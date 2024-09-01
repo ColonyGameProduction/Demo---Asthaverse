@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerAction : ExecuteLogic
 {
-    private PlayerActionInput inputActions;
+    public PlayerActionInput inputActions;
 
     //supaya input action bisa digunakan
     private void Awake()
