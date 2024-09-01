@@ -7,20 +7,21 @@ using UnityEngine;
  * Public class nya extend ke class ini
  * Jangan ke MonoBehaviour
  */
-public class ExecuteLogic : WeaponType
+public class ExecuteLogic : WeaponLogic
 {
 
     //setelah di extend, klean bisa make function ini tanpa perlu refrence
 
     //logic 'Shoot'
-    public void Shoot(GameObject gameObject)
+    public void Shoot()
     {
-        ExecuteShooting(gameObject);
+        GameObject weaponType = GetComponentInChildren<WeaponType>().gameObject;
+        ExecuteShooting(weaponType);
     }    
 
     public void ChangingWeapon()
     {
-        Debug.Log("WeaponChanged");
+        ChangeWeapon();
     }
 
     //logic 'SilentKill'
