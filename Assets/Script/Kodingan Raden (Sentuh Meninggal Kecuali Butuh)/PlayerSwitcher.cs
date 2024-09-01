@@ -42,6 +42,7 @@ public class PlayerSwitcher : MonoBehaviour
     private void SwitchCharacter() // switch a main character role to another character
     {
         playableCharacters[playerNumber].gameObject.GetComponent<PlayerMovement>().enabled = false; // turn off PlayerMovement script from previous main character
+        playableCharacters[playerNumber].gameObject.GetComponent<PlayerCamera>().enabled = false; // turn off PlayerCamera script from previous main character
 
         followCameras[playerNumber].SetActive(false); // turn off follow camera from previous main character
 
@@ -60,6 +61,7 @@ public class PlayerSwitcher : MonoBehaviour
     private void SetActiveCharacter(int characterIndex) // set a new main character and camera follow
     {
         playableCharacters[characterIndex].gameObject.GetComponent<PlayerMovement>().enabled = true; // turn on PlayerMovement script for the new main character
+        playableCharacters[characterIndex].gameObject.GetComponent<PlayerCamera>().enabled = true; // turn on PlayerCamera script for the new main character
 
         followCameras[characterIndex].SetActive(true); // turn on follow camera for the new main character
     }
