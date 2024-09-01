@@ -41,7 +41,7 @@ public class PlayerAction : ExecuteLogic
     //event ketika 'Shoot' dilakukan
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
-        Shoot(this.gameObject);        
+        Shoot();        
     }    
 
     
