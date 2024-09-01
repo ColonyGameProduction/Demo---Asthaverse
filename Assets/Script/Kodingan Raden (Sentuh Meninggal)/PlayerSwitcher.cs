@@ -7,6 +7,9 @@ public class PlayerSwitcher : MonoBehaviour
     [Header("All Playable Character follow target")]
     public GameObject[] playableCharacters;
 
+    [Header("All Follow Camera for each character's")]
+    public GameObject[] followCameras;
+
     [Header("Change Switch Character Cooldown Time")]
     public int switchCooldownTime = 1;
 
@@ -44,7 +47,14 @@ public class PlayerSwitcher : MonoBehaviour
     {
         playableCharacters[playerNumber].gameObject.GetComponent<PlayerMovement>().enabled = false; // turn off PlayerMovement script from previous main character
 
-        playerNumber = (playerNumber + 1) % playableCharacters.Length; // switch playerNumber and make sure playerNumber not out of bounds
+        followCameras[playerNumber].SetActive(false); // turn off follow camera from previous main character
+
+        playerNumber++; // increase playerNumber by 1
+
+        if (playerNumber >= playableCharacters.Length) // check if playerNumber more than playableCharacters.Length, then playerNumber back to 0
+        {
+            playerNumber = 0;
+        }
 
         SetActiveCharacter(playerNumber);
 
@@ -55,6 +65,6 @@ public class PlayerSwitcher : MonoBehaviour
     {
         playableCharacters[characterIndex].gameObject.GetComponent<PlayerMovement>().enabled = true; // turn on PlayerMovement script for the new main character
 
-        followCamera.Follow = playableCharacters[characterIndex].transform.GetChild(0); // change cinemachine virtual camera follow component to active playable character
+        followCameras[characterIndex].SetActive(true); // turn on follow camera for the new main character
     }
 }
