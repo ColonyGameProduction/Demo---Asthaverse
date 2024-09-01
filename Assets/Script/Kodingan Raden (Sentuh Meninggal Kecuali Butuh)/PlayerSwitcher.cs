@@ -1,5 +1,4 @@
 using UnityEngine;
-using Cinemachine;
 using System.Collections;
 
 public class PlayerSwitcher : MonoBehaviour
@@ -12,9 +11,6 @@ public class PlayerSwitcher : MonoBehaviour
 
     [Header("Change Switch Character Cooldown Time")]
     public int switchCooldownTime = 1;
-
-    [Header("Reference to Follow Camera")]
-    public CinemachineVirtualCamera followCamera;
 
     private int playerNumber = 0;
 
