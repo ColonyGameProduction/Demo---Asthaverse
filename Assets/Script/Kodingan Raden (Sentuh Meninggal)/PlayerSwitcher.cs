@@ -49,7 +49,12 @@ public class PlayerSwitcher : MonoBehaviour
 
         followCameras[playerNumber].SetActive(false); // turn off follow camera from previous main character
 
-        playerNumber = (playerNumber + 1) % playableCharacters.Length; // switch playerNumber and make sure playerNumber not out of bounds
+        playerNumber++; // increase playerNumber by 1
+
+        if (playerNumber >= playableCharacters.Length) // check if playerNumber more than playableCharacters.Length, then playerNumber back to 0
+        {
+            playerNumber = 0;
+        }
 
         SetActiveCharacter(playerNumber);
 
