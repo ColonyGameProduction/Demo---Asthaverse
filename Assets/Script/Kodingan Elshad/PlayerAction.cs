@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerAction : ExecuteLogic
 {
-    public PlayerActionInput inputActions;
+    private PlayerActionInput inputActions;
 
     //supaya input action bisa digunakan
     private void Awake()
@@ -30,7 +30,12 @@ public class PlayerAction : ExecuteLogic
 
     private void ChangePlayer_performed(InputAction.CallbackContext context)
     {
-        SwitchCharacter(inputActions);
+        GameManager gm = GameManager.instance;
+
+        if(gm.canSwitch)
+        {
+            SwitchCharacter();
+        }
     }
 
     private void ChangingWeapon_performed(InputAction.CallbackContext context)
@@ -51,6 +56,9 @@ public class PlayerAction : ExecuteLogic
         Shoot();        
     }    
 
-    
+    public PlayerActionInput GetPlayerActionInput()
+    {
+        return inputActions;
+    }
     
 }
