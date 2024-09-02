@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /* PERHATIAN!!!
  * Kalo mau akses logic di skrip ini
@@ -29,6 +30,11 @@ public class ExecuteLogic : WeaponLogic
     {
         SilentKill silentKill = GetComponentInChildren<SilentKill>();
         silentKill.canKill = true;
+    }
+
+    public void SwitchCharacter(PlayerActionInput inputActions)
+    {
+
     }
 
 }

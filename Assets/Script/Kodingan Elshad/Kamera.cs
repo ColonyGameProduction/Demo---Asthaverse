@@ -73,6 +73,6 @@ public class Kamera : MonoBehaviour
         playableCharacters[playerNumber].gameObject.GetComponent<PlayerAction>().inputActions.InputPlayerAction.SilentKill.Enable();
         playableCharacters[playerNumber].gameObject.GetComponent<PlayerAction>().inputActions.InputPlayerAction.ChangingWeapon.Enable();
 
-        followCameras[characterIndex].SetActive(true); // turn on follow camera for the new main character
+        followCameras[characterIndex].SetActive(true); // turn on follow camera for the new main character        
     }
 }
