@@ -17,6 +17,7 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.SilentKill.Enable();
         inputActions.InputPlayerAction.ChangingWeapon.Enable();
         inputActions.InputPlayerAction.ChangePlayer.Enable();
+        inputActions.InputPlayerAction.Scope.Enable();
     }
 
     private void Start()
@@ -26,6 +27,12 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.SilentKill.performed += SilentKill_performed;
         inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
         inputActions.InputPlayerAction.ChangePlayer.performed += ChangePlayer_performed;
+        inputActions.InputPlayerAction.Scope.performed += Scope_performed;
+    }
+
+    private void Scope_performed(InputAction.CallbackContext context)
+    {
+        Debug.Log("Can Scope");
     }
 
     private void ChangePlayer_performed(InputAction.CallbackContext context)

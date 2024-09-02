@@ -62,6 +62,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Scope"",
+                    ""type"": ""Button"",
+                    ""id"": ""67bb825e-50c3-401d-9d2a-5ca407012fe9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -108,6 +117,17 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""ChangePlayer"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7bca3d4-785c-43d2-92a5-8c920d738d7b"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scope"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -120,6 +140,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_SilentKill = m_InputPlayerAction.FindAction("SilentKill", throwIfNotFound: true);
         m_InputPlayerAction_ChangingWeapon = m_InputPlayerAction.FindAction("ChangingWeapon", throwIfNotFound: true);
         m_InputPlayerAction_ChangePlayer = m_InputPlayerAction.FindAction("ChangePlayer", throwIfNotFound: true);
+        m_InputPlayerAction_Scope = m_InputPlayerAction.FindAction("Scope", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -185,6 +206,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_SilentKill;
     private readonly InputAction m_InputPlayerAction_ChangingWeapon;
     private readonly InputAction m_InputPlayerAction_ChangePlayer;
+    private readonly InputAction m_InputPlayerAction_Scope;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -193,6 +215,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @SilentKill => m_Wrapper.m_InputPlayerAction_SilentKill;
         public InputAction @ChangingWeapon => m_Wrapper.m_InputPlayerAction_ChangingWeapon;
         public InputAction @ChangePlayer => m_Wrapper.m_InputPlayerAction_ChangePlayer;
+        public InputAction @Scope => m_Wrapper.m_InputPlayerAction_Scope;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -214,6 +237,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @ChangePlayer.started += instance.OnChangePlayer;
             @ChangePlayer.performed += instance.OnChangePlayer;
             @ChangePlayer.canceled += instance.OnChangePlayer;
+            @Scope.started += instance.OnScope;
+            @Scope.performed += instance.OnScope;
+            @Scope.canceled += instance.OnScope;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -230,6 +256,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @ChangePlayer.started -= instance.OnChangePlayer;
             @ChangePlayer.performed -= instance.OnChangePlayer;
             @ChangePlayer.canceled -= instance.OnChangePlayer;
+            @Scope.started -= instance.OnScope;
+            @Scope.performed -= instance.OnScope;
+            @Scope.canceled -= instance.OnScope;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -253,5 +282,6 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnSilentKill(InputAction.CallbackContext context);
         void OnChangingWeapon(InputAction.CallbackContext context);
         void OnChangePlayer(InputAction.CallbackContext context);
+        void OnScope(InputAction.CallbackContext context);
     }
 }
