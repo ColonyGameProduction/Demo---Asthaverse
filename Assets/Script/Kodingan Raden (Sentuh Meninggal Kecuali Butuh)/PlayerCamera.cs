@@ -10,11 +10,17 @@ public class PlayerCamera : MonoBehaviour
 
     private void Start()
     {
+        // hide mouse cursor when game start
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     private void Update()
+    {
+        HandleCameraMovement();
+    }
+
+    private void HandleCameraMovement()
     {
         // mouse input declaration
         float mouseX = Input.GetAxis("Mouse X") * cameraRotationSpeed * Time.deltaTime;
@@ -26,7 +32,7 @@ public class PlayerCamera : MonoBehaviour
 
         // prevent camera moving out of bounds
         Vector3 angles = followTarget.localEulerAngles;
-        angles.z = 0f; 
+        angles.z = 0f;
 
         float angle = followTarget.localEulerAngles.x;
 
