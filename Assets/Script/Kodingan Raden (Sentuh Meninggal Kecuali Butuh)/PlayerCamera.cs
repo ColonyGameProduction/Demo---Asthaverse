@@ -33,7 +33,7 @@ public class PlayerCamera : MonoBehaviour
 
         // move the camera x and y axis with rotating follow target from player
         followTarget.rotation *= Quaternion.AngleAxis(mouseX, Vector3.up);
-        followTarget.rotation *= Quaternion.AngleAxis(mouseY, Vector3.right);
+        followTarget.rotation *= Quaternion.AngleAxis(-mouseY, Vector3.right);
 
         // prevent camera moving out of bounds
         Vector3 angles = followTarget.localEulerAngles;
