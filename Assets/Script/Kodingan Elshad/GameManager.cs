@@ -6,6 +6,7 @@ using Cinemachine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+
     [Header("All Playable Character")]
     public GameObject[] playerGameObject;
 
@@ -15,8 +16,11 @@ public class GameManager : MonoBehaviour
     [Header("Sedang memainkan character ke berapa")]
     public int playableCharacterNum;
 
-    [Header("Apakah bisa berganti")]
+    [Header("Apakah bisa berganti character")]
     public bool canSwitch;
+
+    [Header("Apakah sudah scope")]
+    public bool scope;
 
     private void Awake()
     {
@@ -28,6 +32,7 @@ public class GameManager : MonoBehaviour
         playableCharacterNum = 0;
         FollowCamerasRefrence();
         canSwitch = true;
+        scope = false;
     }
 
     public void FollowCamerasRefrence()

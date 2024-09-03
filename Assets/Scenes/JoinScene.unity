@@ -410,7 +410,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 1586786643}
   m_Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 60
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -1148,13 +1148,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 743586296}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6905226c3ae5ba4598fc72fd41e0b4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   followTarget: {fileID: 1611590578}
-  cameraRotationSpeed: 100
+  cameraRotationSpeed: 30
 --- !u!1 &859698410
 GameObject:
   m_ObjectHideFlags: 0
@@ -1282,7 +1282,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 60
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1537,6 +1537,7 @@ MonoBehaviour:
   - {fileID: 0}
   playableCharacterNum: 0
   canSwitch: 0
+  scope: 0
 --- !u!1 &1109155658
 GameObject:
   m_ObjectHideFlags: 0
@@ -1652,13 +1653,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1156905590}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6905226c3ae5ba4598fc72fd41e0b4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   followTarget: {fileID: 2085741375}
-  cameraRotationSpeed: 100
+  cameraRotationSpeed: 30
 --- !u!1 &1303093420
 GameObject:
   m_ObjectHideFlags: 0
@@ -2571,7 +2572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   followTarget: {fileID: 1586786643}
-  cameraRotationSpeed: 100
+  cameraRotationSpeed: 30
 --- !u!1 &2085741374
 GameObject:
   m_ObjectHideFlags: 0

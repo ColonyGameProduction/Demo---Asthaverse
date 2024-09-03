@@ -32,7 +32,7 @@ public class PlayerAction : ExecuteLogic
 
     private void Scope_performed(InputAction.CallbackContext context)
     {
-        Debug.Log("Can Scope");
+        Scope();
     }
 
     private void ChangePlayer_performed(InputAction.CallbackContext context)

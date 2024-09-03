@@ -33,17 +33,45 @@ public class ExecuteLogic : WeaponLogic
         silentKill.canKill = true;
     }
 
+    //Logic 'Scope'
+    public void Scope()
+    {
+        GameManager gm = GameManager.instance;
+
+        if(!gm.scope)
+        {
+            gm.followCameras[gm.playableCharacterNum].m_Lens.FieldOfView = 30;
+            gm.scope = true;
+        }
+        else
+        {
+            gm.followCameras[gm.playableCharacterNum].m_Lens.FieldOfView = 60;
+            gm.scope = false;
+        }
+
+    }
+
+
+    //Logic 'Switch Character'
     public void SwitchCharacter()
     {
+        //kategori untuk refrensikan yang diperlukan
         GameManager gm = GameManager.instance;        
 
         PlayerAction playerAction = gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerAction>();
         PlayerActionInput inputActions;
         inputActions = playerAction.GetPlayerActionInput();
 
+        //kategori logic script
         gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerAction>().enabled = false;
-        gm.followCameras[gm.playableCharacterNum].Priority = 1;
+        gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerCamera>().enabled = false;
 
+        //kategori kamera
+        gm.followCameras[gm.playableCharacterNum].m_Lens.FieldOfView = 60;
+        gm.followCameras[gm.playableCharacterNum].Priority = 1;
+        gm.scope = false;
+
+        //kategori logic input action
         inputActions.InputPlayerAction.Shooting.Disable();
         inputActions.InputPlayerAction.SilentKill.Disable();
         inputActions.InputPlayerAction.ChangingWeapon.Disable();
@@ -61,21 +89,26 @@ public class ExecuteLogic : WeaponLogic
         StartCoroutine(Switching(gm));
     }
 
+    //Logic 'Mengaktifkan karakter ketika di switch'
     private void SetActiveCharacter(GameManager gm, int playerNumber)
     {
+        //kategori untuk refrensikan yang diperlukan
         PlayerAction playerAction = gm.playerGameObject[playerNumber].GetComponent<PlayerAction>();
         PlayerActionInput inputActions;
         inputActions = playerAction.GetPlayerActionInput();
 
+        //kategori logic input action
         inputActions.InputPlayerAction.Shooting.Enable();
         inputActions.InputPlayerAction.SilentKill.Enable();
         inputActions.InputPlayerAction.ChangingWeapon.Enable();
         inputActions.InputPlayerAction.ChangePlayer.Enable();
 
-
+        //kategori logic script
         gm.playerGameObject[playerNumber].GetComponent<PlayerAction>().enabled = true;        
-        gm.followCameras[playerNumber].Priority = 2;
+        gm.playerGameObject[playerNumber].GetComponent<PlayerCamera>().enabled = true; 
         
+        //kategori kamera
+        gm.followCameras[playerNumber].Priority = 2;        
     }
 
     public IEnumerator Switching(GameManager gm)
