@@ -80,6 +80,24 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""709ab3e1-5252-4e58-9ddb-e56098262fb7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Run"",
+                    ""type"": ""Button"",
+                    ""id"": ""a2ffa34d-e2f1-47da-b70d-bbd465b15076"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -192,6 +210,28 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66628e6c-17d0-457a-8e93-d1bc9b5dc5d5"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""171cce9c-8a53-467b-82e3-0ca64e783415"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -206,6 +246,8 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_ChangePlayer = m_InputPlayerAction.FindAction("ChangePlayer", throwIfNotFound: true);
         m_InputPlayerAction_Scope = m_InputPlayerAction.FindAction("Scope", throwIfNotFound: true);
         m_InputPlayerAction_Movement = m_InputPlayerAction.FindAction("Movement", throwIfNotFound: true);
+        m_InputPlayerAction_Crouch = m_InputPlayerAction.FindAction("Crouch", throwIfNotFound: true);
+        m_InputPlayerAction_Run = m_InputPlayerAction.FindAction("Run", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -273,6 +315,8 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_ChangePlayer;
     private readonly InputAction m_InputPlayerAction_Scope;
     private readonly InputAction m_InputPlayerAction_Movement;
+    private readonly InputAction m_InputPlayerAction_Crouch;
+    private readonly InputAction m_InputPlayerAction_Run;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -283,6 +327,8 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @ChangePlayer => m_Wrapper.m_InputPlayerAction_ChangePlayer;
         public InputAction @Scope => m_Wrapper.m_InputPlayerAction_Scope;
         public InputAction @Movement => m_Wrapper.m_InputPlayerAction_Movement;
+        public InputAction @Crouch => m_Wrapper.m_InputPlayerAction_Crouch;
+        public InputAction @Run => m_Wrapper.m_InputPlayerAction_Run;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -310,6 +356,12 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
+            @Crouch.started += instance.OnCrouch;
+            @Crouch.performed += instance.OnCrouch;
+            @Crouch.canceled += instance.OnCrouch;
+            @Run.started += instance.OnRun;
+            @Run.performed += instance.OnRun;
+            @Run.canceled += instance.OnRun;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -332,6 +384,12 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
+            @Crouch.started -= instance.OnCrouch;
+            @Crouch.performed -= instance.OnCrouch;
+            @Crouch.canceled -= instance.OnCrouch;
+            @Run.started -= instance.OnRun;
+            @Run.performed -= instance.OnRun;
+            @Run.canceled -= instance.OnRun;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -357,5 +415,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnChangePlayer(InputAction.CallbackContext context);
         void OnScope(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
+        void OnCrouch(InputAction.CallbackContext context);
+        void OnRun(InputAction.CallbackContext context);
     }
 }

@@ -17,12 +17,7 @@ public class PlayerAction : ExecuteLogic
     private void Awake()
     {
         inputActions = new PlayerActionInput();
-        inputActions.InputPlayerAction.Shooting.Enable();
-        inputActions.InputPlayerAction.SilentKill.Enable();
-        inputActions.InputPlayerAction.ChangingWeapon.Enable();
-        inputActions.InputPlayerAction.ChangePlayer.Enable();
-        inputActions.InputPlayerAction.Scope.Enable();
-        inputActions.InputPlayerAction.Movement.Enable();
+        inputActions.InputPlayerAction.Enable();
     }
 
     private void Start()
@@ -35,6 +30,30 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
 
         CC = GetComponent<CharacterController>();
+    }
+
+    private bool Run()
+    {
+        if (inputActions.InputPlayerAction.Run.ReadValue<float>() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private bool Crouch()
+    {
+        if(inputActions.InputPlayerAction.Crouch.ReadValue<float>() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     private void Scope_performed(InputAction.CallbackContext context)
@@ -75,7 +94,18 @@ public class PlayerAction : ExecuteLogic
         Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
-        CC.Move(movement * moveSpeed * Time.deltaTime);
+        if(Crouch())
+        {
+            CC.Move(movement * (moveSpeed - 2) * Time.deltaTime);
+        }
+        else if(Run())
+        {
+            CC.Move(movement * (moveSpeed + 2) * Time.deltaTime);
+        }
+        else
+        {
+            CC.Move(movement * moveSpeed * Time.deltaTime);
+        }
     }
 
     public PlayerActionInput GetPlayerActionInput()

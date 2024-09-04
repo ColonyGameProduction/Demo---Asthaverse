@@ -72,10 +72,8 @@ public class ExecuteLogic : WeaponLogic
         gm.scope = false;
 
         //kategori logic input action
-        inputActions.InputPlayerAction.Shooting.Disable();
-        inputActions.InputPlayerAction.SilentKill.Disable();
-        inputActions.InputPlayerAction.ChangingWeapon.Disable();
-        inputActions.InputPlayerAction.ChangePlayer.Disable();
+        inputActions.InputPlayerAction.Disable();
+
 
         gm.playableCharacterNum++;
 
@@ -98,10 +96,8 @@ public class ExecuteLogic : WeaponLogic
         inputActions = playerAction.GetPlayerActionInput();
 
         //kategori logic input action
-        inputActions.InputPlayerAction.Shooting.Enable();
-        inputActions.InputPlayerAction.SilentKill.Enable();
-        inputActions.InputPlayerAction.ChangingWeapon.Enable();
-        inputActions.InputPlayerAction.ChangePlayer.Enable();
+        inputActions.InputPlayerAction.Enable();
+
 
         //kategori logic script
         gm.playerGameObject[playerNumber].GetComponent<PlayerAction>().enabled = true;        
