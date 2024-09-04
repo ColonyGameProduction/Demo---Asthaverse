@@ -8,6 +8,10 @@ using UnityEngine.InputSystem;
 public class PlayerAction : ExecuteLogic
 {
     private PlayerActionInput inputActions;
+    
+    [SerializeField]
+    private int moveSpeed = 5;
+    private CharacterController CC;
 
     //supaya input action bisa digunakan
     private void Awake()
@@ -18,6 +22,7 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.ChangingWeapon.Enable();
         inputActions.InputPlayerAction.ChangePlayer.Enable();
         inputActions.InputPlayerAction.Scope.Enable();
+        inputActions.InputPlayerAction.Movement.Enable();
     }
 
     private void Start()
@@ -28,6 +33,8 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
         inputActions.InputPlayerAction.ChangePlayer.performed += ChangePlayer_performed;
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
+
+        CC = GetComponent<CharacterController>();
     }
 
     private void Scope_performed(InputAction.CallbackContext context)
@@ -61,11 +68,20 @@ public class PlayerAction : ExecuteLogic
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
         Shoot();        
-    }    
+    }
+
+    private void FixedUpdate()
+    {
+        Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
+        Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
+
+        CC.Move(movement * moveSpeed * Time.deltaTime);
+    }
 
     public PlayerActionInput GetPlayerActionInput()
     {
         return inputActions;
     }
     
+
 }

@@ -71,6 +71,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Movement"",
+                    ""type"": ""Value"",
+                    ""id"": ""5ae68d93-695a-4e4d-9a7c-fba775db84a6"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -128,6 +137,61 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""Scope"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""9a8c5271-1f20-466d-9166-97da362fafba"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""ed510a29-e23b-4b04-a517-f9d2ed64d0b7"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""914f02ea-3029-446a-a05a-428b4995fda4"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""85487b36-d284-4240-abda-3d058b115087"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""eda68aeb-b1f6-4359-b924-de6a00bdf5b5"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -141,6 +205,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_ChangingWeapon = m_InputPlayerAction.FindAction("ChangingWeapon", throwIfNotFound: true);
         m_InputPlayerAction_ChangePlayer = m_InputPlayerAction.FindAction("ChangePlayer", throwIfNotFound: true);
         m_InputPlayerAction_Scope = m_InputPlayerAction.FindAction("Scope", throwIfNotFound: true);
+        m_InputPlayerAction_Movement = m_InputPlayerAction.FindAction("Movement", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -207,6 +272,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_ChangingWeapon;
     private readonly InputAction m_InputPlayerAction_ChangePlayer;
     private readonly InputAction m_InputPlayerAction_Scope;
+    private readonly InputAction m_InputPlayerAction_Movement;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -216,6 +282,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @ChangingWeapon => m_Wrapper.m_InputPlayerAction_ChangingWeapon;
         public InputAction @ChangePlayer => m_Wrapper.m_InputPlayerAction_ChangePlayer;
         public InputAction @Scope => m_Wrapper.m_InputPlayerAction_Scope;
+        public InputAction @Movement => m_Wrapper.m_InputPlayerAction_Movement;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -240,6 +307,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @Scope.started += instance.OnScope;
             @Scope.performed += instance.OnScope;
             @Scope.canceled += instance.OnScope;
+            @Movement.started += instance.OnMovement;
+            @Movement.performed += instance.OnMovement;
+            @Movement.canceled += instance.OnMovement;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -259,6 +329,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @Scope.started -= instance.OnScope;
             @Scope.performed -= instance.OnScope;
             @Scope.canceled -= instance.OnScope;
+            @Movement.started -= instance.OnMovement;
+            @Movement.performed -= instance.OnMovement;
+            @Movement.canceled -= instance.OnMovement;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -283,5 +356,6 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnChangingWeapon(InputAction.CallbackContext context);
         void OnChangePlayer(InputAction.CallbackContext context);
         void OnScope(InputAction.CallbackContext context);
+        void OnMovement(InputAction.CallbackContext context);
     }
 }
