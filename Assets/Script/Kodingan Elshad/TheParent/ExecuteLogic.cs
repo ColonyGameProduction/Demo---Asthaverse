@@ -58,10 +58,6 @@ public class ExecuteLogic : AILogic
         //kategori untuk refrensikan yang diperlukan
         GameManager gm = GameManager.instance;        
 
-        PlayerAction playerAction = gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerAction>();
-        PlayerActionInput inputActions;
-        inputActions = playerAction.GetPlayerActionInput();
-
         //kategori logic script
         gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerAction>().enabled = false;
         gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerCamera>().enabled = false;
@@ -71,10 +67,6 @@ public class ExecuteLogic : AILogic
         gm.followCameras[gm.playableCharacterNum].Priority = 1;        
         gm.scope = false;
         StartCoroutine(CameraDelay(gm));
-
-        //kategori logic input action
-        inputActions.InputPlayerAction.Disable();
-
 
         gm.playableCharacterNum++;
 
@@ -90,16 +82,7 @@ public class ExecuteLogic : AILogic
 
     //Logic 'Mengaktifkan karakter ketika di switch'
     private void SetActiveCharacter(GameManager gm, int playerNumber)
-    {
-        //kategori untuk refrensikan yang diperlukan
-        PlayerAction playerAction = gm.playerGameObject[playerNumber].GetComponent<PlayerAction>();
-        PlayerActionInput inputActions;
-        inputActions = playerAction.GetPlayerActionInput();
-
-        //kategori logic input action
-        inputActions.InputPlayerAction.Enable();
-
-
+    {       
         //kategori logic script
         gm.playerGameObject[playerNumber].GetComponent<PlayerAction>().enabled = true;        
         gm.playerGameObject[playerNumber].GetComponent<PlayerCamera>().enabled = true; 

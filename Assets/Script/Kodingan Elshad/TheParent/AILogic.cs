@@ -11,13 +11,5 @@ public class AILogic : MonoBehaviour
         agent.destination = destination.transform.position;
     }
 
-    public void FriendsMoveAI(GameObject [] destination)
-    {
-        SetDestination(destination[0]);
-    }
-
-    public Vector3 SetDestination(GameObject destination)
-    {
-        return destination.transform.position;
-    }
+    
 }

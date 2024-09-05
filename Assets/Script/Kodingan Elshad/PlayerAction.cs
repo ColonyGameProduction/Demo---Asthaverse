@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;  
+using UnityEngine.InputSystem;
 
 //kelas untuk player action seperti attacking, scope, dan Silent kill
 
@@ -11,6 +11,7 @@ public class PlayerAction : ExecuteLogic
 
     [SerializeField]
     private GameObject[] friendsDestination;
+
     [SerializeField]
     private int moveSpeed = 5;
     private CharacterController CC;
@@ -19,7 +20,6 @@ public class PlayerAction : ExecuteLogic
     private void Awake()
     {
         inputActions = new PlayerActionInput();
-        inputActions.InputPlayerAction.Enable();
     }
 
     private void Start()
@@ -48,7 +48,7 @@ public class PlayerAction : ExecuteLogic
 
     private bool Crouch()
     {
-        if(inputActions.InputPlayerAction.Crouch.ReadValue<float>() > 0)
+        if (inputActions.InputPlayerAction.Crouch.ReadValue<float>() > 0)
         {
             return true;
         }
@@ -67,7 +67,7 @@ public class PlayerAction : ExecuteLogic
     {
         GameManager gm = GameManager.instance;
 
-        if(gm.canSwitch)
+        if (gm.canSwitch)
         {
             SwitchCharacter();
         }
@@ -84,15 +84,10 @@ public class PlayerAction : ExecuteLogic
         SilentKill();
     }
 
-    private void friendsFollow()
-    {
-        FriendsMoveAI(friendsDestination);
-    }
-
     //event ketika 'Shoot' dilakukan
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
-        Shoot();        
+        Shoot();
     }
 
     private void FixedUpdate()
@@ -125,5 +120,19 @@ public class PlayerAction : ExecuteLogic
     {
         return inputActions;
     }
-        
+
+    public GameObject[] GetDestinationGameObject()
+    {
+        return friendsDestination;
+    }
+
+    private void OnEnable()
+    {
+        inputActions.InputPlayerAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions.InputPlayerAction.Disable();
+    }
 }
