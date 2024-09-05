@@ -11,7 +11,7 @@ public class EnemyAI : ExecuteLogic
         timer += Time.deltaTime;
         if(timer > 2)
         {
-            Shoot(this.gameObject);
+            Shoot();
             timer = 0;
         }        
     }      
