@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using Unity.VisualScripting;
+using System;
 
 public class PlayerSwitcher : MonoBehaviour
 {
@@ -44,7 +44,7 @@ public class PlayerSwitcher : MonoBehaviour
     {
         playableCharacters[playerNumber].gameObject.GetComponent<PlayerMovement>().enabled = false; // turn off PlayerMovement script from previous main character
         playableCharacters[playerNumber].gameObject.GetComponent<PlayerCamera>().enabled = false; // turn off PlayerCamera script from previous main character
-        playableCharacters[playerNumber].gameObject.transform.GetChild(0).eulerAngles = Vector3.zero;
+        playableCharacters[playerNumber].gameObject.transform.GetChild(0).eulerAngles = Vector3.zero; // reset character follow target rotation to 0, 0, 0
 
         followCameras[playerNumber].SetActive(false); // turn off follow camera from previous main character
 
