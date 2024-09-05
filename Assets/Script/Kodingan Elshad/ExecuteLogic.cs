@@ -9,7 +9,7 @@ using Cinemachine;
  * Public class nya extend ke class ini
  * Jangan ke MonoBehaviour
  */
-public class ExecuteLogic : WeaponLogic
+public class ExecuteLogic : MonoBehaviour
 {
 
     //setelah di extend, klean bisa make function ini tanpa perlu refrence
@@ -17,13 +17,13 @@ public class ExecuteLogic : WeaponLogic
     //logic 'Shoot'
     public void Shoot()
     {
-        GameObject weaponType = GetComponentInChildren<WeaponType>().gameObject;
-        ExecuteShooting(weaponType);
+        WeaponType weaponType = GetComponentInChildren<WeaponType>();
+        weaponType.Shooting();
     }    
 
     public void ChangingWeapon()
     {
-        ChangeWeapon();
+        
     }
 
     //logic 'SilentKill'

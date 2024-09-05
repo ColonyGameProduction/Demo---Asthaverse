@@ -12,9 +12,8 @@ public class WeaponLogic : MonoBehaviour
 
 
     //Untuk menembak tergantung dari tag weapon nya
-    public void ExecuteShooting(GameObject gameObject)
-    {
-        string weaponType = gameObject.GetComponent<WeaponType>().Weapon();
+    public void ExecuteShooting(string weaponType)
+    {        
         float fireRate;
         float spawnRate;
 

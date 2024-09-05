@@ -13,7 +13,11 @@ public class EnemyAI : ExecuteLogic
         {
             Shoot();
             timer = 0;
+
+            
         }        
     }      
+
+    
 
 }
