@@ -8,7 +8,9 @@ using UnityEngine.InputSystem;
 public class PlayerAction : ExecuteLogic
 {
     private PlayerActionInput inputActions;
-    
+
+    [SerializeField]
+    private GameObject[] friendsDestination;
     [SerializeField]
     private int moveSpeed = 5;
     private CharacterController CC;
@@ -82,6 +84,10 @@ public class PlayerAction : ExecuteLogic
         SilentKill();
     }
 
+    private void friendsFollow()
+    {
+        FriendsMoveAI(friendsDestination);
+    }
 
     //event ketika 'Shoot' dilakukan
     private void Shooting_Performed(InputAction.CallbackContext context)
@@ -91,14 +97,20 @@ public class PlayerAction : ExecuteLogic
 
     private void FixedUpdate()
     {
+        Movement();
+    }
+
+    //movement
+    private void Movement()
+    {
         Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
-        if(Crouch())
+        if (Crouch())
         {
             CC.Move(movement * (moveSpeed - 2) * Time.deltaTime);
         }
-        else if(Run())
+        else if (Run())
         {
             CC.Move(movement * (moveSpeed + 2) * Time.deltaTime);
         }
@@ -108,10 +120,10 @@ public class PlayerAction : ExecuteLogic
         }
     }
 
+    //untuk mendapatkan refrensi player action input
     public PlayerActionInput GetPlayerActionInput()
     {
         return inputActions;
     }
-    
-
+        
 }
