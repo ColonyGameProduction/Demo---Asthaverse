@@ -69,6 +69,7 @@ public class ExecuteLogic : WeaponLogic
         //kategori kamera
         gm.followCameras[gm.playableCharacterNum].m_Lens.FieldOfView = 60;
         gm.followCameras[gm.playableCharacterNum].Priority = 1;
+        gm.playerGameObject[gm.playableCharacterNum].gameObject.transform.GetChild(0).eulerAngles = Vector3.zero;
         gm.scope = false;
 
         //kategori logic input action
