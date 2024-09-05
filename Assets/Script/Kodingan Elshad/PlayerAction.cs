@@ -9,13 +9,17 @@ public class PlayerAction : ExecuteLogic
 {
     private PlayerActionInput inputActions;
 
+    [SerializeField]
+    private GameObject[] friendsDestination;
+    [SerializeField]
+    private int moveSpeed = 5;
+    private CharacterController CC;
+
     //supaya input action bisa digunakan
     private void Awake()
     {
         inputActions = new PlayerActionInput();
-        inputActions.InputPlayerAction.Shooting.Enable();
-        inputActions.InputPlayerAction.SilentKill.Enable();
-        inputActions.InputPlayerAction.ChangingWeapon.Enable();
+        inputActions.InputPlayerAction.Enable();
     }
 
     private void Start()
@@ -24,6 +28,49 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
         inputActions.InputPlayerAction.SilentKill.performed += SilentKill_performed;
         inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
+        inputActions.InputPlayerAction.ChangePlayer.performed += ChangePlayer_performed;
+        inputActions.InputPlayerAction.Scope.performed += Scope_performed;
+
+        CC = GetComponent<CharacterController>();
+    }
+
+    private bool Run()
+    {
+        if (inputActions.InputPlayerAction.Run.ReadValue<float>() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private bool Crouch()
+    {
+        if(inputActions.InputPlayerAction.Crouch.ReadValue<float>() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void Scope_performed(InputAction.CallbackContext context)
+    {
+        Scope();
+    }
+
+    private void ChangePlayer_performed(InputAction.CallbackContext context)
+    {
+        GameManager gm = GameManager.instance;
+
+        if(gm.canSwitch)
+        {
+            SwitchCharacter();
+        }
     }
 
     private void ChangingWeapon_performed(InputAction.CallbackContext context)
@@ -37,13 +84,46 @@ public class PlayerAction : ExecuteLogic
         SilentKill();
     }
 
+    private void friendsFollow()
+    {
+        FriendsMoveAI(friendsDestination);
+    }
 
     //event ketika 'Shoot' dilakukan
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
-        Shoot(this.gameObject);        
-    }    
+        Shoot();        
+    }
 
-    
-    
+    private void FixedUpdate()
+    {
+        Movement();
+    }
+
+    //movement
+    private void Movement()
+    {
+        Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
+        Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
+
+        if (Crouch())
+        {
+            CC.Move(movement * (moveSpeed - 2) * Time.deltaTime);
+        }
+        else if (Run())
+        {
+            CC.Move(movement * (moveSpeed + 2) * Time.deltaTime);
+        }
+        else
+        {
+            CC.Move(movement * moveSpeed * Time.deltaTime);
+        }
+    }
+
+    //untuk mendapatkan refrensi player action input
+    public PlayerActionInput GetPlayerActionInput()
+    {
+        return inputActions;
+    }
+        
 }
