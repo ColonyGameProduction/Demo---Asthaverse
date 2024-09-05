@@ -9,7 +9,7 @@ using Cinemachine;
  * Public class nya extend ke class ini
  * Jangan ke MonoBehaviour
  */
-public class ExecuteLogic : WeaponLogic
+public class ExecuteLogic : AILogic
 {
 
     //setelah di extend, klean bisa make function ini tanpa perlu refrence
@@ -17,13 +17,13 @@ public class ExecuteLogic : WeaponLogic
     //logic 'Shoot'
     public void Shoot()
     {
-        GameObject weaponType = GetComponentInChildren<WeaponType>().gameObject;
-        ExecuteShooting(weaponType);
+        WeaponType weaponType = GetComponentInChildren<WeaponType>();
+        weaponType.Shooting();
     }    
 
     public void ChangingWeapon()
     {
-        ChangeWeapon();
+        
     }
 
     //logic 'SilentKill'
@@ -58,23 +58,15 @@ public class ExecuteLogic : WeaponLogic
         //kategori untuk refrensikan yang diperlukan
         GameManager gm = GameManager.instance;        
 
-        PlayerAction playerAction = gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerAction>();
-        PlayerActionInput inputActions;
-        inputActions = playerAction.GetPlayerActionInput();
-
         //kategori logic script
         gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerAction>().enabled = false;
         gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerCamera>().enabled = false;
 
         //kategori kamera
         gm.followCameras[gm.playableCharacterNum].m_Lens.FieldOfView = 60;
-        gm.followCameras[gm.playableCharacterNum].Priority = 1;
-        gm.playerGameObject[gm.playableCharacterNum].gameObject.transform.GetChild(0).eulerAngles = Vector3.zero;
+        gm.followCameras[gm.playableCharacterNum].Priority = 1;        
         gm.scope = false;
-
-        //kategori logic input action
-        inputActions.InputPlayerAction.Disable();
-
+        StartCoroutine(CameraDelay(gm));
 
         gm.playableCharacterNum++;
 
@@ -90,16 +82,7 @@ public class ExecuteLogic : WeaponLogic
 
     //Logic 'Mengaktifkan karakter ketika di switch'
     private void SetActiveCharacter(GameManager gm, int playerNumber)
-    {
-        //kategori untuk refrensikan yang diperlukan
-        PlayerAction playerAction = gm.playerGameObject[playerNumber].GetComponent<PlayerAction>();
-        PlayerActionInput inputActions;
-        inputActions = playerAction.GetPlayerActionInput();
-
-        //kategori logic input action
-        inputActions.InputPlayerAction.Enable();
-
-
+    {       
         //kategori logic script
         gm.playerGameObject[playerNumber].GetComponent<PlayerAction>().enabled = true;        
         gm.playerGameObject[playerNumber].GetComponent<PlayerCamera>().enabled = true; 
@@ -108,6 +91,7 @@ public class ExecuteLogic : WeaponLogic
         gm.followCameras[playerNumber].Priority = 2;        
     }
 
+    //delay untuk switch karakter
     public IEnumerator Switching(GameManager gm)
     {
         gm.canSwitch = false;
@@ -115,5 +99,13 @@ public class ExecuteLogic : WeaponLogic
         yield return new WaitForSeconds(1);
 
         gm.canSwitch = true;
+    }
+
+    //delay untuk perpindahan kamera
+    public IEnumerator CameraDelay(GameManager gm)
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        gm.playerGameObject[gm.playableCharacterNum].gameObject.transform.GetChild(0).eulerAngles = Vector3.zero;
     }
 }

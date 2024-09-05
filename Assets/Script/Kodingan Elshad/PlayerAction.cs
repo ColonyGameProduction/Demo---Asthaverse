@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;  
+using UnityEngine.InputSystem;
 
 //kelas untuk player action seperti attacking, scope, dan Silent kill
 
 public class PlayerAction : ExecuteLogic
 {
     private PlayerActionInput inputActions;
-    
+
+    [SerializeField]
+    private GameObject[] friendsDestination;
+
     [SerializeField]
     private int moveSpeed = 5;
     private CharacterController CC;
@@ -17,7 +20,6 @@ public class PlayerAction : ExecuteLogic
     private void Awake()
     {
         inputActions = new PlayerActionInput();
-        inputActions.InputPlayerAction.Enable();
     }
 
     private void Start()
@@ -46,7 +48,7 @@ public class PlayerAction : ExecuteLogic
 
     private bool Crouch()
     {
-        if(inputActions.InputPlayerAction.Crouch.ReadValue<float>() > 0)
+        if (inputActions.InputPlayerAction.Crouch.ReadValue<float>() > 0)
         {
             return true;
         }
@@ -65,7 +67,7 @@ public class PlayerAction : ExecuteLogic
     {
         GameManager gm = GameManager.instance;
 
-        if(gm.canSwitch)
+        if (gm.canSwitch)
         {
             SwitchCharacter();
         }
@@ -82,23 +84,28 @@ public class PlayerAction : ExecuteLogic
         SilentKill();
     }
 
-
     //event ketika 'Shoot' dilakukan
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
-        Shoot();        
+        Shoot();
     }
 
     private void FixedUpdate()
     {
+        Movement();
+    }
+
+    //movement
+    private void Movement()
+    {
         Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
-        if(Crouch())
+        if (Crouch())
         {
             CC.Move(movement * (moveSpeed - 2) * Time.deltaTime);
         }
-        else if(Run())
+        else if (Run())
         {
             CC.Move(movement * (moveSpeed + 2) * Time.deltaTime);
         }
@@ -108,10 +115,24 @@ public class PlayerAction : ExecuteLogic
         }
     }
 
+    //untuk mendapatkan refrensi player action input
     public PlayerActionInput GetPlayerActionInput()
     {
         return inputActions;
     }
-    
 
+    public GameObject[] GetDestinationGameObject()
+    {
+        return friendsDestination;
+    }
+
+    private void OnEnable()
+    {
+        inputActions.InputPlayerAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions.InputPlayerAction.Disable();
+    }
 }
