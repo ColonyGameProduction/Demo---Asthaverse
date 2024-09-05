@@ -40,11 +40,19 @@ public class PlayerSwitcher : MonoBehaviour
         canSwitch = true;
     }
 
+    private IEnumerator SwitchRotationDelay()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        playableCharacters[playerNumber].gameObject.transform.GetChild(0).eulerAngles = Vector3.zero;
+    }
+
     private void SwitchCharacter() // switch a main character role to another character
     {
         playableCharacters[playerNumber].gameObject.GetComponent<PlayerMovement>().enabled = false; // turn off PlayerMovement script from previous main character
         playableCharacters[playerNumber].gameObject.GetComponent<PlayerCamera>().enabled = false; // turn off PlayerCamera script from previous main character
-        playableCharacters[playerNumber].gameObject.transform.GetChild(0).eulerAngles = Vector3.zero; // reset character follow target rotation to 0, 0, 0
+
+        StartCoroutine(SwitchRotationDelay()); // reset character follow target rotation to 0, 0, 0
 
         followCameras[playerNumber].SetActive(false); // turn off follow camera from previous main character
 
