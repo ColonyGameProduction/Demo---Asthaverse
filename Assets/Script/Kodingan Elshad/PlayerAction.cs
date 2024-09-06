@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
+using Unity.VisualScripting;
+using UnityEngine.UIElements;
 
 //kelas untuk player action seperti attacking, scope, dan Silent kill
 
@@ -101,17 +104,30 @@ public class PlayerAction : ExecuteLogic
         Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
+        Transform cameraTransform = Camera.main.transform;
+
+        Vector3 cameraForward = cameraTransform.forward;
+        Vector3 cameraRight = cameraTransform.right;
+
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+
+        cameraForward.Normalize();
+        cameraRight.Normalize();
+
+        Vector3 relativeMovement = (cameraForward * movement.z + cameraRight * movement.x).normalized;
+
         if (Crouch())
         {
-            CC.Move(movement * (moveSpeed - 2) * Time.deltaTime);
+            CC.Move(relativeMovement * (moveSpeed - 2) * Time.deltaTime);
         }
         else if (Run())
         {
-            CC.Move(movement * (moveSpeed + 2) * Time.deltaTime);
+            CC.Move(relativeMovement * (moveSpeed + 2) * Time.deltaTime);
         }
         else
         {
-            CC.Move(movement * moveSpeed * Time.deltaTime);
+            CC.Move(relativeMovement * moveSpeed * Time.deltaTime);
         }
     }
 
