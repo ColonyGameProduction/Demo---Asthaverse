@@ -14,6 +14,13 @@ public class ExecuteLogic : AILogic
 
     //setelah di extend, klean bisa make function ini tanpa perlu refrence
 
+    public void StartingSetup()
+    {
+        GameManager gm = GameManager.instance;
+        gm.playerGameObject[1].GetComponent<FriendsAI>().friendsID = 1;
+        gm.playerGameObject[2].GetComponent<FriendsAI>().friendsID = 2;
+    }
+
     //logic 'Shoot'
     public void Shoot()
     {
@@ -61,12 +68,16 @@ public class ExecuteLogic : AILogic
         //kategori logic script
         gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerAction>().enabled = false;
         gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerCamera>().enabled = false;
+        gm.playerGameObject[gm.playableCharacterNum].GetComponent<FriendsAI>().enabled = true;
 
         //kategori kamera
         gm.followCameras[gm.playableCharacterNum].m_Lens.FieldOfView = 60;
         gm.followCameras[gm.playableCharacterNum].Priority = 1;        
         gm.scope = false;
         StartCoroutine(CameraDelay(gm));
+
+        //kategori untuk friendsAI
+        gm.playerGameObject[gm.playableCharacterNum].GetComponent<FriendsAI>().friendsID = 1;
 
         gm.playableCharacterNum++;
 
@@ -85,10 +96,23 @@ public class ExecuteLogic : AILogic
     {       
         //kategori logic script
         gm.playerGameObject[playerNumber].GetComponent<PlayerAction>().enabled = true;        
-        gm.playerGameObject[playerNumber].GetComponent<PlayerCamera>().enabled = true; 
-        
+        gm.playerGameObject[playerNumber].GetComponent<PlayerCamera>().enabled = true;
+        gm.playerGameObject[gm.playableCharacterNum].GetComponent<FriendsAI>().enabled = false;
+
         //kategori kamera
-        gm.followCameras[playerNumber].Priority = 2;        
+        gm.followCameras[playerNumber].Priority = 2;
+
+        //kategori untuk friendsAI
+        if(gm.playableCharacterNum == gm.playerGameObject.Length-1)
+        {
+            gm.playerGameObject[0].GetComponent<FriendsAI>().friendsID = 2;
+        }
+        else
+        {
+            gm.playerGameObject[gm.playableCharacterNum + 1].GetComponent<FriendsAI>().friendsID = 2;
+        }
+        
+
     }
 
     //delay untuk switch karakter

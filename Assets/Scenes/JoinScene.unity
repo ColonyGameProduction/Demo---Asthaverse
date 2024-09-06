@@ -436,7 +436,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 277967138}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.013806879, y: -0.017899975, z: 0.00024724886, w: -0.9997444}
+  m_LocalRotation: {x: -0, y: -0.08248053, z: -0, w: 0.9965927}
   m_LocalPosition: {x: 0.5, y: 0.5, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -740,7 +740,6 @@ GameObject:
   - component: {fileID: 439030860}
   - component: {fileID: 439030863}
   - component: {fileID: 439030862}
-  - component: {fileID: 439030861}
   m_Layer: 0
   m_Name: PlayerObj
   m_TagString: Player
@@ -764,29 +763,6 @@ Transform:
   - {fileID: 1038150455}
   m_Father: {fileID: 1347309374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &439030861
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 439030859}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &439030862
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1257,8 +1233,8 @@ MonoBehaviour:
   friendsDestination:
   - {fileID: 279957712}
   - {fileID: 1191237419}
+  rotateSpeed: 10
   moveSpeed: 5
-  cam: {fileID: 1728406385}
 --- !u!114 &743586303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1333,6 +1309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a029e869171a244b47240e78fae34f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  friendsID: 0
 --- !u!1 &745014793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1988,8 +1965,8 @@ MonoBehaviour:
   friendsDestination:
   - {fileID: 312050264}
   - {fileID: 1398910608}
+  rotateSpeed: 10
   moveSpeed: 5
-  cam: {fileID: 1303093421}
 --- !u!114 &1156905597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2064,6 +2041,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a029e869171a244b47240e78fae34f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  friendsID: 0
 --- !u!1 &1191237419
 GameObject:
   m_ObjectHideFlags: 0
@@ -2188,8 +2166,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1586786643}
   - {fileID: 277967140}
+  - {fileID: 1586786643}
   m_Father: {fileID: 1999881233}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1303093420
@@ -2713,7 +2691,6 @@ GameObject:
   - component: {fileID: 1911957387}
   - component: {fileID: 1911957390}
   - component: {fileID: 1911957389}
-  - component: {fileID: 1911957388}
   m_Layer: 0
   m_Name: PlayerObj
   m_TagString: Player
@@ -2737,29 +2714,6 @@ Transform:
   - {fileID: 859698411}
   m_Father: {fileID: 745014794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &1911957388
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1911957386}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1911957389
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3086,8 +3040,8 @@ MonoBehaviour:
   friendsDestination:
   - {fileID: 1205169415}
   - {fileID: 421418394}
+  rotateSpeed: 10
   moveSpeed: 5
-  cam: {fileID: 277967139}
 --- !u!114 &2066745661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3135,7 +3089,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2066745654}
-  m_Enabled: 0
+  m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
@@ -3162,6 +3116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a029e869171a244b47240e78fae34f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  friendsID: 0
 --- !u!1 &2085741374
 GameObject:
   m_ObjectHideFlags: 0

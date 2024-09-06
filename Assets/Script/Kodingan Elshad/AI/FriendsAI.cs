@@ -10,6 +10,10 @@ public class FriendsAI : ExecuteLogic
     GameManager gm;
     private GameObject[] destination = new GameObject[2];
 
+    public int friendsID;
+
+    
+
     private void Start()
     {
         gm = GameManager.instance;
@@ -23,8 +27,14 @@ public class FriendsAI : ExecuteLogic
     {
         DetectingPlayer();
 
-        MoveToDestination(GetNavMesh(), destination[0]);
-        MoveToDestination(GetNavMesh(), destination[1]);
+        if(friendsID == 1)
+        {
+            MoveToDestination(GetNavMesh(), destination[0]);
+        }
+        else if(friendsID == 2)
+        {
+            MoveToDestination(GetNavMesh(), destination[1]);
+        }
     }
 
     public void DetectingPlayer()

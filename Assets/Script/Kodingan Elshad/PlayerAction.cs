@@ -16,7 +16,10 @@ public class PlayerAction : ExecuteLogic
     private GameObject[] friendsDestination;
 
     [SerializeField]
-    private int moveSpeed = 5;
+    private float rotateSpeed = 10f;
+
+    [SerializeField]
+    private float moveSpeed = 5f;
     private CharacterController CC;
 
     //supaya input action bisa digunakan
@@ -35,6 +38,8 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
 
         CC = GetComponent<CharacterController>();
+
+        StartingSetup();
     }
 
     private bool Run()
@@ -120,14 +125,17 @@ public class PlayerAction : ExecuteLogic
         if (Crouch())
         {
             CC.Move(relativeMovement * (moveSpeed - 2) * Time.deltaTime);
+            //transform.forward = Vector3.Slerp(transform.forward, relativeMovement, rotateSpeed * Time.deltaTime);
         }
         else if (Run())
         {
             CC.Move(relativeMovement * (moveSpeed + 2) * Time.deltaTime);
+            //transform.forward = Vector3.Slerp(transform.forward, relativeMovement, rotateSpeed * Time.deltaTime);
         }
         else
         {
             CC.Move(relativeMovement * moveSpeed * Time.deltaTime);
+            //transform.forward = Vector3.Slerp(transform.forward, relativeMovement, rotateSpeed * Time.deltaTime);
         }
     }
 
