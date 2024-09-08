@@ -19,6 +19,9 @@ public class PlayerAction : ExecuteLogic
     private int moveSpeed = 5;
     private CharacterController CC;
 
+    [Header("Variable yang mendadakan pemain bergerak atau tidak")]
+    public bool isMove;
+
     //supaya input action bisa digunakan
     private void Awake()
     {
@@ -116,6 +119,16 @@ public class PlayerAction : ExecuteLogic
         cameraRight.Normalize();
 
         Vector3 relativeMovement = (cameraForward * movement.z + cameraRight * movement.x).normalized;
+
+        // cek apakah pemain bergerak atau tidak
+        if (move.x == 0f && move.y == 0f)
+        {
+            isMove = false;
+        }
+        else
+        {
+            isMove = true;
+        }
 
         if (Crouch())
         {
