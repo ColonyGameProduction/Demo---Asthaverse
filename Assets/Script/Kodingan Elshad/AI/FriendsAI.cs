@@ -18,7 +18,7 @@ public class FriendsAI : ExecuteLogic
     {
         gm = GameManager.instance;
     }
-    private void Update()
+    private void FixedUpdate()
     {
         Move();
     }

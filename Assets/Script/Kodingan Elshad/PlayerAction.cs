@@ -112,25 +112,27 @@ public class PlayerAction : ExecuteLogic
 
     //movement
     private void Movement()
-    {
+    {       
+
         Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
-        Vector3 moveDir = followTarget.forward * movement.z + followTarget.right * movement.x;        
+        Vector3 flatForward = new Vector3(followTarget.forward.x, 0, followTarget.forward.z).normalized;
+        Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;        
 
         if (Crouch())
         {
-            CC.Move(moveDir * (moveSpeed - 2) * Time.deltaTime);
+            CC.Move(direction * (moveSpeed - 2) * Time.deltaTime);
         }
         else if (Run())
         {
-            CC.Move(moveDir * (moveSpeed + 2) * Time.deltaTime);
+            CC.Move(direction * (moveSpeed + 2) * Time.deltaTime);
         }
         else
         {
-            CC.Move(moveDir * moveSpeed * Time.deltaTime);
+            CC.Move(direction * moveSpeed * Time.deltaTime);
         }
-        Rotation(moveDir);
+        Rotation(direction);
     }
 
     private void Rotation(Vector3 direction)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
+using UnityEngine.AI;
 
 /* PERHATIAN!!!
  * Kalo mau akses logic di skrip ini
@@ -68,6 +69,7 @@ public class ExecuteLogic : AILogic
         //kategori logic script
         gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerAction>().enabled = false;
         gm.playerGameObject[gm.playableCharacterNum].GetComponent<PlayerCamera>().enabled = false;
+        gm.playerGameObject[gm.playableCharacterNum].GetComponent<NavMeshAgent>().enabled = true;
         gm.playerGameObject[gm.playableCharacterNum].GetComponent<FriendsAI>().enabled = true;
 
         //kategori kamera
@@ -98,6 +100,8 @@ public class ExecuteLogic : AILogic
         gm.playerGameObject[playerNumber].GetComponent<PlayerAction>().enabled = true;        
         gm.playerGameObject[playerNumber].GetComponent<PlayerCamera>().enabled = true;
         gm.playerGameObject[gm.playableCharacterNum].GetComponent<FriendsAI>().enabled = false;
+        gm.playerGameObject[gm.playableCharacterNum].GetComponent<NavMeshAgent>().enabled = false;
+
 
         //kategori kamera
         gm.followCameras[playerNumber].Priority = 2;
@@ -106,12 +110,14 @@ public class ExecuteLogic : AILogic
         if(gm.playableCharacterNum == gm.playerGameObject.Length-1)
         {
             gm.playerGameObject[0].GetComponent<FriendsAI>().friendsID = 2;
+            gm.playerGameObject[gm.playableCharacterNum].GetComponent<NavMeshAgent>().enabled = false;
         }
         else
         {
             gm.playerGameObject[gm.playableCharacterNum + 1].GetComponent<FriendsAI>().friendsID = 2;
+            gm.playerGameObject[gm.playableCharacterNum].GetComponent<NavMeshAgent>().enabled = false;
         }
-        
+
 
     }
 
