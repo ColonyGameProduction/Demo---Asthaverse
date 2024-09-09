@@ -60,11 +60,5 @@ public class PlayerCamera : MonoBehaviour
 
         followTarget.localEulerAngles = angles;
 
-        // Since player moving, character rotation will follow camera direction
-        if (playerAction.isMove)
-        {
-            transform.rotation = Quaternion.Euler(0f, followTarget.rotation.eulerAngles.y, 0f);
-            followTarget.localEulerAngles = new Vector3(angles.x, 0f, 0f);
-        }
     }
 }

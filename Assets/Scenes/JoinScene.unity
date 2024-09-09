@@ -260,7 +260,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 704183259}
-  m_Father: {fileID: 745014794}
+  m_Father: {fileID: 1911957387}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &155064226
 MonoBehaviour:
@@ -762,6 +762,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1038150455}
+  - {fileID: 1109155659}
   m_Father: {fileID: 1347309374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &439030861
@@ -1254,11 +1255,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 259d9888c334b684d8efe57dddc5ca36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerGameObject: {fileID: 439030860}
+  followTarget: {fileID: 1611590578}
   friendsDestination:
   - {fileID: 279957712}
   - {fileID: 1191237419}
+  rotateSpeed: 10
   moveSpeed: 5
-  isMove: 1
+  isMove: 0
 --- !u!114 &743586303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1333,6 +1337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a029e869171a244b47240e78fae34f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  friendsID: 0
 --- !u!1 &745014793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1364,7 +1369,6 @@ Transform:
   m_Children:
   - {fileID: 407286757}
   - {fileID: 1911957387}
-  - {fileID: 155064225}
   - {fileID: 2094983564}
   m_Father: {fileID: 1156905594}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1921,7 +1925,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 92720345}
-  m_Father: {fileID: 1347309374}
+  m_Father: {fileID: 439030860}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1109155660
 MonoBehaviour:
@@ -1985,11 +1989,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 259d9888c334b684d8efe57dddc5ca36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerGameObject: {fileID: 1911957387}
+  followTarget: {fileID: 2085741375}
   friendsDestination:
   - {fileID: 312050264}
   - {fileID: 1398910608}
+  rotateSpeed: 10
   moveSpeed: 5
-  isMove: 1
+  isMove: 0
 --- !u!114 &1156905597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2064,6 +2071,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a029e869171a244b47240e78fae34f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  friendsID: 0
 --- !u!1 &1191237419
 GameObject:
   m_ObjectHideFlags: 0
@@ -2295,7 +2303,6 @@ Transform:
   m_Children:
   - {fileID: 1897181812}
   - {fileID: 439030860}
-  - {fileID: 1109155659}
   - {fileID: 1242949133}
   m_Father: {fileID: 743586300}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2582,7 +2589,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 524170310}
-  m_Father: {fileID: 1999881233}
+  m_Father: {fileID: 2047355711}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1715774231
 MonoBehaviour:
@@ -2735,6 +2742,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 859698411}
+  - {fileID: 155064225}
   m_Father: {fileID: 745014794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &1911957388
@@ -2946,7 +2954,6 @@ Transform:
   m_Children:
   - {fileID: 1254957714}
   - {fileID: 2047355711}
-  - {fileID: 1715774230}
   - {fileID: 918077073}
   m_Father: {fileID: 2066745658}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2982,6 +2989,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 981631380}
+  - {fileID: 1715774230}
   m_Father: {fileID: 1999881233}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2047355713
@@ -3083,11 +3091,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 259d9888c334b684d8efe57dddc5ca36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerGameObject: {fileID: 2047355711}
+  followTarget: {fileID: 1586786643}
   friendsDestination:
   - {fileID: 1205169415}
   - {fileID: 421418394}
+  rotateSpeed: 10
   moveSpeed: 5
-  isMove: 1
+  isMove: 0
 --- !u!114 &2066745661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3162,6 +3173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a029e869171a244b47240e78fae34f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  friendsID: 0
 --- !u!1 &2085741374
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,8 @@ public class PlayerAction : ExecuteLogic
     private PlayerActionInput inputActions;
 
     [SerializeField]
+    private Transform playerGameObject;
+    [SerializeField]
     private Transform followTarget;
     [SerializeField]
     private GameObject[] friendsDestination;
@@ -114,17 +116,7 @@ public class PlayerAction : ExecuteLogic
         Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
-        Vector3 moveDir = followTarget.forward * movement.z + followTarget.right * movement.x;
-
-        // cek apakah pemain bergerak atau tidak
-        if (move.x == 0f && move.y == 0f)
-        {
-            isMove = false;
-        }
-        else
-        {
-            isMove = true;
-        }
+        Vector3 moveDir = followTarget.forward * movement.z + followTarget.right * movement.x;        
 
         if (Crouch())
         {
@@ -137,6 +129,15 @@ public class PlayerAction : ExecuteLogic
         else
         {
             CC.Move(moveDir * moveSpeed * Time.deltaTime);
+        }
+        Rotation(moveDir);
+    }
+
+    private void Rotation(Vector3 direction)
+    {
+        if(direction != Vector3.zero)
+        {
+            playerGameObject.forward = Vector3.Slerp(playerGameObject.forward, direction.normalized, Time.deltaTime * rotateSpeed);
         }
     }
 
