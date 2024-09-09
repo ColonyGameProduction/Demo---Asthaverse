@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
@@ -7,6 +8,13 @@ public class PlayerCamera : MonoBehaviour
 
     [Header("Adjust Camera Rotation Speed")]
     public float cameraRotationSpeed = 1f;
+
+    private PlayerAction playerAction;
+
+    private void Awake()
+    {
+        playerAction = GetComponent<PlayerAction>();
+    }
 
     private void Start()
     {
@@ -51,5 +59,12 @@ public class PlayerCamera : MonoBehaviour
         }
 
         followTarget.localEulerAngles = angles;
+
+        // Since player moving, character rotation will follow camera direction
+        if (playerAction.isMove)
+        {
+            transform.rotation = Quaternion.Euler(0f, followTarget.rotation.eulerAngles.y, 0f);
+            followTarget.localEulerAngles = new Vector3(angles.x, 0f, 0f);
+        }
     }
 }

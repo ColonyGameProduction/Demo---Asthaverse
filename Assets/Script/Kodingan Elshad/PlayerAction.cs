@@ -24,6 +24,9 @@ public class PlayerAction : ExecuteLogic
     private float moveSpeed = 5f;
     private CharacterController CC;
 
+    [Header("Variable yang mendadakan pemain bergerak atau tidak")]
+    public bool isMove;
+
     //supaya input action bisa digunakan
     private void Awake()
     {
@@ -112,6 +115,16 @@ public class PlayerAction : ExecuteLogic
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
         Vector3 moveDir = followTarget.forward * movement.z + followTarget.right * movement.x;
+
+        // cek apakah pemain bergerak atau tidak
+        if (move.x == 0f && move.y == 0f)
+        {
+            isMove = false;
+        }
+        else
+        {
+            isMove = true;
+        }
 
         if (Crouch())
         {

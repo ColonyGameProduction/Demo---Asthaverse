@@ -70,8 +70,6 @@ public class PlayerSwitcher : MonoBehaviour
 
     private void SetActiveCharacter(int characterIndex) // set a new main character and camera follow
     {
-
-
         playableCharacters[characterIndex].gameObject.GetComponent<PlayerMovement>().enabled = true; // turn on PlayerMovement script for the new main character
         playableCharacters[characterIndex].gameObject.GetComponent<PlayerCamera>().enabled = true; // turn on PlayerCamera script for the new main character
 

@@ -130,6 +130,6 @@ public class ExecuteLogic : AILogic
     {
         yield return new WaitForSeconds(0.1f);
 
-        gm.playerGameObject[gm.playableCharacterNum].gameObject.transform.GetChild(0).eulerAngles = Vector3.zero;
+        gm.playerGameObject[gm.playableCharacterNum].gameObject.transform.GetChild(0).GetChild(0).GetChild(0).eulerAngles = Vector3.zero;
     }
 }
