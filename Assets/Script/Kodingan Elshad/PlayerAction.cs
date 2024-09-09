@@ -13,6 +13,8 @@ public class PlayerAction : ExecuteLogic
     private PlayerActionInput inputActions;
 
     [SerializeField]
+    private Transform followTarget;
+    [SerializeField]
     private GameObject[] friendsDestination;
 
     [SerializeField]
@@ -109,33 +111,19 @@ public class PlayerAction : ExecuteLogic
         Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
-        Transform cameraTransform = Camera.main.transform;
-
-        Vector3 cameraForward = cameraTransform.forward;
-        Vector3 cameraRight = cameraTransform.right;
-
-        cameraForward.y = 0f;
-        cameraRight.y = 0f;
-
-        cameraForward.Normalize();
-        cameraRight.Normalize();
-
-        Vector3 relativeMovement = (cameraForward * movement.z + cameraRight * movement.x).normalized;
+        Vector3 moveDir = followTarget.forward * movement.z + followTarget.right * movement.x;
 
         if (Crouch())
         {
-            CC.Move(relativeMovement * (moveSpeed - 2) * Time.deltaTime);
-            //transform.forward = Vector3.Slerp(transform.forward, relativeMovement, rotateSpeed * Time.deltaTime);
+            CC.Move(moveDir * (moveSpeed - 2) * Time.deltaTime);
         }
         else if (Run())
         {
-            CC.Move(relativeMovement * (moveSpeed + 2) * Time.deltaTime);
-            //transform.forward = Vector3.Slerp(transform.forward, relativeMovement, rotateSpeed * Time.deltaTime);
+            CC.Move(moveDir * (moveSpeed + 2) * Time.deltaTime);
         }
         else
         {
-            CC.Move(relativeMovement * moveSpeed * Time.deltaTime);
-            //transform.forward = Vector3.Slerp(transform.forward, relativeMovement, rotateSpeed * Time.deltaTime);
+            CC.Move(moveDir * moveSpeed * Time.deltaTime);
         }
     }
 
