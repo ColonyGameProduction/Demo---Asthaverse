@@ -48,12 +48,12 @@ public class ExecuteLogic : AILogic
 
         if(!gm.scope)
         {
-            gm.followCameras[gm.playableCharacterNum].m_Lens.FieldOfView = 30;
+            gm.followCameras[gm.playableCharacterNum].m_Lens.FieldOfView = 40;
             gm.scope = true;
         }
         else
         {
-            gm.followCameras[gm.playableCharacterNum].m_Lens.FieldOfView = 60;
+            gm.followCameras[gm.playableCharacterNum].m_Lens.FieldOfView = 70;
             gm.scope = false;
         }
 
