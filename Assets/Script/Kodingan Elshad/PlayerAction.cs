@@ -26,8 +26,8 @@ public class PlayerAction : ExecuteLogic
     private float moveSpeed = 5f;
     private CharacterController CC;
 
-    [Header("Variable yang mendadakan pemain bergerak atau tidak")]
-    public bool isMove;
+    [SerializeField]
+    private GameObject command;
 
     //supaya input action bisa digunakan
     private void Awake()
@@ -105,6 +105,18 @@ public class PlayerAction : ExecuteLogic
         Shoot();
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Y))
+        {
+            command.SetActive(true);
+        }
+        else
+        {
+            command.SetActive(false);
+        }
+    }
+
     private void FixedUpdate()
     {
         Movement();
@@ -113,12 +125,11 @@ public class PlayerAction : ExecuteLogic
     //movement
     private void Movement()
     {       
-
         Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
         Vector3 flatForward = new Vector3(followTarget.forward.x, 0, followTarget.forward.z).normalized;
-        Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;        
+        Vector3 direction = flatForward * movement.z + flatForward * movement.x;        
 
         if (Crouch())
         {
