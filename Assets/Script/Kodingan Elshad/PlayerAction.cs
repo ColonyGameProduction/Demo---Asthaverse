@@ -129,7 +129,7 @@ public class PlayerAction : ExecuteLogic
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
         Vector3 flatForward = new Vector3(followTarget.forward.x, 0, followTarget.forward.z).normalized;
-        Vector3 direction = flatForward * movement.z + flatForward * movement.x;        
+        Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;        
 
         if (Crouch())
         {
