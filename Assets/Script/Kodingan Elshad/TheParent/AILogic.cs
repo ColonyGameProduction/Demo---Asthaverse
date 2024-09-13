@@ -11,5 +11,14 @@ public class AILogic : MonoBehaviour
         agent.destination = destination.transform.position;
     }
 
-    
+    public void FieldOfView(Transform character)
+    {
+        float viewRadius;
+        float viewAngle;
+    }
+
+    public Vector3 DirectionFromAngle(float angleInDegrees)
+    {
+        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    }
 }

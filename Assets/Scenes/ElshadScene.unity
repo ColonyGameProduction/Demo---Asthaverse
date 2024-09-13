@@ -360,7 +360,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 259d9888c334b684d8efe57dddc5ca36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerGameObject: {fileID: 0}
+  followTarget: {fileID: 0}
+  friendsDestination: []
+  rotateSpeed: 10
   moveSpeed: 5
+  isMove: 0
 --- !u!4 &104110108 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4755716441238886717, guid: 9faaf32607770b5469cd14d9154e22ad, type: 3}
@@ -1056,12 +1061,12 @@ Transform:
   m_GameObject: {fileID: 754549693}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.975, z: 0}
+  m_LocalPosition: {x: 0, y: 0.035000026, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 232817948}
-  m_Father: {fileID: 952744820}
+  m_Father: {fileID: 896976330}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &754549695
 MonoBehaviour:
@@ -1181,7 +1186,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.94, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 754549694}
   m_Father: {fileID: 952744820}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &896976331
@@ -1256,7 +1262,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 896976330}
-  - {fileID: 754549694}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &952744821
@@ -1404,7 +1409,7 @@ Transform:
   m_GameObject: {fileID: 1184463478}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.35, y: 0.12, z: -3.64}
+  m_LocalPosition: {x: -17.31, y: 0.12, z: -3.58}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
