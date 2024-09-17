@@ -26,14 +26,22 @@ public class FriendsAI : ExecuteLogic
     public void Move()
     {
         DetectingPlayer();
+        //if(commandFollow)
+        //{
+        //
+        //}
+        CommandFollow();
+    }
 
-        if(friendsID == 1)
+    private void CommandFollow()
+    {
+        if (friendsID == 1)
         {
-            MoveToDestination(GetNavMesh(), destination[0]);
+            MoveToDestination(GetNavMesh(), destination[0].transform.position);
         }
-        else if(friendsID == 2)
+        else if (friendsID == 2)
         {
-            MoveToDestination(GetNavMesh(), destination[1]);
+            MoveToDestination(GetNavMesh(), destination[1].transform.position);
         }
     }
 

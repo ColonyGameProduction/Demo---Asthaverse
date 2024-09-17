@@ -11,6 +11,10 @@ public class EnemyAI : ExecuteLogic
     private NavMeshAgent enemyNavmesh;
     [SerializeField] private GameObject destination;
 
+    //hal yang diperlukan untuk FOV
+    [SerializeField] private float viewRadius;
+    [SerializeField] private float viewAngle;
+
     private void Start()
     {
         enemyNavmesh = GetComponent<NavMeshAgent>();
@@ -19,6 +23,7 @@ public class EnemyAI : ExecuteLogic
     private void Update()
     {
         Moving();
+        //FieldOfView(this.transform, viewRadius, viewAngle);
 
         timer += Time.deltaTime;
         if(timer > 2)
@@ -33,7 +38,7 @@ public class EnemyAI : ExecuteLogic
     {
         if (destination != null)
         {
-            MoveToDestination(enemyNavmesh, destination);
+            MoveToDestination(enemyNavmesh, destination.transform.position);
         }
     }
 

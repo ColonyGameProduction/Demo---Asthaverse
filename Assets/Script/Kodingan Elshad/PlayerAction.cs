@@ -133,16 +133,16 @@ public class PlayerAction : ExecuteLogic
 
         if (Crouch())
         {
-            CC.Move(direction * (moveSpeed - 2) * Time.deltaTime);
+            CC.SimpleMove(direction * (moveSpeed - 2));
         }
         else if (Run())
         {
-            CC.Move(direction * (moveSpeed + 2) * Time.deltaTime);
+            CC.SimpleMove(direction * (moveSpeed + 2));
         }
         else
         {
-            CC.Move(direction * moveSpeed * Time.deltaTime);
-        }
+            CC.SimpleMove(direction * moveSpeed);
+        }   
         Rotation(direction);
     }
 
