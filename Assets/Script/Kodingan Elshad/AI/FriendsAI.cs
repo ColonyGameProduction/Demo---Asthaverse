@@ -12,11 +12,38 @@ public class FriendsAI : ExecuteLogic
 
     public int friendsID;
 
-    
+
+    //hal yang diperlukan untuk FOV
+    [SerializeField] private int edgeResolveIteration;
+    [SerializeField] private float edgeDistanceTreshold;
+    [Header("Untuk Besarnya FOV")]
+    [SerializeField] private float viewRadius;
+    [Range(0, 360)]
+    [SerializeField] private float viewAngle;
+    [Header("FOV Resolution")]
+    [SerializeField] private float meshResolution;
+    [Header("")]
+    [SerializeField] private Transform FOVPoint;
+    [SerializeField] private List<Transform> visibleTargets = new List<Transform>();
+    [SerializeField] private LayerMask enemyMask;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private MeshFilter viewMeshFilter;
+    private Mesh viewMesh;
+
+
 
     private void Start()
     {
+        viewMesh = new Mesh();
+        viewMesh.name = "View Mesh";
+        viewMeshFilter.mesh = viewMesh;
+        StartCoroutine("FindTargetWithDelay", .2f);
         gm = GameManager.instance;
+    }
+
+    private void LateUpdate()
+    {
+        DrawFieldOfView(edgeResolveIteration, edgeDistanceTreshold, viewRadius, viewAngle, meshResolution, FOVPoint, viewMesh, groundMask);
     }
     private void FixedUpdate()
     {
@@ -32,6 +59,8 @@ public class FriendsAI : ExecuteLogic
         //}
         CommandFollow();
     }
+
+    
 
     private void CommandFollow()
     {
@@ -60,5 +89,19 @@ public class FriendsAI : ExecuteLogic
     public NavMeshAgent GetNavMesh()
     {
         return this.GetComponent<NavMeshAgent>();
+    }
+
+    private void OnDisable()
+    {
+        viewMesh.Clear();
+    }
+
+    public IEnumerator FindTargetWithDelay(float delay)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(delay);
+            FindVisibleTargetsForEnemy(viewRadius, viewAngle, visibleTargets, FOVPoint, enemyMask, groundMask);
+        }
     }
 }
