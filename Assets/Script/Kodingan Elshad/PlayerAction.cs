@@ -12,6 +12,8 @@ public class PlayerAction : ExecuteLogic
 {
     private PlayerActionInput inputActions;
 
+    private bool isShooting = false;
+
     [SerializeField]
     private Transform playerGameObject;
     [SerializeField]
@@ -39,8 +41,8 @@ public class PlayerAction : ExecuteLogic
     {
         //membuat event untuk menjalankan aksi yang dipakai oleh player
         inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
+        inputActions.InputPlayerAction.Shooting.canceled += Shooting_canceled;
         inputActions.InputPlayerAction.SilentKill.performed += SilentKill_performed;
-        inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
         inputActions.InputPlayerAction.ChangePlayer.performed += ChangePlayer_performed;
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
 
@@ -48,6 +50,8 @@ public class PlayerAction : ExecuteLogic
 
         StartingSetup();
     }
+
+    
 
     private bool Run()
     {
@@ -88,10 +92,6 @@ public class PlayerAction : ExecuteLogic
         }
     }
 
-    private void ChangingWeapon_performed(InputAction.CallbackContext context)
-    {
-        ChangingWeapon();
-    }
 
     //event ketika 'SilentKill' dilakukan
     private void SilentKill_performed(InputAction.CallbackContext context)
@@ -102,7 +102,12 @@ public class PlayerAction : ExecuteLogic
     //event ketika 'Shoot' dilakukan
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
-        Shoot();
+        isShooting = true;
+    }
+
+    private void Shooting_canceled(InputAction.CallbackContext obj)
+    {
+        isShooting = false;
     }
 
     private void Update()
@@ -119,6 +124,10 @@ public class PlayerAction : ExecuteLogic
 
     private void FixedUpdate()
     {
+        if(isShooting)
+        {
+            Shoot();
+        }
         Movement();
     }
 
@@ -163,6 +172,11 @@ public class PlayerAction : ExecuteLogic
     public GameObject[] GetDestinationGameObject()
     {
         return friendsDestination;
+    }
+
+    public Transform GetFollowTargetTransform()
+    {
+        return followTarget;
     }
 
     private void OnEnable()

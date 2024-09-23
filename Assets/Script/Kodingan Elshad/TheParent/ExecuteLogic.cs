@@ -25,14 +25,9 @@ public class ExecuteLogic : AILogic
     //logic 'Shoot'
     public void Shoot()
     {
-        WeaponType weaponType = GetComponentInChildren<WeaponType>();
-        weaponType.Shooting();
+
     }    
 
-    public void ChangingWeapon()
-    {
-        
-    }
 
     //logic 'SilentKill'
     public void SilentKill()
