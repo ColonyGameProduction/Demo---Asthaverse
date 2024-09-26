@@ -396,6 +396,7 @@ MonoBehaviour:
   friendsDestination: []
   rotateSpeed: 10
   moveSpeed: 5
+  weaponStat: []
   command: {fileID: 0}
 --- !u!4 &104110108 stripped
 Transform:
@@ -411,7 +412,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 117377205}
-  - component: {fileID: 117377206}
   m_Layer: 8
   m_Name: Weapon Type
   m_TagString: Untagged
@@ -435,29 +435,6 @@ Transform:
   - {fileID: 237098843}
   m_Father: {fileID: 694109913}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &117377206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 117377204}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c121dbcea14020d468d6b9766a2661bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponName: AK-47
-  weaponType: 1
-  fireRate: 0.1
-  baseDamage: 30
-  headDamageMultiplier: 2.5
-  legDamageMultiplier: 0.5
-  recoil: 0.05
-  range: 400
-  magSize: 30
-  magSpare: 0
-  allowHoldDownButton: 0
 --- !u!1001 &196731022
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1430,7 +1407,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 754549694}
-  - component: {fileID: 754549695}
   m_Layer: 8
   m_Name: Weapon Type
   m_TagString: Untagged
@@ -1454,29 +1430,6 @@ Transform:
   - {fileID: 232817948}
   m_Father: {fileID: 896976330}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &754549695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 754549693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c121dbcea14020d468d6b9766a2661bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponName: 
-  weaponType: 0
-  fireRate: 0
-  baseDamage: 0
-  headDamageMultiplier: 0
-  legDamageMultiplier: 0
-  recoil: 0
-  range: 0
-  magSize: 0
-  magSpare: 0
-  allowHoldDownButton: 0
 --- !u!1001 &806819874
 PrefabInstance:
   m_ObjectHideFlags: 0

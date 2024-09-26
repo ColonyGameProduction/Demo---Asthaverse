@@ -22,10 +22,49 @@ public class ExecuteLogic : AILogic
         gm.playerGameObject[2].GetComponent<FriendsAI>().friendsID = 2;
     }
 
-    //logic 'Shoot'
-    public void Shoot()
+    //untuk Reloading
+    public void Reload(WeaponStatSO weaponStatSO)
     {
+        int bulletNeed = weaponStatSO.magSize - weaponStatSO.currBullet;
+        if (weaponStatSO.totalBullet >= bulletNeed)
+        {
+            weaponStatSO.currBullet = weaponStatSO.magSize;
+            weaponStatSO.totalBullet -= bulletNeed;
+        }
+        else if (weaponStatSO.totalBullet > 0)
+        {
+            weaponStatSO.currBullet += weaponStatSO.totalBullet;
+            weaponStatSO.totalBullet = 0;
+        }        
 
+        Debug.Log("Reload");
+    }
+
+    //untuk ganti weapon
+    public void ChangeWeapon(PlayerAction playerAction, WeaponStatSO[] weaponStats, int weaponNum)
+    {
+        if (weaponNum >= weaponStats.Length - 1)
+        {
+            weaponNum = 0;
+        }
+        else
+        {
+            weaponNum++;
+            if (weaponStats[weaponNum] == null)
+            {
+                weaponNum--;
+            }
+
+        }
+        Debug.Log(weaponStats[weaponNum].weaponName);
+        playerAction.SetCurrentWeapon(weaponStats[weaponNum], weaponNum);
+    }
+
+    //logic 'Shoot'
+    public void Shoot(WeaponStatSO weaponStat)
+    {
+        WeaponLogicHandler weaponHandler = new WeaponLogicHandler();
+        weaponHandler.ExecuteShooting(weaponStat.weaponType, weaponStat);
     }    
 
 

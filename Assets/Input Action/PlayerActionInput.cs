@@ -98,6 +98,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""e9c2ab17-b3b3-482d-accb-22c030686088"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -232,6 +241,17 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8a973222-8b41-4b6a-9ca0-f9c2fb631734"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -248,6 +268,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_Movement = m_InputPlayerAction.FindAction("Movement", throwIfNotFound: true);
         m_InputPlayerAction_Crouch = m_InputPlayerAction.FindAction("Crouch", throwIfNotFound: true);
         m_InputPlayerAction_Run = m_InputPlayerAction.FindAction("Run", throwIfNotFound: true);
+        m_InputPlayerAction_Reload = m_InputPlayerAction.FindAction("Reload", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -317,6 +338,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_Movement;
     private readonly InputAction m_InputPlayerAction_Crouch;
     private readonly InputAction m_InputPlayerAction_Run;
+    private readonly InputAction m_InputPlayerAction_Reload;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -329,6 +351,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_InputPlayerAction_Movement;
         public InputAction @Crouch => m_Wrapper.m_InputPlayerAction_Crouch;
         public InputAction @Run => m_Wrapper.m_InputPlayerAction_Run;
+        public InputAction @Reload => m_Wrapper.m_InputPlayerAction_Reload;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -362,6 +385,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @Run.started += instance.OnRun;
             @Run.performed += instance.OnRun;
             @Run.canceled += instance.OnRun;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -390,6 +416,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @Run.started -= instance.OnRun;
             @Run.performed -= instance.OnRun;
             @Run.canceled -= instance.OnRun;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -417,5 +446,6 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
 }

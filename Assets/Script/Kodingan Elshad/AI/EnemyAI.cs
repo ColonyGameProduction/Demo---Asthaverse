@@ -50,7 +50,7 @@ public class EnemyAI : ExecuteLogic
         timer += Time.deltaTime;
         if(timer > 2)
         {
-            Shoot();
+            //Shoot();
             timer = 0;            
         }        
     }      

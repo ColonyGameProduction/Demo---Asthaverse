@@ -11,22 +11,28 @@ using UnityEngine.UIElements;
 public class PlayerAction : ExecuteLogic
 {
     private PlayerActionInput inputActions;
-
     private bool isShooting = false;
+    private bool isReloading = false;
+    private bool fireRateOn = false;
 
+    [Header("Untuk Movement dan Kamera")]
     [SerializeField]
     private Transform playerGameObject;
     [SerializeField]
     private Transform followTarget;
     [SerializeField]
     private GameObject[] friendsDestination;
-
     [SerializeField]
     private float rotateSpeed = 10f;
-
     [SerializeField]
     private float moveSpeed = 5f;
     private CharacterController CC;
+
+    [Header("Weaponry")]
+    [SerializeField]
+    private WeaponStatSO[] weaponStat;
+    private WeaponStatSO activeWeapon;
+    private int curWeapon;
 
     [SerializeField]
     private GameObject command;
@@ -39,12 +45,16 @@ public class PlayerAction : ExecuteLogic
 
     private void Start()
     {
+
         //membuat event untuk menjalankan aksi yang dipakai oleh player
         inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
         inputActions.InputPlayerAction.Shooting.canceled += Shooting_canceled;
+
         inputActions.InputPlayerAction.SilentKill.performed += SilentKill_performed;
         inputActions.InputPlayerAction.ChangePlayer.performed += ChangePlayer_performed;
+        inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
+        inputActions.InputPlayerAction.Reload.performed += Reload_performed;
 
         CC = GetComponent<CharacterController>();
 
@@ -77,6 +87,17 @@ public class PlayerAction : ExecuteLogic
         }
     }
 
+    private void Reload_performed(InputAction.CallbackContext obj)
+    {
+        Reload(activeWeapon);
+        StartCoroutine(ReloadTime());
+    }
+
+    private void ChangingWeapon_performed(InputAction.CallbackContext context)
+    {
+        ChangeWeapon(this, weaponStat, curWeapon);
+    }
+
     private void Scope_performed(InputAction.CallbackContext context)
     {
         Scope();
@@ -84,7 +105,7 @@ public class PlayerAction : ExecuteLogic
 
     private void ChangePlayer_performed(InputAction.CallbackContext context)
     {
-        GameManager gm = GameManager.instance;
+        GameManager gm = GameManager.instance;        
 
         if (gm.canSwitch)
         {
@@ -103,6 +124,19 @@ public class PlayerAction : ExecuteLogic
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
         isShooting = true;
+        //only once
+        if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
+        {
+            Shoot(activeWeapon);
+            StartCoroutine(FireRate(activeWeapon.fireRate));
+            isShooting = false;
+            if (activeWeapon.currBullet == 0 && activeWeapon.totalBullet > 0)
+            {
+                isReloading = true;
+                Reload(activeWeapon);
+                StartCoroutine(ReloadTime());                
+            }
+        }
     }
 
     private void Shooting_canceled(InputAction.CallbackContext obj)
@@ -124,9 +158,20 @@ public class PlayerAction : ExecuteLogic
 
     private void FixedUpdate()
     {
-        if(isShooting)
+        //continous Shoot
+        if(isShooting && activeWeapon.allowHoldDownButton && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
         {
-            Shoot();
+            if(activeWeapon != null)
+            {
+                Shoot(activeWeapon);
+                StartCoroutine (FireRate(activeWeapon.fireRate));
+                if (activeWeapon.currBullet == 0)
+                {
+                    isReloading = true;
+                    Reload(activeWeapon);
+                    StartCoroutine(ReloadTime());
+                }
+            }
         }
         Movement();
     }
@@ -179,13 +224,37 @@ public class PlayerAction : ExecuteLogic
         return followTarget;
     }
 
+    public void SetCurrentWeapon(WeaponStatSO weaponStat, int curWeaponIndex)
+    {
+        activeWeapon = weaponStat;
+        curWeapon = curWeaponIndex;
+    }
+
     private void OnEnable()
     {
+        curWeapon = 0;
+        activeWeapon = weaponStat[curWeapon];
         inputActions.InputPlayerAction.Enable();
     }
 
     private void OnDisable()
     {
         inputActions.InputPlayerAction.Disable();
+    }
+
+    private IEnumerator ReloadTime()
+    {
+        yield return new WaitForSeconds(activeWeapon.reloadTime);
+
+        isReloading = false;
+    }
+
+    public IEnumerator FireRate(float fireRate)
+    {
+        fireRateOn = true;
+
+        yield return new WaitForSeconds(fireRate);
+
+        fireRateOn = false;
     }
 }
