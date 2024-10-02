@@ -11,7 +11,7 @@ public class EnemyAI : ExecuteLogic
     private NavMeshAgent enemyNavmesh;
     [SerializeField] private GameObject destination;
 
-    //hal yang diperlukan untuk FOV
+    [Header("Untuk mengkalkulasi sudut benda")]
     [SerializeField] private int edgeResolveIteration;
     [SerializeField] private float edgeDistanceTreshold;
     [Header("Untuk Besarnya FOV")]
@@ -23,18 +23,31 @@ public class EnemyAI : ExecuteLogic
     [Header("")]
     [SerializeField] private Transform FOVPoint;
     [SerializeField] private List<Transform> visibleTargets = new List<Transform>();
+    [Header("Misc")]
     [SerializeField] private LayerMask playerMask;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private MeshFilter viewMeshFilter;
-    private Mesh viewMesh; 
+    private Mesh viewMesh;
+
+    [Header("Untuk Stat")]
+    [SerializeField]
+    private EntityStatSO enemyStat;
+    [SerializeField]
+    private float enemyHP;
+    private bool isReloading;
+    private bool fireRateOn;
+    private WeaponStatSO weapon;
+    public LayerMask isItEnemy;
 
     private void Start()
     {
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
-        StartCoroutine("FindTargetWithDelay", .2f);
+        StartCoroutine(FindTargetWithDelay(.2f));
         enemyNavmesh = GetComponent<NavMeshAgent>();
+        enemyHP = enemyStat.health;
+        weapon = enemyStat.weaponStat[0];
     }
 
     private void LateUpdate()
@@ -45,14 +58,23 @@ public class EnemyAI : ExecuteLogic
     private void Update()
     {
         Moving();
-        //FieldOfView(this.transform, viewRadius, viewAngle);
-
-        timer += Time.deltaTime;
-        if(timer > 2)
+        if(enemyHP <= 0)
         {
-            //Shoot();
-            timer = 0;            
-        }        
+            Debug.Log("Dead");
+        }
+
+        if(!fireRateOn && !isReloading)
+        {
+            Shooting();
+            StartCoroutine(FireRate(FireRateFlag, weapon.fireRate));
+            if (weapon.currBullet == 0)
+            {
+                isReloading = true;
+                Reload(weapon);
+                StartCoroutine(ReloadTime(ReloadFlag, weapon.reloadTime));
+            }
+
+        }
     }      
 
     //pathfinding untuk enemy
@@ -62,8 +84,16 @@ public class EnemyAI : ExecuteLogic
         {
             MoveToDestination(enemyNavmesh, destination.transform.position);
         }
+        else
+        {
+            MoveToDestination(enemyNavmesh, visibleTargets[0].position);
+        }
     }
 
+    private void Shooting()
+    {
+        Shoot(FOVPoint.position, visibleTargets[0].position, weapon, isItEnemy);
+    }
 
     public IEnumerator FindTargetWithDelay(float delay)
     {
@@ -74,5 +104,24 @@ public class EnemyAI : ExecuteLogic
         }
     }
 
+    public float GetEnemyHP()
+    {
+        return enemyHP;
+    }
+
+    public void SetEnemyHP(float hp)
+    {
+        enemyHP = hp;
+    }
+
+    private void ReloadFlag(bool value)
+    {
+        isReloading = value;
+    }
+
+    private void FireRateFlag(bool value)
+    {
+        fireRateOn = value;
+    }
 
 }

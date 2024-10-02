@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -100,13 +102,13 @@ public class AILogic : MonoBehaviour
 
         //Membuat mesh segitiganya
         //Di clear dulu, supaya ketika sudah di frame selanjutnya, mesh nya tida duplikat dan jadi hancur
-        viewMesh.Clear();
+        //viewMesh.Clear();
         //Titik mesh dimasukan
-        viewMesh.vertices = vertices;
+        //viewMesh.vertices = vertices;
         //Segitiga mesh dimasukan
-        viewMesh.triangles = triangles;
+        //viewMesh.triangles = triangles;
         //Mengkalkulasi lagi mesh nya supaya sesuai dengan orientasi
-        viewMesh.RecalculateNormals();
+        //viewMesh.RecalculateNormals();
 
     }
 
@@ -179,6 +181,13 @@ public class AILogic : MonoBehaviour
                 }
             }
         }
+        if(visibleTargets != null)
+        {
+            foreach (Transform visibleTarget in visibleTargets)
+            {
+                //Debug.DrawLine(FOVPoint.position, visibleTarget.position, Color.red);
+            }
+        }        
     }
 
     //Untuk mencari sudut ada dimana

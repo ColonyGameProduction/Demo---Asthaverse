@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 using UnityEngine.AI;
+using System;
 
 /* PERHATIAN!!!
  * Kalo mau akses logic di skrip ini
@@ -61,10 +62,10 @@ public class ExecuteLogic : AILogic
     }
 
     //logic 'Shoot'
-    public void Shoot(WeaponStatSO weaponStat)
+    public void Shoot(Vector3 origin, Vector3 direction, WeaponStatSO weaponStat, LayerMask entityMask)
     {
         WeaponLogicHandler weaponHandler = new WeaponLogicHandler();
-        weaponHandler.ExecuteShooting(weaponStat.weaponType, weaponStat);
+        weaponHandler.ShootingPerformed(origin, direction, weaponStat, entityMask);
     }    
 
 
@@ -172,4 +173,22 @@ public class ExecuteLogic : AILogic
 
         gm.playerGameObject[gm.playableCharacterNum].gameObject.transform.GetChild(0).GetChild(0).GetChild(0).eulerAngles = Vector3.zero;
     }
+
+    public IEnumerator ReloadTime(Action<bool> isReloading, float reloadTime)
+    {
+        yield return new WaitForSeconds(reloadTime);
+
+        isReloading(false);
+    }
+
+    public IEnumerator FireRate(Action<bool> fireRateOn, float fireRateTime)
+    {
+        fireRateOn(true);
+
+        yield return new WaitForSeconds(fireRateTime);
+
+        fireRateOn(false);
+    }
+
+
 }

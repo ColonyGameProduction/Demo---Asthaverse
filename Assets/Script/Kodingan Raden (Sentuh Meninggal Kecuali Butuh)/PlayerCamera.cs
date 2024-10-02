@@ -7,7 +7,7 @@ public class PlayerCamera : MonoBehaviour
     public Transform followTarget;
 
     [Header("Adjust Camera Rotation Speed")]
-    public float cameraRotationSpeed = 1f;
+    public float cameraRotationSpeed = 200f;
 
     private PlayerAction playerAction;
 

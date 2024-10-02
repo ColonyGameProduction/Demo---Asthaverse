@@ -14,6 +14,7 @@ public class FriendsAI : ExecuteLogic
 
 
     //hal yang diperlukan untuk FOV
+    [Header("Untuk mengkalkulasi sudut benda")]
     [SerializeField] private int edgeResolveIteration;
     [SerializeField] private float edgeDistanceTreshold;
     [Header("Untuk Besarnya FOV")]
@@ -25,11 +26,13 @@ public class FriendsAI : ExecuteLogic
     [Header("")]
     [SerializeField] private Transform FOVPoint;
     [SerializeField] private List<Transform> visibleTargets = new List<Transform>();
+    [Header("Misc")]
     [SerializeField] private LayerMask enemyMask;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private MeshFilter viewMeshFilter;
     private Mesh viewMesh;
 
+    
 
 
     private void Start()
@@ -37,7 +40,7 @@ public class FriendsAI : ExecuteLogic
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
-        StartCoroutine("FindTargetWithDelay", .2f);
+        StartCoroutine(FindTargetWithDelay(0.2f));
         gm = GameManager.instance;
     }
 

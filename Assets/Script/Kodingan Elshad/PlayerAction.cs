@@ -30,8 +30,11 @@ public class PlayerAction : ExecuteLogic
 
     [Header("Weaponry")]
     [SerializeField]
+    private LayerMask enemyMask;
+    [SerializeField]
     private WeaponStatSO[] weaponStat;
     private WeaponStatSO activeWeapon;
+    
     private int curWeapon;
 
     [SerializeField]
@@ -57,6 +60,7 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.Reload.performed += Reload_performed;
 
         CC = GetComponent<CharacterController>();
+
 
         StartingSetup();
     }
@@ -90,7 +94,7 @@ public class PlayerAction : ExecuteLogic
     private void Reload_performed(InputAction.CallbackContext obj)
     {
         Reload(activeWeapon);
-        StartCoroutine(ReloadTime());
+        StartCoroutine(ReloadTime(ReloadFlag, activeWeapon.reloadTime));
     }
 
     private void ChangingWeapon_performed(InputAction.CallbackContext context)
@@ -127,14 +131,14 @@ public class PlayerAction : ExecuteLogic
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
         {
-            Shoot(activeWeapon);
-            StartCoroutine(FireRate(activeWeapon.fireRate));
+            Shoot(Camera.main.transform.position, followTarget.transform.position, activeWeapon, enemyMask);
+            StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
             isShooting = false;
             if (activeWeapon.currBullet == 0 && activeWeapon.totalBullet > 0)
             {
                 isReloading = true;
                 Reload(activeWeapon);
-                StartCoroutine(ReloadTime());                
+                StartCoroutine(ReloadTime(ReloadFlag, activeWeapon.reloadTime));
             }
         }
     }
@@ -163,13 +167,13 @@ public class PlayerAction : ExecuteLogic
         {
             if(activeWeapon != null)
             {
-                Shoot(activeWeapon);
-                StartCoroutine (FireRate(activeWeapon.fireRate));
+                Shoot(Camera.main.transform.position, followTarget.transform.position, activeWeapon, enemyMask);
+                StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
                 if (activeWeapon.currBullet == 0)
                 {
                     isReloading = true;
                     Reload(activeWeapon);
-                    StartCoroutine(ReloadTime());
+                    StartCoroutine(ReloadTime(ReloadFlag, activeWeapon.reloadTime));
                 }
             }
         }
@@ -242,19 +246,14 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.Disable();
     }
 
-    private IEnumerator ReloadTime()
+    private void ReloadFlag(bool value)
     {
-        yield return new WaitForSeconds(activeWeapon.reloadTime);
-
-        isReloading = false;
+        isReloading = value;
     }
 
-    public IEnumerator FireRate(float fireRate)
+    private void FireRateFlag(bool value)
     {
-        fireRateOn = true;
-
-        yield return new WaitForSeconds(fireRate);
-
-        fireRateOn = false;
+        fireRateOn = value;
     }
+
 }
