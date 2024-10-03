@@ -11,8 +11,27 @@ using System;
  * Public class nya extend ke class ini
  * Jangan ke MonoBehaviour
  */
+
+
+
+abstract class slajdkadj : MonoBehaviour
+{
+    public void BaseShoot()
+    {
+
+    }
+
+    public abstract void asdads();
+    public virtual void dasdad()
+    {
+
+    }
+}
+
 public class ExecuteLogic : AILogic
 {
+
+    
 
     //setelah di extend, klean bisa make function ini tanpa perlu refrence
 
