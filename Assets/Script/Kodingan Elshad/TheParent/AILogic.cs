@@ -13,8 +13,6 @@ public class AILogic : MonoBehaviour
         agent.destination = destination;
     }
 
-
-    
     //Untuk membuat FOV nya
     public void DrawFieldOfView(int edgeResolveIteration, float edgeDistanceTreshold, float viewRadius, float viewAngle, float meshResolution, Transform FOVPoint, Mesh viewMesh, LayerMask groundMask)
     {
@@ -102,13 +100,13 @@ public class AILogic : MonoBehaviour
 
         //Membuat mesh segitiganya
         //Di clear dulu, supaya ketika sudah di frame selanjutnya, mesh nya tida duplikat dan jadi hancur
-        //viewMesh.Clear();
+        viewMesh.Clear();
         //Titik mesh dimasukan
-        //viewMesh.vertices = vertices;
+        viewMesh.vertices = vertices;
         //Segitiga mesh dimasukan
-        //viewMesh.triangles = triangles;
+        viewMesh.triangles = triangles;
         //Mengkalkulasi lagi mesh nya supaya sesuai dengan orientasi
-        //viewMesh.RecalculateNormals();
+        viewMesh.RecalculateNormals();
 
     }
 

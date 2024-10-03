@@ -6,7 +6,6 @@ using UnityEngine.AI;
 public class EnemyAI : ExecuteLogic
 {
     private float timer;
-    
     //hal yang diperlukan untuk pathfinding
     private NavMeshAgent enemyNavmesh;
     [SerializeField] private GameObject destination;
@@ -86,13 +85,13 @@ public class EnemyAI : ExecuteLogic
         }
         else
         {
-            MoveToDestination(enemyNavmesh, visibleTargets[0].position);
+            if(visibleTargets.Count > 0)MoveToDestination(enemyNavmesh, visibleTargets[0].position);
         }
     }
 
     private void Shooting()
     {
-        Shoot(FOVPoint.position, visibleTargets[0].position, weapon, isItEnemy);
+        if(visibleTargets.Count > 0)Shoot(FOVPoint.position, visibleTargets[0].position, weapon, isItEnemy);
     }
 
     public IEnumerator FindTargetWithDelay(float delay)
