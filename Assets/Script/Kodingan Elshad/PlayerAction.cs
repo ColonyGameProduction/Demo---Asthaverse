@@ -10,6 +10,7 @@ using UnityEngine.UIElements;
 
 public class PlayerAction : ExecuteLogic
 {
+    
     private PlayerActionInput inputActions;
     private bool isShooting = false;
     private bool isReloading = false;
@@ -34,6 +35,8 @@ public class PlayerAction : ExecuteLogic
     [SerializeField]
     private WeaponStatSO[] weaponStat;
     private WeaponStatSO activeWeapon;
+
+    private AnimationTestScript testAnimation;
     
     private int curWeapon;
 
@@ -48,6 +51,8 @@ public class PlayerAction : ExecuteLogic
 
     private void Start()
     {
+
+        testAnimation = GetComponent<AnimationTestScript>();
 
         //membuat event untuk menjalankan aksi yang dipakai oleh player
         inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
@@ -64,8 +69,6 @@ public class PlayerAction : ExecuteLogic
 
         StartingSetup();
     }
-
-    
 
     private bool Run()
     {
@@ -200,8 +203,13 @@ public class PlayerAction : ExecuteLogic
         else
         {
             CC.SimpleMove(direction * moveSpeed);
-        }   
-        Rotation(direction);
+        }
+
+        testAnimation.WalkAnimation(move);
+        if (!isShooting)
+        {
+            Rotation(direction);
+        }
     }
 
     private void Rotation(Vector3 direction)
@@ -255,5 +263,7 @@ public class PlayerAction : ExecuteLogic
     {
         fireRateOn = value;
     }
+
+    
 
 }
