@@ -7,6 +7,7 @@ using UnityEngine.AI;
 
 public class AILogic : MonoBehaviour
 {    
+    public bool stopView = true;
     //AI Navmesh untuk ke tempat yang ditentukan, memerlukan parsing navmesh agent dan tempat destinasinya
     public void MoveToDestination(NavMeshAgent agent, Vector3 destination)
     {
@@ -101,12 +102,16 @@ public class AILogic : MonoBehaviour
         //Membuat mesh segitiganya
         //Di clear dulu, supaya ketika sudah di frame selanjutnya, mesh nya tida duplikat dan jadi hancur
         viewMesh.Clear();
-        //Titik mesh dimasukan
-        viewMesh.vertices = vertices;
-        //Segitiga mesh dimasukan
-        viewMesh.triangles = triangles;
-        //Mengkalkulasi lagi mesh nya supaya sesuai dengan orientasi
-        viewMesh.RecalculateNormals();
+
+        if(!stopView)
+        {    
+            //Titik mesh dimasukan
+            viewMesh.vertices = vertices;
+            //Segitiga mesh dimasukan
+            viewMesh.triangles = triangles;
+            //Mengkalkulasi lagi mesh nya supaya sesuai dengan orientasi
+            viewMesh.RecalculateNormals();
+        }
 
     }
 

@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class EnemyAI : ExecuteLogic
 {
+    public bool stopMoving;
     private float timer;
     //hal yang diperlukan untuk pathfinding
     private NavMeshAgent enemyNavmesh;
@@ -79,6 +80,11 @@ public class EnemyAI : ExecuteLogic
     //pathfinding untuk enemy
     private void Moving()
     {
+        if(stopMoving)
+        {
+            
+            return;
+        }
         if (destination != null)
         {
             MoveToDestination(enemyNavmesh, destination.transform.position);
