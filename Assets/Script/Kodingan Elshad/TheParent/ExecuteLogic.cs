@@ -59,6 +59,53 @@ public class ExecuteLogic : AILogic
 
     }
 
+    //Logic 'Command'
+    public void Command()
+    {
+        ShowMouseCursor();
+
+        PlayerAction playerAction = GetComponent<PlayerAction>();
+
+        playerAction.isCommandActive = true;
+        playerAction.command.SetActive(true);
+    }
+
+    //Logic 'UnCommand'
+    public void UnCommand()
+    {
+        PlayerAction playerAction = GetComponent<PlayerAction>();
+
+        if (playerAction.isCommandActive == true)
+        {
+            HideMouseCursor();
+
+            playerAction.isCommandActive = false;
+            playerAction.command.SetActive(false);
+        }
+    }
+
+    //Logic 'Hold Position'
+    public void HoldPosition()
+    {
+        PlayerAction playerAction = GetComponent<PlayerAction>();
+
+        if (playerAction.isCommandActive == true)
+        {
+            playerAction.isHoldPosition = true;
+        }
+    }
+
+    //Logic 'UnHold Position'
+    public void UnHoldPosition()
+    {
+        PlayerAction playerAction = GetComponent<PlayerAction>();
+
+        if (playerAction.isCommandActive == true)
+        {
+            playerAction.isHoldPosition = false;
+        }
+    }
+
 
     //Logic 'Switch Character'
     public void SwitchCharacter()
@@ -137,5 +184,19 @@ public class ExecuteLogic : AILogic
         yield return new WaitForSeconds(0.1f);
 
         gm.playerGameObject[gm.playableCharacterNum].gameObject.transform.GetChild(0).GetChild(0).GetChild(0).eulerAngles = Vector3.zero;
+    }
+
+    public void HideMouseCursor()
+    {
+        // hide mouse cursor when game start
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public void ShowMouseCursor()
+    {
+        // hide mouse cursor when game start
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

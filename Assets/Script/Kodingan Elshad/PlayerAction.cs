@@ -18,6 +18,8 @@ public class PlayerAction : ExecuteLogic
     private Transform followTarget;
     [SerializeField]
     private GameObject[] friendsDestination;
+    [SerializeField]
+    private GameObject[] GoToTargetPosition;
 
     [SerializeField]
     private float rotateSpeed = 10f;
@@ -26,8 +28,12 @@ public class PlayerAction : ExecuteLogic
     private float moveSpeed = 5f;
     private CharacterController CC;
 
-    [SerializeField]
-    private GameObject command;
+    public GameObject command;
+
+    //command variables
+    public bool isCommandActive = false;
+    public bool isHoldPosition = false;
+    private int selectedFriendID = -1;
 
     //supaya input action bisa digunakan
     private void Awake()
@@ -43,6 +49,11 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
         inputActions.InputPlayerAction.ChangePlayer.performed += ChangePlayer_performed;
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
+
+        inputActions.InputPlayerAction.Command.performed += Command_performed;
+        inputActions.InputPlayerAction.UnCommand.performed += UnCommand_performed;
+        inputActions.InputPlayerAction.HoldPosition.performed += HoldPosition_performed;
+        inputActions.InputPlayerAction.UnHoldPosition.performed += UnHoldPosition_performed;
 
         CC = GetComponent<CharacterController>();
 
@@ -78,6 +89,26 @@ public class PlayerAction : ExecuteLogic
         Scope();
     }
 
+    private void Command_performed(InputAction.CallbackContext context)
+    {
+        Command();
+    }
+
+    private void UnCommand_performed(InputAction.CallbackContext context)
+    {
+        UnCommand();
+    }
+
+    private void HoldPosition_performed(InputAction.CallbackContext context)
+    {
+        HoldPosition();
+    }
+
+    private void UnHoldPosition_performed(InputAction.CallbackContext context)
+    {
+        UnHoldPosition();
+    }
+
     private void ChangePlayer_performed(InputAction.CallbackContext context)
     {
         GameManager gm = GameManager.instance;
@@ -107,13 +138,27 @@ public class PlayerAction : ExecuteLogic
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Y))
+        // Input yang ini itu sementara aja
+
+        // Select the AI friend by pressing keys 1, 2, etc.
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            command.SetActive(true);
+            selectedFriendID = 1; // Select FriendAI with ID 1
         }
-        else
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            command.SetActive(false);
+            selectedFriendID = 2; // Select FriendAI with ID 2
+        }
+
+        // If command is active and a friend is selected, detect mouse click
+        if (isCommandActive && selectedFriendID != -1 && Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                // Set the destination for the selected friend based on the mouse click
+                GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
+            }
         }
     }
 
@@ -163,6 +208,11 @@ public class PlayerAction : ExecuteLogic
     public GameObject[] GetDestinationGameObject()
     {
         return friendsDestination;
+    }
+
+    public GameObject[] GetPositionGameObject()
+    {
+        return GoToTargetPosition;
     }
 
     private void OnEnable()

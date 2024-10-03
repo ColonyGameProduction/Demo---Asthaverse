@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using System.Diagnostics.CodeAnalysis;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviour
     public bool canSwitch;
 
     [Header("Apakah sudah scope")]
-    public bool scope;
+    public bool scope; 
 
     private void Awake()
     {
