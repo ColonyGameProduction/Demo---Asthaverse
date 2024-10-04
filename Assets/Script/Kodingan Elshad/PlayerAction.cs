@@ -124,11 +124,11 @@ public class PlayerAction : ExecuteLogic
         Scope();
         if(gm.scope)
         {
-            testAnimation.animator.SetBool("Scope", true);
+            testAnimation?.animator.SetBool("Scope", true);
         }
         else
         {
-            testAnimation.animator.SetBool("Scope", false);
+            testAnimation?.animator.SetBool("Scope", false);
         }
     }
 
@@ -172,7 +172,7 @@ public class PlayerAction : ExecuteLogic
     //event ketika 'Shoot' dilakukan
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
-        testAnimation.animator.SetBool("Scope", true);
+        testAnimation?.animator.SetBool("Scope", true);
         isShooting = true;
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
@@ -191,7 +191,7 @@ public class PlayerAction : ExecuteLogic
 
     private void Shooting_canceled(InputAction.CallbackContext obj)
     {
-        testAnimation.animator.SetBool("Scope", false);
+        testAnimation?.animator.SetBool("Scope", false);
         isShooting = false;
     }
 
@@ -266,14 +266,14 @@ public class PlayerAction : ExecuteLogic
 
         if(move == Vector2.zero)
         {
-            testAnimation.animator.SetBool("Move", false);
+            testAnimation?.animator.SetBool("Move", false);
         }
         else
         {
-            testAnimation.animator.SetBool("Move", true);
+            testAnimation?.animator.SetBool("Move", true);
         }
 
-        testAnimation.WalkAnimation(move);
+        testAnimation?.WalkAnimation(move);
         if (!isShooting && !gm.scope)
         {
             
@@ -281,7 +281,7 @@ public class PlayerAction : ExecuteLogic
         }
         else if(isShooting || gm.scope)
         {
-            testAnimation.animator.SetBool("Move", false);
+            testAnimation?.animator.SetBool("Move", false);
             Rotation(flatForward);
         }
     }
