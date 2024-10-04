@@ -228,6 +228,7 @@ public class FOV : MonoBehaviour
                 float distanceToTarget = Vector3.Distance(FOVPoint.position, target.position);
                 if (!Physics.Raycast(FOVPoint.position, dirToTarget, distanceToTarget, groundMask))
                 {
+                    if(visibleTargets.Count > 0)if(visibleTargets.Contains(target))continue;
                     visibleTargets.Add(target);
                 }
             }
