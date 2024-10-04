@@ -30,7 +30,5 @@ public class MovementStateManager : CharacterStateManager
         currState = newState as MovementState;
         currState?.EnterState(this);
     }
-    public void Walk()=>SwitchState(walkState);
-    public void Run()=>SwitchState(runState);
 
 }
