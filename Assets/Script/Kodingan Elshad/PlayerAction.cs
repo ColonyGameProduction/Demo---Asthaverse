@@ -10,6 +10,7 @@ using UnityEngine.UIElements;
 
 public class PlayerAction : ExecuteLogic
 {
+    GameManager gm;
     private PlayerActionInput inputActions;
     private bool isShooting = false;
     private bool isReloading = false;
@@ -37,6 +38,8 @@ public class PlayerAction : ExecuteLogic
     [SerializeField]
     private WeaponStatSO[] weaponStat;
     private WeaponStatSO activeWeapon;
+
+    private AnimationTestScript testAnimation;
     
     private int curWeapon;
 
@@ -57,6 +60,8 @@ public class PlayerAction : ExecuteLogic
 
     private void Start()
     {
+        gm = GameManager.instance;
+        testAnimation = GetComponent<AnimationTestScript>();
 
         //membuat event untuk menjalankan aksi yang dipakai oleh player
         inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
@@ -78,8 +83,6 @@ public class PlayerAction : ExecuteLogic
 
         StartingSetup();
     }
-
-    
 
     private bool Run()
     {
@@ -119,6 +122,14 @@ public class PlayerAction : ExecuteLogic
     private void Scope_performed(InputAction.CallbackContext context)
     {
         Scope();
+        if(gm.scope)
+        {
+            testAnimation.animator.SetBool("Scope", true);
+        }
+        else
+        {
+            testAnimation.animator.SetBool("Scope", false);
+        }
     }
 
     private void Command_performed(InputAction.CallbackContext context)
@@ -161,6 +172,7 @@ public class PlayerAction : ExecuteLogic
     //event ketika 'Shoot' dilakukan
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
+        testAnimation.animator.SetBool("Scope", true);
         isShooting = true;
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
@@ -179,6 +191,7 @@ public class PlayerAction : ExecuteLogic
 
     private void Shooting_canceled(InputAction.CallbackContext obj)
     {
+        testAnimation.animator.SetBool("Scope", false);
         isShooting = false;
     }
 
@@ -215,6 +228,7 @@ public class PlayerAction : ExecuteLogic
         {
             if(activeWeapon != null)
             {
+
                 Shoot(Camera.main.transform.position, followTarget.transform.position, activeWeapon, enemyMask);
                 StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
                 if (activeWeapon.currBullet == 0)
@@ -248,8 +262,28 @@ public class PlayerAction : ExecuteLogic
         else
         {
             CC.SimpleMove(direction * moveSpeed);
-        }   
-        Rotation(direction);
+        }
+
+        if(move == Vector2.zero)
+        {
+            testAnimation.animator.SetBool("Move", false);
+        }
+        else
+        {
+            testAnimation.animator.SetBool("Move", true);
+        }
+
+        testAnimation.WalkAnimation(move);
+        if (!isShooting && !gm.scope)
+        {
+            
+            Rotation(direction);
+        }
+        else if(isShooting || gm.scope)
+        {
+            testAnimation.animator.SetBool("Move", false);
+            Rotation(flatForward);
+        }
     }
 
     private void Rotation(Vector3 direction)
@@ -307,5 +341,7 @@ public class PlayerAction : ExecuteLogic
     {
         fireRateOn = value;
     }
+
+    
 
 }
