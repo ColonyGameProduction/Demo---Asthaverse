@@ -18,19 +18,14 @@ public class PlayerCamera : MonoBehaviour
 
     private void Start()
     {
-        HideMouseCursor();
+        // hide mouse cursor when game start
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
     {
         HandleCameraMovement();
-    }
-
-    private void HideMouseCursor()
-    {
-        // hide mouse cursor when game start
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     private void HandleCameraMovement()

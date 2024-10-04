@@ -107,6 +107,42 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Command"",
+                    ""type"": ""Button"",
+                    ""id"": ""1ec604b5-4781-4d40-8e48-83ff417424dc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UnCommand"",
+                    ""type"": ""Button"",
+                    ""id"": ""f2362205-11ac-4c79-b536-7e3b70145197"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HoldPosition"",
+                    ""type"": ""Button"",
+                    ""id"": ""a9cb49e1-b57b-4b41-a8d4-62092f74a2d2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UnHoldPosition"",
+                    ""type"": ""Button"",
+                    ""id"": ""0a4e3c02-b9d2-42ef-8d1c-f6fe3c18ca50"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -242,7 +278,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
-                {
+                                {
                     ""name"": """",
                     ""id"": ""8a973222-8b41-4b6a-9ca0-f9c2fb631734"",
                     ""path"": ""<Keyboard>/r"",
@@ -250,6 +286,50 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c6b6b74-b75c-4802-a5fe-e62fdfcdc78f"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Command"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2683275f-ef13-4cc8-ab81-71959eda5000"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UnCommand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a9fa93b2-0119-46ef-92c4-3f0fd1c057c2"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HoldPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f48e8ad4-d1d1-473e-8c54-f4ee456d2a86"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UnHoldPosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -269,6 +349,10 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_Crouch = m_InputPlayerAction.FindAction("Crouch", throwIfNotFound: true);
         m_InputPlayerAction_Run = m_InputPlayerAction.FindAction("Run", throwIfNotFound: true);
         m_InputPlayerAction_Reload = m_InputPlayerAction.FindAction("Reload", throwIfNotFound: true);
+        m_InputPlayerAction_Command = m_InputPlayerAction.FindAction("Command", throwIfNotFound: true);
+        m_InputPlayerAction_UnCommand = m_InputPlayerAction.FindAction("UnCommand", throwIfNotFound: true);
+        m_InputPlayerAction_HoldPosition = m_InputPlayerAction.FindAction("HoldPosition", throwIfNotFound: true);
+        m_InputPlayerAction_UnHoldPosition = m_InputPlayerAction.FindAction("UnHoldPosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -339,6 +423,10 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_Crouch;
     private readonly InputAction m_InputPlayerAction_Run;
     private readonly InputAction m_InputPlayerAction_Reload;
+    private readonly InputAction m_InputPlayerAction_Command;
+    private readonly InputAction m_InputPlayerAction_UnCommand;
+    private readonly InputAction m_InputPlayerAction_HoldPosition;
+    private readonly InputAction m_InputPlayerAction_UnHoldPosition;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -352,6 +440,10 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @Crouch => m_Wrapper.m_InputPlayerAction_Crouch;
         public InputAction @Run => m_Wrapper.m_InputPlayerAction_Run;
         public InputAction @Reload => m_Wrapper.m_InputPlayerAction_Reload;
+        public InputAction @Command => m_Wrapper.m_InputPlayerAction_Command;
+        public InputAction @UnCommand => m_Wrapper.m_InputPlayerAction_UnCommand;
+        public InputAction @HoldPosition => m_Wrapper.m_InputPlayerAction_HoldPosition;
+        public InputAction @UnHoldPosition => m_Wrapper.m_InputPlayerAction_UnHoldPosition;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -388,6 +480,18 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @Reload.started += instance.OnReload;
             @Reload.performed += instance.OnReload;
             @Reload.canceled += instance.OnReload;
+            @Command.started += instance.OnCommand;
+            @Command.performed += instance.OnCommand;
+            @Command.canceled += instance.OnCommand;
+            @UnCommand.started += instance.OnUnCommand;
+            @UnCommand.performed += instance.OnUnCommand;
+            @UnCommand.canceled += instance.OnUnCommand;
+            @HoldPosition.started += instance.OnHoldPosition;
+            @HoldPosition.performed += instance.OnHoldPosition;
+            @HoldPosition.canceled += instance.OnHoldPosition;
+            @UnHoldPosition.started += instance.OnUnHoldPosition;
+            @UnHoldPosition.performed += instance.OnUnHoldPosition;
+            @UnHoldPosition.canceled += instance.OnUnHoldPosition;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -419,6 +523,18 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @Reload.started -= instance.OnReload;
             @Reload.performed -= instance.OnReload;
             @Reload.canceled -= instance.OnReload;
+            @Command.started -= instance.OnCommand;
+            @Command.performed -= instance.OnCommand;
+            @Command.canceled -= instance.OnCommand;
+            @UnCommand.started -= instance.OnUnCommand;
+            @UnCommand.performed -= instance.OnUnCommand;
+            @UnCommand.canceled -= instance.OnUnCommand;
+            @HoldPosition.started -= instance.OnHoldPosition;
+            @HoldPosition.performed -= instance.OnHoldPosition;
+            @HoldPosition.canceled -= instance.OnHoldPosition;
+            @UnHoldPosition.started -= instance.OnUnHoldPosition;
+            @UnHoldPosition.performed -= instance.OnUnHoldPosition;
+            @UnHoldPosition.canceled -= instance.OnUnHoldPosition;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -447,5 +563,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnCrouch(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnCommand(InputAction.CallbackContext context);
+        void OnUnCommand(InputAction.CallbackContext context);
+        void OnHoldPosition(InputAction.CallbackContext context);
+        void OnUnHoldPosition(InputAction.CallbackContext context);
     }
 }

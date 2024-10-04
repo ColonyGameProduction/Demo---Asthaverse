@@ -1030,6 +1030,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &275599267
+--- !u!1 &227831813
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1041,12 +1042,16 @@ GameObject:
   - component: {fileID: 275599269}
   m_Layer: 0
   m_Name: WeaponManager
+  - component: {fileID: 227831814}
+  m_Layer: 0
+  m_Name: FriendPosition 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &275599268
+--- !u!4 &227831814
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1085,6 +1090,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d5ea681c149b09441949b00548119c82, type: 2}
   - {fileID: 11400000, guid: cd2e758b83c1d7a459a23c5505d5fdd3, type: 2}
   - {fileID: 11400000, guid: 133f43a972ed0d943a29e84eed99189f, type: 2}
+  m_GameObject: {fileID: 227831813}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -3, y: 0, z: -2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1398962085}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &277967138
 GameObject:
   m_ObjectHideFlags: 0
@@ -3943,6 +3957,9 @@ MonoBehaviour:
   friendsDestination:
   - {fileID: 279957712}
   - {fileID: 1191237419}
+  GoToTargetPosition:
+  - {fileID: 1590047127}
+  - {fileID: 227831813}
   rotateSpeed: 10
   moveSpeed: 5
   enemyMask:
@@ -3952,6 +3969,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ce86a641912742b49adc7be1f7fd8c2e, type: 2}
   - {fileID: 11400000, guid: 4e797d732470a364584aa35fc319d05c, type: 2}
   command: {fileID: 1543354274}
+  isCommandActive: 0
+  isHoldPosition: 0
 --- !u!114 &743586303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4087,6 +4106,7 @@ GameObject:
   - component: {fileID: 752859312}
   - component: {fileID: 752859311}
   m_Layer: 6
+  m_Layer: 9
   m_Name: surface
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5308,6 +5328,9 @@ MonoBehaviour:
   friendsDestination:
   - {fileID: 312050264}
   - {fileID: 1398910608}
+  GoToTargetPosition:
+  - {fileID: 1590047127}
+  - {fileID: 227831813}
   rotateSpeed: 10
   moveSpeed: 5
   enemyMask:
@@ -5317,6 +5340,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ddddea676c9c1d64683b955392c0bef3, type: 2}
   - {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
   command: {fileID: 138660905}
+  isCommandActive: 0
+  isHoldPosition: 0
 --- !u!114 &1156905597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6188,6 +6213,7 @@ Transform:
   m_Father: {fileID: 2094983564}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1457320075
+--- !u!1 &1398962084
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6200,12 +6226,16 @@ GameObject:
   - component: {fileID: 1457320077}
   m_Layer: 0
   m_Name: FOVPoint
+  - component: {fileID: 1398962085}
+  m_Layer: 0
+  m_Name: Go To Target Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1457320076
+--- !u!4 &1398962085
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6301,6 +6331,16 @@ Transform:
   m_Children:
   - {fileID: 1554778859}
   m_Father: {fileID: 63220341}
+  m_GameObject: {fileID: 1398962084}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1590047128}
+  - {fileID: 227831814}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1543354274
 GameObject:
@@ -6610,6 +6650,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1254957714}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1590047127
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1590047128}
+  m_Layer: 0
+  m_Name: FriendPosition 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1590047128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1590047127}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3, y: 0, z: -2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1398962085}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1611590577
 GameObject:
@@ -7671,6 +7742,9 @@ MonoBehaviour:
   friendsDestination:
   - {fileID: 1205169415}
   - {fileID: 421418394}
+  GoToTargetPosition:
+  - {fileID: 1590047127}
+  - {fileID: 227831813}
   rotateSpeed: 10
   moveSpeed: 5
   enemyMask:
@@ -7680,6 +7754,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a9d97bbad63f47d4a92e1eb934894ae8, type: 2}
   - {fileID: 11400000, guid: 4e797d732470a364584aa35fc319d05c, type: 2}
   command: {fileID: 486741365}
+  isCommandActive: 0
+  isHoldPosition: 0
 --- !u!114 &2066745661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7954,3 +8030,4 @@ SceneRoots:
   - {fileID: 1369132762}
   - {fileID: 2143454058}
   - {fileID: 447115269}
+  - {fileID: 1398962085}
