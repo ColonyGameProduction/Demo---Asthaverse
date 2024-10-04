@@ -53,6 +53,96 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangePlayer"",
+                    ""type"": ""Button"",
+                    ""id"": ""071fe5e1-7e58-418d-82fa-ed09c5893767"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Scope"",
+                    ""type"": ""Button"",
+                    ""id"": ""67bb825e-50c3-401d-9d2a-5ca407012fe9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Movement"",
+                    ""type"": ""Value"",
+                    ""id"": ""5ae68d93-695a-4e4d-9a7c-fba775db84a6"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""709ab3e1-5252-4e58-9ddb-e56098262fb7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Run"",
+                    ""type"": ""Button"",
+                    ""id"": ""a2ffa34d-e2f1-47da-b70d-bbd465b15076"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""e9c2ab17-b3b3-482d-accb-22c030686088"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Command"",
+                    ""type"": ""Button"",
+                    ""id"": ""1ec604b5-4781-4d40-8e48-83ff417424dc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UnCommand"",
+                    ""type"": ""Button"",
+                    ""id"": ""f2362205-11ac-4c79-b536-7e3b70145197"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HoldPosition"",
+                    ""type"": ""Button"",
+                    ""id"": ""a9cb49e1-b57b-4b41-a8d4-62092f74a2d2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UnHoldPosition"",
+                    ""type"": ""Button"",
+                    ""id"": ""0a4e3c02-b9d2-42ef-8d1c-f6fe3c18ca50"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -88,6 +178,160 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""ChangingWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""62738c04-e284-4457-8049-049aeb8de3dd"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangePlayer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7bca3d4-785c-43d2-92a5-8c920d738d7b"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scope"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""9a8c5271-1f20-466d-9166-97da362fafba"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""ed510a29-e23b-4b04-a517-f9d2ed64d0b7"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""914f02ea-3029-446a-a05a-428b4995fda4"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""85487b36-d284-4240-abda-3d058b115087"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""eda68aeb-b1f6-4359-b924-de6a00bdf5b5"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66628e6c-17d0-457a-8e93-d1bc9b5dc5d5"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""171cce9c-8a53-467b-82e3-0ca64e783415"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                                {
+                    ""name"": """",
+                    ""id"": ""8a973222-8b41-4b6a-9ca0-f9c2fb631734"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c6b6b74-b75c-4802-a5fe-e62fdfcdc78f"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Command"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2683275f-ef13-4cc8-ab81-71959eda5000"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UnCommand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a9fa93b2-0119-46ef-92c4-3f0fd1c057c2"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HoldPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f48e8ad4-d1d1-473e-8c54-f4ee456d2a86"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UnHoldPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -99,6 +343,16 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_Shooting = m_InputPlayerAction.FindAction("Shooting", throwIfNotFound: true);
         m_InputPlayerAction_SilentKill = m_InputPlayerAction.FindAction("SilentKill", throwIfNotFound: true);
         m_InputPlayerAction_ChangingWeapon = m_InputPlayerAction.FindAction("ChangingWeapon", throwIfNotFound: true);
+        m_InputPlayerAction_ChangePlayer = m_InputPlayerAction.FindAction("ChangePlayer", throwIfNotFound: true);
+        m_InputPlayerAction_Scope = m_InputPlayerAction.FindAction("Scope", throwIfNotFound: true);
+        m_InputPlayerAction_Movement = m_InputPlayerAction.FindAction("Movement", throwIfNotFound: true);
+        m_InputPlayerAction_Crouch = m_InputPlayerAction.FindAction("Crouch", throwIfNotFound: true);
+        m_InputPlayerAction_Run = m_InputPlayerAction.FindAction("Run", throwIfNotFound: true);
+        m_InputPlayerAction_Reload = m_InputPlayerAction.FindAction("Reload", throwIfNotFound: true);
+        m_InputPlayerAction_Command = m_InputPlayerAction.FindAction("Command", throwIfNotFound: true);
+        m_InputPlayerAction_UnCommand = m_InputPlayerAction.FindAction("UnCommand", throwIfNotFound: true);
+        m_InputPlayerAction_HoldPosition = m_InputPlayerAction.FindAction("HoldPosition", throwIfNotFound: true);
+        m_InputPlayerAction_UnHoldPosition = m_InputPlayerAction.FindAction("UnHoldPosition", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -163,6 +417,16 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_Shooting;
     private readonly InputAction m_InputPlayerAction_SilentKill;
     private readonly InputAction m_InputPlayerAction_ChangingWeapon;
+    private readonly InputAction m_InputPlayerAction_ChangePlayer;
+    private readonly InputAction m_InputPlayerAction_Scope;
+    private readonly InputAction m_InputPlayerAction_Movement;
+    private readonly InputAction m_InputPlayerAction_Crouch;
+    private readonly InputAction m_InputPlayerAction_Run;
+    private readonly InputAction m_InputPlayerAction_Reload;
+    private readonly InputAction m_InputPlayerAction_Command;
+    private readonly InputAction m_InputPlayerAction_UnCommand;
+    private readonly InputAction m_InputPlayerAction_HoldPosition;
+    private readonly InputAction m_InputPlayerAction_UnHoldPosition;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -170,6 +434,16 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @Shooting => m_Wrapper.m_InputPlayerAction_Shooting;
         public InputAction @SilentKill => m_Wrapper.m_InputPlayerAction_SilentKill;
         public InputAction @ChangingWeapon => m_Wrapper.m_InputPlayerAction_ChangingWeapon;
+        public InputAction @ChangePlayer => m_Wrapper.m_InputPlayerAction_ChangePlayer;
+        public InputAction @Scope => m_Wrapper.m_InputPlayerAction_Scope;
+        public InputAction @Movement => m_Wrapper.m_InputPlayerAction_Movement;
+        public InputAction @Crouch => m_Wrapper.m_InputPlayerAction_Crouch;
+        public InputAction @Run => m_Wrapper.m_InputPlayerAction_Run;
+        public InputAction @Reload => m_Wrapper.m_InputPlayerAction_Reload;
+        public InputAction @Command => m_Wrapper.m_InputPlayerAction_Command;
+        public InputAction @UnCommand => m_Wrapper.m_InputPlayerAction_UnCommand;
+        public InputAction @HoldPosition => m_Wrapper.m_InputPlayerAction_HoldPosition;
+        public InputAction @UnHoldPosition => m_Wrapper.m_InputPlayerAction_UnHoldPosition;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -188,6 +462,36 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @ChangingWeapon.started += instance.OnChangingWeapon;
             @ChangingWeapon.performed += instance.OnChangingWeapon;
             @ChangingWeapon.canceled += instance.OnChangingWeapon;
+            @ChangePlayer.started += instance.OnChangePlayer;
+            @ChangePlayer.performed += instance.OnChangePlayer;
+            @ChangePlayer.canceled += instance.OnChangePlayer;
+            @Scope.started += instance.OnScope;
+            @Scope.performed += instance.OnScope;
+            @Scope.canceled += instance.OnScope;
+            @Movement.started += instance.OnMovement;
+            @Movement.performed += instance.OnMovement;
+            @Movement.canceled += instance.OnMovement;
+            @Crouch.started += instance.OnCrouch;
+            @Crouch.performed += instance.OnCrouch;
+            @Crouch.canceled += instance.OnCrouch;
+            @Run.started += instance.OnRun;
+            @Run.performed += instance.OnRun;
+            @Run.canceled += instance.OnRun;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
+            @Command.started += instance.OnCommand;
+            @Command.performed += instance.OnCommand;
+            @Command.canceled += instance.OnCommand;
+            @UnCommand.started += instance.OnUnCommand;
+            @UnCommand.performed += instance.OnUnCommand;
+            @UnCommand.canceled += instance.OnUnCommand;
+            @HoldPosition.started += instance.OnHoldPosition;
+            @HoldPosition.performed += instance.OnHoldPosition;
+            @HoldPosition.canceled += instance.OnHoldPosition;
+            @UnHoldPosition.started += instance.OnUnHoldPosition;
+            @UnHoldPosition.performed += instance.OnUnHoldPosition;
+            @UnHoldPosition.canceled += instance.OnUnHoldPosition;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -201,6 +505,36 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @ChangingWeapon.started -= instance.OnChangingWeapon;
             @ChangingWeapon.performed -= instance.OnChangingWeapon;
             @ChangingWeapon.canceled -= instance.OnChangingWeapon;
+            @ChangePlayer.started -= instance.OnChangePlayer;
+            @ChangePlayer.performed -= instance.OnChangePlayer;
+            @ChangePlayer.canceled -= instance.OnChangePlayer;
+            @Scope.started -= instance.OnScope;
+            @Scope.performed -= instance.OnScope;
+            @Scope.canceled -= instance.OnScope;
+            @Movement.started -= instance.OnMovement;
+            @Movement.performed -= instance.OnMovement;
+            @Movement.canceled -= instance.OnMovement;
+            @Crouch.started -= instance.OnCrouch;
+            @Crouch.performed -= instance.OnCrouch;
+            @Crouch.canceled -= instance.OnCrouch;
+            @Run.started -= instance.OnRun;
+            @Run.performed -= instance.OnRun;
+            @Run.canceled -= instance.OnRun;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
+            @Command.started -= instance.OnCommand;
+            @Command.performed -= instance.OnCommand;
+            @Command.canceled -= instance.OnCommand;
+            @UnCommand.started -= instance.OnUnCommand;
+            @UnCommand.performed -= instance.OnUnCommand;
+            @UnCommand.canceled -= instance.OnUnCommand;
+            @HoldPosition.started -= instance.OnHoldPosition;
+            @HoldPosition.performed -= instance.OnHoldPosition;
+            @HoldPosition.canceled -= instance.OnHoldPosition;
+            @UnHoldPosition.started -= instance.OnUnHoldPosition;
+            @UnHoldPosition.performed -= instance.OnUnHoldPosition;
+            @UnHoldPosition.canceled -= instance.OnUnHoldPosition;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -223,5 +557,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnShooting(InputAction.CallbackContext context);
         void OnSilentKill(InputAction.CallbackContext context);
         void OnChangingWeapon(InputAction.CallbackContext context);
+        void OnChangePlayer(InputAction.CallbackContext context);
+        void OnScope(InputAction.CallbackContext context);
+        void OnMovement(InputAction.CallbackContext context);
+        void OnCrouch(InputAction.CallbackContext context);
+        void OnRun(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
+        void OnCommand(InputAction.CallbackContext context);
+        void OnUnCommand(InputAction.CallbackContext context);
+        void OnHoldPosition(InputAction.CallbackContext context);
+        void OnUnHoldPosition(InputAction.CallbackContext context);
     }
 }

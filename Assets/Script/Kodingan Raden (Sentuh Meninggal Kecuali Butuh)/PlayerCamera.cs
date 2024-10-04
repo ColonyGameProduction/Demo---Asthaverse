@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerCamera : MonoBehaviour
@@ -6,23 +7,25 @@ public class PlayerCamera : MonoBehaviour
     public Transform followTarget;
 
     [Header("Adjust Camera Rotation Speed")]
-    public float cameraRotationSpeed = 1f;
+    public float cameraRotationSpeed = 200f;
+
+    private PlayerAction playerAction;
+
+    private void Awake()
+    {
+        playerAction = GetComponent<PlayerAction>();
+    }
 
     private void Start()
     {
-        HideMouseCursor();
+        // hide mouse cursor when game start
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
     {
         HandleCameraMovement();
-    }
-
-    private void HideMouseCursor()
-    {
-        // hide mouse cursor when game start
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
     }
 
     private void HandleCameraMovement()
@@ -33,7 +36,7 @@ public class PlayerCamera : MonoBehaviour
 
         // move the camera x and y axis with rotating follow target from player
         followTarget.rotation *= Quaternion.AngleAxis(mouseX, Vector3.up);
-        followTarget.rotation *= Quaternion.AngleAxis(mouseY, Vector3.right);
+        followTarget.rotation *= Quaternion.AngleAxis(-mouseY, Vector3.right);
 
         // prevent camera moving out of bounds
         Vector3 angles = followTarget.localEulerAngles;
@@ -51,5 +54,6 @@ public class PlayerCamera : MonoBehaviour
         }
 
         followTarget.localEulerAngles = angles;
+
     }
 }
