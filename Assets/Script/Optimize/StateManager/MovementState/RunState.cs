@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Run
+/// </summary>
 public class RunState : MovementState
 {
     public override void UpdateState(MovementStateManager stateManager)

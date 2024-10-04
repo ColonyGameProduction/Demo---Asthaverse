@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Crouch
+/// </summary>
 public class CrouchState : MovementState
 {
     public override void UpdateState(MovementStateManager stateManager)

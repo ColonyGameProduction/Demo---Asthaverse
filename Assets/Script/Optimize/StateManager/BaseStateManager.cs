@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Base of all State Manager
+/// </summary>
 public abstract class BaseStateManager : MonoBehaviour
 {
     //Switch to other state

@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Base of All state, has generic T so every child of BaseStateManager can enter
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public abstract class BaseState<T> where T : BaseStateManager
 {
     //If Entering State do what
