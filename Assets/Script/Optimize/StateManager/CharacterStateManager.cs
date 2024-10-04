@@ -4,9 +4,12 @@ using UnityEngine;
 
 public abstract class CharacterStateManager : BaseStateManager
 {
-    [SerializeField]protected Animator animator;
-    private void Awake() 
+    [SerializeField]protected Animator _animator;
+    public Animator CharaAnimator {get {return _animator;}}
+
+
+    protected virtual void Awake() 
     {
-        animator = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
     }
 }

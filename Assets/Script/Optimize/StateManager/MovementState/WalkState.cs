@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class WalkState : MovementState
 {
+    public override void UpdateState(MovementStateManager stateManager)
+    {
+        throw new System.NotImplementedException();
+    }
+
     // Start is called before the first frame update
     void Start()
     {

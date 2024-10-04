@@ -1,18 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class IdleState : MovementState
 {
-    // Start is called before the first frame update
-    void Start()
+    public IdleState()
     {
-        
+        StateAnimationName = "IdleAnimation";
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void EnterState(MovementStateManager stateManager)
     {
-        
+
+    }
+
+    public override void UpdateState(MovementStateManager stateManager)
+    {
+        throw new NotImplementedException();
+    }
+    public override void ExiState(MovementStateManager stateManager)
+    {
+        throw new NotImplementedException();
     }
 }
