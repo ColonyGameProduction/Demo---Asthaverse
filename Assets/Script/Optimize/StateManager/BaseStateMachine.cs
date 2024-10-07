@@ -6,8 +6,8 @@ using UnityEngine;
 /// <summary>
 /// Base of all State Manager
 /// </summary>
-public abstract class BaseStateManager : MonoBehaviour
+public abstract class BaseStateMachine : MonoBehaviour
 {
     //Switch to other state
-    public abstract void SwitchState<T>(BaseState<T> newState) where T : BaseStateManager;
+    public abstract void SwitchState(BaseState newState);
 }

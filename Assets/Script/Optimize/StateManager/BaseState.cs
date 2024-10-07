@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Base of All state, has generic T so every child of BaseStateManager can enter
+/// Base of All state
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public abstract class BaseState<T> where T : BaseStateManager
+public abstract class BaseState
 {
     //If Entering State do what
-    public abstract void EnterState(T stateManager);
+    public abstract void EnterState();
     //if in Update frame, do what
-    public abstract void UpdateState(T stateManager);
+    public abstract void UpdateState();
     //If going to exit state, do what
-    public abstract void ExiState(T stateManager);
+    public abstract void ExiState();
 }

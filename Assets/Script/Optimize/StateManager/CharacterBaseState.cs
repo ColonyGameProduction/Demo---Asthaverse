@@ -6,16 +6,21 @@ using UnityEngine;
 /// Base State that connect with animation; connect
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public abstract class  CharacterBaseState<T> : BaseState<T> where T : CharacterStateManager
+public abstract class  CharacterBaseState<T> : BaseState where T : CharacterStateMachine
 {
+    protected T _stateMachine;
     protected string StateAnimationName{get;set;}
-    public override void EnterState(T stateManager)
+    public CharacterBaseState(T stateMachine)
     {
-        stateManager.CharaAnimator.SetBool(StateAnimationName, true);
+        _stateMachine = stateMachine;
+    }
+    public override void EnterState()
+    {
+        _stateMachine.CharaAnimator.SetBool(StateAnimationName, true);
     }
 
-    public override void ExiState(T stateManager)
+    public override void ExiState()
     {
-        stateManager.CharaAnimator.SetBool(StateAnimationName, false);
+        _stateMachine.CharaAnimator.SetBool(StateAnimationName, false);
     }
 }

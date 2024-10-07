@@ -2,17 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Juga Tempat ambil data-data universal yg tidak berhubungan dgn si statemachine 
+/// </summary>
 public class CharacterIdentity : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]private bool _isInputPlayer;
+    public bool IsInputPlayer { get { return _isInputPlayer; } }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

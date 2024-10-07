@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using System;
 
 //kelas untuk player action seperti attacking, scope, dan Silent kill
 
@@ -15,6 +16,8 @@ public class PlayerAction : ExecuteLogic
     private bool isShooting = false;
     private bool isReloading = false;
     private bool fireRateOn = false;
+    private bool isRun = false;
+    private bool IsCrouching = false;
 
     [Header("Untuk Movement dan Kamera")]
     [SerializeField]
@@ -64,6 +67,12 @@ public class PlayerAction : ExecuteLogic
         testAnimation = GetComponent<AnimationTestScript>();
 
         //membuat event untuk menjalankan aksi yang dipakai oleh player
+        inputActions.InputPlayerAction.Run.performed += Run_performed;
+        inputActions.InputPlayerAction.Run.canceled += Run_canceled;
+
+        inputActions.InputPlayerAction.Crouch.performed += Crouch_performed;
+        inputActions.InputPlayerAction.Crouch.canceled += Crouch_canceled;
+
         inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
         inputActions.InputPlayerAction.Shooting.canceled += Shooting_canceled;
 
@@ -84,29 +93,28 @@ public class PlayerAction : ExecuteLogic
         StartingSetup();
     }
 
-    private bool Run()
+    private void Crouch_canceled(InputAction.CallbackContext context)
     {
-        if (inputActions.InputPlayerAction.Run.ReadValue<float>() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        IsCrouching = false;
     }
 
-    private bool Crouch()
+    private void Crouch_performed(InputAction.CallbackContext context)
     {
-        if (inputActions.InputPlayerAction.Crouch.ReadValue<float>() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if(isRun)isRun = false;
+        IsCrouching = true;
     }
+
+    private void Run_canceled(InputAction.CallbackContext context)
+    {
+        isRun = false;
+    }
+
+    private void Run_performed(InputAction.CallbackContext context)
+    {
+        if(IsCrouching)IsCrouching = false;
+        isRun = true;
+    }
+
 
     private void Reload_performed(InputAction.CallbackContext obj)
     {
@@ -251,11 +259,11 @@ public class PlayerAction : ExecuteLogic
         Vector3 flatForward = new Vector3(followTarget.forward.x, 0, followTarget.forward.z).normalized;
         Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;        
 
-        if (Crouch())
+        if (IsCrouching)
         {
             CC.SimpleMove(direction * (moveSpeed - 2));
         }
-        else if (Run())
+        else if (isRun)
         {
             CC.SimpleMove(direction * (moveSpeed + 2));
         }

@@ -2,22 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Walk
+/// </summary>
 public class WalkState : MovementState
 {
-    public override void UpdateState(MovementStateManager stateManager)
+    public WalkState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
     {
-        throw new System.NotImplementedException();
+        // StateAnimationName = "IdleAnimation";
     }
-
-    // Start is called before the first frame update
-    void Start()
+    public override void EnterState()
+    {
+        // base.EnterState(); // Jalankan animasi
+        Debug.Log("Walking");
+        _stateMachine.ChangeCurrSpeed(_stateMachine.WalkSpeed);
+    }
+    public override void UpdateState()
     {
         
-    }
+        if((!_stateMachine.isAI && _playableData.InputMovement != Vector3.zero) || (_stateMachine.isAI && _stateMachine.CurrAIDirection != null))
+        {
+            if(_stateMachine.isAI)_stateMachine.Move();
+            if(_crouch != null && _crouch.IsCrouching)_stateMachine.SwitchState(_factory.CrouchState());
+            else if(_standMovement.IsRunning)_stateMachine.SwitchState(_factory.RunState());
 
-    // Update is called once per frame
-    void Update()
+        }
+        else if((!_stateMachine.isAI && _playableData.InputMovement == Vector3.zero) || (_stateMachine.isAI && _stateMachine.CurrAIDirection == null))
+        {
+            _stateMachine.SwitchState(_factory.IdleState());
+        }
+    }
+    public override void ExiState()
     {
-        
+        // base.EnterState(); // Matikan animasi
+    }
+    public override void PhysicsLogicUpdateState()
+    {
+        if(!_stateMachine.isAI)_stateMachine.Move();
     }
 }

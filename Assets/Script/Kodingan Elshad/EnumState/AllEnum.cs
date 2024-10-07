@@ -19,3 +19,6 @@ public enum weaponType
     Rifle,
     MachineGun,
 }
+
+///summary
+///Enum ini penanda, karakter saat ini lg kondisi dikontrol AI atau dikontrol Player atau ga

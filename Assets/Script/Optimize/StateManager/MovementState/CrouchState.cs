@@ -7,20 +7,41 @@ using UnityEngine;
 /// </summary>
 public class CrouchState : MovementState
 {
-    public override void UpdateState(MovementStateManager stateManager)
+    public CrouchState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
     {
-        throw new System.NotImplementedException();
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
     }
-
-    // Update is called once per frame
-    void Update()
+    public override void EnterState()
     {
-        
+        // base.EnterState(); // Jalankan animasi
+        Debug.Log("Crouching");
+        _stateMachine.ChangeCurrSpeed(_crouch.CrouchSpeed);
+    }
+    public override void UpdateState()
+    {
+        if((!_stateMachine.isAI && _playableData.InputMovement != Vector3.zero) || (_stateMachine.isAI && _stateMachine.CurrAIDirection != null))
+        {
+            if(_stateMachine.isAI)_stateMachine.Move();
+            if(!_crouch.IsCrouching)
+            {
+                if(_standMovement.IsRunning)
+                {
+                    _stateMachine.SwitchState(_factory.RunState());
+                }
+                else _stateMachine.SwitchState(_factory.WalkState());
+            }
+        }
+        else if((!_stateMachine.isAI && _playableData.InputMovement == Vector3.zero) || (_stateMachine.isAI && _stateMachine.CurrAIDirection == null))
+        {
+            _stateMachine.SwitchState(_factory.IdleState());
+        }
+    }
+    public override void ExiState()
+    {
+        // if(!_crouch.IsCrouching) //Matikan state animasi crouch
+    }
+    public override void PhysicsLogicUpdateState()
+    {
+        if(!_stateMachine.isAI)_stateMachine.Move();
     }
 }
