@@ -16,7 +16,6 @@ public class AnimationTestScript : MonoBehaviour
 
     public void WalkAnimation(Vector2 Movement)
     {
-        Debug.Log(Movement);
         animator.SetFloat("Horizontal", Movement.x);
         animator.SetFloat("Vertical", Movement.y);
     }

@@ -103,7 +103,7 @@ public class FriendsAI : ExecuteLogic
     }
 
     
-
+    //untuk follow player
     private void CommandFollow()
     {
         if (commandActive == true || holdPositionActive == true)
@@ -130,6 +130,7 @@ public class FriendsAI : ExecuteLogic
         }
     }
 
+    //set destination supaya friends bisa mengikuti player
     public void DetectingPlayer()
     {
         for(int i = 0; i<gm.playerGameObject.Length; i++)
@@ -142,6 +143,7 @@ public class FriendsAI : ExecuteLogic
         }
     }
 
+    //untuk go to position
     public void DetectingPosition()
     {
         for (int i = 0; i < gm.playerGameObject.Length; i++)
@@ -154,6 +156,7 @@ public class FriendsAI : ExecuteLogic
         }
     }
 
+    //balikin friends ke posisi awal player
     private void FindActivePlayerAction() 
     { 
         // Cari semua PlayerAction
@@ -170,10 +173,13 @@ public class FriendsAI : ExecuteLogic
         }
     }
 
+    //untuk passing navmesh
     public NavMeshAgent GetNavMesh()
     {
         return this.GetComponent<NavMeshAgent>();
     }
+
+    
 
     private void OnDisable()
     {

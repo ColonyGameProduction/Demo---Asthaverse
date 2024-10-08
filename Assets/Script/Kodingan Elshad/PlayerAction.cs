@@ -22,6 +22,8 @@ public class PlayerAction : ExecuteLogic
     [SerializeField]
     private Transform followTarget;
     [SerializeField]
+    private Transform aim;
+    [SerializeField]
     private GameObject[] friendsDestination;
     [SerializeField]
     private GameObject[] GoToTargetPosition;
@@ -177,7 +179,7 @@ public class PlayerAction : ExecuteLogic
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
         {
-            Shoot(Camera.main.transform.position, followTarget.transform.position, activeWeapon, enemyMask);
+            Shoot(Camera.main.transform.position, aim.transform.position, activeWeapon, enemyMask);
             StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
             isShooting = false;
             if (activeWeapon.currBullet == 0 && activeWeapon.totalBullet > 0)
@@ -189,9 +191,14 @@ public class PlayerAction : ExecuteLogic
         }
     }
 
+    //event ketika selesai shoot
     private void Shooting_canceled(InputAction.CallbackContext obj)
     {
-        testAnimation?.animator.SetBool("Scope", false);
+        if(!gm.scope)
+        {
+            testAnimation?.animator.SetBool("Scope", false);
+
+        }
         isShooting = false;
     }
 
@@ -229,7 +236,7 @@ public class PlayerAction : ExecuteLogic
             if(activeWeapon != null)
             {
 
-                Shoot(Camera.main.transform.position, followTarget.transform.position, activeWeapon, enemyMask);
+                Shoot(Camera.main.transform.position, aim.transform.position, activeWeapon, enemyMask);
                 StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
                 if (activeWeapon.currBullet == 0)
                 {
