@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -39,8 +40,14 @@ public class EnemyAI : ExecuteLogic
     private WeaponStatSO weapon;
     public LayerMask isItEnemy;
 
+    //Untuk Alert
+    alertState enemyState;
+    [SerializeField]
+    private float alertValue;
+
     private void Start()
     {
+        enemyState = alertState.Idle;
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
@@ -57,13 +64,61 @@ public class EnemyAI : ExecuteLogic
 
     private void Update()
     {
-        Moving();
+        switch(enemyState)
+        {
+            case alertState.Idle:
+                Moving();
+                Debug.Log("idle");
+                break;
+            case alertState.Hunted:
+                Debug.Log("hunted");
+                break;
+            case alertState.Engage:
+                Debug.Log("engage");
+                destination = visibleTargets[0].gameObject;
+                Shoot();
+                break;
+        }
+
         if(enemyHP <= 0)
         {
             Debug.Log("Dead");
         }
 
-        if(!fireRateOn && !isReloading)
+        if (visibleTargets.Count > 0)
+        {
+
+            if (alertValue <= 90)
+            {
+                alertValue += Time.deltaTime * 10;
+            }
+
+            if (alertValue == 0)
+            {
+                enemyState = alertState.Idle;
+            }
+            else if (alertValue >= 90 / 2 && alertValue < 90)
+            {
+                enemyState = alertState.Hunted;
+            }
+            else if (alertValue >= 90)
+            {
+                enemyState = alertState.Engage;
+            }
+        }
+        else
+        {
+            if (alertValue >= 0)
+            {
+                alertValue -= Time.deltaTime * 10;
+            }
+        }
+        
+    }      
+
+    private void Shoot()
+    {
+        if (!fireRateOn && !isReloading)
         {
             Shooting();
             StartCoroutine(FireRate(FireRateFlag, weapon.fireRate));
@@ -75,7 +130,7 @@ public class EnemyAI : ExecuteLogic
             }
 
         }
-    }      
+    }
 
     //pathfinding untuk enemy
     private void Moving()
@@ -89,10 +144,7 @@ public class EnemyAI : ExecuteLogic
         {
             MoveToDestination(enemyNavmesh, destination.transform.position);
         }
-        else
-        {
-            if(visibleTargets.Count > 0)MoveToDestination(enemyNavmesh, visibleTargets[0].position);
-        }
+        
     }
 
     private void Shooting()
