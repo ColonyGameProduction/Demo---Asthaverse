@@ -26,6 +26,29 @@ public class ExecuteLogic : AILogic
         gm.playerGameObject[2].GetComponent<FriendsAI>().friendsID = 2;
     }
 
+    public void BreadcrumbsFollowPlayer(PlayerAction playerAction, ref int currBreadcrumbs)
+    {
+        GameManager gm = GameManager.instance;
+
+
+        if (currBreadcrumbs < gm.breadcrumbsGameObject.Length - 1)
+        {
+            gm.breadcrumbsGameObject[currBreadcrumbs].SetActive(true);
+            gm.breadcrumbsGameObject[currBreadcrumbs].transform.position = playerAction.transform.position;
+            gm.breadcrumbsGameObject[currBreadcrumbs].transform.forward = playerAction.transform.forward;
+            currBreadcrumbs++;
+        }
+        else if (currBreadcrumbs == gm.breadcrumbsGameObject.Length - 1)
+        {
+            gm.breadcrumbsGameObject[currBreadcrumbs].SetActive(true);
+            gm.breadcrumbsGameObject[currBreadcrumbs].transform.position = playerAction.transform.position;
+            gm.breadcrumbsGameObject[currBreadcrumbs].transform.forward = playerAction.transform.forward;
+            currBreadcrumbs = 0;
+        }
+
+
+    }
+
     //untuk Reloading
     public void Reload(WeaponStatSO weaponStatSO)
     {

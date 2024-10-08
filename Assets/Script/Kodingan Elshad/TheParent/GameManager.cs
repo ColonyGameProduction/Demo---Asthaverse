@@ -49,14 +49,11 @@ public class GameManager : MonoBehaviour
 
     public void CreatingBreadcrumbs()
     {
-        for(int i = 0;i < 10;i++)
+        breadcrumbsGameObject = new GameObject[10];
+        for(int i = 0; i < 10; i++)
         {
-            breadcrumbsGameObject[i] = new GameObject();
-        }
-
-        for (int i = 0; i < 10; i++)
-        {
-            Instantiate(breadcrumbsGameObject[i], Vector3.zero, Quaternion.identity);
+            breadcrumbsGameObject[i] = new GameObject("Breadcrumbs");
+            breadcrumbsGameObject[i].SetActive(false);
         }
     }
 }

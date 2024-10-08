@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using System;
 
 //kelas untuk player action seperti attacking, scope, dan Silent kill
 
@@ -21,8 +22,6 @@ public class PlayerAction : ExecuteLogic
     private Transform playerGameObject;
     [SerializeField]
     private Transform followTarget;
-    [SerializeField]
-    private Transform aim;
     [SerializeField]
     private GameObject[] friendsDestination;
     [SerializeField]
@@ -60,6 +59,9 @@ public class PlayerAction : ExecuteLogic
     public bool isHoldPosition = false;
     private int selectedFriendID = -1;
 
+    //breadcrumbs
+    private int currBreadcrumbs;
+
     //supaya input action bisa digunakan
     private void Awake()
     {
@@ -68,6 +70,8 @@ public class PlayerAction : ExecuteLogic
 
     private void Start()
     {
+        StartCoroutine("BreadcrumbsDrop", .3f);
+
         gm = GameManager.instance;
         testAnimation = GetComponent<AnimationTestScript>();
 
@@ -186,7 +190,7 @@ public class PlayerAction : ExecuteLogic
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
         {
-            Shoot(Camera.main.transform.position, aim.transform.position, activeWeapon, enemyMask);
+            Shoot(Camera.main.transform.position, Camera.main.transform.forward, activeWeapon, enemyMask);
             StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
             isShooting = false;
             if (activeWeapon.currBullet == 0 && activeWeapon.totalBullet > 0)
@@ -227,12 +231,12 @@ public class PlayerAction : ExecuteLogic
         if (isCommandActive && selectedFriendID != -1 && Mouse.current.leftButton.wasPressedThisFrame)
         {
 
-            Vector3 rayOrigin = crosshairPoint.transform.position;
-            Vector3 rayDirection = crosshairPoint.transform.forward;
+            Vector3 rayOrigin = Camera.main.transform.position;
+            Vector3 rayDirection = Camera.main.transform.forward.normalized;
 
             Debug.DrawRay(rayOrigin, rayDirection, Color.red);
 
-            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit))
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
             {
                 // Set the destination for the selected friend based on the mouse click
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
@@ -244,13 +248,14 @@ public class PlayerAction : ExecuteLogic
 
     private void FixedUpdate()
     {
+        
         //continous Shoot
         if(isShooting && activeWeapon.allowHoldDownButton && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
         {
             if(activeWeapon != null)
             {
 
-                Shoot(Camera.main.transform.position, aim.transform.position, activeWeapon, enemyMask);
+                Shoot(Camera.main.transform.position, Camera.main.transform.forward, activeWeapon, enemyMask);
                 StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
                 if (activeWeapon.currBullet == 0)
                 {
@@ -363,6 +368,14 @@ public class PlayerAction : ExecuteLogic
         fireRateOn = value;
     }
 
-    
+    private IEnumerator BreadcrumbsDrop (float delay)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(delay);
+            BreadcrumbsFollowPlayer(this, ref currBreadcrumbs);
+        }
+    }
+
 
 }
