@@ -19,13 +19,15 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouch, IPlay
     [Space(1)]
     [Header("Hubungan dgn Movement dan Camera")]
     [SerializeField] private Transform _followTarget;
-    [SerializeField]protected bool _isCrouch;
+    [SerializeField] protected bool _isCrouch;
+    [SerializeField] protected bool _isMustLookForward;
+    protected Vector3 _inputMovement;
     
-    public bool IsCrouching { get {return _isCrouch;}set{} }
-    public bool IsMustLookForward { get; set; } // Kan kalo nembak gitu hrs liat ke depan selalu, jd is true
     [HideInInspector]
     //getter setter
-    public Vector3 InputMovement { get; set;} // Getting Input Movement from playercontroller
+    public Vector3 InputMovement { get{ return _inputMovement;} set{_inputMovement = value;}} // Getting Input Movement from playercontroller
+    public bool IsCrouching { get {return _isCrouch;}set{ _isCrouch = value;} }
+    public bool IsMustLookForward { get{return _isMustLookForward;} set{_isMustLookForward = value;} } // Kan kalo nembak gitu hrs liat ke depan selalu, jd is true
     public CharacterController CC {get { return _cc;} }
     public float CrouchSpeed {get{return _crouchSpeed;}}
 
@@ -33,11 +35,12 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouch, IPlay
     {
         base.Awake();
         if(_cc == null)_cc = GetComponent<CharacterController>();
+        if(_followTarget == null) _followTarget = GetComponent<PlayableCamera>().GetFollowTarget;
     }
 
     public override void Move()
     {
-        if(isAI)base.Move();
+        if(IsInputPlayer)base.Move();
         else MovePlayableChara(InputMovement);
     }
     /// <summary>
@@ -50,10 +53,10 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouch, IPlay
         Vector3 flatForward = new Vector3(_followTarget.forward.x, 0, _followTarget.forward.z).normalized;
         Vector3 Facedir = flatForward * movement.z + _followTarget.right * movement.x; 
 
-        CC.SimpleMove(direction * _currSpeed);
+        CC.SimpleMove(Facedir * _currSpeed);
 
-        CharaAnimator.SetFloat("Horizontal", direction.x);
-        CharaAnimator.SetFloat("Vertical", direction.z);
+        CharaAnimator.SetFloat("Horizontal", movement.x);
+        CharaAnimator.SetFloat("Vertical", movement.z);
 
         if(!IsMustLookForward)RotatePlayableChara(Facedir);
         else RotatePlayableChara(flatForward);
@@ -65,6 +68,17 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouch, IPlay
             _charaGameObject.forward = Vector3.Slerp(_charaGameObject.forward, direction.normalized, Time.deltaTime * _rotateSpeed);
         }
     }
-    
 
+    public void ForceStopPlayable()
+    {
+        InputMovement = Vector3.zero;
+        IsWalking = false;
+        IsRunning = false;
+        IsCrouching = false;
+    }
+    public override void ForceStopMoving()
+    {
+        if(IsInputPlayer)base.ForceStopMoving();
+        else ForceStopPlayable();
+    }
 }

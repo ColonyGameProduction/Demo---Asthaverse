@@ -11,6 +11,9 @@ using System;
 
 public class PlayerAction : ExecuteLogic
 {
+    [Header("TRest")]
+    [SerializeField]PlayableMovementStateMachine stateMachine;
+    private IPlayableMovementDataNeeded dataMovement;
     GameManager gm;
     private PlayerActionInput inputActions;
     private bool isShooting = false;
@@ -63,6 +66,7 @@ public class PlayerAction : ExecuteLogic
 
     private void Start()
     {
+        dataMovement = GetComponent<IPlayableMovementDataNeeded>();
         gm = GameManager.instance;
         testAnimation = GetComponent<AnimationTestScript>();
 
@@ -227,6 +231,8 @@ public class PlayerAction : ExecuteLogic
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
             }
         }
+        // Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
+        // dataMovement.InputMovement = move;
     }
 
     private void FixedUpdate()

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Run
+/// State Run
 /// </summary>
 public class RunState : MovementState
 {    
@@ -15,13 +15,18 @@ public class RunState : MovementState
     {
         // base.EnterState(); // Jalankan animasi
         Debug.Log("Running");
+
+        //Mengganti kecepatan
         _stateMachine.ChangeCurrSpeed(_stateMachine.RunSpeed);
+
+        //Harus membuat semua state aim di aim manager, false, dn balik ke posisi not aiming
     }
     public override void UpdateState()
     {
-        if((!_stateMachine.isAI && _playableData.InputMovement != Vector3.zero) || (_stateMachine.isAI && _stateMachine.CurrAIDirection != null))
+        //Menunggu syarat
+        if((!_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
         {
-            if(_stateMachine.isAI)_stateMachine.Move();
+            if(_stateMachine.IsInputPlayer)_stateMachine.Move();
             if(!_standMovement.IsRunning)
             {
                 if(_crouch != null && _crouch.IsCrouching) _stateMachine.SwitchState(_factory.CrouchState());
@@ -32,7 +37,7 @@ public class RunState : MovementState
             }
         
         }
-        else if((!_stateMachine.isAI && _playableData.InputMovement == Vector3.zero) || (_stateMachine.isAI && _stateMachine.CurrAIDirection == null))
+        else if((!_stateMachine.IsInputPlayer && _playableData.InputMovement == Vector3.zero) || (_stateMachine.IsInputPlayer && _stateMachine.IsTargetTheSamePositionAsTransform()))
         {
             _stateMachine.SwitchState(_factory.IdleState());
         }
@@ -44,6 +49,6 @@ public class RunState : MovementState
     }
     public override void PhysicsLogicUpdateState()
     {
-        if(!_stateMachine.isAI)_stateMachine.Move();
+        if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
     }
 }

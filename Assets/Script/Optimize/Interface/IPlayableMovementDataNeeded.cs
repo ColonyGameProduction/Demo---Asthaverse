@@ -6,4 +6,5 @@ public interface IPlayableMovementDataNeeded
 {
     public Vector3 InputMovement { get; set;}
     bool IsMustLookForward{get; set;}
+    
 }

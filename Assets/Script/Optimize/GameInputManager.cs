@@ -66,29 +66,6 @@ public class GameInputManager : MonoBehaviour
     private void Shooting_canceled(InputAction.CallbackContext context)=> OnShootingCanceled?.Invoke();    
     private void Scope_performed(InputAction.CallbackContext context)=> OnScopePerformed?.Invoke();
     private void Reload_performed(InputAction.CallbackContext context)=> OnReloadPerformed?.Invoke();
-    public bool Run()
-    {
-        if (_inputActions.InputPlayerAction.Run.ReadValue<float>() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool Crouch()
-    {
-        if (_inputActions.InputPlayerAction.Crouch.ReadValue<float>() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
     public Vector2 Movement()
     {
         Vector2 direction = Vector2.zero;

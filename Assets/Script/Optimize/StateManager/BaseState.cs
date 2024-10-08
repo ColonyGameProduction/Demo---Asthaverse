@@ -5,7 +5,6 @@ using UnityEngine;
 /// <summary>
 /// Base of All state
 /// </summary>
-/// <typeparam name="T"></typeparam>
 public abstract class BaseState
 {
     //If Entering State do what

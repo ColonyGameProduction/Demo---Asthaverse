@@ -16,12 +16,15 @@ public class CrouchState : MovementState
         // base.EnterState(); // Jalankan animasi
         Debug.Log("Crouching");
         _stateMachine.ChangeCurrSpeed(_crouch.CrouchSpeed);
+
+        //mungkin di sini bisa ditambah kalau masuknya zero atau masih idle dan iscrouching false, maka animasi dimatikan trus lsg ke exit
     }
     public override void UpdateState()
     {
-        if((!_stateMachine.isAI && _playableData.InputMovement != Vector3.zero) || (_stateMachine.isAI && _stateMachine.CurrAIDirection != null))
+        //sama seperti walk dkk
+        if((!_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
         {
-            if(_stateMachine.isAI)_stateMachine.Move();
+            if(_stateMachine.IsInputPlayer)_stateMachine.Move();
             if(!_crouch.IsCrouching)
             {
                 if(_standMovement.IsRunning)
@@ -31,7 +34,7 @@ public class CrouchState : MovementState
                 else _stateMachine.SwitchState(_factory.WalkState());
             }
         }
-        else if((!_stateMachine.isAI && _playableData.InputMovement == Vector3.zero) || (_stateMachine.isAI && _stateMachine.CurrAIDirection == null))
+        else if((!_stateMachine.IsInputPlayer && _playableData.InputMovement == Vector3.zero) || (_stateMachine.IsInputPlayer && _stateMachine.IsTargetTheSamePositionAsTransform()))
         {
             _stateMachine.SwitchState(_factory.IdleState());
         }
@@ -42,6 +45,6 @@ public class CrouchState : MovementState
     }
     public override void PhysicsLogicUpdateState()
     {
-        if(!_stateMachine.isAI)_stateMachine.Move();
+        if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
     }
 }
