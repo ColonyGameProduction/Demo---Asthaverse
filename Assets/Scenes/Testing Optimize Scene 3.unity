@@ -5613,6 +5613,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3a9c9ae468c6ea47a2fbe8f2dda0d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _charaIdentities: []
+  _normalFOV: 40
+  _scopeFOV: 60
+  _isScope: 0
+  _cameraDelayDuration: 0.1
+  _switchDelayDuration: 1
 --- !u!1 &859698410
 GameObject:
   m_ObjectHideFlags: 0
@@ -9271,7 +9277,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &2017098523
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -9307,7 +9313,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1083558674}
-  isAI: 1
   isGo: 0
   isStop: 0
   objectDir: {fileID: 1786254555}
@@ -9346,7 +9351,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1083558674}
-  isAI: 1
   isGo: 0
   isStop: 0
   objectDir: {fileID: 1786254555}
@@ -9664,7 +9668,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1031462396}
-  isAI: 0
   isGo: 0
   isStop: 0
   objectDir: {fileID: 1786254555}
