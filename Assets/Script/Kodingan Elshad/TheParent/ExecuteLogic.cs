@@ -100,7 +100,7 @@ public class ExecuteLogic : AILogic
     //Logic 'Command'
     public void Command()
     {
-        ShowMouseCursor();
+        //ShowMouseCursor();
 
         PlayerAction playerAction = GetComponent<PlayerAction>();
 
