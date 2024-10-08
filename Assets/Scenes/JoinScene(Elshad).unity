@@ -395,6 +395,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9faaf32607770b5469cd14d9154e22ad, type: 3}
+--- !u!1 &56341113
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 56341114}
+  m_Layer: 7
+  m_Name: Crosshair Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &56341114
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56341113}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1911957387}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &63220340
 GameObject:
   m_ObjectHideFlags: 0
@@ -934,6 +965,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 189267911}
   m_CullTransparentMesh: 1
+--- !u!1 &190074157
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 190074158}
+  m_Layer: 7
+  m_Name: Crosshair Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &190074158
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190074157}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.75}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2047355711}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &219401199
 GameObject:
   m_ObjectHideFlags: 3
@@ -2036,6 +2098,7 @@ Transform:
   - {fileID: 1109155659}
   - {fileID: 1242949133}
   - {fileID: 1457320076}
+  - {fileID: 1799307561}
   - {fileID: 1398962085}
   m_Father: {fileID: 1347309374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4053,6 +4116,8 @@ MonoBehaviour:
   weaponStat:
   - {fileID: 11400000, guid: ce86a641912742b49adc7be1f7fd8c2e, type: 2}
   - {fileID: 11400000, guid: 4e797d732470a364584aa35fc319d05c, type: 2}
+  siapaSih: {fileID: 11400000, guid: 78ac99ab9c521f949b44b30310e67cba, type: 2}
+  crosshairPoint: {fileID: 1799307560}
   command: {fileID: 1543354274}
   isCommandActive: 0
   isHoldPosition: 0
@@ -6352,6 +6417,8 @@ MonoBehaviour:
   weaponStat:
   - {fileID: 11400000, guid: ddddea676c9c1d64683b955392c0bef3, type: 2}
   - {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
+  siapaSih: {fileID: 11400000, guid: 404520d3bc4bb0c45b8455162413b7d4, type: 2}
+  crosshairPoint: {fileID: 56341113}
   command: {fileID: 138660905}
   isCommandActive: 0
   isHoldPosition: 0
@@ -8260,6 +8327,37 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1799307560
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1799307561}
+  m_Layer: 7
+  m_Name: Crosshair Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1799307561
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1799307560}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 439030860}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1844982620
 GameObject:
   m_ObjectHideFlags: 0
@@ -8528,6 +8626,7 @@ Transform:
   - {fileID: 155064225}
   - {fileID: 2094983564}
   - {fileID: 946796280}
+  - {fileID: 56341114}
   m_Father: {fileID: 745014794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &1911957388
@@ -8782,6 +8881,7 @@ Transform:
   - {fileID: 1715774230}
   - {fileID: 918077073}
   - {fileID: 961320780}
+  - {fileID: 190074158}
   - {fileID: 1031462395}
   m_Father: {fileID: 1999881233}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8926,6 +9026,8 @@ MonoBehaviour:
   weaponStat:
   - {fileID: 11400000, guid: a9d97bbad63f47d4a92e1eb934894ae8, type: 2}
   - {fileID: 11400000, guid: 4e797d732470a364584aa35fc319d05c, type: 2}
+  siapaSih: {fileID: 11400000, guid: aee2290065d7285488cdea12fbc8bb54, type: 2}
+  crosshairPoint: {fileID: 190074157}
   command: {fileID: 486741365}
   isCommandActive: 0
   isHoldPosition: 0

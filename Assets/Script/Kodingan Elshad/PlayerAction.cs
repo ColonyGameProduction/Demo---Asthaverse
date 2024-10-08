@@ -39,6 +39,12 @@ public class PlayerAction : ExecuteLogic
     private WeaponStatSO[] weaponStat;
     private WeaponStatSO activeWeapon;
 
+    [SerializeField]
+    private EntityStatSO siapaSih;
+
+    [SerializeField]
+    private GameObject crosshairPoint;
+
     private AnimationTestScript testAnimation;
     
     private int curWeapon;
@@ -80,6 +86,7 @@ public class PlayerAction : ExecuteLogic
 
         CC = GetComponent<CharacterController>();
 
+        weaponStat = siapaSih.weaponStat;
 
         StartingSetup();
     }
@@ -212,11 +219,18 @@ public class PlayerAction : ExecuteLogic
         // If command is active and a friend is selected, detect mouse click
         if (isCommandActive && selectedFriendID != -1 && Mouse.current.leftButton.wasPressedThisFrame)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hit))
+
+            Vector3 rayOrigin = crosshairPoint.transform.position;
+            Vector3 rayDirection = crosshairPoint.transform.forward;
+
+            Debug.DrawRay(rayOrigin, rayDirection, Color.red);
+
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit))
             {
                 // Set the destination for the selected friend based on the mouse click
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
+
+                Debug.Log(hit.point);
             }
         }
     }
