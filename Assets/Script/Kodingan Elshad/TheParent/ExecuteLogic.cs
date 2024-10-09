@@ -12,22 +12,6 @@ using System;
  * Jangan ke MonoBehaviour
  */
 
-
-
-abstract class slajdkadj : MonoBehaviour
-{
-    public void BaseShoot()
-    {
-
-    }
-
-    public abstract void asdads();
-    public virtual void dasdad()
-    {
-
-    }
-}
-
 public class ExecuteLogic : AILogic
 {
 
@@ -40,6 +24,29 @@ public class ExecuteLogic : AILogic
         GameManager gm = GameManager.instance;
         gm.playerGameObject[1].GetComponent<FriendsAI>().friendsID = 1;
         gm.playerGameObject[2].GetComponent<FriendsAI>().friendsID = 2;
+    }
+
+    public void BreadcrumbsFollowPlayer(PlayerAction playerAction, ref int currBreadcrumbs)
+    {
+        GameManager gm = GameManager.instance;
+
+
+        if (currBreadcrumbs < gm.breadcrumbsGameObject.Length - 1)
+        {
+            gm.breadcrumbsGameObject[currBreadcrumbs].SetActive(true);
+            gm.breadcrumbsGameObject[currBreadcrumbs].transform.position = playerAction.transform.position;
+            gm.breadcrumbsGameObject[currBreadcrumbs].transform.forward = playerAction.transform.forward;
+            currBreadcrumbs++;
+        }
+        else if (currBreadcrumbs == gm.breadcrumbsGameObject.Length - 1)
+        {
+            gm.breadcrumbsGameObject[currBreadcrumbs].SetActive(true);
+            gm.breadcrumbsGameObject[currBreadcrumbs].transform.position = playerAction.transform.position;
+            gm.breadcrumbsGameObject[currBreadcrumbs].transform.forward = playerAction.transform.forward;
+            currBreadcrumbs = 0;
+        }
+
+
     }
 
     //untuk Reloading
@@ -116,7 +123,7 @@ public class ExecuteLogic : AILogic
     //Logic 'Command'
     public void Command()
     {
-        ShowMouseCursor();
+        //ShowMouseCursor();
 
         PlayerAction playerAction = GetComponent<PlayerAction>();
 

@@ -21,7 +21,9 @@ public class GameManager : MonoBehaviour
     public bool canSwitch;
 
     [Header("Apakah sudah scope")]
-    public bool scope; 
+    public bool scope;
+
+    public GameObject[] breadcrumbsGameObject;
 
     private void Awake()
     {
@@ -32,6 +34,7 @@ public class GameManager : MonoBehaviour
     {
         playableCharacterNum = 0;
         FollowCamerasRefrence();
+        CreatingBreadcrumbs();
         canSwitch = true;
         scope = false;
     }
@@ -41,6 +44,16 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < playerGameObject.Length; i++)
         {
             followCameras[i] = playerGameObject[i].GetComponentInChildren<CinemachineVirtualCamera>();
+        }
+    }
+
+    public void CreatingBreadcrumbs()
+    {
+        breadcrumbsGameObject = new GameObject[10];
+        for(int i = 0; i < 10; i++)
+        {
+            breadcrumbsGameObject[i] = new GameObject("Breadcrumbs");
+            breadcrumbsGameObject[i].SetActive(false);
         }
     }
 }

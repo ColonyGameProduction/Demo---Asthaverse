@@ -28,6 +28,8 @@ public class PlayerAction : ExecuteLogic
     [SerializeField]
     private Transform followTarget;
     [SerializeField]
+    private Transform aim;
+    [SerializeField]
     private GameObject[] friendsDestination;
     [SerializeField]
     private GameObject[] GoToTargetPosition;
@@ -44,6 +46,12 @@ public class PlayerAction : ExecuteLogic
     [SerializeField]
     private WeaponStatSO[] weaponStat;
     private WeaponStatSO activeWeapon;
+
+    [SerializeField]
+    private EntityStatSO siapaSih;
+
+    [SerializeField]
+    private GameObject crosshairPoint;
 
     private AnimationTestScript testAnimation;
     
@@ -93,6 +101,7 @@ public class PlayerAction : ExecuteLogic
 
         CC = GetComponent<CharacterController>();
 
+        weaponStat = siapaSih.weaponStat;
 
         StartingSetup();
     }
@@ -189,7 +198,7 @@ public class PlayerAction : ExecuteLogic
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
         {
-            Shoot(Camera.main.transform.position, followTarget.transform.position, activeWeapon, enemyMask);
+            Shoot(Camera.main.transform.position, aim.transform.position, activeWeapon, enemyMask);
             StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
             isShooting = false;
             if (activeWeapon.currBullet == 0 && activeWeapon.totalBullet > 0)
@@ -201,9 +210,14 @@ public class PlayerAction : ExecuteLogic
         }
     }
 
+    //event ketika selesai shoot
     private void Shooting_canceled(InputAction.CallbackContext obj)
     {
-        testAnimation?.animator.SetBool("Scope", false);
+        if(!gm.scope)
+        {
+            testAnimation?.animator.SetBool("Scope", false);
+
+        }
         isShooting = false;
     }
 
@@ -221,11 +235,35 @@ public class PlayerAction : ExecuteLogic
             selectedFriendID = 2; // Select FriendAI with ID 2
         }
 
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Vector3 rayOrigin = Camera.main.transform.position;
+            Vector3 rayDirection = Camera.main.transform.forward.normalized;
+
+            Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.magenta, 2f);
+
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Interactable")))
+            {
+                if (hit.collider.GetComponent<PickableItems>())
+                {
+                    Debug.Log("Ambil!");
+                }
+                else if (hit.collider.GetComponent<OpenableObject>())
+                {
+                    Debug.Log("Buka!");
+                }
+            }
+        }
+
         // If command is active and a friend is selected, detect mouse click
         if (isCommandActive && selectedFriendID != -1 && Mouse.current.leftButton.wasPressedThisFrame)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            Vector3 rayOrigin = Camera.main.transform.position;
+            Vector3 rayDirection = Camera.main.transform.forward.normalized;
+
+            Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.red, 2f);
+
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground")))
             {
                 // Set the destination for the selected friend based on the mouse click
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
@@ -243,7 +281,7 @@ public class PlayerAction : ExecuteLogic
             if(activeWeapon != null)
             {
 
-                Shoot(Camera.main.transform.position, followTarget.transform.position, activeWeapon, enemyMask);
+                Shoot(Camera.main.transform.position, aim.transform.position, activeWeapon, enemyMask);
                 StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
                 if (activeWeapon.currBullet == 0)
                 {

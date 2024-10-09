@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//untuk armor type
 public enum armourType
 {
     Light = 20,
@@ -9,6 +10,7 @@ public enum armourType
     Heavy = 50,
 }
 
+//untuk weapon type
 public enum weaponType
 {
     Pistol,
@@ -22,3 +24,10 @@ public enum weaponType
 
 ///summary
 ///Enum ini penanda, karakter saat ini lg kondisi dikontrol AI atau dikontrol Player atau ga
+//untuk alert system enemy
+public enum alertState
+{
+    Idle,
+    Hunted,
+    Engage,
+}
