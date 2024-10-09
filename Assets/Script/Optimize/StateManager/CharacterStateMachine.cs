@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class CharacterStateManager : BaseStateManager
+public abstract class CharacterStateMachine : BaseStateMachine
 {
     [SerializeField]protected Animator _animator;
     public Animator CharaAnimator {get {return _animator;}}
@@ -10,6 +10,6 @@ public abstract class CharacterStateManager : BaseStateManager
 
     protected virtual void Awake() 
     {
-        _animator = GetComponent<Animator>();
+        if(_animator == null)_animator = GetComponent<Animator>();
     }
 }

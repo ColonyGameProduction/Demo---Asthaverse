@@ -2,16 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class  CharacterBaseState<T> : BaseState<T> where T : CharacterStateManager
+/// <summary>
+/// Base State that connect with animation in it's doing; 
+/// StateAnimationName maksudnya nama bool parameter di animator
+/// Di sini pakai T karena state machinenya yg penting anak dr characterstatemachine
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public abstract class  CharacterBaseState<T> : BaseState where T : CharacterStateMachine
 {
+    protected T _stateMachine;
     protected string StateAnimationName{get;set;}
-    public override void EnterState(T stateManager)
+    public CharacterBaseState(T stateMachine)
     {
-        stateManager.CharaAnimator.SetBool(StateAnimationName, true);
+        _stateMachine = stateMachine;
+    }
+    public override void EnterState()
+    {
+        _stateMachine.CharaAnimator?.SetBool(StateAnimationName, true);
     }
 
-    public override void ExiState(T stateManager)
+    public override void ExiState()
     {
-        stateManager.CharaAnimator.SetBool(StateAnimationName, false);
+        _stateMachine.CharaAnimator?.SetBool(StateAnimationName, false);
     }
 }

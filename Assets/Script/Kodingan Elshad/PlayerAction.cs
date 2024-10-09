@@ -5,16 +5,22 @@ using UnityEngine.InputSystem;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using System;
 
 //kelas untuk player action seperti attacking, scope, dan Silent kill
 
 public class PlayerAction : ExecuteLogic
 {
+    [Header("TRest")]
+    [SerializeField]PlayableMovementStateMachine stateMachine;
+    private IPlayableMovementDataNeeded dataMovement;
     GameManager gm;
     private PlayerActionInput inputActions;
     private bool isShooting = false;
     private bool isReloading = false;
     private bool fireRateOn = false;
+    private bool isRun = false;
+    private bool IsCrouching = false;
 
     [Header("Untuk Movement dan Kamera")]
     [SerializeField]
@@ -68,10 +74,17 @@ public class PlayerAction : ExecuteLogic
 
     private void Start()
     {
+        dataMovement = GetComponent<IPlayableMovementDataNeeded>();
         gm = GameManager.instance;
         testAnimation = GetComponent<AnimationTestScript>();
 
         //membuat event untuk menjalankan aksi yang dipakai oleh player
+        inputActions.InputPlayerAction.Run.performed += Run_performed;
+        inputActions.InputPlayerAction.Run.canceled += Run_canceled;
+
+        inputActions.InputPlayerAction.Crouch.performed += Crouch_performed;
+        inputActions.InputPlayerAction.Crouch.canceled += Crouch_canceled;
+
         inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
         inputActions.InputPlayerAction.Shooting.canceled += Shooting_canceled;
 
@@ -93,29 +106,28 @@ public class PlayerAction : ExecuteLogic
         StartingSetup();
     }
 
-    private bool Run()
+    private void Crouch_canceled(InputAction.CallbackContext context)
     {
-        if (inputActions.InputPlayerAction.Run.ReadValue<float>() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        IsCrouching = false;
     }
 
-    private bool Crouch()
+    private void Crouch_performed(InputAction.CallbackContext context)
     {
-        if (inputActions.InputPlayerAction.Crouch.ReadValue<float>() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if(isRun)isRun = false;
+        IsCrouching = true;
     }
+
+    private void Run_canceled(InputAction.CallbackContext context)
+    {
+        isRun = false;
+    }
+
+    private void Run_performed(InputAction.CallbackContext context)
+    {
+        if(IsCrouching)IsCrouching = false;
+        isRun = true;
+    }
+
 
     private void Reload_performed(InputAction.CallbackContext obj)
     {
@@ -131,14 +143,14 @@ public class PlayerAction : ExecuteLogic
     private void Scope_performed(InputAction.CallbackContext context)
     {
         Scope();
-        if(gm.scope)
-        {
-            testAnimation?.animator.SetBool("Scope", true);
-        }
-        else
-        {
-            testAnimation?.animator.SetBool("Scope", false);
-        }
+        // if(gm.scope)
+        // {
+        //     testAnimation?.animator.SetBool("Scope", true);
+        // }
+        // else
+        // {
+        //     testAnimation?.animator.SetBool("Scope", false);
+        // }
     }
 
     private void Command_performed(InputAction.CallbackContext context)
@@ -181,7 +193,7 @@ public class PlayerAction : ExecuteLogic
     //event ketika 'Shoot' dilakukan
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
-        testAnimation?.animator.SetBool("Scope", true);
+        // testAnimation?.animator.SetBool("Scope", true);
         isShooting = true;
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
@@ -257,6 +269,8 @@ public class PlayerAction : ExecuteLogic
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
             }
         }
+        // Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
+        // dataMovement.InputMovement = move;
     }
 
     private void FixedUpdate()
@@ -289,11 +303,11 @@ public class PlayerAction : ExecuteLogic
         Vector3 flatForward = new Vector3(followTarget.forward.x, 0, followTarget.forward.z).normalized;
         Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;        
 
-        if (Crouch())
+        if (IsCrouching)
         {
             CC.SimpleMove(direction * (moveSpeed - 2));
         }
-        else if (Run())
+        else if (isRun)
         {
             CC.SimpleMove(direction * (moveSpeed + 2));
         }
