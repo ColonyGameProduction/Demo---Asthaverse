@@ -37,12 +37,12 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     private MovementStateMachine _currMoveStateMachine;
     //Get Standmovement bool -> isIdle, isWalking, isRunning
     private IMovement _currMoveFunction;
-    private IStandMovement _currStandMovementBool;
-    private ICrouch _currCrouchMovementBool;
+    private IStandMovementData _currStandMovementBool;
+    private ICrouchMovementData _currCrouchMovementBool;
     private IPlayableMovementDataNeeded _currPlayableMovementData;
     private PlayableCamera _currPlayableCamera;
     #endregion
-    
+
     #region GETTERSETTER Variable
     //Getter Setter
     public static bool IsSwitchingCharacter { get { return _isSwitchingCharacter;}}
@@ -291,6 +291,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     {
         if(!IsSwitchingCharacter)
         {
+            //ntr di sini jg ada syarat kalo !isRun baru bisa
             _currPlayableMovementData.IsMustLookForward = false;
             if(IsScope)
             {
@@ -302,13 +303,14 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     {
         if(!IsSwitchingCharacter)
         {
-            _currPlayableMovementData.IsMustLookForward = true;
             if(!IsScope)
             {
+                _currPlayableMovementData.IsMustLookForward = true;
                 ScopeCamera(_currCharaidx);
             }
             else
             {
+                _currPlayableMovementData.IsMustLookForward = false;
                 ResetScope(_currCharaidx);
             }
 

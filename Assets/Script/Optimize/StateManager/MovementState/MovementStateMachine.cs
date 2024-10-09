@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMovement
+public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMovementData
 {
     #region Normal Variable
     [Header("Testing")]

@@ -29,7 +29,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     //Thing needed to getcomponent
     //Get Standmovement bool -> isIdle, isWalking, isRunning
     protected IMovement _getMoveFunction;
-    protected IStandMovement _getStandMovementBool;
+    protected IStandMovementData _getStandMovementBool;
 
     [HideInInspector]
     //getter setter
@@ -50,13 +50,13 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
     public MovementStateMachine MovementStateMachine {get { return _moveStateMachine;}}
-    public IStandMovement GetStandMovementBool {get { return _getStandMovementBool;}}
+    public IStandMovementData GetStandMovementBool {get { return _getStandMovementBool;}}
     public IMovement GetMoveFunction {get { return _getMoveFunction;}}
     protected virtual void Awake()
     {
         if(_moveStateMachine == null) _moveStateMachine = GetComponent<MovementStateMachine>();
         _getMoveFunction = GetComponent<IMovement>();
-        _getStandMovementBool = GetComponent<IStandMovement>();
+        _getStandMovementBool = GetComponent<IStandMovementData>();
     }
     protected virtual void Start() 
     {

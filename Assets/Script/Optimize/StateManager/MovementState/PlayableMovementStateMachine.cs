@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayableMovementStateMachine : MovementStateMachine, ICrouch, IPlayableMovementDataNeeded
+public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovementData, IPlayableMovementDataNeeded
 {
     #region Normal Variable
     [Header ("Playable Character Variable")]
