@@ -223,21 +223,38 @@ public class PlayerAction : ExecuteLogic
             selectedFriendID = 2; // Select FriendAI with ID 2
         }
 
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Vector3 rayOrigin = Camera.main.transform.position;
+            Vector3 rayDirection = Camera.main.transform.forward.normalized;
+
+            Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.magenta, 2f);
+
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Interactable")))
+            {
+                if (hit.collider.GetComponent<PickableItems>())
+                {
+                    Debug.Log("Ambil!");
+                }
+                else if (hit.collider.GetComponent<OpenableObject>())
+                {
+                    Debug.Log("Buka!");
+                }
+            }
+        }
+
         // If command is active and a friend is selected, detect mouse click
         if (isCommandActive && selectedFriendID != -1 && Mouse.current.leftButton.wasPressedThisFrame)
         {
+            Vector3 rayOrigin = Camera.main.transform.position;
+            Vector3 rayDirection = Camera.main.transform.forward.normalized;
 
-            Vector3 rayOrigin = crosshairPoint.transform.position;
-            Vector3 rayDirection = crosshairPoint.transform.forward;
+            Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.red, 2f);
 
-            Debug.DrawRay(rayOrigin, rayDirection, Color.red);
-
-            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit))
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground")))
             {
                 // Set the destination for the selected friend based on the mouse click
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
-
-                Debug.Log(hit.point);
             }
         }
     }
