@@ -228,6 +228,8 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         {
             if(_currCrouchMovementBool.IsCrouching)_currCrouchMovementBool.IsCrouching = false;
             _currStandMovementBool.IsRunning = true;
+
+            //di sini kalo misal tdnya lg aim/shooting bakal lsg disuru stop
         }
     }
 
@@ -303,6 +305,9 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     {
         if(!IsSwitchingCharacter)
         {
+            //KALO LAGI mo ngescope, tp blm aim, lsg aim nya nyalain jg
+
+            //tp kalo unscope, dan
             if(!IsScope)
             {
                 _currPlayableMovementData.IsMustLookForward = true;

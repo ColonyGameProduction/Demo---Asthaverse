@@ -37,10 +37,6 @@ public class AimWeaponState : UseWeaponState
         {
             _stateMachine.SwitchState(_factory.ReloadWeaponState());
         }
-        else if(_normalUse.IsReloading)
-        {
-            _stateMachine.SwitchState(_factory.ReloadWeaponState());
-        }
         else if(_advancedUse != null)
         {
             if(_advancedUse.IsSwitchingWeapon)
