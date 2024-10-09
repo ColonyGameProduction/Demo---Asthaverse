@@ -17,12 +17,7 @@ public class GameInputManager : MonoBehaviour
     private void Awake() 
     {
         Instance = this;
-        _inputActions = new PlayerActionInput();   
-    }
-    private void Start() 
-    {
-        _gm = GameManager.instance;
-
+        _inputActions = new PlayerActionInput();  
         //membuat event untuk menjalankan aksi yang dipakai oleh player
         _inputActions.InputPlayerAction.Run.performed += Run_performed;
         _inputActions.InputPlayerAction.Run.canceled += Run_canceled;
@@ -44,7 +39,12 @@ public class GameInputManager : MonoBehaviour
         _inputActions.InputPlayerAction.Shooting.canceled += Shooting_canceled;
         _inputActions.InputPlayerAction.Scope.performed += Scope_performed;
         _inputActions.InputPlayerAction.Reload.performed += Reload_performed;
-
+        
+        _inputActions.Enable();
+    }
+    private void Start() 
+    {
+        _gm = GameManager.instance;
     }
 
     private void Run_performed(InputAction.CallbackContext context) => OnRunPerformed?.Invoke();
@@ -52,7 +52,7 @@ public class GameInputManager : MonoBehaviour
     private void Crouch_performed(InputAction.CallbackContext context) => OnCrouchPerformed?.Invoke();
     private void Crouch_canceled(InputAction.CallbackContext context) => OnCrouchCanceled?.Invoke();
 
-    private void ChangePlayer_performed(InputAction.CallbackContext context)=> OnChangePlayerPerformed?.Invoke();
+    private void ChangePlayer_performed(InputAction.CallbackContext context) => OnChangePlayerPerformed?.Invoke();
     private void ChangingWeapon_performed(InputAction.CallbackContext context)=> OnChangeWeaponPerformed?.Invoke();
 
     private void Command_performed(InputAction.CallbackContext context)=> OnCommandPerformed?.Invoke();

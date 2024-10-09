@@ -9,12 +9,12 @@ public class WalkState : MovementState
 {
     public WalkState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
     {
-        // StateAnimationName = "IdleAnimation";
+        StateAnimationName = "Move";
     }
     public override void EnterState()
     {
-        // base.EnterState(); // Jalankan animasi
-        Debug.Log("Walking");
+        base.EnterState(); // Jalankan animasi
+        Debug.Log("Walking" + _stateMachine.gameObject.name);
 
         _standMovement.IsWalking = true;
         //Menganti kecepatan
@@ -23,14 +23,14 @@ public class WalkState : MovementState
     public override void UpdateState()
     {
         //Menunggu logika lain yang dapat mengubah statenya sembari melakukan pergerakan, untuk AI ditaro di update state, untuk Input player di physisc logic atau fixed update
-        if((!_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
+        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
         {
-            if(_stateMachine.IsInputPlayer)_stateMachine.Move();
+            if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
             if(_crouch != null && _crouch.IsCrouching)_stateMachine.SwitchState(_factory.CrouchState());
             else if(_standMovement.IsRunning)_stateMachine.SwitchState(_factory.RunState());
 
         }
-        else if((!_stateMachine.IsInputPlayer && _playableData.InputMovement == Vector3.zero) || (_stateMachine.IsInputPlayer && _stateMachine.IsTargetTheSamePositionAsTransform()))
+        else if((_stateMachine.IsInputPlayer && _playableData.InputMovement == Vector3.zero) || (!_stateMachine.IsInputPlayer && _stateMachine.IsTargetTheSamePositionAsTransform()))
         {
             _stateMachine.SwitchState(_factory.IdleState());
         }
@@ -38,10 +38,10 @@ public class WalkState : MovementState
     public override void ExiState()
     {
         _standMovement.IsWalking = false;
-        // base.EnterState(); // Matikan animasi
+        base.ExiState(); // Matikan animasi
     }
     public override void PhysicsLogicUpdateState()
     {
-        if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
+        if(_stateMachine.IsInputPlayer)_stateMachine.Move();
     }
 }

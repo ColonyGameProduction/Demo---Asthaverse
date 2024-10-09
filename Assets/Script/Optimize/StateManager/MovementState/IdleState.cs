@@ -15,17 +15,17 @@ public class IdleState : MovementState
     // dan karena crouch ada idle animation, jd crouch tetap di posisi animasi crouch; sedangkan run tidak. Ketika isCrouch = false, maka animasinya akan dimatikan
     public IdleState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
     {
-        StateAnimationName = "IdleAnimation";
+        // StateAnimationName = "IdleAnimation";
     }
     public override void EnterState()
     {
-        Debug.Log("Idle");
+        Debug.Log("Idle" + _stateMachine.gameObject.name);
         
         //Making sure that it's idle animation that plays
         if(_crouch != null && _crouch.IsCrouching)wasCrouch = true;
         _standMovement.IsIdle = true;
-        _stateMachine.CharaAnimator.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_HORIZONTAL, 0);
-        _stateMachine.CharaAnimator.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_VERTICAL, 0);
+        _stateMachine.CharaAnimator?.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_HORIZONTAL, 0);
+        _stateMachine.CharaAnimator?.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_VERTICAL, 0);
     }
     public override void UpdateState()
     {
@@ -33,14 +33,15 @@ public class IdleState : MovementState
         if(PlayableCharacterManager.IsSwitchingCharacter)return;
 
         //If there's an input movement: dalam hal ini kalo inputnya player berarti input movement tidak sama dengan 0 ATAU kalau input dari AI berarti currAIDirectionnya itu ga null, maka kita akan masuk ke state selanjutnya tergantung syarat yg ada
-        if((!_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
+        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
         {
             if(_crouch != null && _crouch.IsCrouching)_stateMachine.SwitchState(_factory.CrouchState());
             else if(_standMovement.IsRunning)_stateMachine.SwitchState(_factory.RunState());
             else _stateMachine.SwitchState(_factory.WalkState());
 
         }
-
+        
+        if(_stateMachine.IsInputPlayer &&_playableData.IsMustLookForward)_playableData.Idle_RotateAim();
         //Ini emang sudah diam di tmpt
         ///Urusan animasi aja, soalnya kek kondisi crouch kan dia msh bs idle
         ///
@@ -58,12 +59,8 @@ public class IdleState : MovementState
     }
     public override void ExiState()
     {
-        if((!_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (_stateMachine.IsInputPlayer && _stateMachine.CurrAIDirection != null)) _standMovement.IsIdle = false; //kyk gini krn bs aja keluar krn crouch state di atas
+        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && _stateMachine.CurrAIDirection != null)) _standMovement.IsIdle = false; //kyk gini krn bs aja keluar krn crouch state di atas
         // base.EnterState(); //Stop Idle Anim
     }
-    public override void PhysicsLogicUpdateState()
-    {
-        // throw new System.NotImplementedException();
-    }
-    
+        
 }

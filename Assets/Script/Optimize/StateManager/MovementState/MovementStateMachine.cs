@@ -1,21 +1,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMovement
 {
+    #region Normal Variable
     [Header("Testing")]
     public bool isGo;
     public bool isStop;
     public GameObject objectDir;
 
     [Space(5)]
-    [Header("States")]
-    MovementState _currState;
+    [Header("Other Component Variable")]
     MovementStateFactory _states;
-    // public CrouchState crouchState= new CrouchState();
+    protected CharacterIdentity _charaIdentity;
+    
+    [Header("AI")]
+    [SerializeField]protected NavMeshAgent _agentNavMesh;
+    protected NavMeshPath _checkPath;
+
     [Header("Move Speed List - Each State")]
     [SerializeField] protected float _walkSpeed;
     [SerializeField] protected float _runSpeed;
@@ -23,10 +30,23 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [SerializeField] protected bool _isWalking;
     [SerializeField] protected bool _isRun;
 
+
+    [Space(5)]
+    [Header("No Inspector Variable")]
+    MovementState _currState;
+    protected float _currSpeed;
+    protected Transform _currAIDirection; //Nyimpen direction AI yg ntr dikasih jg dr luar
+    protected bool _isInputPlayer;
+
+    #endregion
+
+    #region CONST Variable
     //CONST
     public const string ANIMATION_MOVE_PARAMETER_HORIZONTAL = "Horizontal";
     public const string ANIMATION_MOVE_PARAMETER_VERTICAL = "Vertical";
-    [HideInInspector]
+    #endregion
+
+    #region GETTERSETTER Variable
     //Getter Setter
     public float WalkSpeed { get {return _walkSpeed;}}
     public float RunSpeed { get {return _runSpeed;}}
@@ -36,24 +56,16 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public bool IsRunning { get {return _isRun;}set{ _isRun = value;} }
     public NavMeshAgent AgentNavMesh {get {return _agentNavMesh;}}
     public bool IsInputPlayer {get {return _isInputPlayer;}}
-
-    // [SerializeField]private float _crouchSpeed;
-    // public float CrouchSpeed{get {return _crouchSpeed;}}
-
-    [Space(5)]
-    protected float _currSpeed;
-    protected Transform _currAIDirection; //Nyimpen direction AI yg ntr dikasih jg dr luar
-    protected CharacterIdentity _charaIdentity;
-    protected bool _isInputPlayer;
-
-    [Header("AI Moving Controller")]
-    [SerializeField]protected NavMeshAgent _agentNavMesh;
-
+    #endregion
 
     protected override void Awake() 
     {
+        //Cek path biar tau ini go idle or not
+        _checkPath = new NavMeshPath();
+
+        
         base.Awake();
-        if(_charaIdentity == null)_charaIdentity.GetComponent<CharacterIdentity>();
+        if(_charaIdentity == null)_charaIdentity = GetComponent<CharacterIdentity>();
         _isInputPlayer = _charaIdentity.IsInputPlayer;
         _charaIdentity.OnInputPlayerChange += CharaIdentity_OnInputPlayerChange; // Ditaro di sini biar ga ketinggalan sebelah, krn sebelah diubah di start
 
@@ -67,7 +79,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     {
         SwitchState(_states.IdleState());
     }
-    private void Update() 
+    protected virtual void Update() 
     {
         if(isGo && objectDir != null)
         {
@@ -107,53 +119,38 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     protected void MoveAI(Vector3 direction)
     {
         if(AgentNavMesh.speed != _currSpeed)AgentNavMesh.speed = _currSpeed;
-        if(AgentNavMesh.hasPath)
-        {
-            Vector3 facedir = (AgentNavMesh.steeringTarget - transform.position).normalized;
-            Vector3 animatedFaceDir = transform.InverseTransformDirection(facedir);
-            // Debug.Log("aaa"+dir + "anim" + animatedDir);
-            
-            ///Animation Part -> Mungkin ntr dipindah
-            CharaAnimator.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, animatedFaceDir.x);
-            CharaAnimator.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, animatedFaceDir.z);
-            CharaAnimator.SetBool("Scope", true);
-            ///Animation Part -> Mungkin ntr dipindah
 
-            if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentNavMesh.radius)
-            {
-                ///Animation Part -> Mungkin ntr dipindah
-                CharaAnimator.SetBool("Scope", false);
-                ///Animation Part -> Mungkin ntr dipindah
+        Vector3 facedir = (AgentNavMesh.steeringTarget - transform.position).normalized;
+        Vector3 animatedFaceDir = transform.InverseTransformDirection(facedir);
 
-                AgentNavMesh.ResetPath();
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, animatedFaceDir.x);
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, animatedFaceDir.z);
 
-                // _currAIDirection = null;
-                Debug.Log("DoneMove");
-            }
-        }
-        else
-        {
-
-            ///Animation Part -> Mungkin ntr dipindah
-            CharaAnimator.SetBool("Scope", false);
-            ///Animation Part -> Mungkin ntr dipindah
-            
-        }
-        if(AgentNavMesh.destination != direction)
-        {
-            AgentNavMesh.destination = direction;
-        }
  
     }
     public bool IsTargetTheSamePositionAsTransform()
     {
         if(CurrAIDirection == null) return true;
-        if(Vector3.Distance(transform.position, CurrAIDirection.position) < AgentNavMesh.radius)
+
+        if(AgentNavMesh.destination != CurrAIDirection.position)
         {
-            return true;
+            AgentNavMesh.destination = CurrAIDirection.position;
         }
+        if(!AgentNavMesh.hasPath)return true;
+        else
+        {
+            if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentNavMesh.radius)
+            {
+
+                AgentNavMesh.ResetPath();
+
+                return true;
+            }
+        }
+
         return false;
     }
+
     public void GiveAIDirection(Transform newDir)
     {
         _currAIDirection = newDir;
@@ -172,7 +169,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         IsWalking = false;
         IsRunning = false;
         AgentNavMesh.speed = 0;
-        CharaAnimator.SetBool("Scope", false);
+        // CharaAnimator.SetBool("Scope", false);
 
         AgentNavMesh.ResetPath();
 

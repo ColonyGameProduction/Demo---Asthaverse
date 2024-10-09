@@ -9,12 +9,14 @@ public class RunState : MovementState
 {    
     public RunState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
     {
-        // StateAnimationName = "IdleAnimation";
+        // StateAnimationName = "Sprint";
+        StateAnimationName = "Move";
     }
     public override void EnterState()
     {
+        base.EnterState(); 
         // base.EnterState(); // Jalankan animasi
-        Debug.Log("Running");
+        Debug.Log("Running" + _stateMachine.gameObject.name);
 
         //Mengganti kecepatan
         _stateMachine.ChangeCurrSpeed(_stateMachine.RunSpeed);
@@ -24,9 +26,9 @@ public class RunState : MovementState
     public override void UpdateState()
     {
         //Menunggu syarat
-        if((!_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
+        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
         {
-            if(_stateMachine.IsInputPlayer)_stateMachine.Move();
+            if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
             if(!_standMovement.IsRunning)
             {
                 if(_crouch != null && _crouch.IsCrouching) _stateMachine.SwitchState(_factory.CrouchState());
@@ -37,18 +39,18 @@ public class RunState : MovementState
             }
         
         }
-        else if((!_stateMachine.IsInputPlayer && _playableData.InputMovement == Vector3.zero) || (_stateMachine.IsInputPlayer && _stateMachine.IsTargetTheSamePositionAsTransform()))
+        else if((_stateMachine.IsInputPlayer && _playableData.InputMovement == Vector3.zero) || (!_stateMachine.IsInputPlayer && _stateMachine.IsTargetTheSamePositionAsTransform()))
         {
             _stateMachine.SwitchState(_factory.IdleState());
         }
     }
     public override void ExiState()
     {
-
+        base.ExiState();
         // //Matikan state animasi Run -> mau state tombol masih true pun tetep matiin krn ga ada animasi idle d run
     }
     public override void PhysicsLogicUpdateState()
     {
-        if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
+        if(_stateMachine.IsInputPlayer)_stateMachine.Move();
     }
 }

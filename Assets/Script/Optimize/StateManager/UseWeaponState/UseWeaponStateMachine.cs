@@ -2,17 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UseWeaponStateMachine : MonoBehaviour
+public class UseWeaponStateMachine : CharacterStateMachine
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void SwitchState(BaseState newState)
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

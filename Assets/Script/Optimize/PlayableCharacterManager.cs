@@ -7,13 +7,17 @@ using UnityEngine;
 
 public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 {
+    #region Normal Variable
+    [Header("Manager Variable")]
     GameManager _gm;
     GameInputManager _gameInputManager;
+
     [Header("Character")]
     [SerializeField] private PlayableCharacterIdentity[] _charaIdentities;
     private static bool _isSwitchingCharacter;
     private static bool _isSwitchingWeapon;
     private static bool _isCommanding;
+
     [Space(1)]
     [Header("Camera Effect")]
     [SerializeField] private float _normalFOV = 40, _scopeFOV = 60;
@@ -27,8 +31,8 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     [SerializeField] private float _switchDelayDuration = 1f;
 
     //Saving all curr variable..
+    [Header("No Inspector Variable - Saving all Current Data")]
     private int _currCharaidx;
-    
     //Movement Save
     private MovementStateMachine _currMoveStateMachine;
     //Get Standmovement bool -> isIdle, isWalking, isRunning
@@ -37,17 +41,20 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     private ICrouch _currCrouchMovementBool;
     private IPlayableMovementDataNeeded _currPlayableMovementData;
     private PlayableCamera _currPlayableCamera;
-    //private Setter
+    #endregion
+    
+    #region GETTERSETTER Variable
+    //Getter Setter
     public static bool IsSwitchingCharacter { get { return _isSwitchingCharacter;}}
     public static bool IsSwitchingWeapon { get { return _isSwitchingWeapon;}}
     public PlayableCharacterIdentity PlayableCharaNow { get { return _charaIdentities[_currCharaidx];}}
-
     public bool IsScope {get { return _isScope;}}
-
     public bool IsNightVision {get { return _isNightVision;}}
+    #endregion
     void Start()
     {
         _gm = GameManager.instance;
+        _charaIdentities = new PlayableCharacterIdentity[_gm.playerGameObject.Length];
         for(int i = 0; i < _gm.playerGameObject.Length; i++)
         {
             _charaIdentities[i] = _gm.playerGameObject[i].GetComponent<PlayableCharacterIdentity>();
@@ -55,6 +62,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
         //jd kalo misal ada save save bs lwt sini
         _currCharaidx = 0;
+        SetAllCurr();
         SwitchCharacter(_currCharaidx);
         //jd kalo misal ada save save bs lwt sini
         _gameInputManager = GameInputManager.Instance;
@@ -65,8 +73,9 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     // Update is called once per frame
     public void Update()
     {
-        _currPlayableMovementData.InputMovement = _gameInputManager.Movement();
+        GameInput_Movement();
     }
+
     #region Character Switching
     // Ganti Karakter
     //     Logic 'Switch Character'
@@ -76,7 +85,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         //Matikan semua pergerakan dan aim dan lainnya - in state machine and player identities
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
-            _currMoveFunction.ForceStopMoving();
+            chara.GetMoveFunction?.ForceStopMoving();
         }
         PlayableCharaNow.IsInputPlayer = false;
         
@@ -118,7 +127,8 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
             _charaIdentities[nextCharaidx].FriendID = i;
             //Di sini nanti jg taro di AI controllernya, posisi update mereka yang biasa
-
+            _charaIdentities[nextCharaidx].MovementStateMachine.GiveAIDirection(PlayableCharaNow.GetFriendsNormalPosition[i-1].transform);
+            Debug.Log(nextCharaidx + " aa"+ i);
             ++nextCharaidx;
         }
         
@@ -129,6 +139,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     {
         yield return new WaitForSeconds(_switchDelayDuration);
         _isSwitchingCharacter = false;
+        Debug.Log(IsSwitchingCharacter);
     }
 
     // delay untuk perpindahan kamera
@@ -157,17 +168,19 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         
     }
     #endregion
+
     #region Camera Effect
+    
     public void ScopeCamera(int charaIdx)
     {
         _isScope = true;
-        _charaIdentities[charaIdx].GetPlayableCamera.ChangeCameraFOV(_normalFOV);
+        _charaIdentities[charaIdx].GetPlayableCamera?.ChangeCameraFOV(_normalFOV);
     }
 
     public void ResetScope(int charaIdx)
     {
         _isScope = false;
-        _charaIdentities[charaIdx].GetPlayableCamera.ChangeCameraFOV(_scopeFOV);
+        _charaIdentities[charaIdx].GetPlayableCamera?.ChangeCameraFOV(_scopeFOV);
     }
 
     public void NightVision(int charaIdx)
@@ -205,7 +218,10 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         _gameInputManager.OnScopePerformed += GameInput_OnScopePerformed;
         _gameInputManager.OnReloadPerformed += GameInput_OnReloadPerformed;
     }
-
+    private void GameInput_Movement()
+    {
+        if(!IsSwitchingCharacter)_currPlayableMovementData.InputMovement = _gameInputManager.Movement();
+    }
     private void GameInput_OnRunPerformed()
     {
         if(!IsSwitchingCharacter)
@@ -266,19 +282,41 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     }
     private void GameInput_OnShootingPerformed()
     {
-        throw new NotImplementedException();
+        if(!IsSwitchingCharacter)
+        {
+            _currPlayableMovementData.IsMustLookForward = true;
+        }
     }
     private void GameInput_OnShootingCanceled()
     {
-        throw new NotImplementedException();
+        if(!IsSwitchingCharacter)
+        {
+            _currPlayableMovementData.IsMustLookForward = false;
+            if(IsScope)
+            {
+                ResetScope(_currCharaidx);
+            }
+        }
     }
     private void GameInput_OnScopePerformed()
     {
-        throw new NotImplementedException();
+        if(!IsSwitchingCharacter)
+        {
+            _currPlayableMovementData.IsMustLookForward = true;
+            if(!IsScope)
+            {
+                ScopeCamera(_currCharaidx);
+            }
+            else
+            {
+                ResetScope(_currCharaidx);
+            }
+
+        }
     }
     private void GameInput_OnReloadPerformed()
     {
-        throw new NotImplementedException();
+        
     }
 
     #endregion

@@ -134,14 +134,14 @@ public class PlayerAction : ExecuteLogic
     private void Scope_performed(InputAction.CallbackContext context)
     {
         Scope();
-        if(gm.scope)
-        {
-            testAnimation?.animator.SetBool("Scope", true);
-        }
-        else
-        {
-            testAnimation?.animator.SetBool("Scope", false);
-        }
+        // if(gm.scope)
+        // {
+        //     testAnimation?.animator.SetBool("Scope", true);
+        // }
+        // else
+        // {
+        //     testAnimation?.animator.SetBool("Scope", false);
+        // }
     }
 
     private void Command_performed(InputAction.CallbackContext context)
@@ -184,7 +184,7 @@ public class PlayerAction : ExecuteLogic
     //event ketika 'Shoot' dilakukan
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
-        testAnimation?.animator.SetBool("Scope", true);
+        // testAnimation?.animator.SetBool("Scope", true);
         isShooting = true;
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)

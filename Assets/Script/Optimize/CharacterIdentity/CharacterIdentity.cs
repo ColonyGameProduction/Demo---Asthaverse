@@ -13,9 +13,6 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     [Header("Manager/Machine")]
     //Untuk ambil bool
     [SerializeField] protected MovementStateMachine _moveStateMachine;
-    //Get Standmovement bool -> isIdle, isWalking, isRunning
-    protected IMovement _getMoveFunction;
-    protected IStandMovement _getStandMovementBool;
     [Space(1)]
     [Header("Input Control Now")]
     [SerializeField]protected bool _isInputPlayer;
@@ -28,6 +25,11 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     [Header("Weapon")]
     [SerializeField] protected List<WeaponData> _weaponLists;
     [SerializeField] protected int _currWeaponIdx;
+
+    //Thing needed to getcomponent
+    //Get Standmovement bool -> isIdle, isWalking, isRunning
+    protected IMovement _getMoveFunction;
+    protected IStandMovement _getStandMovementBool;
 
     [HideInInspector]
     //getter setter
@@ -53,6 +55,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     protected virtual void Awake()
     {
         if(_moveStateMachine == null) _moveStateMachine = GetComponent<MovementStateMachine>();
+        _getMoveFunction = GetComponent<IMovement>();
         _getStandMovementBool = GetComponent<IStandMovement>();
     }
     protected virtual void Start() 

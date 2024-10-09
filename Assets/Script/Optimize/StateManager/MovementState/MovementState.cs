@@ -34,8 +34,8 @@ public abstract class MovementState : CharacterBaseState<MovementStateMachine>
 
     public override void ExiState()
     {
-        base.EnterState();
+        base.ExiState();
     }
-    public abstract void PhysicsLogicUpdateState();
+    public virtual void PhysicsLogicUpdateState(){}
 
 }

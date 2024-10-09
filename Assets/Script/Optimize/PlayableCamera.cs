@@ -21,8 +21,8 @@ public class PlayableCamera : MonoBehaviour
         // hide mouse cursor when game start
 
         //Urus cursor nanti
-        // Cursor.lockState = CursorLockMode.Locked;
-        // Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()

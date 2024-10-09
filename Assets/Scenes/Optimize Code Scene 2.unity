@@ -4185,7 +4185,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &743586300
 Transform:
   m_ObjectHideFlags: 0
@@ -5608,11 +5608,17 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 849947677}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c3a9c9ae468c6ea47a2fbe8f2dda0d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _charaIdentities: []
+  _normalFOV: 40
+  _scopeFOV: 60
+  _isScope: 0
+  _cameraDelayDuration: 0.1
+  _switchDelayDuration: 1
 --- !u!1 &859698410
 GameObject:
   m_ObjectHideFlags: 0
@@ -6633,7 +6639,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1156905594
 Transform:
   m_ObjectHideFlags: 0
@@ -9271,7 +9277,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &2017098523
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -9307,7 +9313,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1083558674}
-  isAI: 1
   isGo: 0
   isStop: 0
   objectDir: {fileID: 1786254555}
@@ -9346,7 +9351,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1083558674}
-  isAI: 1
   isGo: 0
   isStop: 0
   objectDir: {fileID: 1786254555}
@@ -9484,7 +9488,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2066745658}
-  - component: {fileID: 2066745666}
   - component: {fileID: 2066745660}
   - component: {fileID: 2066745661}
   - component: {fileID: 2066745664}
@@ -9497,7 +9500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2066745658
 Transform:
   m_ObjectHideFlags: 0
@@ -9651,36 +9654,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1031462396}
---- !u!114 &2066745666
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2066745654}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49c689a50c7996a458ae6ea313eebcf0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animator: {fileID: 1031462396}
-  isAI: 0
-  isGo: 0
-  isStop: 0
-  objectDir: {fileID: 1786254555}
-  _walkSpeed: 3.5
-  _runSpeed: 5
-  _isIdle: 0
-  _isWalking: 0
-  _isRun: 0
-  _agentNavMesh: {fileID: 0}
-  _cc: {fileID: 2066745662}
-  _charaGameObject: {fileID: 2047355711}
-  _rotateSpeed: 10
-  _crouchSpeed: 1
-  _followTarget: {fileID: 1586786643}
-  _isCrouch: 0
-  _isMustLookForward: 0
 --- !u!1 &2085741374
 GameObject:
   m_ObjectHideFlags: 0

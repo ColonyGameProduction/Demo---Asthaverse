@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper
 {
-    protected ICrouch _getCrouchMovementBool;
-    protected IPlayableMovementDataNeeded _getPlayableMovementData;
-    protected PlayableCamera _getPlayableCamera;
     [Header("Friend Data Helper")]
     [SerializeField] protected GameObject[] _friendsNormalPosition;
     protected int _friendID;
+
+    //Thing needed to getcomponent
+    protected ICrouch _getCrouchMovementBool;
+    protected IPlayableMovementDataNeeded _getPlayableMovementData;
+    protected PlayableCamera _getPlayableCamera;
+
 
     [HideInInspector]
     //Getter Setter
@@ -24,6 +27,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         base.Awake();
         _getCrouchMovementBool = GetComponent<ICrouch>();
         _getPlayableMovementData = GetComponent<IPlayableMovementDataNeeded>();
+        _getPlayableCamera = GetComponent<PlayableCamera>();
     }
     
 }
