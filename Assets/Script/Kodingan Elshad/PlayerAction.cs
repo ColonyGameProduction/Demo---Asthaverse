@@ -42,7 +42,7 @@ public class PlayerAction : ExecuteLogic
     private WeaponStatSO activeWeapon;
 
     [SerializeField]
-    private EntityStatSO siapaSih;
+    private EntityStatSO character;
 
     [SerializeField]
     private GameObject crosshairPoint;
@@ -80,6 +80,7 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
         inputActions.InputPlayerAction.Reload.performed += Reload_performed;
+        inputActions.InputPlayerAction.Interact.performed += Interact_performed;
 
         inputActions.InputPlayerAction.Command.performed += Command_performed;
         inputActions.InputPlayerAction.UnCommand.performed += UnCommand_performed;
@@ -88,7 +89,7 @@ public class PlayerAction : ExecuteLogic
 
         CC = GetComponent<CharacterController>();
 
-        weaponStat = siapaSih.weaponStat;
+        weaponStat = character.weaponStat;
 
         StartingSetup();
     }
@@ -171,6 +172,11 @@ public class PlayerAction : ExecuteLogic
         }
     }
 
+    private void Interact_performed(InputAction.CallbackContext context)
+    {
+        Interact();
+    }
+
 
     //event ketika 'SilentKill' dilakukan
     private void SilentKill_performed(InputAction.CallbackContext context)
@@ -221,26 +227,6 @@ public class PlayerAction : ExecuteLogic
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             selectedFriendID = 2; // Select FriendAI with ID 2
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Vector3 rayOrigin = Camera.main.transform.position;
-            Vector3 rayDirection = Camera.main.transform.forward.normalized;
-
-            Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.magenta, 2f);
-
-            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Interactable")))
-            {
-                if (hit.collider.GetComponent<PickableItems>())
-                {
-                    Debug.Log("Ambil!");
-                }
-                else if (hit.collider.GetComponent<OpenableObject>())
-                {
-                    Debug.Log("Buka!");
-                }
-            }
         }
 
         // If command is active and a friend is selected, detect mouse click
