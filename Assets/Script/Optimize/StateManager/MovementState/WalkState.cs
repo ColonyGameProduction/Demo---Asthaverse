@@ -35,10 +35,10 @@ public class WalkState : MovementState
             _stateMachine.SwitchState(_factory.IdleState());
         }
     }
-    public override void ExiState()
+    public override void ExitState()
     {
         _standMovement.IsWalking = false;
-        base.ExiState(); // Matikan animasi
+        base.ExitState(); // Matikan animasi
     }
     public override void PhysicsLogicUpdateState()
     {

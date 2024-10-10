@@ -19,7 +19,10 @@ public class UsingWeaponState : UseWeaponState
         {
             if(!_stateMachine.IsInputPlayer)
             {
-                if(_stateMachine.ChosenTarget != null)Debug.Log("Shoot" + _stateMachine.ChosenTarget);
+                if(_stateMachine.ChosenTarget != null)
+                {
+                    _stateMachine.UseWeapon();
+                }
                 else
                 {
                     //we're gonna talk about this later
@@ -30,23 +33,20 @@ public class UsingWeaponState : UseWeaponState
             }
             else
             {
-                Debug.Log("SHOOOOTT");
+                _stateMachine.UseWeapon();
             }
         }
-        if(_normalUse.IsReloading)
+        if(_advancedUse != null && _advancedUse.IsSilentKill)
+        {
+            _stateMachine.SwitchState(_factory.SilentKillState());
+        }
+        else if(_advancedUse != null && _advancedUse.IsSwitchingWeapon)
+        {
+            _stateMachine.SwitchState(_factory.SwitchingWeaponState());
+        }
+        else if(_normalUse.IsReloading)
         {
             _stateMachine.SwitchState(_factory.ReloadWeaponState());
-        }
-        else if(_advancedUse != null)
-        {
-            if(_advancedUse.IsSwitchingWeapon)
-            {
-                _stateMachine.SwitchState(_factory.SwitchingWeaponState());
-            }
-            else if(_advancedUse.IsSilentKill)
-            {
-                _stateMachine.SwitchState(_factory.SilentKillState());
-            }
         }
         else if(!_normalUse.IsUsingWeapon)
         {
@@ -64,8 +64,10 @@ public class UsingWeaponState : UseWeaponState
 
 
     }
-    public override void ExiState()
+    public override void ExitState()
     {
-        // base.ExiState(); // Matikan Animasi
+        // base.ExiState(); // Matikan Animasi shooting
+        //kalo aim jg off
+        if(!_normalUse.IsAiming && _stateMachine.CharaAnimator.GetBool("Scope")) StateAnimationOff("Scope");
     }
 }

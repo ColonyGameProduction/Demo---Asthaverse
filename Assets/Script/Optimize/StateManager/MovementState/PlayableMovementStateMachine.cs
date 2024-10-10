@@ -10,6 +10,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovemen
     [Space(2)]
     [Header("Other Component Variable")]
     [SerializeField] private CharacterController _cc;
+    protected ICanInputPlayer _getCanInputPlayer;
 
     [Header("For Rotation")]
     [SerializeField] private Transform _charaGameObject;
@@ -39,6 +40,10 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovemen
     protected override void Awake()
     {
         base.Awake();
+        _getCanInputPlayer = GetComponent<ICanInputPlayer>();
+        _isInputPlayer = _getCanInputPlayer.IsInputPlayer;
+        _getCanInputPlayer.OnInputPlayerChange += CharaIdentity_OnInputPlayerChange; // Ditaro di sini biar ga ketinggalan sebelah, krn sebelah diubah di start
+
         if(_cc == null)_cc = GetComponent<CharacterController>();
         if(_followTarget == null) _followTarget = GetComponent<PlayableCamera>().GetFollowTarget;
     }
@@ -47,6 +52,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovemen
     {
         base.Update();
     }
+
+    #region Move
     public override void Move()
     {
         if(!IsInputPlayer)base.Move();
@@ -95,5 +102,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovemen
     {
         if(!IsInputPlayer)base.ForceStopMoving();
         else ForceStopPlayable();
+        if(IsMustLookForward)IsMustLookForward = false;
+    }
+    #endregion
+    private void CharaIdentity_OnInputPlayerChange(bool obj)
+    {
+        _isInputPlayer = obj;
     }
 }

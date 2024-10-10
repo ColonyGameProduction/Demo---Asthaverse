@@ -12,8 +12,13 @@ public class ReloadWeaponState : UseWeaponState
     public override void EnterState()
     {
         // base.EnterState(); mainkan animasi
+
         isDoReloading = false;
-        _normalUse.CanReload = false;
+        
+        if(_stateMachine.IsInputPlayer)
+        {
+            _playableData.TellToTurnOffScope();
+        }
 
         Debug.Log("Reload Weapon" + _stateMachine.gameObject.name);
     }
@@ -21,24 +26,40 @@ public class ReloadWeaponState : UseWeaponState
     {
         if(!isDoReloading && _normalUse.IsReloading)
         {
-            DoReload();
+            isDoReloading = true;
+            _stateMachine.ReloadWeapon();
+        }
+        else if(isDoReloading && !_normalUse.IsReloading)
+        {
+            if(_advancedUse != null && _advancedUse.IsSilentKill)
+            {
+                _stateMachine.SwitchState(_factory.SilentKillState());
+            }
+            else if(_advancedUse != null && _advancedUse.IsSwitchingWeapon)
+            {
+                _stateMachine.SwitchState(_factory.SwitchingWeaponState());
+            }
+            else if(_normalUse.IsAiming)
+            {
+                if(_normalUse.IsUsingWeapon)
+                {
+                    _stateMachine.SwitchState(_factory.UsingWeaponState());
+                }
+                else
+                {
+                    _stateMachine.SwitchState(_factory.AimWeaponState());
+                }
+            }
+            else
+            {
+                _stateMachine.SwitchState(_factory.IdleWeaponState());
+            }
+
         }
     }
-    public override void ExiState()
+    public override void ExitState()
     {
-        //keknya ga ngapa ngapain?
+        _stateMachine.CanReloadWeapon_Coroutine();
     }
-    public void DoReload() => isDoReloading = true;
-    public void ReloadDone()
-    {
-        _normalUse.IsReloading = false;
-        isDoReloading = false;
 
-        //DO Delay to make canreload = true;
-    }
-    // private IEnumerator ReloadDelay()
-    // {
-    //     yield return new WaitForSeconds(0.1f);
-        
-    // }
 }

@@ -21,23 +21,20 @@ public class IdleWeaponState : UseWeaponState
         {
             _stateMachine.SwitchState(_factory.AimWeaponState());
         }
+        else if(_advancedUse != null && _advancedUse.IsSilentKill)
+        {
+            _stateMachine.SwitchState(_factory.SilentKillState());
+        }
+        else if(_advancedUse != null && _advancedUse.IsSwitchingWeapon)
+        {
+            _stateMachine.SwitchState(_factory.SwitchingWeaponState());
+        }
         else if(_normalUse.IsReloading)
         {
             _stateMachine.SwitchState(_factory.ReloadWeaponState());
         }
-        else if(_advancedUse != null)
-        {
-            if(_advancedUse.IsSwitchingWeapon)
-            {
-                _stateMachine.SwitchState(_factory.SwitchingWeaponState());
-            }
-            else if(_advancedUse.IsSilentKill)
-            {
-                _stateMachine.SwitchState(_factory.SilentKillState());
-            }
-        }
     }
-    public override void ExiState()
+    public override void ExitState()
     {
         _stateMachine.IsIdle = false;
     }

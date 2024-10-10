@@ -9,60 +9,60 @@ using UnityEngine;
 /// </summary>
 public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 {
-    protected GameManager _gm;
+    #region Normal Variable
     [Header("Manager/Machine")]
     //Untuk ambil bool
     [SerializeField] protected MovementStateMachine _moveStateMachine;
-    [Space(1)]
-    [Header("Input Control Now")]
-    [SerializeField]protected bool _isInputPlayer;
-    public Action<bool> OnInputPlayerChange;
+    [SerializeField] protected UseWeaponStateMachine _useWeaponStateMachine;
+    protected GameManager _gm;
+
     [Space(1)]
     [Header("Health")]
     [SerializeField] protected float _totalHealth;
     protected float _health;
+
     [Space(1)]
     [Header("Weapon")]
     [SerializeField] protected List<WeaponData> _weaponLists;
     [SerializeField] protected int _currWeaponIdx;
 
+    [Space(5)]
+    [Header("No Inspector Variable")]
     //Thing needed to getcomponent
     //Get Standmovement bool -> isIdle, isWalking, isRunning
     protected IMovement _getMoveFunction;
-    protected IStandMovementData _getStandMovementBool;
+    protected IStandMovementData _getStandMovementData;
+    protected IUseWeapon _getUseWeaponFunction;
+    protected INormalUseWeaponData _getNormalUseWeaponData;
+    #endregion
 
+    #region GETTERSETTER Variable
     [HideInInspector]
     //getter setter
-    public bool IsInputPlayer 
-    { 
-        get { return _isInputPlayer; } 
-        set
-        { 
-            if(IsInputPlayer != value)
-            {
-                _isInputPlayer = value;
-                OnInputPlayerChange?.Invoke(_isInputPlayer);
-            }
-        } 
-    }
     public float TotalHealth {get { return _totalHealth; } }
     public float HealthNow {get {return _health; } }
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
     public MovementStateMachine MovementStateMachine {get { return _moveStateMachine;}}
-    public IStandMovementData GetStandMovementBool {get { return _getStandMovementBool;}}
+    public IStandMovementData GetStandMovementData {get { return _getStandMovementData;}}
     public IMovement GetMoveFunction {get { return _getMoveFunction;}}
+    public IUseWeapon GetUseWeaponFunction {get { return _getUseWeaponFunction;}}
+    public INormalUseWeaponData GetNormalUseWeaponData {get { return _getNormalUseWeaponData;}}
+    #endregion
     protected virtual void Awake()
     {
         if(_moveStateMachine == null) _moveStateMachine = GetComponent<MovementStateMachine>();
         _getMoveFunction = GetComponent<IMovement>();
-        _getStandMovementBool = GetComponent<IStandMovementData>();
+        _getStandMovementData = GetComponent<IStandMovementData>();
+
+        _getUseWeaponFunction = GetComponent<IUseWeapon>();
+        _getNormalUseWeaponData = GetComponent<INormalUseWeaponData>();
+        InitializeHealth();
+        InitializeWeapon();
     }
     protected virtual void Start() 
     {
         _gm = GameManager.instance;
-        InitializeHealth();
-        InitializeWeapon();
     }
 
     #region Health
@@ -106,5 +106,6 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         _currWeaponIdx = 0;
 
     }
+    public abstract void ReloadWeapon();
     #endregion
 }

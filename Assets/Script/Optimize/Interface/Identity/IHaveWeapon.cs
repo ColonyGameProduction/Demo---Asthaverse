@@ -15,5 +15,6 @@ public interface IHaveWeapon
 {
     List<WeaponData> WeaponLists{ get; }
     WeaponData CurrWeapon{get;}
+    void ReloadWeapon();
 
 }

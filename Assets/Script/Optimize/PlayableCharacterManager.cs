@@ -17,6 +17,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     private static bool _isSwitchingCharacter;
     private static bool _isSwitchingWeapon;
     private static bool _isCommanding;
+    private bool _isLeftMouseClicked;
 
     [Space(1)]
     [Header("Camera Effect")]
@@ -37,10 +38,15 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     private MovementStateMachine _currMoveStateMachine;
     //Get Standmovement bool -> isIdle, isWalking, isRunning
     private IMovement _currMoveFunction;
-    private IStandMovementData _currStandMovementBool;
-    private ICrouchMovementData _currCrouchMovementBool;
+    private IStandMovementData _currStandMovementData;
+    private ICrouchMovementData _currCrouchMovementData;
     private IPlayableMovementDataNeeded _currPlayableMovementData;
     private PlayableCamera _currPlayableCamera;
+
+    private IUseWeapon _currUseWeaponFunction;
+    private INormalUseWeaponData _currNormalUseWeaponData;
+    private IAdvancedUseWeaponData _currAdvancedUseWeaponData;
+    private IPlayableUseWeaponDataNeeded _currPlayableUseWeaponData;
     #endregion
 
     #region GETTERSETTER Variable
@@ -86,7 +92,10 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
             chara.GetMoveFunction?.ForceStopMoving();
+            chara.GetUseWeaponFunction?.ForceStopUseWeapon();
         }
+        _currPlayableUseWeaponData.OnTurningOffScope -= UseWeaponData_OnTurningOffScope;
+
         PlayableCharaNow.IsInputPlayer = false;
         
         //Kategori kamera
@@ -110,12 +119,14 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         StartCoroutine(Switching());
     }
 
+
     // Logic 'Mengaktifkan karakter ketika di switch'
     private void SetActiveCharacter()
     {   
         //Ini uda ganti chara angkanya
         PlayableCharaNow.IsInputPlayer = true;
         SetAllCurr();
+        _currPlayableUseWeaponData.OnTurningOffScope += UseWeaponData_OnTurningOffScope;
         //kategori kamera
         _currPlayableCamera.GetFollowCamera.Priority = 2;
 
@@ -155,17 +166,15 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         //Dapetin semua class data dr playablecharanow jdnya ga ngebebanin pas getter setter terus
         _currMoveStateMachine = PlayableCharaNow.MovementStateMachine;
         _currMoveFunction = PlayableCharaNow.GetMoveFunction;
-        _currStandMovementBool = PlayableCharaNow.GetStandMovementBool;
-        _currCrouchMovementBool = PlayableCharaNow.GetCrouchMovementBool;
+        _currStandMovementData = PlayableCharaNow.GetStandMovementData;
+        _currCrouchMovementData = PlayableCharaNow.GetCrouchMovementData;
         _currPlayableMovementData = PlayableCharaNow.GetPlayableMovementData;
         _currPlayableCamera = PlayableCharaNow.GetPlayableCamera;
-    }
-    #endregion
 
-    #region Weapon Switching
-    private void SwitchWeapon()
-    {
-        
+        _currUseWeaponFunction = PlayableCharaNow.GetUseWeaponFunction;
+        _currNormalUseWeaponData = PlayableCharaNow.GetNormalUseWeaponData;
+        _currAdvancedUseWeaponData = PlayableCharaNow.GetAdvancedUseWeaponData;
+        _currPlayableUseWeaponData = PlayableCharaNow.GetPlayableUseWeaponData;
     }
     #endregion
 
@@ -193,6 +202,12 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     {
         _isNightVision = false;
         //do smth with camera
+    }
+    #endregion
+    #region  Weapon Data
+    private void UseWeaponData_OnTurningOffScope()
+    {
+        if(IsScope)ResetScope(_currCharaidx);
     }
     #endregion
 
@@ -226,39 +241,46 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     {
         if(!IsSwitchingCharacter)
         {
-            if(_currCrouchMovementBool.IsCrouching)_currCrouchMovementBool.IsCrouching = false;
-            _currStandMovementBool.IsRunning = true;
+            _currUseWeaponFunction.ForceStopUseWeapon();
+            if(_currPlayableMovementData.IsMustLookForward)_currPlayableMovementData.IsMustLookForward = false;
 
-            //di sini kalo misal tdnya lg aim/shooting bakal lsg disuru stop
+            if(IsScope)ResetScope(_currCharaidx);
+            if(_currCrouchMovementData.IsCrouching)_currCrouchMovementData.IsCrouching = false;
+            _currStandMovementData.IsRunning = true;
         }
     }
 
     private void GameInput_OnRunCanceled()
     {
-         _currStandMovementBool.IsRunning = false;
+         _currStandMovementData.IsRunning = false;
     }
 
     private void GameInput_OnCrouchPerformed()
     {
         if(!IsSwitchingCharacter)
         {
-            if(_currStandMovementBool.IsRunning)_currStandMovementBool.IsRunning = false;
-            _currCrouchMovementBool.IsCrouching = true;
+            if(_currStandMovementData.IsRunning)_currStandMovementData.IsRunning = false;
+            _currCrouchMovementData.IsCrouching = true;
         }
     }
 
     private void GameInput_OnCrouchCanceled()
     {
-        _currCrouchMovementBool.IsCrouching = false;
+        _currCrouchMovementData.IsCrouching = false;
     }
 
     private void GameInput_OnChangePlayerPerformed()
     {
+        //pas silent kill gabole ganti?
         if(!IsSwitchingCharacter)SwitchCharacter(_currCharaidx + 1);
     }
     private void GameInput_OnChangeWeaponPerformed()
     {
-        throw new NotImplementedException();
+
+        if(!IsSwitchingCharacter && !_currAdvancedUseWeaponData.IsSwitchingWeapon)
+        {
+            _currAdvancedUseWeaponData.IsSwitchingWeapon = true;
+        }
     }
 
     private void GameInput_OnCommandPerformed()
@@ -280,12 +302,17 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
     private void GameInput_OnSilentKillPerformed()
     {
-        throw new NotImplementedException();
+        if(!IsSwitchingCharacter && !_currAdvancedUseWeaponData.IsSilentKill)
+        {
+            _currAdvancedUseWeaponData.IsSilentKill = true;
+        }
     }
     private void GameInput_OnShootingPerformed()
     {
-        if(!IsSwitchingCharacter)
-        {
+        if(!IsSwitchingCharacter && !_currStandMovementData.IsRunning)
+        {   
+            if(!_currNormalUseWeaponData.IsAiming)_currNormalUseWeaponData.IsAiming = true;
+            _currNormalUseWeaponData.IsUsingWeapon = true;
             _currPlayableMovementData.IsMustLookForward = true;
         }
     }
@@ -293,28 +320,27 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     {
         if(!IsSwitchingCharacter)
         {
-            //ntr di sini jg ada syarat kalo !isRun baru bisa
+            _currNormalUseWeaponData.IsUsingWeapon = false;
             _currPlayableMovementData.IsMustLookForward = false;
-            if(IsScope)
-            {
-                ResetScope(_currCharaidx);
-            }
+            if(!IsScope)_currNormalUseWeaponData.IsAiming = false;
         }
     }
     private void GameInput_OnScopePerformed()
     {
-        if(!IsSwitchingCharacter)
+        if(!IsSwitchingCharacter && !_currStandMovementData.IsRunning && !_currAdvancedUseWeaponData.IsSilentKill && !_currAdvancedUseWeaponData.IsSwitchingWeapon && !_currNormalUseWeaponData.IsReloading)
         {
             //KALO LAGI mo ngescope, tp blm aim, lsg aim nya nyalain jg
 
             //tp kalo unscope, dan
             if(!IsScope)
             {
+                _currNormalUseWeaponData.IsAiming = true;
                 _currPlayableMovementData.IsMustLookForward = true;
                 ScopeCamera(_currCharaidx);
             }
             else
             {
+                _currNormalUseWeaponData.IsAiming = false;
                 _currPlayableMovementData.IsMustLookForward = false;
                 ResetScope(_currCharaidx);
             }
@@ -323,7 +349,10 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     }
     private void GameInput_OnReloadPerformed()
     {
-        
+        if(!IsSwitchingCharacter && !_currNormalUseWeaponData.IsReloading)
+        {
+            _currNormalUseWeaponData.IsReloading = true;
+        }
     }
 
     #endregion

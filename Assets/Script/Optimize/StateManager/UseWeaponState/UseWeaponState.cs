@@ -7,6 +7,7 @@ public abstract class UseWeaponState : CharacterBaseState<UseWeaponStateMachine>
     protected UseWeaponStateFactory _factory;
     protected INormalUseWeaponData _normalUse;
     protected IAdvancedUseWeaponData _advancedUse;
+    protected IPlayableUseWeaponDataNeeded _playableData;
     protected UseWeaponState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine)
     {
         _factory = factory;
@@ -18,13 +19,17 @@ public abstract class UseWeaponState : CharacterBaseState<UseWeaponStateMachine>
         {
             _advancedUse = a;
         }
+        if(stateMachine is IPlayableUseWeaponDataNeeded p)
+        {
+            _playableData = p;
+        }
     }
     public override void EnterState()
     {
         base.EnterState();
     }
-    public override void ExiState()
+    public override void ExitState()
     {
-        base.ExiState();
+        base.ExitState();
     }
 }

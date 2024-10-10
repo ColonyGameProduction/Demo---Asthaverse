@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IUseWeapon
+public interface ICanSwitchWeapon
 {
-    void UseWeapon();
-    void ForceStopUseWeapon();
+    void SwitchWeapon();
 }

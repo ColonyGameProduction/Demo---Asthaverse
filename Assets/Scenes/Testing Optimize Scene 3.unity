@@ -197,6 +197,7 @@ MonoBehaviour:
   isItEnemy:
     serializedVersion: 2
     m_Bits: 0
+  alertValue: 0
 --- !u!4 &2227553
 Transform:
   m_ObjectHideFlags: 0
@@ -2884,6 +2885,8 @@ Transform:
   m_Children:
   - {fileID: 2085741375}
   - {fileID: 1303093422}
+  - {fileID: 1243830266}
+  - {fileID: 1073878542}
   m_Father: {fileID: 745014794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &421418394
@@ -5096,6 +5099,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 709643202}
   m_CullTransparentMesh: 1
+--- !u!1 &712735113
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 712735114}
+  m_Layer: 7
+  m_Name: Crosshair Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &712735114
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712735113}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.78220034, y: 0.43091118, z: 0.14810908}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1897181812}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &743586296
 GameObject:
   m_ObjectHideFlags: 0
@@ -5107,6 +5141,7 @@ GameObject:
   - component: {fileID: 743586300}
   - component: {fileID: 743586309}
   - component: {fileID: 743586308}
+  - component: {fileID: 743586310}
   - component: {fileID: 743586307}
   - component: {fileID: 743586302}
   - component: {fileID: 743586303}
@@ -5153,6 +5188,7 @@ MonoBehaviour:
   stateMachine: {fileID: 0}
   playerGameObject: {fileID: 439030860}
   followTarget: {fileID: 1611590578}
+  aim: {fileID: 0}
   friendsDestination:
   - {fileID: 279957712}
   - {fileID: 1191237419}
@@ -5167,6 +5203,8 @@ MonoBehaviour:
   weaponStat:
   - {fileID: 11400000, guid: ce86a641912742b49adc7be1f7fd8c2e, type: 2}
   - {fileID: 11400000, guid: 4e797d732470a364584aa35fc319d05c, type: 2}
+  siapaSih: {fileID: 0}
+  crosshairPoint: {fileID: 0}
   command: {fileID: 1543354274}
   isCommandActive: 0
   isHoldPosition: 0
@@ -5291,18 +5329,18 @@ MonoBehaviour:
   isGo: 0
   isStop: 0
   objectDir: {fileID: 1786254555}
+  _agentNavMesh: {fileID: 743586305}
   _walkSpeed: 3.5
   _runSpeed: 5
   _isIdle: 0
   _isWalking: 0
   _isRun: 0
-  _agentNavMesh: {fileID: 743586305}
   _cc: {fileID: 743586304}
   _charaGameObject: {fileID: 439030860}
   _rotateSpeed: 10
   _crouchSpeed: 1
-  _followTarget: {fileID: 1611590578}
   _isCrouch: 0
+  _followTarget: {fileID: 1611590578}
   _isMustLookForward: 0
 --- !u!114 &743586309
 MonoBehaviour:
@@ -5317,7 +5355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveStateMachine: {fileID: 743586308}
-  _isInputPlayer: 0
+  _useWeaponStateMachine: {fileID: 0}
   _totalHealth: 100
   _weaponLists:
   - weaponStatSO: {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
@@ -5327,9 +5365,40 @@ MonoBehaviour:
     totalBullet: 0
     currBullet: 0
   _currWeaponIdx: 2
+  _isInputPlayer: 0
   _friendsNormalPosition:
   - {fileID: 279957712}
   - {fileID: 1191237419}
+--- !u!114 &743586310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743586296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abb16d10ac060de41935481a6872c830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 1069478232}
+  isGo: 0
+  isStop: 0
+  target: {fileID: 0}
+  _isIdle: 0
+  _isAiming: 0
+  _isUsingWeapon: 0
+  _isReloading: 0
+  _notAimSpamClickDelayTime: 0.1
+  _charaEnemyMask:
+    serializedVersion: 2
+    m_Bits: 256
+  _originShootPoint_AIContainer: {fileID: 1457320076}
+  _directionShootPoint_PlayerContainer: {fileID: 1777798473}
+  _isSwitchingWeapon: 0
+  _switchWeaponDuration: 0.2
+  _isSilentKill: 0
+  _silentKillDuration: 0.2
 --- !u!1 &745014793
 GameObject:
   m_ObjectHideFlags: 0
@@ -6622,7 +6691,7 @@ MonoBehaviour:
   _scopeFOV: 60
   _isScope: 0
   _cameraDelayDuration: 0.1
-  _switchDelayDuration: 1
+  _switchDelayDuration: 0.2
 --- !u!1 &859698410
 GameObject:
   m_ObjectHideFlags: 0
@@ -7083,6 +7152,37 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1004914693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1004914694}
+  m_Layer: 7
+  m_Name: Crosshair Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1004914694
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1004914693}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.78220034, y: 0.43091118, z: 0.14810908}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1254957714}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1023814759
 GameObject:
   m_ObjectHideFlags: 0
@@ -8233,6 +8333,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1073878541
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1073878542}
+  m_Layer: 7
+  m_Name: Crosshair Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1073878542
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1073878541}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.78220034, y: 0.43091118, z: 0.14810908}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 407286757}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1077971746
 GameObject:
   m_ObjectHideFlags: 0
@@ -8290,6 +8421,7 @@ MonoBehaviour:
   playableCharacterNum: 0
   canSwitch: 0
   scope: 0
+  breadcrumbsGameObject: []
 --- !u!114 &1077971749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8565,6 +8697,7 @@ GameObject:
   - component: {fileID: 1156905594}
   - component: {fileID: 1156905603}
   - component: {fileID: 1156905601}
+  - component: {fileID: 1156905604}
   - component: {fileID: 1156905602}
   - component: {fileID: 1156905596}
   - component: {fileID: 1156905597}
@@ -8611,6 +8744,7 @@ MonoBehaviour:
   stateMachine: {fileID: 0}
   playerGameObject: {fileID: 1911957387}
   followTarget: {fileID: 2085741375}
+  aim: {fileID: 0}
   friendsDestination:
   - {fileID: 312050264}
   - {fileID: 1398910608}
@@ -8625,6 +8759,8 @@ MonoBehaviour:
   weaponStat:
   - {fileID: 11400000, guid: ddddea676c9c1d64683b955392c0bef3, type: 2}
   - {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
+  siapaSih: {fileID: 0}
+  crosshairPoint: {fileID: 0}
   command: {fileID: 138660905}
   isCommandActive: 0
   isHoldPosition: 0
@@ -8734,18 +8870,18 @@ MonoBehaviour:
   isGo: 0
   isStop: 0
   objectDir: {fileID: 1786254555}
+  _agentNavMesh: {fileID: 1156905599}
   _walkSpeed: 3.5
   _runSpeed: 5
   _isIdle: 0
   _isWalking: 0
   _isRun: 0
-  _agentNavMesh: {fileID: 1156905599}
   _cc: {fileID: 1156905598}
   _charaGameObject: {fileID: 1911957387}
   _rotateSpeed: 10
   _crouchSpeed: 1
-  _followTarget: {fileID: 2085741375}
   _isCrouch: 0
+  _followTarget: {fileID: 2085741375}
   _isMustLookForward: 0
 --- !u!114 &1156905602
 MonoBehaviour:
@@ -8775,7 +8911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveStateMachine: {fileID: 1156905601}
-  _isInputPlayer: 0
+  _useWeaponStateMachine: {fileID: 0}
   _totalHealth: 100
   _weaponLists:
   - weaponStatSO: {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
@@ -8785,9 +8921,40 @@ MonoBehaviour:
     totalBullet: 0
     currBullet: 0
   _currWeaponIdx: 2
+  _isInputPlayer: 0
   _friendsNormalPosition:
   - {fileID: 312050264}
   - {fileID: 1398910608}
+--- !u!114 &1156905604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156905590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abb16d10ac060de41935481a6872c830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 151174312}
+  isGo: 0
+  isStop: 0
+  target: {fileID: 0}
+  _isIdle: 0
+  _isAiming: 0
+  _isUsingWeapon: 0
+  _isReloading: 0
+  _notAimSpamClickDelayTime: 0.1
+  _charaEnemyMask:
+    serializedVersion: 2
+    m_Bits: 256
+  _originShootPoint_AIContainer: {fileID: 946796280}
+  _directionShootPoint_PlayerContainer: {fileID: 1243830266}
+  _isSwitchingWeapon: 0
+  _switchWeaponDuration: 0.2
+  _isSilentKill: 0
+  _silentKillDuration: 0.2
 --- !u!1 &1191237419
 GameObject:
   m_ObjectHideFlags: 0
@@ -8883,6 +9050,37 @@ Transform:
   - {fileID: 1191237420}
   m_Father: {fileID: 439030860}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1243830265
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1243830266}
+  m_Layer: 0
+  m_Name: Aim
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1243830266
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243830265}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.013806879, y: -0.017899975, z: 0.00024724886, w: -0.9997444}
+  m_LocalPosition: {x: 0.78220034, y: 0.43091118, z: 0.14810908}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 407286757}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1254957713
 GameObject:
   m_ObjectHideFlags: 0
@@ -8914,6 +9112,8 @@ Transform:
   m_Children:
   - {fileID: 1586786643}
   - {fileID: 277967140}
+  - {fileID: 1781075837}
+  - {fileID: 1004914694}
   m_Father: {fileID: 1999881233}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1268347119
@@ -9490,6 +9690,7 @@ MonoBehaviour:
   isItEnemy:
     serializedVersion: 2
     m_Bits: 0
+  alertValue: 0
 --- !u!4 &1369132762
 Transform:
   m_ObjectHideFlags: 0
@@ -10115,7 +10316,8 @@ GameObject:
   - component: {fileID: 1643429135}
   - component: {fileID: 1643429134}
   - component: {fileID: 1643429133}
-  m_Layer: 6
+  - component: {fileID: 1643429137}
+  m_Layer: 8
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10208,6 +10410,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1643429137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1643429132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e18892f13798866408103a2d16e06911, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _moveStateMachine: {fileID: 0}
+  _useWeaponStateMachine: {fileID: 0}
+  _totalHealth: 1000
+  _weaponLists:
+  - weaponStatSO: {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
+    totalBullet: 0
+    currBullet: 0
+  - weaponStatSO: {fileID: 11400000, guid: a9d97bbad63f47d4a92e1eb934894ae8, type: 2}
+    totalBullet: 0
+    currBullet: 0
+  _currWeaponIdx: 0
+  _isInputPlayer: 0
+  _friendsNormalPosition: []
 --- !u!1 &1659097350
 GameObject:
   m_ObjectHideFlags: 0
@@ -10574,6 +10801,68 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1777798472
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1777798473}
+  m_Layer: 0
+  m_Name: Aim
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1777798473
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1777798472}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.013806879, y: -0.017899975, z: 0.00024724886, w: -0.9997444}
+  m_LocalPosition: {x: 0.78220034, y: 0.43091118, z: 0.14810908}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1897181812}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1781075836
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1781075837}
+  m_Layer: 0
+  m_Name: Aim
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1781075837
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1781075836}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.013806879, y: -0.017899975, z: 0.00024724886, w: -0.9997444}
+  m_LocalPosition: {x: 0.78220034, y: 0.43091118, z: 0.14810908}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1254957714}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1786254555
 GameObject:
   m_ObjectHideFlags: 0
@@ -10584,7 +10873,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1786254558}
   - component: {fileID: 1786254559}
-  m_Layer: 0
+  - component: {fileID: 1786254560}
+  m_Layer: 7
   m_Name: test
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10625,8 +10915,33 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 4.032385, z: 1}
+  m_Center: {x: 0, y: 1.5161924, z: 0}
+--- !u!114 &1786254560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786254555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e18892f13798866408103a2d16e06911, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _moveStateMachine: {fileID: 0}
+  _useWeaponStateMachine: {fileID: 0}
+  _totalHealth: 1000
+  _weaponLists:
+  - weaponStatSO: {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
+    totalBullet: 0
+    currBullet: 0
+  - weaponStatSO: {fileID: 11400000, guid: a9d97bbad63f47d4a92e1eb934894ae8, type: 2}
+    totalBullet: 0
+    currBullet: 0
+  _currWeaponIdx: 0
+  _isInputPlayer: 0
+  _friendsNormalPosition: []
 --- !u!1001 &1817375226
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10918,6 +11233,8 @@ Transform:
   m_Children:
   - {fileID: 1611590578}
   - {fileID: 1728406386}
+  - {fileID: 1777798473}
+  - {fileID: 712735114}
   m_Father: {fileID: 1347309374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1911957386
@@ -11186,6 +11503,7 @@ GameObject:
   - component: {fileID: 2017098525}
   - component: {fileID: 2017098526}
   - component: {fileID: 2017098524}
+  - component: {fileID: 2017098527}
   - component: {fileID: 2017098523}
   m_Layer: 0
   m_Name: Enemy (3)
@@ -11193,7 +11511,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!195 &2017098523
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -11232,12 +11550,12 @@ MonoBehaviour:
   isGo: 0
   isStop: 0
   objectDir: {fileID: 1786254555}
+  _agentNavMesh: {fileID: 2017098523}
   _walkSpeed: 3.5
   _runSpeed: 5
   _isIdle: 0
   _isWalking: 0
   _isRun: 0
-  _agentNavMesh: {fileID: 2017098523}
 --- !u!4 &2017098525
 Transform:
   m_ObjectHideFlags: 0
@@ -11267,16 +11585,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveStateMachine: {fileID: 2017098524}
-  _isInputPlayer: 0
+  _useWeaponStateMachine: {fileID: 0}
   _totalHealth: 90
   _weaponLists:
-  - weaponStatSO: {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
-    totalBullet: 0
-    currBullet: 0
   - weaponStatSO: {fileID: 11400000, guid: a9d97bbad63f47d4a92e1eb934894ae8, type: 2}
     totalBullet: 0
     currBullet: 0
+  - weaponStatSO: {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
+    totalBullet: 0
+    currBullet: 0
   _currWeaponIdx: 0
+--- !u!114 &2017098527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017098522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98324d2f92aea754a815fb482ebcc3f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 1083558674}
+  isGo: 0
+  isStop: 0
+  target: {fileID: 1786254555}
+  _isIdle: 0
+  _isAiming: 0
+  _isUsingWeapon: 0
+  _isReloading: 0
+  _notAimSpamClickDelayTime: 0.1
+  _charaEnemyMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _originShootPoint_AIContainer: {fileID: 301498854}
 --- !u!1 &2047355710
 GameObject:
   m_ObjectHideFlags: 0
@@ -11400,6 +11743,7 @@ GameObject:
   - component: {fileID: 2066745658}
   - component: {fileID: 2066745668}
   - component: {fileID: 2066745666}
+  - component: {fileID: 2066745669}
   - component: {fileID: 2066745667}
   - component: {fileID: 2066745660}
   - component: {fileID: 2066745661}
@@ -11446,6 +11790,7 @@ MonoBehaviour:
   stateMachine: {fileID: 0}
   playerGameObject: {fileID: 2047355711}
   followTarget: {fileID: 1586786643}
+  aim: {fileID: 0}
   friendsDestination:
   - {fileID: 1205169415}
   - {fileID: 421418394}
@@ -11460,6 +11805,8 @@ MonoBehaviour:
   weaponStat:
   - {fileID: 11400000, guid: a9d97bbad63f47d4a92e1eb934894ae8, type: 2}
   - {fileID: 11400000, guid: 4e797d732470a364584aa35fc319d05c, type: 2}
+  siapaSih: {fileID: 0}
+  crosshairPoint: {fileID: 0}
   command: {fileID: 486741365}
   isCommandActive: 0
   isHoldPosition: 0
@@ -11569,18 +11916,18 @@ MonoBehaviour:
   isGo: 0
   isStop: 0
   objectDir: {fileID: 1786254555}
+  _agentNavMesh: {fileID: 2066745663}
   _walkSpeed: 3.5
   _runSpeed: 5
   _isIdle: 0
   _isWalking: 0
   _isRun: 0
-  _agentNavMesh: {fileID: 2066745663}
   _cc: {fileID: 2066745662}
   _charaGameObject: {fileID: 2047355711}
   _rotateSpeed: 10
   _crouchSpeed: 1
-  _followTarget: {fileID: 1586786643}
   _isCrouch: 0
+  _followTarget: {fileID: 1586786643}
   _isMustLookForward: 0
 --- !u!114 &2066745667
 MonoBehaviour:
@@ -11610,7 +11957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveStateMachine: {fileID: 2066745666}
-  _isInputPlayer: 1
+  _useWeaponStateMachine: {fileID: 0}
   _totalHealth: 100
   _weaponLists:
   - weaponStatSO: {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
@@ -11620,9 +11967,40 @@ MonoBehaviour:
     totalBullet: 0
     currBullet: 0
   _currWeaponIdx: 2
+  _isInputPlayer: 1
   _friendsNormalPosition:
   - {fileID: 1205169415}
   - {fileID: 421418394}
+--- !u!114 &2066745669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066745654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abb16d10ac060de41935481a6872c830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 1031462396}
+  isGo: 0
+  isStop: 0
+  target: {fileID: 0}
+  _isIdle: 0
+  _isAiming: 0
+  _isUsingWeapon: 0
+  _isReloading: 0
+  _notAimSpamClickDelayTime: 0.1
+  _charaEnemyMask:
+    serializedVersion: 2
+    m_Bits: 256
+  _originShootPoint_AIContainer: {fileID: 961320780}
+  _directionShootPoint_PlayerContainer: {fileID: 1781075837}
+  _isSwitchingWeapon: 0
+  _switchWeaponDuration: 0.2
+  _isSilentKill: 0
+  _silentKillDuration: 0.2
 --- !u!1 &2085741374
 GameObject:
   m_ObjectHideFlags: 0

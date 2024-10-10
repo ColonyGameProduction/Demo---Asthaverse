@@ -7,11 +7,11 @@ public class AimWeaponState : UseWeaponState
 {
     public AimWeaponState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine, factory)
     {
-
+        StateAnimationName = "Scope";
     }
     public override void EnterState()
     {
-        // base.EnterState(); //Do animation
+        base.EnterState(); //Do animation
         Debug.Log("Aim Weapon" + _stateMachine.gameObject.name);
     }
     public override void UpdateState()
@@ -37,16 +37,13 @@ public class AimWeaponState : UseWeaponState
         {
             _stateMachine.SwitchState(_factory.ReloadWeaponState());
         }
-        else if(_advancedUse != null)
+        else if(_advancedUse != null && _advancedUse.IsSilentKill)
         {
-            if(_advancedUse.IsSwitchingWeapon)
-            {
-                _stateMachine.SwitchState(_factory.SwitchingWeaponState());
-            }
-            else if(_advancedUse.IsSilentKill)
-            {
-                _stateMachine.SwitchState(_factory.SilentKillState());
-            }
+            _stateMachine.SwitchState(_factory.SilentKillState());
+        }
+        else if(_advancedUse != null && _advancedUse.IsSwitchingWeapon)
+        {
+            _stateMachine.SwitchState(_factory.SwitchingWeaponState());
         }
         else if(!_normalUse.IsAiming)
         {
@@ -54,8 +51,9 @@ public class AimWeaponState : UseWeaponState
         }
         // else if()
     }
-    public override void ExiState()
+    public override void ExitState()
     {
+        if(!_normalUse.IsAiming) base.ExitState();
         // base.ExiState(); //Turn Off Aiming ANimation if isAiming is false
     }
 }

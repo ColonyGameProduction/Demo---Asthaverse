@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponLogicHandler : MonoBehaviour
+public class WeaponLogicHandler
 {    
 
     //Logic Shooting
@@ -13,7 +13,6 @@ public class WeaponLogicHandler : MonoBehaviour
 
         Vector3 bulletDirection = (direction).normalized + new Vector3(x, y, 0).normalized; 
 
-        weaponStat.currBullet--;
         RaycastHit hit;
         if(Physics.Raycast(origin, bulletDirection, out hit, weaponStat.range, entityMask))
         {
@@ -36,22 +35,29 @@ public class WeaponLogicHandler : MonoBehaviour
 
     public void CalculateDamage(WeaponStatSO weapon, GameObject entityGameObject)
     {
-        
-        if(entityGameObject.CompareTag("Enemy"))
+        IHealth _getHealthFunction;
+        _getHealthFunction =  entityGameObject.transform.GetComponent<IHealth>();
+        if(_getHealthFunction == null) _getHealthFunction = entityGameObject.transform.GetComponentInParent<IHealth>();
+        if(_getHealthFunction != null)
         {
-            EnemyAI enemy = entityGameObject.GetComponentInParent<EnemyAI>(); 
-            float enemyHP = enemy.GetEnemyHP();
-
-            enemyHP -= weapon.baseDamage;
-
-            enemy.SetEnemyHP(enemyHP);
-            Debug.Log("Enemy Hit!");
+            _getHealthFunction.Hurt(weapon.baseDamage);
+            Debug.Log(entityGameObject.name + " Hit!" + " HP:" + _getHealthFunction.HealthNow);
         }
-        else if(entityGameObject.CompareTag("Player"))
-        {
-            PlayerAction player = entityGameObject.GetComponentInParent<PlayerAction>();
+        // if(entityGameObject.CompareTag("Enemy"))
+        // {
+        //     EnemyAI enemy = entityGameObject.GetComponentInParent<EnemyAI>(); 
+        //     float enemyHP = enemy.GetEnemyHP();
+
+        //     enemyHP -= weapon.baseDamage;
+
+        //     enemy.SetEnemyHP(enemyHP);
+        //     Debug.Log("Enemy Hit!");
+        // }
+        // else if(entityGameObject.CompareTag("Player"))
+        // {
+        //     PlayerAction player = entityGameObject.GetComponentInParent<PlayerAction>();
             
-        }
+        // }
     }
 
 }

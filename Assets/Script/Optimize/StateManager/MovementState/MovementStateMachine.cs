@@ -16,8 +16,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     [Space(5)]
     [Header("Other Component Variable")]
-    MovementStateFactory _states;
-    protected CharacterIdentity _charaIdentity;
+    protected MovementStateFactory _states;
     
     [Header("AI")]
     [SerializeField]protected NavMeshAgent _agentNavMesh;
@@ -33,7 +32,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     [Space(5)]
     [Header("No Inspector Variable")]
-    MovementState _currState;
+    protected MovementState _currState;
     protected float _currSpeed;
     protected Transform _currAIDirection; //Nyimpen direction AI yg ntr dikasih jg dr luar
     protected bool _isInputPlayer;
@@ -65,9 +64,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
         
         base.Awake();
-        if(_charaIdentity == null)_charaIdentity = GetComponent<CharacterIdentity>();
-        _isInputPlayer = _charaIdentity.IsInputPlayer;
-        _charaIdentity.OnInputPlayerChange += CharaIdentity_OnInputPlayerChange; // Ditaro di sini biar ga ketinggalan sebelah, krn sebelah diubah di start
+
 
         _states = new MovementStateFactory(this);
 
@@ -102,7 +99,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     {
         if(_currState != null)
         {
-            _currState?.ExiState();
+            _currState?.ExitState();
         }
         _currState = newState as MovementState;
         _currState?.EnterState();
@@ -176,9 +173,5 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         Debug.Log("DoneMove");
     }
     #endregion
-    private void CharaIdentity_OnInputPlayerChange(bool obj)
-    {
-        _isInputPlayer = obj;
-    }
 
 }
