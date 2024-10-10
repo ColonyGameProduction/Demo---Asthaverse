@@ -143,6 +143,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""44403a63-af6d-400c-b989-041ffc7ba145"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -278,7 +287,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
-                                {
+                {
                     ""name"": """",
                     ""id"": ""8a973222-8b41-4b6a-9ca0-f9c2fb631734"",
                     ""path"": ""<Keyboard>/r"",
@@ -332,6 +341,17 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""UnHoldPosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6f3e16bd-c721-4aba-8d18-89ac95e25f2d"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -353,6 +373,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_UnCommand = m_InputPlayerAction.FindAction("UnCommand", throwIfNotFound: true);
         m_InputPlayerAction_HoldPosition = m_InputPlayerAction.FindAction("HoldPosition", throwIfNotFound: true);
         m_InputPlayerAction_UnHoldPosition = m_InputPlayerAction.FindAction("UnHoldPosition", throwIfNotFound: true);
+        m_InputPlayerAction_Interact = m_InputPlayerAction.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -427,6 +448,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_UnCommand;
     private readonly InputAction m_InputPlayerAction_HoldPosition;
     private readonly InputAction m_InputPlayerAction_UnHoldPosition;
+    private readonly InputAction m_InputPlayerAction_Interact;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -444,6 +466,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @UnCommand => m_Wrapper.m_InputPlayerAction_UnCommand;
         public InputAction @HoldPosition => m_Wrapper.m_InputPlayerAction_HoldPosition;
         public InputAction @UnHoldPosition => m_Wrapper.m_InputPlayerAction_UnHoldPosition;
+        public InputAction @Interact => m_Wrapper.m_InputPlayerAction_Interact;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -492,6 +515,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @UnHoldPosition.started += instance.OnUnHoldPosition;
             @UnHoldPosition.performed += instance.OnUnHoldPosition;
             @UnHoldPosition.canceled += instance.OnUnHoldPosition;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -535,6 +561,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @UnHoldPosition.started -= instance.OnUnHoldPosition;
             @UnHoldPosition.performed -= instance.OnUnHoldPosition;
             @UnHoldPosition.canceled -= instance.OnUnHoldPosition;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -567,5 +596,6 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnUnCommand(InputAction.CallbackContext context);
         void OnHoldPosition(InputAction.CallbackContext context);
         void OnUnHoldPosition(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }
