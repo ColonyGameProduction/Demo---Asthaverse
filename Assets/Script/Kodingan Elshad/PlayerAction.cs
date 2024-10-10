@@ -63,9 +63,6 @@ public class PlayerAction : ExecuteLogic
     public bool isHoldPosition = false;
     private int selectedFriendID = -1;
 
-    //friend's position Parent
-    public Transform friendsPositionParent;
-
     //supaya input action bisa digunakan
     private void Awake()
     {
@@ -158,14 +155,11 @@ public class PlayerAction : ExecuteLogic
     {
         Command();
 
-        // ketika command di aktifkan maka friend otomatis semua isi dari GoToTargetPosition (yang isinya friend position buat jadi patokan friend buat ikutin) akan dikeluarkan dari parentnya, dan juga JIKA ternyata mode Hold Position dinyalakan dan command sudah dimatikan maka friend yang sudah di arahkan ke suatu posisi akan stay di posisi itu sampai player memutuskan untuk mematikan Hold Position
-        for (int i = 0; i < GoToTargetPosition.Length; i++)
+        if (isHoldPosition == false) // pas command aktif dan keadaannya KAGA HOLD POSITION
         {
-            GoToTargetPosition[i].transform.parent = null;
-
-            if (isHoldPosition == false)
+            for (int i = 0; i < GoToTargetPosition.Length; i++)
             {
-                GoToTargetPosition[i].transform.position = friendsDestination[i].transform.position;
+                GoToTargetPosition[i].transform.position = friendsDestination[i].transform.position; // posisi si friend ini bakal stay dibelakang sesuai posisi dari friendDestination;
             }
         }
     }
@@ -173,15 +167,6 @@ public class PlayerAction : ExecuteLogic
     private void UnCommand_performed(InputAction.CallbackContext context)
     {
         UnCommand();
-
-        // ketika player memutuskan untuk uncommand atau mematikan mode command, semua isi GoToTargetPosition (yang isinya friend position buat jadi patokan friend buat ikutin) bakal balik lagi ke parent awalnya yaitu friendsPositionParent / GoToTargetPosition gameObject
-        if (isHoldPosition == false)
-        {
-            for (int i = 0; i < GoToTargetPosition.Length; i++)
-            {
-                GoToTargetPosition[i].transform.parent = friendsPositionParent;
-            }
-        }
     }
 
     private void HoldPosition_performed(InputAction.CallbackContext context)
