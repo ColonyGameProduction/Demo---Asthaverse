@@ -10,7 +10,6 @@ public class EnemyAI : ExecuteLogic
     private float timer;
     //hal yang diperlukan untuk pathfinding
     private NavMeshAgent enemyNavmesh;
-    [SerializeField] private GameObject destination;
 
     [Header("Untuk mengkalkulasi sudut benda")]
     [SerializeField] private int edgeResolveIteration;
@@ -24,6 +23,7 @@ public class EnemyAI : ExecuteLogic
     [Header("")]
     [SerializeField] private Transform FOVPoint;
     [SerializeField] private List<Transform> visibleTargets = new List<Transform>();
+    [SerializeField] private List<Transform> otherVisibleTargets = new List<Transform>();
     [Header("Misc")]
     [SerializeField] private LayerMask playerMask;
     [SerializeField] private LayerMask groundMask;
@@ -42,11 +42,24 @@ public class EnemyAI : ExecuteLogic
 
     //Untuk Alert
     alertState enemyState;
+    FOVDistState FOVState;
     [SerializeField]
     private float alertValue;
+    [SerializeField]
+    private float maxAlertValue;
+
+    //untuk patrol
+    [SerializeField]
+    private Vector3[] patrolPath;
+    private bool switchingPath;
+    private int currPath;
+    private Vector3 lastSeenPosition;
 
     private void Start()
     {
+        currPath = 0;
+        patrolPath[0] = transform.position;
+
         enemyState = alertState.Idle;
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
@@ -64,18 +77,51 @@ public class EnemyAI : ExecuteLogic
 
     private void Update()
     {
-        switch(enemyState)
+        ChangingState();
+        switch (enemyState)
         {
+
             case alertState.Idle:
-                Moving();
+                if(visibleTargets.Count == 0)
+                {
+                    enemyNavmesh.isStopped = false;
+                    Patrol();
+                }
+                else
+                {
+                    enemyNavmesh.isStopped = true;
+                    lastSeenPosition = visibleTargets[0].position;
+                    
+                }
                 Debug.Log("idle");
                 break;
             case alertState.Hunted:
+                enemyNavmesh.isStopped = false;
+                if (otherVisibleTargets.Count > 0)
+                {
+                    Moving(otherVisibleTargets[0].position);
+                }
+                else
+                {
+                    if (lastSeenPosition != Vector3.zero)
+                    {
+                        Moving(lastSeenPosition);
+                    }
+                    else
+                    {
+                        enemyNavmesh.isStopped = true;
+                    }
+
+                    if (Vector3.Distance(transform.position, lastSeenPosition) < 0.5f)
+                    {
+                        lastSeenPosition = Vector3.zero;
+                    }
+                }
                 Debug.Log("hunted");
                 break;
             case alertState.Engage:
+                FOVStateHandler();
                 Debug.Log("engage");
-                destination = visibleTargets[0].gameObject;
                 Shoot();
                 break;
         }
@@ -85,36 +131,60 @@ public class EnemyAI : ExecuteLogic
             Debug.Log("Dead");
         }
 
+
+    }      
+
+    private void ChangingState()
+    {
+        Debug.Log(maxAlertValue);
         if (visibleTargets.Count > 0)
         {
+            foreach(Transform transform in visibleTargets)
+            {
+                if (transform.GetComponent<PlayerAction>().enabled == true)
+                {
+                    if(maxAlertValue > transform.GetComponent<PlayerAction>().GetPlayerStat().stealth || maxAlertValue == 0)
+                    {
+                        maxAlertValue = transform.GetComponent<PlayerAction>().GetPlayerStat().stealth;
+                    }
+                }
+                else
+                {
+                    if (maxAlertValue > transform.GetComponent<PlayerAction>().GetPlayerStat().stealth || maxAlertValue == 0)
+                    {
+                        maxAlertValue = transform.GetComponent<PlayerAction>().GetPlayerStat().stealth;
+                    }
+                }
+            }
+            
 
-            if (alertValue <= 90)
+            if (alertValue <= maxAlertValue)
             {
                 alertValue += Time.deltaTime * 10;
-            }
-
-            if (alertValue == 0)
-            {
-                enemyState = alertState.Idle;
-            }
-            else if (alertValue >= 90 / 2 && alertValue < 90)
-            {
-                enemyState = alertState.Hunted;
-            }
-            else if (alertValue >= 90)
-            {
-                enemyState = alertState.Engage;
             }
         }
         else
         {
-            if (alertValue >= 0)
+            if (alertValue >= 0 && otherVisibleTargets.Count == 0 && lastSeenPosition == Vector3.zero)
             {
                 alertValue -= Time.deltaTime * 10;
             }
         }
-        
-    }      
+
+
+        if (alertValue <= maxAlertValue/2)
+        {
+            enemyState = alertState.Idle;
+        }
+        else if (alertValue >= maxAlertValue / 2 && alertValue < maxAlertValue)
+        {
+            enemyState = alertState.Hunted;
+        }
+        else if (alertValue >= maxAlertValue)
+        {
+            enemyState = alertState.Engage;
+        }
+    }
 
     private void Shoot()
     {
@@ -132,8 +202,38 @@ public class EnemyAI : ExecuteLogic
         }
     }
 
+    private void Patrol()
+    {
+
+        if (patrolPath.Length > 1)
+        {
+            if (Vector3.Distance(transform.position, patrolPath[currPath]) < 0.1f)
+            {
+                if (!switchingPath)
+                {
+                    currPath++;
+                }
+                else
+                {
+                    currPath--;
+                }
+
+                if (currPath == patrolPath.Length - 1)
+                {
+                    switchingPath = true;
+                }
+                else if (currPath == 0)
+                {
+                    switchingPath = false;
+                }
+            }
+            Moving(patrolPath[currPath]);
+        }
+
+    }
+
     //pathfinding untuk enemy
-    private void Moving()
+    private void Moving(Vector3 destination)
     {
         if(stopMoving)
         {
@@ -142,14 +242,14 @@ public class EnemyAI : ExecuteLogic
         }
         if (destination != null)
         {
-            MoveToDestination(enemyNavmesh, destination.transform.position);
+            MoveToDestination(enemyNavmesh, destination);
         }
         
     }
 
     private void Shooting()
     {
-        if(visibleTargets.Count > 0)Shoot(FOVPoint.position, visibleTargets[0].position, weapon, isItEnemy);
+        if(visibleTargets.Count > 0)Shoot(FOVPoint.position, visibleTargets[0].transform.position, weapon, isItEnemy);
     }
 
     public IEnumerator FindTargetWithDelay(float delay)
@@ -158,7 +258,74 @@ public class EnemyAI : ExecuteLogic
         {
             yield return new WaitForSeconds(delay);
             FindVisibleTargetsForEnemy(viewRadius, viewAngle, visibleTargets, FOVPoint, playerMask, groundMask);
+            SplittingTheObject();
         }
+    }
+
+    private void SplittingTheObject()
+    {
+        List<Transform> toRemove = new List<Transform>();
+        toRemove.Clear();
+        otherVisibleTargets.Clear();
+
+        foreach (Transform transform in visibleTargets)
+        {
+            if (!transform.gameObject.CompareTag("Player"))
+            {
+                otherVisibleTargets.Add(transform);
+                toRemove.Add(transform);
+            }
+        }
+        foreach (Transform transform in toRemove)
+        {
+            visibleTargets.Remove(transform);
+        }
+    }
+
+    private void FOVStateHandler()
+    {
+        float distance;
+        if (visibleTargets.Count > 0)
+        {
+            distance = Vector3.Distance(transform.position, visibleTargets[0].position);
+            lastSeenPosition = visibleTargets[0].position;
+        }
+        else
+        {            
+            distance = Vector3.Distance(transform.position, lastSeenPosition);
+        }
+
+
+        if (distance <= viewRadius && distance > viewRadius - (viewRadius/3))
+        {
+            FOVState = FOVDistState.far;
+        }
+        else if(distance <= viewRadius - (viewRadius / 3) && distance > viewRadius - (viewRadius / 3 * 2))
+        {
+            FOVState = FOVDistState.middle;
+        }
+        else if(distance <= viewRadius - (viewRadius / 3*2) && distance >= 0)
+        {
+            FOVState = FOVDistState.close;
+        }
+
+        switch(FOVState)
+        {
+            case FOVDistState.far:                
+                Moving(visibleTargets[0].position);
+                Shoot();
+                Debug.Log("Far");
+                break;
+            case FOVDistState.middle:
+                Shoot();
+                Debug.Log("Middle");
+                break; 
+            case FOVDistState.close:
+                Shoot();
+                Debug.Log("Close");
+                break;
+        }
+        
     }
 
     public float GetEnemyHP()
@@ -181,4 +348,5 @@ public class EnemyAI : ExecuteLogic
         fireRateOn = value;
     }
 
+    
 }
