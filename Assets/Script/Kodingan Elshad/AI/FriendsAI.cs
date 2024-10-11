@@ -33,7 +33,7 @@ public class FriendsAI : ExecuteLogic
     private Mesh viewMesh;
 
     [SerializeField]
-    private EntityStatSO siapaSih;
+    private EntityStatSO character;
 
 
     private bool commandActive = false;
@@ -200,7 +200,7 @@ public class FriendsAI : ExecuteLogic
 
     public EntityStatSO GetFriendsStat()
     {
-        return siapaSih;
+        return character;
     }
 
 }

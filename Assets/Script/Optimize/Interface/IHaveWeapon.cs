@@ -8,8 +8,8 @@ public class WeaponData
 {
     public WeaponStatSO weaponStatSO;
 
-    public int totalBullet;
-    public int currBullet;
+    public float totalBullet;
+    public float currBullet;
 }
 public interface IHaveWeapon
 {

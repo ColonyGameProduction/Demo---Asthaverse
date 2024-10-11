@@ -53,7 +53,7 @@ public class ExecuteLogic : AILogic
     //untuk Reloading
     public void Reload(WeaponStatSO weaponStatSO)
     {
-        int bulletNeed = weaponStatSO.magSize - weaponStatSO.currBullet;
+        float bulletNeed = weaponStatSO.magSize - weaponStatSO.currBullet;
         if (weaponStatSO.totalBullet >= bulletNeed)
         {
             weaponStatSO.currBullet = weaponStatSO.magSize;
@@ -88,6 +88,7 @@ public class ExecuteLogic : AILogic
         playerAction.SetCurrentWeapon(weaponStats[weaponNum], weaponNum);
     }
 
+    
     //logic 'Shoot'
     public void Shoot(Vector3 origin, Vector3 direction, WeaponStatSO weaponStat, LayerMask entityMask)
     {
