@@ -53,7 +53,10 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < 10; i++)
         {
             breadcrumbsGameObject[i] = new GameObject("Breadcrumbs");
+            breadcrumbsGameObject[i].AddComponent<BoxCollider>().isTrigger = true;
+            breadcrumbsGameObject[i].layer = 7;
             breadcrumbsGameObject[i].SetActive(false);
+            
         }
     }
 }

@@ -13,7 +13,6 @@ public class PlayerAction : ExecuteLogic
 {
     [Header("TRest")]
     [SerializeField]PlayableMovementStateMachine stateMachine;
-    private IPlayableMovementDataNeeded dataMovement;
     GameManager gm;
     private PlayerActionInput inputActions;
     private bool isShooting = false;
@@ -63,6 +62,8 @@ public class PlayerAction : ExecuteLogic
     public bool isHoldPosition = false;
     private int selectedFriendID = -1;
 
+    private int currBreadCrumbs;
+
     //supaya input action bisa digunakan
     private void Awake()
     {
@@ -71,7 +72,9 @@ public class PlayerAction : ExecuteLogic
 
     private void Start()
     {
-        dataMovement = GetComponent<IPlayableMovementDataNeeded>();
+
+        StartCoroutine("BreadCrumbsDrop", .3f);
+
         gm = GameManager.instance;
         testAnimation = GetComponent<AnimationTestScript>();
 
@@ -209,7 +212,7 @@ public class PlayerAction : ExecuteLogic
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
         {
-            Shoot(Camera.main.transform.position, aim.transform.position, activeWeapon, enemyMask);
+            Shoot(Camera.main.transform.position, Camera.main.transform.forward, activeWeapon, enemyMask);
             StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
             isShooting = false;
             if (activeWeapon.currBullet == 0 && activeWeapon.totalBullet > 0)
@@ -272,7 +275,7 @@ public class PlayerAction : ExecuteLogic
             if(activeWeapon != null)
             {
 
-                Shoot(Camera.main.transform.position, aim.transform.position, activeWeapon, enemyMask);
+                Shoot(Camera.main.transform.position, Camera.main.transform.forward, activeWeapon, enemyMask);
                 StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
                 if (activeWeapon.currBullet == 0)
                 {
@@ -385,6 +388,18 @@ public class PlayerAction : ExecuteLogic
         fireRateOn = value;
     }
 
-    
+    private IEnumerator BreadCrumbsDrop(float delay)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(delay);
+            BreadcrumbsFollowPlayer(this, ref currBreadCrumbs);
+        }
+    }
+
+    public EntityStatSO GetPlayerStat()
+    {
+        return character;
+    }
 
 }

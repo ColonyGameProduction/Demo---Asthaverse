@@ -6,8 +6,9 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class AILogic : MonoBehaviour
-{    
+{
     public bool stopView = true;
+
     //AI Navmesh untuk ke tempat yang ditentukan, memerlukan parsing navmesh agent dan tempat destinasinya
     public void MoveToDestination(NavMeshAgent agent, Vector3 destination)
     {
@@ -188,7 +189,7 @@ public class AILogic : MonoBehaviour
         {
             foreach (Transform visibleTarget in visibleTargets)
             {
-                //Debug.DrawLine(FOVPoint.position, visibleTarget.position, Color.red);
+                //Debug.DrawLine(FOVPoint.position, visibleTarget.transform.position, Color.red);
             }
         }        
     }

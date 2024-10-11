@@ -31,3 +31,12 @@ public enum alertState
     Hunted,
     Engage,
 }
+
+
+public enum FOVDistState
+{
+    far,
+    middle,
+    close,
+}
+

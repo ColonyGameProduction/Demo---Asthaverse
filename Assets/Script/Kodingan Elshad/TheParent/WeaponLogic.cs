@@ -11,11 +11,12 @@ public class WeaponLogicHandler : MonoBehaviour
         float x = Random.Range(-weaponStat.recoil, weaponStat.recoil);
         float y = Random.Range(-weaponStat.recoil, weaponStat.recoil);
 
-        Vector3 bulletDirection = (direction).normalized + new Vector3(x, y, 0).normalized; 
+        Vector3 recoil = new Vector3(x, y, 0);
+        Vector3 bulletDirection = (direction + recoil).normalized; 
 
         weaponStat.currBullet--;
         RaycastHit hit;
-        if(Physics.Raycast(origin, bulletDirection, out hit, weaponStat.range, entityMask))
+        if(Physics.Raycast(origin, direction, out hit, weaponStat.range, entityMask))
         {
             Debug.DrawRay(origin, bulletDirection * weaponStat.range, Color.black);
 
