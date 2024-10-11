@@ -48,10 +48,7 @@ public class PlayerAction : ExecuteLogic
     private WeaponStatSO activeWeapon;
 
     [SerializeField]
-    private EntityStatSO siapaSih;
-
-    [SerializeField]
-    private GameObject crosshairPoint;
+    private EntityStatSO character;
 
     private AnimationTestScript testAnimation;
     
@@ -93,6 +90,7 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
         inputActions.InputPlayerAction.Reload.performed += Reload_performed;
+        inputActions.InputPlayerAction.Interact.performed += Interact_performed;
 
         inputActions.InputPlayerAction.Command.performed += Command_performed;
         inputActions.InputPlayerAction.UnCommand.performed += UnCommand_performed;
@@ -101,7 +99,7 @@ public class PlayerAction : ExecuteLogic
 
         CC = GetComponent<CharacterController>();
 
-        // weaponStat = siapaSih.weaponStat;
+        weaponStat = character.weaponStat;
 
         StartingSetup();
     }
@@ -156,6 +154,14 @@ public class PlayerAction : ExecuteLogic
     private void Command_performed(InputAction.CallbackContext context)
     {
         Command();
+
+        if (isHoldPosition == false) // pas command aktif dan keadaannya KAGA HOLD POSITION
+        {
+            for (int i = 0; i < GoToTargetPosition.Length; i++)
+            {
+                GoToTargetPosition[i].transform.position = friendsDestination[i].transform.position; // posisi si friend ini bakal stay dibelakang sesuai posisi dari friendDestination;
+            }
+        }
     }
 
     private void UnCommand_performed(InputAction.CallbackContext context)
@@ -181,6 +187,11 @@ public class PlayerAction : ExecuteLogic
         {
             SwitchCharacter();
         }
+    }
+
+    private void Interact_performed(InputAction.CallbackContext context)
+    {
+        Interact();
     }
 
 
@@ -233,26 +244,6 @@ public class PlayerAction : ExecuteLogic
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             selectedFriendID = 2; // Select FriendAI with ID 2
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Vector3 rayOrigin = Camera.main.transform.position;
-            Vector3 rayDirection = Camera.main.transform.forward.normalized;
-
-            Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.magenta, 2f);
-
-            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Interactable")))
-            {
-                if (hit.collider.GetComponent<PickableItems>())
-                {
-                    Debug.Log("Ambil!");
-                }
-                else if (hit.collider.GetComponent<OpenableObject>())
-                {
-                    Debug.Log("Buka!");
-                }
-            }
         }
 
         // If command is active and a friend is selected, detect mouse click
