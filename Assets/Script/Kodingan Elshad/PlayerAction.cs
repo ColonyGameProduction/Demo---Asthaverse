@@ -13,7 +13,6 @@ public class PlayerAction : ExecuteLogic
 {
     [Header("TRest")]
     [SerializeField]PlayableMovementStateMachine stateMachine;
-    private IPlayableMovementDataNeeded dataMovement;
     GameManager gm;
     private PlayerActionInput inputActions;
     private bool isShooting = false;
@@ -73,12 +72,9 @@ public class PlayerAction : ExecuteLogic
 
     private void Start()
     {
-<<<<<<< HEAD
+
         StartCoroutine("BreadCrumbsDrop", .3f);
 
-=======
-        dataMovement = GetComponent<IPlayableMovementDataNeeded>();
->>>>>>> main
         gm = GameManager.instance;
         testAnimation = GetComponent<AnimationTestScript>();
 
@@ -403,7 +399,7 @@ public class PlayerAction : ExecuteLogic
 
     public EntityStatSO GetPlayerStat()
     {
-        return siapaSih;
+        return character;
     }
 
 }
