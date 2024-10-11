@@ -13,11 +13,16 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     GameInputManager _gameInputManager;
 
     [Header("Character")]
-    [SerializeField] private PlayableCharacterIdentity[] _charaIdentities;
+    [SerializeField] private List<PlayableCharacterIdentity> _charaIdentities = new List<PlayableCharacterIdentity>();
     private static bool _isSwitchingCharacter;
-    private static bool _isSwitchingWeapon;
-    private static bool _isCommanding;
-    private bool _isLeftMouseClicked;
+    [SerializeField] private int _totalFriendInControl;
+    
+    [Space(1)]
+    [Header("Command Variable")]
+    [SerializeField] protected GameObject[] _friendsCommandPosition;
+    private static bool _isCommandingFriend;
+    private static bool _isHoldInPlaceFriend;
+    // private bool _isLeftMouseClicked;
 
     [Space(1)]
     [Header("Camera Effect")]
@@ -47,23 +52,31 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     private INormalUseWeaponData _currNormalUseWeaponData;
     private IAdvancedUseWeaponData _currAdvancedUseWeaponData;
     private IPlayableUseWeaponDataNeeded _currPlayableUseWeaponData;
+    
+    
+
+
+    [Header("Events")]
+    public Action<bool> OnCommandingBoolChange;
     #endregion
 
     #region GETTERSETTER Variable
     //Getter Setter
     public static bool IsSwitchingCharacter { get { return _isSwitchingCharacter;}}
-    public static bool IsSwitchingWeapon { get { return _isSwitchingWeapon;}}
+    public static bool IsCommandingFriend { get { return _isCommandingFriend;}}
+    public static bool IsHoldInPlaceFriend { get { return _isHoldInPlaceFriend;}}
     public PlayableCharacterIdentity PlayableCharaNow { get { return _charaIdentities[_currCharaidx];}}
     public bool IsScope {get { return _isScope;}}
     public bool IsNightVision {get { return _isNightVision;}}
+
     #endregion
     void Start()
     {
         _gm = GameManager.instance;
-        _charaIdentities = new PlayableCharacterIdentity[_gm.playerGameObject.Length];
-        for(int i = 0; i < _gm.playerGameObject.Length; i++)
+
+        foreach(GameObject player in _gm.playerGameObject)
         {
-            _charaIdentities[i] = _gm.playerGameObject[i].GetComponent<PlayableCharacterIdentity>();
+            _charaIdentities.Add(player.GetComponent<PlayableCharacterIdentity>());
         }
 
         //jd kalo misal ada save save bs lwt sini
@@ -89,6 +102,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     {
         _isSwitchingCharacter = true;
         //Matikan semua pergerakan dan aim dan lainnya - in state machine and player identities
+
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
             chara.GetMoveFunction?.ForceStopMoving();
@@ -109,7 +123,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
 
         //Time to change Chara
-        if(newIdx == _charaIdentities.Length)
+        if(newIdx == _charaIdentities.Count)
         {
             newIdx = 0;
         }
@@ -124,6 +138,10 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     private void SetActiveCharacter()
     {   
         //Ini uda ganti chara angkanya
+        //Turn Off the AI Brain
+        PlayableCharaNow.FriendAIStateMachine.enabled = false;
+        PlayableCharaNow.FOVMachine.enabled = false;
+
         PlayableCharaNow.IsInputPlayer = true;
         SetAllCurr();
         _currPlayableUseWeaponData.OnTurningOffScope += UseWeaponData_OnTurningOffScope;
@@ -132,14 +150,26 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
         //kategori untuk friendsAI
         int nextCharaidx = _currCharaidx + 1;
-        for(int i=1; i <= _charaIdentities.Length - 1; i++)
+        for(int i=1; i <= _charaIdentities.Count - 1; i++)
         {
-            if(nextCharaidx == _charaIdentities.Length)nextCharaidx = 0;
-
+            if(nextCharaidx == _charaIdentities.Count)nextCharaidx = 0;
+            
             _charaIdentities[nextCharaidx].FriendID = i;
             //Di sini nanti jg taro di AI controllernya, posisi update mereka yang biasa
-            _charaIdentities[nextCharaidx].MovementStateMachine.GiveAIDirection(PlayableCharaNow.GetFriendsNormalPosition[i-1].transform);
-            Debug.Log(nextCharaidx + " aa"+ i);
+            _charaIdentities[nextCharaidx].FriendAIStateMachine.GiveUpdateFriendDirection(PlayableCharaNow.GetFriendsNormalPosition[i-1].transform, _friendsCommandPosition[i-1].transform);
+
+            if(IsHoldInPlaceFriend)
+            {
+                _friendsCommandPosition[i-1].transform.position = _charaIdentities[nextCharaidx].transform.position;
+            }
+
+            if(i == _charaIdentities.Count - 1)
+            {
+                _charaIdentities[nextCharaidx].FriendAIStateMachine.enabled = true;
+                _charaIdentities[nextCharaidx].FOVMachine.enabled = true;
+            }
+            // _charaIdentities[nextCharaidx].MovementStateMachine.GiveAIDirection();
+            // Debug.Log(nextCharaidx + " aa"+ i);
             ++nextCharaidx;
         }
         
@@ -211,6 +241,22 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     }
     #endregion
 
+    #region Command Friend
+    public void ChangeFriendCommandPosition(int friendID, Vector3 newPos)
+    {
+        _friendsCommandPosition[friendID - 1].transform.position = newPos;
+    }
+    #endregion
+
+    #region GameInput Validate Function
+    public bool CanDoThisFunction()
+    {
+        if(IsSwitchingCharacter)return false;
+        if(IsCommandingFriend)return false;
+        return true;
+    }
+    #endregion
+
     #region GameInput Event
     private void SubscribeToGameInputManager()
     {
@@ -235,11 +281,11 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     }
     private void GameInput_Movement()
     {
-        if(!IsSwitchingCharacter)_currPlayableMovementData.InputMovement = _gameInputManager.Movement();
+        if(CanDoThisFunction())_currPlayableMovementData.InputMovement = _gameInputManager.Movement();
     }
     private void GameInput_OnRunPerformed()
     {
-        if(!IsSwitchingCharacter)
+        if(CanDoThisFunction())
         {
             _currUseWeaponFunction.ForceStopUseWeapon();
             if(_currPlayableMovementData.IsMustLookForward)_currPlayableMovementData.IsMustLookForward = false;
@@ -257,7 +303,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
     private void GameInput_OnCrouchPerformed()
     {
-        if(!IsSwitchingCharacter)
+        if(CanDoThisFunction())
         {
             if(_currStandMovementData.IsRunning)_currStandMovementData.IsRunning = false;
             _currCrouchMovementData.IsCrouching = true;
@@ -272,12 +318,12 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     private void GameInput_OnChangePlayerPerformed()
     {
         //pas silent kill gabole ganti?
-        if(!IsSwitchingCharacter)SwitchCharacter(_currCharaidx + 1);
+        if(CanDoThisFunction())SwitchCharacter(_currCharaidx + 1);
     }
     private void GameInput_OnChangeWeaponPerformed()
     {
 
-        if(!IsSwitchingCharacter && !_currAdvancedUseWeaponData.IsSwitchingWeapon)
+        if(CanDoThisFunction() && !_currAdvancedUseWeaponData.IsSwitchingWeapon)
         {
             _currAdvancedUseWeaponData.IsSwitchingWeapon = true;
         }
@@ -285,31 +331,46 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
     private void GameInput_OnCommandPerformed()
     {
-        throw new NotImplementedException();
+        if(!CanDoThisFunction() || IsScope)return;
+        _currMoveFunction.ForceStopMoving();
+        _currUseWeaponFunction.ForceStopUseWeapon();
+        if(!_isHoldInPlaceFriend)
+        {
+            for(int i=0;i < _charaIdentities.Count-1;i++)
+            {
+                _friendsCommandPosition[i].transform.position = PlayableCharaNow.GetFriendsNormalPosition[i].transform.position;
+            }
+        }
+        _isCommandingFriend = true;
+        OnCommandingBoolChange?.Invoke(true);
     }
     private void GameInput_OnUnCommandPerformed()
     {
-        throw new NotImplementedException();
+        if(_isCommandingFriend)
+        {
+            _isCommandingFriend = false;
+            OnCommandingBoolChange?.Invoke(false);
+        }
     }
     private void GameInput_OnHoldPosPerformed()
     {
-        throw new NotImplementedException();
+        if(_isCommandingFriend)_isHoldInPlaceFriend = true;
     }
     private void GameInput_OnUnHoldPosPerformed()
     {
-        throw new NotImplementedException();
+        if(_isCommandingFriend)_isHoldInPlaceFriend = false;
     }
 
     private void GameInput_OnSilentKillPerformed()
     {
-        if(!IsSwitchingCharacter && !_currAdvancedUseWeaponData.IsSilentKill)
+        if(CanDoThisFunction() && !_currAdvancedUseWeaponData.IsSilentKill)
         {
             _currAdvancedUseWeaponData.IsSilentKill = true;
         }
     }
     private void GameInput_OnShootingPerformed()
     {
-        if(!IsSwitchingCharacter && !_currStandMovementData.IsRunning)
+        if(CanDoThisFunction() && !_currStandMovementData.IsRunning)
         {   
             if(!_currNormalUseWeaponData.IsAiming)_currNormalUseWeaponData.IsAiming = true;
             _currNormalUseWeaponData.IsUsingWeapon = true;
@@ -318,7 +379,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     }
     private void GameInput_OnShootingCanceled()
     {
-        if(!IsSwitchingCharacter)
+        if(CanDoThisFunction())
         {
             _currNormalUseWeaponData.IsUsingWeapon = false;
             _currPlayableMovementData.IsMustLookForward = false;
@@ -327,7 +388,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     }
     private void GameInput_OnScopePerformed()
     {
-        if(!IsSwitchingCharacter && !_currStandMovementData.IsRunning && !_currAdvancedUseWeaponData.IsSilentKill && !_currAdvancedUseWeaponData.IsSwitchingWeapon && !_currNormalUseWeaponData.IsReloading)
+        if(CanDoThisFunction() && !_currStandMovementData.IsRunning && !_currAdvancedUseWeaponData.IsSilentKill && !_currAdvancedUseWeaponData.IsSwitchingWeapon && !_currNormalUseWeaponData.IsReloading)
         {
             //KALO LAGI mo ngescope, tp blm aim, lsg aim nya nyalain jg
 
@@ -349,7 +410,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     }
     private void GameInput_OnReloadPerformed()
     {
-        if(!IsSwitchingCharacter && !_currNormalUseWeaponData.IsReloading)
+        if(CanDoThisFunction() && !_currNormalUseWeaponData.IsReloading)
         {
             _currNormalUseWeaponData.IsReloading = true;
         }

@@ -12,7 +12,9 @@ public class WeaponLogicHandler
         float y = Random.Range(-weaponStat.recoil, weaponStat.recoil);
 
         Vector3 recoil = new Vector3(x, y, 0);
-        Vector3 bulletDirection = (direction + recoil).normalized; 
+        Vector3 bulletDirection = (direction + recoil).normalized;  
+
+        // Debug.Log(origin + " " + direction + " " + weaponStat + " " + entityMask);
 
         RaycastHit hit;
         if(Physics.Raycast(origin, direction, out hit, weaponStat.range, entityMask))
@@ -22,7 +24,7 @@ public class WeaponLogicHandler
             GameObject entityGameObject = hit.collider.gameObject;
 
             CalculateDamage(weaponStat, entityGameObject);
-            //Debug.Log(hit.point);
+            // Debug.Log(hit.point);
 
         }
         else

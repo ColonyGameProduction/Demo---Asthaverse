@@ -27,10 +27,10 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     [Space(5)]
     [Header("No Inspector Variable")]
     protected UseWeaponState _currState;
-    protected bool _isInputPlayer;
     protected Transform _currChosenTarget;
     protected WeaponData _currWeapon;
     protected Transform _currOriginShootPoint, _currDirectionShootPoint;
+    protected Vector3 _originShootPosition, _directionShootPosition;
 
     [Space(5)]
     [Header("Weapon Logic & Layermask")]
@@ -67,7 +67,6 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     public Transform CurrOriginShootPoint { get{return _currOriginShootPoint;}}
     public Transform CurrDirectionShootPoint { get{return _currDirectionShootPoint;}}
     public Transform ChosenTarget { get {return _currChosenTarget;}}
-    public bool IsInputPlayer {get {return _isInputPlayer;}}
 
 
     #endregion
@@ -76,6 +75,8 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     {
         base.Awake();
 
+        if(_originShootPoint_AIContainer == null)_originShootPoint_AIContainer = GetComponent<FOVMachine>().GetFOVPoint;
+        
         _charaIdentity = GetComponent<CharacterIdentity>();
         if(!IsInputPlayer)
         {
@@ -128,7 +129,8 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     {
         if(CurrWeapon.currBullet > 0 && !_isfireRateOn)
         {
-            _weaponLogicHandler.ShootingPerformed(CurrOriginShootPoint.position, CurrDirectionShootPoint.position, CurrWeapon.weaponStatSO, _charaEnemyMask);
+            SetShootPosition();
+            _weaponLogicHandler.ShootingPerformed(_originShootPosition, _directionShootPosition, CurrWeapon.weaponStatSO, _charaEnemyMask);
             CurrWeapon.currBullet -= 1;
             if(!CurrWeapon.weaponStatSO.allowHoldDownButton)IsUsingWeapon = false;
             StartCoroutine(FireRate(CurrWeapon.weaponStatSO.fireRate));
@@ -138,6 +140,11 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
                 IsReloading = true;
             }
         }
+    }
+    protected virtual void SetShootPosition()
+    {
+        _originShootPosition = CurrOriginShootPoint.position;
+        _directionShootPosition = CurrDirectionShootPoint.position;
     }
 
     protected IEnumerator FireRate(float fireRateTime)

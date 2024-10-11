@@ -23,6 +23,9 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected IAdvancedUseWeaponData _getAdvancedUseWeaponData;
     protected IPlayableUseWeaponDataNeeded _getPlayableUseWeaponData;
 
+    protected FriendAIBehaviourStateMachine _friendAIStateMachine;
+    
+
 
     #region GETTERSETTER Variable
 
@@ -47,6 +50,9 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public PlayableCamera GetPlayableCamera {get {return _getPlayableCamera;}}
     public IAdvancedUseWeaponData GetAdvancedUseWeaponData {get { return _getAdvancedUseWeaponData;}}
     public IPlayableUseWeaponDataNeeded GetPlayableUseWeaponData {get { return _getPlayableUseWeaponData;}}
+
+    public FriendAIBehaviourStateMachine FriendAIStateMachine {get { return _friendAIStateMachine;}}
+    public FOVMachine FOVMachine{get { return _fovMachine;}}
     
     #endregion
     protected override void Awake()
@@ -58,10 +64,13 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
         _getAdvancedUseWeaponData = GetComponent<IAdvancedUseWeaponData>();
         _getPlayableUseWeaponData = GetComponent<IPlayableUseWeaponDataNeeded>();
+
+        _friendAIStateMachine = GetComponent<FriendAIBehaviourStateMachine>();
+        
     }
     public override void ReloadWeapon()
     {
-        int bulletNeed = CurrWeapon.weaponStatSO.magSize - CurrWeapon.currBullet;
+        float bulletNeed = CurrWeapon.weaponStatSO.magSize - CurrWeapon.currBullet;
         if (CurrWeapon.totalBullet >= bulletNeed)
         {
             CurrWeapon.currBullet = CurrWeapon.weaponStatSO.magSize;

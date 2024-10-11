@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IStandMovementData
 {
-    public float WalkSpeed { get;}
+    public float WalkSpeed { get; set;}
     public float RunSpeed { get;}
     public bool IsIdle { get; set;}
     public bool IsWalking { get; set;}

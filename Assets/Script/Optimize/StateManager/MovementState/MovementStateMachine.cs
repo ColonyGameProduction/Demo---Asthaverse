@@ -17,6 +17,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [Space(5)]
     [Header("Other Component Variable")]
     protected MovementStateFactory _states;
+
     
     [Header("AI")]
     [SerializeField]protected NavMeshAgent _agentNavMesh;
@@ -24,7 +25,8 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     [Header("Move Speed List - Each State")]
     [SerializeField] protected float _walkSpeed;
-    [SerializeField] protected float _runSpeed;
+    [SerializeField] protected float _runMultiplier;
+    protected float _runSpeed;
     [SerializeField] protected bool _isIdle;
     [SerializeField] protected bool _isWalking;
     [SerializeField] protected bool _isRun;
@@ -35,7 +37,6 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     protected MovementState _currState;
     protected float _currSpeed;
     protected Transform _currAIDirection; //Nyimpen direction AI yg ntr dikasih jg dr luar
-    protected bool _isInputPlayer;
 
     #endregion
 
@@ -47,14 +48,22 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     #region GETTERSETTER Variable
     //Getter Setter
-    public float WalkSpeed { get {return _walkSpeed;}}
+    public virtual float WalkSpeed 
+    { 
+        get {return _walkSpeed;}
+        set 
+        {
+            _walkSpeed = value;
+            _runSpeed = _walkSpeed * _runMultiplier;
+        }
+    }
     public float RunSpeed { get {return _runSpeed;}}
     public Transform CurrAIDirection { get {return _currAIDirection;}}
     public bool IsIdle {get {return _isIdle;} set{ _isIdle = value;} }
     public bool IsWalking {get {return _isWalking;}set{ _isWalking = value;} }
     public bool IsRunning { get {return _isRun;}set{ _isRun = value;} }
     public NavMeshAgent AgentNavMesh {get {return _agentNavMesh;}}
-    public bool IsInputPlayer {get {return _isInputPlayer;}}
+    
     #endregion
 
     protected override void Awake() 

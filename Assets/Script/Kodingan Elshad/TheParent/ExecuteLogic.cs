@@ -53,7 +53,7 @@ public class ExecuteLogic : AILogic
     //untuk Reloading
     public void Reload(WeaponStatSO weaponStatSO)
     {
-        int bulletNeed = weaponStatSO.magSize - weaponStatSO.currBullet;
+        float bulletNeed = weaponStatSO.magSize - weaponStatSO.currBullet;
         if (weaponStatSO.totalBullet >= bulletNeed)
         {
             weaponStatSO.currBullet = weaponStatSO.magSize;

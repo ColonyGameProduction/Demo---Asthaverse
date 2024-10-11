@@ -15,8 +15,6 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     
     [Space(1)]
     [Header("Weapon Logic & Layermask")]
-    [Tooltip("Diisi aim")]
-    [SerializeField] protected Transform _directionShootPoint_PlayerContainer; 
 
     [Space(1)]
     [Header("State Bool - Advanced use")]
@@ -67,7 +65,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         _getCanInputPlayer.OnInputPlayerChange += CharaIdentity_OnInputPlayerChange; // Ditaro di sini biar ga ketinggalan sebelah, krn sebelah diubah di start
 
     }
-    #region  Weaopn
+    #region  Weapon
     public void SilentKill()
     {
         StartCoroutine(SilentKillActive(_silentKillDuration));
@@ -144,6 +142,13 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
             if(IsSwitchingWeapon)IsSwitchingWeapon = false;
         }
     }
+    
+    protected override void SetShootPosition()
+    {
+        _originShootPosition = CurrOriginShootPoint.position;
+        _directionShootPosition = CurrDirectionShootPoint.forward;
+    }
+    
     #endregion
     private void CharaIdentity_OnInputPlayerChange(bool obj)
     {
@@ -151,7 +156,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         if(_isInputPlayer)
         {
             _currOriginShootPoint = Camera.main.transform;
-            // _currDirectionShootPoint = Camera.main.transform.forward;
+            _currDirectionShootPoint = Camera.main.transform;
         }
         else
         {

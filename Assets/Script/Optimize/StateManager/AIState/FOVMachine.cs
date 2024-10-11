@@ -2,33 +2,56 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIStateMachineBase : BaseStateMachine
+public class FOVMachine : MonoBehaviour
 {
-    #region Creating AI FOV
-    // [SerializeField] private StopView
-    public float viewRadius;
+    #region Variable for Creating FOV and CheckTarget
+    [Header("To TUrn Off FOV")]
+    [SerializeField] private bool _stopView;
+
+    [Header("Untuk mengkalkulasi sudut benda")]
+    [SerializeField] private int _edgeResolveIteration;
+    [SerializeField] private float _edgeDistanceTreshold;
+
+    [Header("Untuk Besarnya FOV")]
+    [SerializeField] private float _viewRadius;
     [Range(0, 360)]
-    public float viewAngle;
-    public int edgeResolveIteration;
+    [SerializeField] private float _viewAngle;
 
-    public LayerMask playerMask;
-    public LayerMask groundMask;
-    public List<Transform> visibleTargets = new List<Transform>();
+    [Header("FOV Resolution")]
+    [SerializeField] private float _meshResolution;
+    [Header("")]
+    [SerializeField] private Transform _FOVPoint;
+    [SerializeField] private List<Transform> _visibleTargets = new List<Transform>();
+    [SerializeField] private List<Transform> _otherVisibleTargets = new List<Transform>();
+
+    [Header("Misc")]
+    [SerializeField] private string _enemyCharaTag;
+    [SerializeField] private LayerMask _charaEnemyMask;
+    [SerializeField] private LayerMask _groundMask;
+    [SerializeField] private MeshFilter _viewMeshFilter;
+    private Mesh _viewMesh;
+    private Vector3 _enemyCharalastSeenPosition;
+    #endregion
     
-    public float meshResolution;
-    public float edgeDistanceTreshold;
+    #region States
+    [SerializeField] private FOVDistState _currstate;
+    #endregion
 
-    public Transform FOVPoint;
-
-    public MeshFilter viewMeshFilter;
-    Mesh viewMesh;
-
+    #region GETTER SETTER
+    public float viewRadius {get {return _viewRadius;} set { _viewRadius = value;}}
+    public Transform GetFOVPoint { get { return _FOVPoint; } }
+    public List<Transform> VisibleTargets {get {return _visibleTargets;} }
+    public List<Transform> OtherVisibleTargets {get {return _otherVisibleTargets;} }
+    public Vector3 EnemyCharalastSeenPosition {get {return _enemyCharalastSeenPosition;} set { _enemyCharalastSeenPosition = value;}}
+    #endregion
+    public FOVDistState CurrState { get{return _currstate;} }
     private void Start()
     {
-        viewMesh = new Mesh();
-        viewMesh.name = "View Mesh";
-        viewMeshFilter.mesh = viewMesh;
-        StartCoroutine("FindTargetWithDelay", .2f);
+        _viewMesh = new Mesh();
+        _viewMesh.name = "View Mesh";
+        _viewMeshFilter.mesh = _viewMesh;
+
+        StartCoroutine(FindTargetWithDelay(.2f));//mungkin kalo pake manager ini bisa kali
     }
 
     private void LateUpdate()
@@ -36,6 +59,7 @@ public class AIStateMachineBase : BaseStateMachine
         DrawFieldOfView();
     }
 
+    #region Function for Creating FOV and CheckTarget
     //Delay untuk mencari musuh yang ada
     public IEnumerator FindTargetWithDelay(float delay)
     {
@@ -43,6 +67,26 @@ public class AIStateMachineBase : BaseStateMachine
         {
             yield return new WaitForSeconds(delay);
             FindVisibleTargetsForEnemy();
+            SplittingTheObject();
+        }
+    }
+    private void SplittingTheObject()
+    {
+        List<Transform> toRemove = new List<Transform>();
+        toRemove.Clear();
+        _otherVisibleTargets.Clear();
+
+        foreach (Transform transform in _visibleTargets)
+        {
+            if (!transform.gameObject.CompareTag(_enemyCharaTag))
+            {
+                _otherVisibleTargets.Add(transform);
+                toRemove.Add(transform);
+            }
+        }
+        foreach (Transform transform in toRemove)
+        {
+            _visibleTargets.Remove(transform);
         }
     }
 
@@ -50,9 +94,9 @@ public class AIStateMachineBase : BaseStateMachine
     public void DrawFieldOfView()
     {
         //Menghitung ada berapa banyak ray yang harus dibuat
-        int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
+        int stepCount = Mathf.RoundToInt(_viewAngle * _meshResolution);
         //Menghitung jarak antara ray
-        float stepAngleSize = viewAngle / stepCount;
+        float stepAngleSize = _viewAngle / stepCount;
 
         List<Vector3> viewPoints = new List<Vector3>();
         ViewCastInfo oldViewCast = new ViewCastInfo();
@@ -67,15 +111,15 @@ public class AIStateMachineBase : BaseStateMachine
             //i = 0 -> 0 derajat
             //i = 1 -> 5 derajat
             //i = 2 -> 10 derajat
-            float angle = FOVPoint.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
+            float angle = _FOVPoint.eulerAngles.y - _viewAngle / 2 + stepAngleSize * i;
 
             //Memasukan info untuk mesh nya
             ViewCastInfo newViewCast = ViewCast(angle);
 
             //Optimising FOV supaya bisa bagus tanpa harus memiliki resolusi yang tinggi
-            if(i>0)
+            if(i > 0)
             {
-                bool edgeDistanceTresholdExeded = Mathf.Abs(oldViewCast.distance - newViewCast.distance) > edgeDistanceTreshold;
+                bool edgeDistanceTresholdExeded = Mathf.Abs(oldViewCast.distance - newViewCast.distance) > _edgeDistanceTreshold;
                 //Membandingkan kedua ViewCast, apakah mereka mendeteksi adanya pinggiran sudut
                 if(oldViewCast.hit != newViewCast.hit || (oldViewCast.hit && newViewCast.hit && edgeDistanceTresholdExeded))
                 {
@@ -117,10 +161,10 @@ public class AIStateMachineBase : BaseStateMachine
         for(int i = 0; i < vertexCount - 1; i++)
         {
             //Memasukan value titik (i+1 karena index ke 0 sudah diisi oleh titik origin)
-            vertices[i + 1] = FOVPoint.InverseTransformPoint(viewPoints[i]);
+            vertices[i + 1] = _FOVPoint.InverseTransformPoint(viewPoints[i]);
 
             //supaya tidak out of bounds
-            if(i<vertexCount-2)
+            if(i < vertexCount-2)
             {
                 //Point segitiga pertama selalu di titik origin (0)
                 triangles[i * 3] = 0;
@@ -133,15 +177,41 @@ public class AIStateMachineBase : BaseStateMachine
 
         //Membuat mesh segitiganya
         //Di clear dulu, supaya ketika sudah di frame selanjutnya, mesh nya tida duplikat dan jadi hancur
-        viewMesh.Clear();
-        //Titik mesh dimasukan
-        viewMesh.vertices = vertices;
-        //Segitiga mesh dimasukan
-        viewMesh.triangles = triangles;
-        //Mengkalkulasi lagi mesh nya supaya sesuai dengan orientasi
-        viewMesh.RecalculateNormals();
+        _viewMesh.Clear();
+
+        if(!_stopView)
+        {    
+            //Titik mesh dimasukan
+            _viewMesh.vertices = vertices;
+            //Segitiga mesh dimasukan
+            _viewMesh.triangles = triangles;
+            //Mengkalkulasi lagi mesh nya supaya sesuai dengan orientasi
+            _viewMesh.RecalculateNormals();
+        }
+
 
     }    
+
+    //Untuk menentukan arah dari sudut menjadi radian
+    public Vector3 DirectionFromAngle(float angleInDegrees, bool angleIsGlobal)
+    {
+        //Untuk mengubah arah FOV sesuai dengan arah character
+        if (!angleIsGlobal)
+        {
+            angleInDegrees += _FOVPoint.eulerAngles.y;
+        }
+
+
+        //Untuk menentukan besarnya FOV (membuat 2 point, 1 dikiri, 1 dikanan)
+        //
+        //Class Mathf menggunakan satuan radian untuk menghitung sudut.
+        //Sudut dalam unity berbeda dengan kehidupan nyata, dimana 0 derajat letak nya ada dikanan
+        //Letak 0 derajat pada unity berada di forward (depan/atas)
+        //
+        //Maka dari itu "angleInDegrees" diubah menjadi radian dahulu
+        //Supaya Mathf.Sin, dan Mathf.Cos bisa menghitung nya
+        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+    }
 
     //Memasukan info tentang raycast
     public ViewCastInfo ViewCast(float globalAngle)
@@ -151,7 +221,7 @@ public class AIStateMachineBase : BaseStateMachine
         RaycastHit hit;
 
         //Mengecek apakah raycast mengenai sesuatu
-        if(Physics.Raycast(FOVPoint.position, direction, out hit, viewRadius, groundMask))
+        if(Physics.Raycast(_FOVPoint.position, direction, out hit, _viewRadius, _groundMask))
         {
             //jika iya, maka ray akan diteruskan hanya sampai point yang terkena
             return new ViewCastInfo(true, hit.point, hit.distance, globalAngle);
@@ -159,7 +229,7 @@ public class AIStateMachineBase : BaseStateMachine
         else
         {
             //jika tidak, maka ray akan diteruskan hingga FOV maksimal (viewRadius)
-            return new ViewCastInfo(false, FOVPoint.position + direction * viewRadius, viewRadius, globalAngle);
+            return new ViewCastInfo(false, _FOVPoint.position + direction * _viewRadius, _viewRadius, globalAngle);
         }
     }
 
@@ -175,14 +245,14 @@ public class AIStateMachineBase : BaseStateMachine
         Vector3 maxPoint = Vector3.zero;
 
         //untuk mencari sudut baru
-        for(int i = 0; i<edgeResolveIteration; i++)
+        for(int i = 0; i<_edgeResolveIteration; i++)
         {
             //Merata rata kedua sudut, supaya bisa mendapatkan sudut tengah
             float angle = (minAngle + maxAngle) / 2;
             //Memasukan info sudut yang baru
             ViewCastInfo newViewcastInfo = ViewCast(angle);
 
-            bool edgeDistanceTresholdExeded = Mathf.Abs(minViewCast.distance - maxViewCast.distance) > edgeDistanceTreshold;
+            bool edgeDistanceTresholdExeded = Mathf.Abs(minViewCast.distance - maxViewCast.distance) > _edgeDistanceTreshold;
             //Jika sudut baru = sudut min, artinya sudut itu adalah sudut baru
             if (newViewcastInfo.hit == minViewCast.hit && !edgeDistanceTresholdExeded)
             {
@@ -208,59 +278,42 @@ public class AIStateMachineBase : BaseStateMachine
     //Untuk mendeteksi semua collider yang ada di dalam FOV
     public void FindVisibleTargetsForEnemy()
     {
-        visibleTargets.Clear();
+        _visibleTargets.Clear();
         //Menyimpan semua collider yang terdeteksi 
         //Titik awal berada di posisi character
         //Selanjutnya akan membuat lingkaran sebesar 'viewRadius'
         //Jika collider game object nya memiliki mask yang ditentukan, maka akan disimpan
-        Collider[] targetInViewRadius = Physics.OverlapSphere(FOVPoint.position, viewRadius, playerMask);
+        Collider[] targetInViewRadius = Physics.OverlapSphere(_FOVPoint.position, _viewRadius, _charaEnemyMask);
 
         //Untuk mendeteksi jarak dan arah musuh/player
         for (int i = 0; i < targetInViewRadius.Length; i++)
         {
             //menghitung arah dari collider yang dideteksi
             Transform target = targetInViewRadius[i].transform;
-            Vector3 dirToTarget = (target.position - FOVPoint.position).normalized;
+            Vector3 dirToTarget = (target.position - _FOVPoint.position).normalized;
 
             //jika arah nya berada di dalam FOV
-            if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
+            if (Vector3.Angle(transform.forward, dirToTarget) < _viewAngle / 2)
             {
                 
-                float distanceToTarget = Vector3.Distance(FOVPoint.position, target.position);
-                if (!Physics.Raycast(FOVPoint.position, dirToTarget, distanceToTarget, groundMask))
+                float distanceToTarget = Vector3.Distance(_FOVPoint.position, target.position);
+                if (!Physics.Raycast(_FOVPoint.position, dirToTarget, distanceToTarget, _groundMask))
                 {
-                    if(visibleTargets.Count > 0)if(visibleTargets.Contains(target))continue;
-                    visibleTargets.Add(target);
+                    if(_visibleTargets.Count > 0)if(_visibleTargets.Contains(target))continue;
+                    _visibleTargets.Add(target);
                 }
             }
         }
-    }
-
-    //Untuk menentukan arah dari sudut menjadi radian
-    public Vector3 DirectionFromAngle(float angleInDegrees, bool angleIsGlobal)
-    {
-        //Untuk mengubah arah FOV sesuai dengan arah character
-        if (!angleIsGlobal)
+        if(_visibleTargets != null)
         {
-            angleInDegrees += FOVPoint.eulerAngles.y;
-        }
-
-
-        //Untuk menentukan besarnya FOV (membuat 2 point, 1 dikiri, 1 dikanan)
-        //
-        //Class Mathf menggunakan satuan radian untuk menghitung sudut.
-        //Sudut dalam unity berbeda dengan kehidupan nyata, dimana 0 derajat letak nya ada dikanan
-        //Letak 0 derajat pada unity berada di forward (depan/atas)
-        //
-        //Maka dari itu "angleInDegrees" diubah menjadi radian dahulu
-        //Supaya Mathf.Sin, dan Mathf.Cos bisa menghitung nya
-        return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+            foreach (Transform visibleTarget in _visibleTargets)
+            {
+                //Debug.DrawLine(FOVPoint.position, visibleTarget.transform.position, Color.red);
+            }
+        } 
     }
 
-    public override void SwitchState(BaseState newState)
-    {
-        throw new System.NotImplementedException();
-    }
+
 
 
     //Struct untuk menyimpan info raycast FOV
@@ -298,6 +351,50 @@ public class AIStateMachineBase : BaseStateMachine
             pointA = _pointA;
             pointB = _pointB;
         }
+    }
+    #endregion
+
+    #region States Function
+    private void FOVStateHandler()
+    {
+        float distance;
+        if (_visibleTargets.Count > 0)
+        {
+            distance = Vector3.Distance(transform.position, _visibleTargets[0].position);
+            _enemyCharalastSeenPosition = _visibleTargets[0].position;
+        }
+        else
+        {            
+            distance = Vector3.Distance(transform.position, _enemyCharalastSeenPosition);
+        }
+
+
+        if (distance <= _viewRadius && distance > _viewRadius - (_viewRadius/3))
+        {
+            _currstate = FOVDistState.far;
+        }
+        else if(distance <= _viewRadius - (_viewRadius / 3) && distance > _viewRadius - (_viewRadius / 3 * 2))
+        {
+            _currstate = FOVDistState.middle;
+        }
+        else if(distance <= _viewRadius - (_viewRadius / 3*2) && distance >= 0)
+        {
+            _currstate = FOVDistState.close;
+        }
+
+        // switch(FOVState)
+        // {
+        //     case FOVDistState.far:                
+        //         Debug.Log("Far");
+        //         break;
+        //     case FOVDistState.middle:
+        //         Debug.Log("Middle");
+        //         break; 
+        //     case FOVDistState.close:
+        //         Debug.Log("Close");
+        //         break;
+        // }
+        
     }
     #endregion
 }

@@ -6,10 +6,14 @@ using UnityEngine;
 [Serializable]
 public class WeaponData
 {
+    public WeaponData(WeaponStatSO stat)
+    {
+        weaponStatSO = stat;
+    }
     public WeaponStatSO weaponStatSO;
 
-    public int totalBullet;
-    public int currBullet;
+    public float totalBullet;
+    public float currBullet;
 }
 public interface IHaveWeapon
 {
