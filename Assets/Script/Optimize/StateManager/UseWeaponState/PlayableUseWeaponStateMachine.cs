@@ -151,7 +151,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         if(_isInputPlayer)
         {
             _currOriginShootPoint = Camera.main.transform;
-            _currDirectionShootPoint = _directionShootPoint_PlayerContainer;
+            // _currDirectionShootPoint = Camera.main.transform.forward;
         }
         else
         {
