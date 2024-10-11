@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UseWeaponState : MonoBehaviour
+public abstract class UseWeaponState : CharacterBaseState<UseWeaponStateMachine>
 {
-    // Start is called before the first frame update
-    void Start()
+    protected UseWeaponStateFactory _factory;
+    protected UseWeaponState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine)
     {
-        
+        _factory = factory;
+    }
+    public override void EnterState()
+    {
+        base.EnterState();
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void ExiState()
     {
-        
+        base.ExiState();
     }
+    public virtual void PhysicsLogicUpdateState(){}
 }

@@ -5,16 +5,22 @@ using UnityEngine.InputSystem;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using System;
 
 //kelas untuk player action seperti attacking, scope, dan Silent kill
 
 public class PlayerAction : ExecuteLogic
 {
+    [Header("TRest")]
+    [SerializeField]PlayableMovementStateMachine stateMachine;
+    private IPlayableMovementDataNeeded dataMovement;
     GameManager gm;
     private PlayerActionInput inputActions;
     private bool isShooting = false;
     private bool isReloading = false;
     private bool fireRateOn = false;
+    private bool isRun = false;
+    private bool IsCrouching = false;
 
     [Header("Untuk Movement dan Kamera")]
     [SerializeField]
@@ -42,10 +48,7 @@ public class PlayerAction : ExecuteLogic
     private WeaponStatSO activeWeapon;
 
     [SerializeField]
-    private EntityStatSO siapaSih;
-
-    [SerializeField]
-    private GameObject crosshairPoint;
+    private EntityStatSO character;
 
     private AnimationTestScript testAnimation;
     
@@ -70,12 +73,22 @@ public class PlayerAction : ExecuteLogic
 
     private void Start()
     {
+<<<<<<< HEAD
         StartCoroutine("BreadCrumbsDrop", .3f);
 
+=======
+        dataMovement = GetComponent<IPlayableMovementDataNeeded>();
+>>>>>>> main
         gm = GameManager.instance;
         testAnimation = GetComponent<AnimationTestScript>();
 
         //membuat event untuk menjalankan aksi yang dipakai oleh player
+        inputActions.InputPlayerAction.Run.performed += Run_performed;
+        inputActions.InputPlayerAction.Run.canceled += Run_canceled;
+
+        inputActions.InputPlayerAction.Crouch.performed += Crouch_performed;
+        inputActions.InputPlayerAction.Crouch.canceled += Crouch_canceled;
+
         inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
         inputActions.InputPlayerAction.Shooting.canceled += Shooting_canceled;
 
@@ -84,6 +97,7 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
         inputActions.InputPlayerAction.Reload.performed += Reload_performed;
+        inputActions.InputPlayerAction.Interact.performed += Interact_performed;
 
         inputActions.InputPlayerAction.Command.performed += Command_performed;
         inputActions.InputPlayerAction.UnCommand.performed += UnCommand_performed;
@@ -92,34 +106,33 @@ public class PlayerAction : ExecuteLogic
 
         CC = GetComponent<CharacterController>();
 
-        weaponStat = siapaSih.weaponStat;
+        weaponStat = character.weaponStat;
 
         StartingSetup();
     }
 
-    private bool Run()
+    private void Crouch_canceled(InputAction.CallbackContext context)
     {
-        if (inputActions.InputPlayerAction.Run.ReadValue<float>() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        IsCrouching = false;
     }
 
-    private bool Crouch()
+    private void Crouch_performed(InputAction.CallbackContext context)
     {
-        if (inputActions.InputPlayerAction.Crouch.ReadValue<float>() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if(isRun)isRun = false;
+        IsCrouching = true;
     }
+
+    private void Run_canceled(InputAction.CallbackContext context)
+    {
+        isRun = false;
+    }
+
+    private void Run_performed(InputAction.CallbackContext context)
+    {
+        if(IsCrouching)IsCrouching = false;
+        isRun = true;
+    }
+
 
     private void Reload_performed(InputAction.CallbackContext obj)
     {
@@ -135,19 +148,27 @@ public class PlayerAction : ExecuteLogic
     private void Scope_performed(InputAction.CallbackContext context)
     {
         Scope();
-        if(gm.scope)
-        {
-            testAnimation?.animator.SetBool("Scope", true);
-        }
-        else
-        {
-            testAnimation?.animator.SetBool("Scope", false);
-        }
+        // if(gm.scope)
+        // {
+        //     testAnimation?.animator.SetBool("Scope", true);
+        // }
+        // else
+        // {
+        //     testAnimation?.animator.SetBool("Scope", false);
+        // }
     }
 
     private void Command_performed(InputAction.CallbackContext context)
     {
         Command();
+
+        if (isHoldPosition == false) // pas command aktif dan keadaannya KAGA HOLD POSITION
+        {
+            for (int i = 0; i < GoToTargetPosition.Length; i++)
+            {
+                GoToTargetPosition[i].transform.position = friendsDestination[i].transform.position; // posisi si friend ini bakal stay dibelakang sesuai posisi dari friendDestination;
+            }
+        }
     }
 
     private void UnCommand_performed(InputAction.CallbackContext context)
@@ -175,6 +196,11 @@ public class PlayerAction : ExecuteLogic
         }
     }
 
+    private void Interact_performed(InputAction.CallbackContext context)
+    {
+        Interact();
+    }
+
 
     //event ketika 'SilentKill' dilakukan
     private void SilentKill_performed(InputAction.CallbackContext context)
@@ -185,7 +211,7 @@ public class PlayerAction : ExecuteLogic
     //event ketika 'Shoot' dilakukan
     private void Shooting_Performed(InputAction.CallbackContext context)
     {
-        testAnimation?.animator.SetBool("Scope", true);
+        // testAnimation?.animator.SetBool("Scope", true);
         isShooting = true;
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
@@ -227,26 +253,6 @@ public class PlayerAction : ExecuteLogic
             selectedFriendID = 2; // Select FriendAI with ID 2
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Vector3 rayOrigin = Camera.main.transform.position;
-            Vector3 rayDirection = Camera.main.transform.forward.normalized;
-
-            Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.magenta, 2f);
-
-            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Interactable")))
-            {
-                if (hit.collider.GetComponent<PickableItems>())
-                {
-                    Debug.Log("Ambil!");
-                }
-                else if (hit.collider.GetComponent<OpenableObject>())
-                {
-                    Debug.Log("Buka!");
-                }
-            }
-        }
-
         // If command is active and a friend is selected, detect mouse click
         if (isCommandActive && selectedFriendID != -1 && Mouse.current.leftButton.wasPressedThisFrame)
         {
@@ -261,6 +267,8 @@ public class PlayerAction : ExecuteLogic
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
             }
         }
+        // Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
+        // dataMovement.InputMovement = move;
     }
 
     private void FixedUpdate()
@@ -293,11 +301,11 @@ public class PlayerAction : ExecuteLogic
         Vector3 flatForward = new Vector3(followTarget.forward.x, 0, followTarget.forward.z).normalized;
         Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;        
 
-        if (Crouch())
+        if (IsCrouching)
         {
             CC.SimpleMove(direction * (moveSpeed - 2));
         }
-        else if (Run())
+        else if (isRun)
         {
             CC.SimpleMove(direction * (moveSpeed + 2));
         }

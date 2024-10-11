@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseState<T> where T : BaseStateManager
+/// <summary>
+/// Base of All state
+/// </summary>
+public abstract class BaseState
 {
     //If Entering State do what
-    public abstract void EnterState(T stateManager);
+    public abstract void EnterState();
     //if in Update frame, do what
-    public abstract void UpdateState(T stateManager);
+    public abstract void UpdateState();
     //If going to exit state, do what
-    public abstract void ExiState(T stateManager);
+    public abstract void ExiState();
 }
