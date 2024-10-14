@@ -57,7 +57,7 @@ public class IdleState : MovementState
             _stateMachine.SwitchState(_factory.CrouchState());
         }
     }
-    public override void ExiState()
+    public override void ExitState()
     {
         if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && _stateMachine.CurrAIDirection != null)) _standMovement.IsIdle = false; //kyk gini krn bs aja keluar krn crouch state di atas
         // base.EnterState(); //Stop Idle Anim

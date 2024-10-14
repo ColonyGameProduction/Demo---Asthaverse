@@ -2,41 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SilentKillState : UseWeaponState
+public class SwitchingWeaponState : UseWeaponState
 {
-    bool isDoSilentKill;
-    public SilentKillState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine, factory)
+    bool isDoSwitch;
+    public SwitchingWeaponState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine, factory)
     {
 
     }
     public override void EnterState()
     {
-        // base.EnterState(); mainkan animasi
-
-        isDoSilentKill = false;
+        isDoSwitch = false;
         
-        //hrsnya gaperlu krn gabisa silentkill pas scope
-        // if(_stateMachine.IsInputPlayer)
-        // {
-        //     _playableData.TellToTurnOffScope();
-        // }
+        if(_stateMachine.IsInputPlayer)
+        {
+            _playableData.TellToTurnOffScope();
+        }
 
-        Debug.Log("SilentKill" + _stateMachine.gameObject.name);
+        Debug.Log("Swithc" + _stateMachine.gameObject.name);
     }
     public override void UpdateState()
     {
-        if(!isDoSilentKill && _advancedUse.IsSilentKill)
+        if(!isDoSwitch && _advancedUse.IsSwitchingWeapon)
         {
-            isDoSilentKill = true;
-            _advancedUse.SilentKill();
+            isDoSwitch = true;
+            _advancedUse.SwitchWeapon();
         }
-        else if(isDoSilentKill && !_advancedUse.IsSilentKill)
+        else if(isDoSwitch && !_advancedUse.IsSwitchingWeapon)
         {
             if(_stateMachine.CurrWeapon.currBullet == 0 && !_normalUse.IsReloading)
             {
                 _normalUse.IsReloading = true;
             }
-            if(_advancedUse.IsSwitchingWeapon)
+            else if (_stateMachine.CurrWeapon.currBullet > 0 && _normalUse.IsReloading)
+            {
+                _normalUse.IsReloading = false;
+            }
+
+            if(_advancedUse.IsSilentKill)
             {
                 _stateMachine.SwitchState(_factory.SwitchingWeaponState());
             }
@@ -60,10 +62,11 @@ public class SilentKillState : UseWeaponState
             {
                 _stateMachine.SwitchState(_factory.IdleWeaponState());
             }
+
         }
     }
     public override void ExitState()
     {
-        _advancedUse.CanSilentKill_Coroutine();
+        _advancedUse.CanSwitchWeapon_Coroutine();
     }
 }
