@@ -47,6 +47,7 @@ public class EnemyAI : ExecuteLogic
     private float alertValue;
     [SerializeField]
     private float maxAlertValue;
+    private float tempAlertValue;
 
     //untuk patrol
     [SerializeField]
@@ -54,9 +55,14 @@ public class EnemyAI : ExecuteLogic
     private bool switchingPath;
     private int currPath;
     private Vector3 lastSeenPosition;
+    private float distance;
+    private float tempDistance;
+
 
     private void Start()
     {
+        distance = 0;
+
         currPath = 0;
         patrolPath[0] = transform.position;
 
@@ -78,18 +84,21 @@ public class EnemyAI : ExecuteLogic
     private void Update()
     {
         ChangingState();
+        
         switch (enemyState)
         {
 
             case alertState.Idle:
-                if(visibleTargets.Count == 0)
+                if (visibleTargets.Count == 0)
                 {
-                    enemyNavmesh.isStopped = false;
+                    enemyNavmesh.speed = enemyStat.speed;
                     Patrol();
                 }
                 else
                 {
-                    enemyNavmesh.isStopped = true;
+                    Vector3 dir = visibleTargets[0].position - transform.position;
+                    enemyNavmesh.speed = 0;
+                    transform.forward = Vector3.Slerp(transform.forward, dir, enemyNavmesh.angularSpeed).normalized;
                     lastSeenPosition = visibleTargets[0].position;
                     
                 }
@@ -102,9 +111,13 @@ public class EnemyAI : ExecuteLogic
                 }
                 else
                 {
-                    if (lastSeenPosition != Vector3.zero)
+                    if (lastSeenPosition != Vector3.zero && otherVisibleTargets.Count == 0)
                     {
                         Moving(lastSeenPosition);
+                    }
+                    else if(otherVisibleTargets.Count != 0 && lastSeenPosition == Vector3.zero)
+                    {
+                        Moving(otherVisibleTargets[0].position);
                     }
                     else
                     {
@@ -135,24 +148,38 @@ public class EnemyAI : ExecuteLogic
     {
         if (visibleTargets.Count > 0)
         {
-            foreach(Transform transform in visibleTargets)
+            foreach (Transform transform in visibleTargets)
             {
                 if (transform.GetComponent<PlayerAction>().enabled == true)
                 {
-                    if(maxAlertValue > transform.GetComponent<PlayerAction>().GetPlayerStat().stealth || maxAlertValue == 0)
+                    if (maxAlertValue > transform.GetComponent<PlayerAction>().GetPlayerStat().stealth || maxAlertValue == 0)
                     {
-                        maxAlertValue = transform.GetComponent<PlayerAction>().GetPlayerStat().stealth;
+                        if(enemyState == alertState.Idle)
+                        {
+                            tempAlertValue = transform.GetComponent<PlayerAction>().GetPlayerStat().stealth;
+                            Debug.Log(maxAlertValue);
+                        }
+                        else
+                        {
+                            maxAlertValue = transform.GetComponent<PlayerAction>().GetPlayerStat().stealth;
+                        }
                     }
                 }
                 else
                 {
                     if (maxAlertValue > transform.GetComponent<FriendsAI>().GetFriendsStat().stealth || maxAlertValue == 0)
                     {
-                        maxAlertValue = transform.GetComponent<FriendsAI>().GetFriendsStat().stealth;
+                        if (enemyState == alertState.Idle)
+                        {
+                            tempAlertValue = transform.GetComponent<PlayerAction>().GetPlayerStat().stealth;
+                        }
+                        else
+                        {
+                            maxAlertValue = transform.GetComponent<PlayerAction>().GetPlayerStat().stealth;
+                        }
                     }
                 }
             }
-            
 
             if (alertValue <= maxAlertValue)
             {
@@ -165,6 +192,11 @@ public class EnemyAI : ExecuteLogic
             {
                 alertValue -= Time.deltaTime * 10;
             }
+        }
+
+        if(enemyState == alertState.Idle)
+        {
+            FOVStateHandler();
         }
 
 
@@ -184,7 +216,7 @@ public class EnemyAI : ExecuteLogic
 
     private void Shoot()
     {
-        if (!fireRateOn && !isReloading)
+        if (!fireRateOn && !isReloading && visibleTargets.Count != 0)
         {
             Shooting();
             StartCoroutine(FireRate(FireRateFlag, weapon.fireRate));
@@ -245,7 +277,8 @@ public class EnemyAI : ExecuteLogic
 
     private void Shooting()
     {
-        if(visibleTargets.Count > 0)Shoot(FOVPoint.position, visibleTargets[0].transform.position, weapon, isItEnemy);
+        Vector3 dis = visibleTargets[0].transform.position - transform.position;
+        if(visibleTargets.Count > 0)Shoot(FOVPoint.position, dis, weapon, isItEnemy);
     }
 
     public IEnumerator FindTargetWithDelay(float delay)
@@ -280,17 +313,19 @@ public class EnemyAI : ExecuteLogic
 
     private void FOVStateHandler()
     {
-        float distance;
         if (visibleTargets.Count > 0)
         {
-            distance = Vector3.Distance(transform.position, visibleTargets[0].position);
-            lastSeenPosition = visibleTargets[0].position;
+            foreach (Transform enemy in visibleTargets)
+            {
+                tempDistance = 0;
+                if(tempDistance > Vector3.Distance(transform.position, enemy.position) || tempDistance == 0)
+                {
+                    tempDistance = Vector3.Distance(transform.position, enemy.position);
+                    lastSeenPosition = enemy.position;
+                }
+            }
+            distance = tempDistance;
         }
-        else
-        {            
-            distance = Vector3.Distance(transform.position, lastSeenPosition);
-        }
-
 
         if (distance <= viewRadius && distance > viewRadius - (viewRadius/3))
         {
@@ -305,19 +340,57 @@ public class EnemyAI : ExecuteLogic
             FOVState = FOVDistState.close;
         }
 
-        switch(FOVState)
+        if (enemyState == alertState.Idle)
         {
-            case FOVDistState.far:                
-                Moving(visibleTargets[0].position);
-                Shoot();
-                break;
-            case FOVDistState.middle:
-                Shoot();
-                break; 
-            case FOVDistState.close:
-                Shoot();
-                break;
+            switch (FOVState)
+            {
+                case FOVDistState.far:
+                    maxAlertValue = tempAlertValue;
+                    break;
+                case FOVDistState.middle:
+                    maxAlertValue = tempAlertValue * 0.5f;
+                    break;
+                case FOVDistState.close:
+                    maxAlertValue = 0;
+                    break;
+            }
         }
+        else if(enemyState == alertState.Engage)
+        {
+            switch (FOVState)
+            {
+                case FOVDistState.far:
+                    enemyNavmesh.speed = enemyStat.speed;
+                    if (distance >= viewRadius)
+                    {
+                        if (otherVisibleTargets.Count != 0)
+                        {
+                            Moving(otherVisibleTargets[0].position);
+                        }
+                        else
+                        {
+                            Moving(lastSeenPosition);
+                            if (Vector3.Distance(transform.position, lastSeenPosition) < 0.5f)
+                            {
+                                lastSeenPosition = Vector3.zero;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Moving(visibleTargets[0].position);
+                    }
+                    break;
+                case FOVDistState.middle:
+                    Shoot();
+                    break;
+                case FOVDistState.close:
+                    Shoot();
+                    break;
+            }
+        }
+
+        
         
     }
 
