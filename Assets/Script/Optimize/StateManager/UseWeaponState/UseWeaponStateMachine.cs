@@ -39,6 +39,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     [SerializeField] protected Transform _originShootPoint_AIContainer; 
 
     protected WeaponLogicHandler _weaponLogicHandler;
+    protected WeaponLogicManager _weaponLogicManager;
     
 
     #endregion
@@ -86,11 +87,11 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         
         //nyari fov jg bs disini, kalo fov null
 
-        _weaponLogicHandler = new WeaponLogicHandler();
         _states = new UseWeaponStateFactory(this);
     }
     private void Start() 
     {
+        _weaponLogicManager = WeaponLogicManager.Instance;
         SetCurrWeapon();
         SwitchState(_states.IdleWeaponState());
     }
@@ -111,6 +112,9 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         }
         _currState?.UpdateState();
     }
+    private void FixedUpdate() {
+        _currState?.PhysicsLogicUpdateState();
+    }
     public override void SwitchState(BaseState newState)
     {
         if(_currState != null)
@@ -130,7 +134,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         if(CurrWeapon.currBullet > 0 && !_isfireRateOn)
         {
             SetShootPosition();
-            _weaponLogicHandler.ShootingPerformed(_originShootPosition, _directionShootPosition, CurrWeapon.weaponStatSO, _charaEnemyMask);
+            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CurrWeapon.weaponStatSO, _charaEnemyMask);
             CurrWeapon.currBullet -= 1;
             if(!CurrWeapon.weaponStatSO.allowHoldDownButton)IsUsingWeapon = false;
             StartCoroutine(FireRate(CurrWeapon.weaponStatSO.fireRate));

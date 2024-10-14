@@ -116,7 +116,11 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 
     public virtual void InitializeCharacter()
     {
-        if(_characterStatSO == null) return;
+        if(_characterStatSO == null) 
+        {
+            _currhealth = TotalHealth;
+            return;
+        }
         _charaName = _characterStatSO.entityName;
 
         _totalHealth = _characterStatSO.health;

@@ -106,9 +106,12 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovemen
     public void ForceStopPlayable()
     {
         InputMovement = Vector3.zero;
+        _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+
         IsWalking = false;
         IsRunning = false;
         IsCrouching = false;
+        
     }
     public override void ForceStopMoving()
     {

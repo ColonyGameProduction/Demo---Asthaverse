@@ -58,6 +58,8 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
     [Header("Events")]
     public Action<bool> OnCommandingBoolChange;
+    public Action OnCommandHoldInput, OnCommandUnHoldInput;
+    public Action<Transform> OnPlayerSwitch;
     #endregion
 
     #region GETTERSETTER Variable
@@ -120,6 +122,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
         //kategori untuk friendsAI
         // PlayableCharaNow.FriendID = 1;
+        if(PlayableCharaNow.FriendAIStateMachine.IsToldHold) PlayableCharaNow.FriendAIStateMachine.IsToldHold = false;
 
 
         //Time to change Chara
@@ -144,6 +147,9 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
         PlayableCharaNow.IsInputPlayer = true;
         SetAllCurr();
+
+        OnPlayerSwitch?.Invoke(PlayableCharaNow.transform); //Kasihtau breadcrumbs player barunya
+
         _currPlayableUseWeaponData.OnTurningOffScope += UseWeaponData_OnTurningOffScope;
         //kategori kamera
         _currPlayableCamera.GetFollowCamera.Priority = 2;
@@ -156,9 +162,13 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
             
             _charaIdentities[nextCharaidx].FriendID = i;
             //Di sini nanti jg taro di AI controllernya, posisi update mereka yang biasa
-            _charaIdentities[nextCharaidx].FriendAIStateMachine.GiveUpdateFriendDirection(PlayableCharaNow.GetFriendsNormalPosition[i-1].transform, _friendsCommandPosition[i-1].transform);
+            _charaIdentities[nextCharaidx].FriendAIStateMachine.GiveUpdateFriendDirection(PlayableCharaNow.transform, PlayableCharaNow.GetFriendsNormalPosition[i-1].transform, _friendsCommandPosition[i-1].transform);
 
-            if(IsHoldInPlaceFriend)
+            // if(IsHoldInPlaceFriend)
+            // {
+            //     _friendsCommandPosition[i-1].transform.position = _charaIdentities[nextCharaidx].transform.position;
+            // }
+            if(_charaIdentities[nextCharaidx].FriendAIStateMachine.IsToldHold)
             {
                 _friendsCommandPosition[i-1].transform.position = _charaIdentities[nextCharaidx].transform.position;
             }
@@ -245,6 +255,18 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     public void ChangeFriendCommandPosition(int friendID, Vector3 newPos)
     {
         _friendsCommandPosition[friendID - 1].transform.position = newPos;
+    }
+    public void ChangeHoldInput(bool change, int friendID)
+    {
+        if(friendID < 1) return;
+        foreach(PlayableCharacterIdentity chara in _charaIdentities)
+        {
+            if(chara.FriendID == friendID)
+            {
+                chara.FriendAIStateMachine.IsToldHold = change;
+                break;
+            }
+        }
     }
     #endregion
 
@@ -334,13 +356,18 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         if(!CanDoThisFunction() || IsScope)return;
         _currMoveFunction.ForceStopMoving();
         _currUseWeaponFunction.ForceStopUseWeapon();
-        if(!_isHoldInPlaceFriend)
+
+        for(int i=0;i < _charaIdentities.Count;i++)
         {
-            for(int i=0;i < _charaIdentities.Count-1;i++)
+            if(_charaIdentities[i] == PlayableCharaNow)continue;
+            if(!_charaIdentities[i].FriendAIStateMachine.IsToldHold)
             {
-                _friendsCommandPosition[i].transform.position = PlayableCharaNow.GetFriendsNormalPosition[i].transform.position;
+                int friendID = _charaIdentities[i].FriendID - 1;
+                _friendsCommandPosition[friendID].transform.position = PlayableCharaNow.GetFriendsNormalPosition[friendID].transform.position;
             }
+            // _friendsCommandPosition[i].transform.position = PlayableCharaNow.GetFriendsNormalPosition[i].transform.position;
         }
+
         _isCommandingFriend = true;
         OnCommandingBoolChange?.Invoke(true);
     }
@@ -354,11 +381,17 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     }
     private void GameInput_OnHoldPosPerformed()
     {
-        if(_isCommandingFriend)_isHoldInPlaceFriend = true;
+        if(_isCommandingFriend)
+        {
+            OnCommandHoldInput?.Invoke();
+        }
     }
     private void GameInput_OnUnHoldPosPerformed()
     {
-        if(_isCommandingFriend)_isHoldInPlaceFriend = false;
+        if(_isCommandingFriend)
+        {
+            OnCommandUnHoldInput?.Invoke();
+        }
     }
 
     private void GameInput_OnSilentKillPerformed()

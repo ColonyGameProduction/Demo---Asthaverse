@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class UseWeaponState : CharacterBaseState<UseWeaponStateMachine>
 {
+    [Header("To Get the data from statemachine class and child class in a group")]
     protected UseWeaponStateFactory _factory;
     protected INormalUseWeaponData _normalUse;
     protected IAdvancedUseWeaponData _advancedUse;
@@ -32,4 +33,5 @@ public abstract class UseWeaponState : CharacterBaseState<UseWeaponStateMachine>
     {
         base.ExitState();
     }
+    public virtual void PhysicsLogicUpdateState(){}
 }

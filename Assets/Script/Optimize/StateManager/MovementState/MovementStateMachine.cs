@@ -36,7 +36,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [Header("No Inspector Variable")]
     protected MovementState _currState;
     protected float _currSpeed;
-    protected Transform _currAIDirection; //Nyimpen direction AI yg ntr dikasih jg dr luar
+    protected Vector3 _currAIDirPos;
 
     #endregion
 
@@ -58,7 +58,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         }
     }
     public float RunSpeed { get {return _runSpeed;}}
-    public Transform CurrAIDirection { get {return _currAIDirection;}}
+    public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
     public bool IsIdle {get {return _isIdle;} set{ _isIdle = value;} }
     public bool IsWalking {get {return _isWalking;}set{ _isWalking = value;} }
     public bool IsRunning { get {return _isRun;}set{ _isRun = value;} }
@@ -90,7 +90,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         if(isGo && objectDir != null)
         {
             isGo = false;
-            GiveAIDirection(objectDir.transform);
+            GiveAIDirection(objectDir.transform.position);
         }
         if(isStop)
         {
@@ -120,8 +120,9 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     
     public virtual void Move()
     {
-        MoveAI(_currAIDirection.position);
+        MoveAI(CurrAIDirPos);
     }
+    //Function to make AI move based on direction
     protected void MoveAI(Vector3 direction)
     {
         if(AgentNavMesh.speed != _currSpeed)AgentNavMesh.speed = _currSpeed;
@@ -132,15 +133,20 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, animatedFaceDir.x);
         CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, animatedFaceDir.z);
 
- 
     }
+
+    //function to check if ai should move or not
     public bool IsTargetTheSamePositionAsTransform()
     {
-        if(CurrAIDirection == null) return true;
+        // if(CurrAIDirection == null) return true;
 
-        if(AgentNavMesh.destination != CurrAIDirection.position)
+        // if(AgentNavMesh.destination != CurrAIDirection.position)
+        // {
+        //     AgentNavMesh.destination = CurrAIDirection.position;
+        // }
+        if(AgentNavMesh.destination != CurrAIDirPos)
         {
-            AgentNavMesh.destination = CurrAIDirection.position;
+            AgentNavMesh.destination = CurrAIDirPos;
         }
         if(!AgentNavMesh.hasPath)return true;
         else
@@ -157,9 +163,9 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         return false;
     }
 
-    public void GiveAIDirection(Transform newDir)
+    public void GiveAIDirection(Vector3 newPos)
     {
-        _currAIDirection = newDir;
+        _currAIDirPos = newPos;
     }
     public void ChangeCurrSpeed(float newSpeed)
     {
@@ -171,13 +177,14 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     }
     private void ForceAIStopMoving()
     {
-        _currAIDirection = null;
+        AgentNavMesh.speed = 0;
+        AgentNavMesh.ResetPath();
+        _currAIDirPos = transform.position;
+        AgentNavMesh.velocity = Vector3.zero;
         IsWalking = false;
         IsRunning = false;
-        AgentNavMesh.speed = 0;
         // CharaAnimator.SetBool("Scope", false);
 
-        AgentNavMesh.ResetPath();
 
         Debug.Log("DoneMove");
     }

@@ -7,6 +7,7 @@ using UnityEngine;
 /// </summary>
 public abstract class MovementState : CharacterBaseState<MovementStateMachine>
 {
+    [Header("To Get the data from statemachine class and child class in a group")]
     protected MovementStateFactory _factory;
     protected IStandMovementData _standMovement;
     protected ICrouchMovementData _crouch;

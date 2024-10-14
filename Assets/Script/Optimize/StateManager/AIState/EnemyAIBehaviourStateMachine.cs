@@ -95,14 +95,14 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                 if(_charaIdentity.GetNormalUseWeaponData.IsUsingWeapon)_charaIdentity.UseWeaponStateMachine.ForceStopUseWeapon();
                 if (_fovMachine.OtherVisibleTargets.Count > 0)
                 {
-                    _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.OtherVisibleTargets[0]);
+                    _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.OtherVisibleTargets[0].position);
 
                 }
                 else
                 {
                     if (_enemyCharaLastSeenPosition != Vector3.zero)
                     {
-                        _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.VisibleTargets[0]);
+                        _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.VisibleTargets[0].position);
                     }
                     else
                     {
@@ -123,7 +123,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                     case FOVDistState.far:
                         if(_fovMachine.VisibleTargets.Count > 0)
                         {
-                            _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.VisibleTargets[0]);
+                            _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.VisibleTargets[0].position);
                             _charaIdentity.UseWeaponStateMachine.GiveChosenTarget(_fovMachine.VisibleTargets[0]);
                         }
                         Debug.Log("Far");
@@ -169,7 +169,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                     _switchingPath = false;
                 }
             }
-            _charaIdentity.MovementStateMachine.GiveAIDirection(_patrolPath[_currPath].transform);
+            _charaIdentity.MovementStateMachine.GiveAIDirection(_patrolPath[_currPath].transform.position);
         }
     }
 

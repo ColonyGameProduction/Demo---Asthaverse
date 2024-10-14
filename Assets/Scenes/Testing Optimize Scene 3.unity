@@ -5610,9 +5610,6 @@ GameObject:
   - component: {fileID: 743586307}
   - component: {fileID: 743586311}
   - component: {fileID: 743586312}
-  - component: {fileID: 743586302}
-  - component: {fileID: 743586303}
-  - component: {fileID: 743586306}
   - component: {fileID: 743586304}
   - component: {fileID: 743586305}
   m_Layer: 0
@@ -5639,55 +5636,6 @@ Transform:
   - {fileID: 539561108}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &743586302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 743586296}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 259d9888c334b684d8efe57dddc5ca36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stopView: 1
-  stateMachine: {fileID: 0}
-  playerGameObject: {fileID: 439030860}
-  followTarget: {fileID: 1611590578}
-  aim: {fileID: 0}
-  friendsDestination:
-  - {fileID: 279957712}
-  - {fileID: 1191237419}
-  GoToTargetPosition:
-  - {fileID: 1853001344}
-  - {fileID: 636682799}
-  rotateSpeed: 10
-  moveSpeed: 5
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 0
-  weaponStat:
-  - {fileID: 11400000, guid: ce86a641912742b49adc7be1f7fd8c2e, type: 2}
-  - {fileID: 11400000, guid: 4e797d732470a364584aa35fc319d05c, type: 2}
-  character: {fileID: 0}
-  command: {fileID: 1543354274}
-  isCommandActive: 0
-  isHoldPosition: 0
---- !u!114 &743586303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 743586296}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6905226c3ae5ba4598fc72fd41e0b4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  followTarget: {fileID: 1611590578}
-  cameraRotationSpeed: 200
 --- !u!143 &743586304
 CharacterController:
   m_ObjectHideFlags: 0
@@ -5736,35 +5684,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &743586306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 743586296}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30a029e869171a244b47240e78fae34f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stopView: 1
-  friendsID: 0
-  edgeResolveIteration: 4
-  edgeDistanceTreshold: 0.5
-  viewRadius: 20
-  viewAngle: 90
-  meshResolution: 0.5
-  FOVPoint: {fileID: 0}
-  visibleTargets: []
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 0
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 64
-  viewMeshFilter: {fileID: 0}
-  siapaSih: {fileID: 0}
 --- !u!114 &743586307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5881,6 +5800,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fovMachine: {fileID: 0}
   _charaIdentity: {fileID: 0}
+  _mainPlayableMaxDistance: 3.5
 --- !u!114 &743586312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7165,6 +7085,7 @@ GameObject:
   - component: {fileID: 849947678}
   - component: {fileID: 849947679}
   - component: {fileID: 849947680}
+  - component: {fileID: 849947681}
   m_Layer: 0
   m_Name: PlayerManager
   m_TagString: Untagged
@@ -7224,10 +7145,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playableCharaManager: {fileID: 849947679}
-  groundMask:
+  _groundMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   _commandUIContainer: {fileID: 1192563506}
+--- !u!114 &849947681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849947677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e923293d472a0734cbfc1323d0cf50b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _breadCrumbsPrefab: {fileID: 3834864200863859013, guid: 1ed6bca86e07db849bbffd5c2dd98264, type: 3}
+  _instantiateParent: {fileID: 1987224369}
+  _breadCrumbsList: []
+  _breadCrumbsSpawnDelay: 0.3
+  _breadCrumbsGoneMaxTimer: 2
+  _totalBreadCrumbs: 50
 --- !u!1 &859698410
 GameObject:
   m_ObjectHideFlags: 0
@@ -9017,6 +8956,7 @@ GameObject:
   - component: {fileID: 1077971747}
   - component: {fileID: 1077971748}
   - component: {fileID: 1077971749}
+  - component: {fileID: 1077971750}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -9074,6 +9014,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38f1288d1cdb1b046a1f3c6f524036be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1077971750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077971746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5213727cc95cecc4494f076732481665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1083558672
@@ -9343,9 +9295,6 @@ GameObject:
   - component: {fileID: 1156905602}
   - component: {fileID: 1156905605}
   - component: {fileID: 1156905606}
-  - component: {fileID: 1156905596}
-  - component: {fileID: 1156905597}
-  - component: {fileID: 1156905600}
   - component: {fileID: 1156905598}
   - component: {fileID: 1156905599}
   m_Layer: 0
@@ -9372,55 +9321,6 @@ Transform:
   - {fileID: 1775317841}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1156905596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1156905590}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 259d9888c334b684d8efe57dddc5ca36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stopView: 1
-  stateMachine: {fileID: 0}
-  playerGameObject: {fileID: 1911957387}
-  followTarget: {fileID: 2085741375}
-  aim: {fileID: 0}
-  friendsDestination:
-  - {fileID: 312050264}
-  - {fileID: 1398910608}
-  GoToTargetPosition:
-  - {fileID: 1853001344}
-  - {fileID: 636682799}
-  rotateSpeed: 10
-  moveSpeed: 5
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 0
-  weaponStat:
-  - {fileID: 11400000, guid: ddddea676c9c1d64683b955392c0bef3, type: 2}
-  - {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
-  character: {fileID: 0}
-  command: {fileID: 138660905}
-  isCommandActive: 0
-  isHoldPosition: 0
---- !u!114 &1156905597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1156905590}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6905226c3ae5ba4598fc72fd41e0b4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  followTarget: {fileID: 2085741375}
-  cameraRotationSpeed: 200
 --- !u!143 &1156905598
 CharacterController:
   m_ObjectHideFlags: 0
@@ -9469,35 +9369,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1156905600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1156905590}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30a029e869171a244b47240e78fae34f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stopView: 1
-  friendsID: 0
-  edgeResolveIteration: 4
-  edgeDistanceTreshold: 0.5
-  viewRadius: 20
-  viewAngle: 90
-  meshResolution: 0.5
-  FOVPoint: {fileID: 946796280}
-  visibleTargets: []
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 0
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 64
-  viewMeshFilter: {fileID: 946796282}
-  siapaSih: {fileID: 0}
 --- !u!114 &1156905601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9614,6 +9485,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fovMachine: {fileID: 0}
   _charaIdentity: {fileID: 0}
+  _mainPlayableMaxDistance: 3.5
 --- !u!114 &1156905606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12289,6 +12161,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4755716441238886717, guid: 9faaf32607770b5469cd14d9154e22ad, type: 3}
   m_PrefabInstance: {fileID: 53829922}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1987224368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1987224369}
+  m_Layer: 0
+  m_Name: BreadCrumbsParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1987224369
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987224368}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 16.883804, y: 1.0271399, z: 14.299523}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1996770345
 GameObject:
   m_ObjectHideFlags: 0
@@ -12736,9 +12639,6 @@ GameObject:
   - component: {fileID: 2066745667}
   - component: {fileID: 2066745671}
   - component: {fileID: 2066745672}
-  - component: {fileID: 2066745660}
-  - component: {fileID: 2066745661}
-  - component: {fileID: 2066745664}
   - component: {fileID: 2066745662}
   - component: {fileID: 2066745663}
   m_Layer: 0
@@ -12765,55 +12665,6 @@ Transform:
   - {fileID: 540029768}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2066745660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2066745654}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 259d9888c334b684d8efe57dddc5ca36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stopView: 1
-  stateMachine: {fileID: 0}
-  playerGameObject: {fileID: 2047355711}
-  followTarget: {fileID: 1586786643}
-  aim: {fileID: 0}
-  friendsDestination:
-  - {fileID: 1205169415}
-  - {fileID: 421418394}
-  GoToTargetPosition:
-  - {fileID: 1853001344}
-  - {fileID: 636682799}
-  rotateSpeed: 10
-  moveSpeed: 5
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 0
-  weaponStat:
-  - {fileID: 11400000, guid: a9d97bbad63f47d4a92e1eb934894ae8, type: 2}
-  - {fileID: 11400000, guid: 4e797d732470a364584aa35fc319d05c, type: 2}
-  character: {fileID: 0}
-  command: {fileID: 486741365}
-  isCommandActive: 0
-  isHoldPosition: 0
---- !u!114 &2066745661
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2066745654}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6905226c3ae5ba4598fc72fd41e0b4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  followTarget: {fileID: 1586786643}
-  cameraRotationSpeed: 200
 --- !u!143 &2066745662
 CharacterController:
   m_ObjectHideFlags: 0
@@ -12862,35 +12713,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &2066745664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2066745654}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30a029e869171a244b47240e78fae34f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stopView: 1
-  friendsID: 0
-  edgeResolveIteration: 4
-  edgeDistanceTreshold: 0.5
-  viewRadius: 20
-  viewAngle: 90
-  meshResolution: 0.5
-  FOVPoint: {fileID: 946796280}
-  visibleTargets: []
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 0
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 64
-  viewMeshFilter: {fileID: 961320782}
-  siapaSih: {fileID: 0}
 --- !u!114 &2066745666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13005,8 +12827,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b07167ffdf3d804aa0f4cd7ec032e1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fovMachine: {fileID: 0}
-  _charaIdentity: {fileID: 0}
+  _fovMachine: {fileID: 2066745672}
+  _charaIdentity: {fileID: 2066745668}
+  _mainPlayableMaxDistance: 3.5
 --- !u!114 &2066745672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13309,3 +13132,4 @@ SceneRoots:
   - {fileID: 447115269}
   - {fileID: 1786254558}
   - {fileID: 896024678}
+  - {fileID: 1987224369}

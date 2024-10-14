@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IFriendBehaviourStateData
 {
-    void GiveUpdateFriendDirection(Transform defaultPos, Transform commandPos);
+    void GiveUpdateFriendDirection(Transform currPlayer, Transform defaultPos, Transform commandPos);
 }

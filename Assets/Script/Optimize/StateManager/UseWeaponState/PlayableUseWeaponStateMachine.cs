@@ -25,6 +25,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected bool _canSilentKill = true;
     [SerializeField] protected float _silentKillDuration; // ini sementara ampe ada animasi
     #endregion
+    #region GETTERSETTER Variable
     public bool IsSwitchingWeapon
     {
         get {return _isSwitchingWeapon;} 
@@ -52,8 +53,8 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     public bool CanSilentKill { get {return _canSilentKill;} set {_canSilentKill = value;}}
     public float SilentKillDuration { get {return _silentKillDuration;}}
 
-
-    public event Action OnTurningOffScope;// ini dipanggil kalo misal lg input player dan reload
+    #endregion
+    public event Action OnTurningOffScope;// ini dipanggil kalo misal lg input player dan reload - yg subs adalah playablecharamanager
     protected override void Awake()
     {
         base.Awake();

@@ -13,10 +13,12 @@ public class IdleState : MovementState
     bool wasCrouch;
     //Di idle state ini, walaupun misal isRun atau isCrouch masih nyala, tetap bisa ke state ini, yg penting inputnya tidak ada 
     // dan karena crouch ada idle animation, jd crouch tetap di posisi animasi crouch; sedangkan run tidak. Ketika isCrouch = false, maka animasinya akan dimatikan
+
     public IdleState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
     {
         // StateAnimationName = "IdleAnimation";
     }
+    
     public override void EnterState()
     {
         Debug.Log("Idle" + _stateMachine.gameObject.name);
@@ -59,7 +61,7 @@ public class IdleState : MovementState
     }
     public override void ExitState()
     {
-        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && _stateMachine.CurrAIDirection != null)) _standMovement.IsIdle = false; //kyk gini krn bs aja keluar krn crouch state di atas
+        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform())) _standMovement.IsIdle = false; //kyk gini krn bs aja keluar krn crouch state di atas
         // base.EnterState(); //Stop Idle Anim
     }
         

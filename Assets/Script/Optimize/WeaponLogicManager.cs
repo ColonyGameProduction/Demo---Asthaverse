@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UI.Image;
 
-public class WeaponLogicHandler
-{    
-
+public class WeaponLogicManager : MonoBehaviour
+{
+    public static WeaponLogicManager Instance {get; private set;}
+    private void Awake() 
+    {
+        Instance = this;
+    }
     //Logic Shooting
     public void ShootingPerformed(Vector3 origin, Vector3 direction, WeaponStatSO weaponStat, LayerMask entityMask)
     {       
@@ -57,7 +60,6 @@ public class WeaponLogicHandler
 
     public void CalculateDamage(WeaponStatSO weapon, GameObject entityGameObject)
     {
-        Debug.Log("???");
         IHealth _getHealthFunction;
         _getHealthFunction =  entityGameObject.transform.GetComponent<IHealth>();
         if(_getHealthFunction == null) _getHealthFunction = entityGameObject.transform.GetComponentInParent<IHealth>();
@@ -66,21 +68,6 @@ public class WeaponLogicHandler
             _getHealthFunction.Hurt(weapon.baseDamage);
             Debug.Log(entityGameObject.name + " Hit!" + " HP:" + _getHealthFunction.HealthNow);
         }
-        // if(entityGameObject.CompareTag("Enemy"))
-        // {
-        //     EnemyAI enemy = entityGameObject.GetComponentInParent<EnemyAI>(); 
-        //     float enemyHP = enemy.GetEnemyHP();
-
-        //     enemyHP -= weapon.baseDamage;
-
-        //     enemy.SetEnemyHP(enemyHP);
-        //     Debug.Log("Enemy Hit!");
-        // }
-        // else if(entityGameObject.CompareTag("Player"))
-        // {
-        //     PlayerAction player = entityGameObject.GetComponentInParent<PlayerAction>();
-            
-        // }
+ 
     }
-
 }
