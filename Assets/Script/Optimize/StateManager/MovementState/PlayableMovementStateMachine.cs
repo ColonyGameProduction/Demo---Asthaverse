@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayableMovementStateMachine : MovementStateMachine, ICrouch, IPlayableMovementDataNeeded
+public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovementData, IPlayableMovementDataNeeded
 {
     #region Normal Variable
     [Header ("Playable Character Variable")]
@@ -10,13 +10,15 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouch, IPlay
     [Space(2)]
     [Header("Other Component Variable")]
     [SerializeField] private CharacterController _cc;
+    protected ICanInputPlayer _getCanInputPlayer;
 
     [Header("For Rotation")]
     [SerializeField] private Transform _charaGameObject;
     [SerializeField] private float _rotateSpeed;
 
     [Header("Move Speed List - Crouch State")]
-    [SerializeField] private float _crouchSpeed;
+    [SerializeField] protected float _crouchMultiplier;
+    private float _crouchSpeed;
     [SerializeField] protected bool _isCrouch;
 
     [Header("Movement - Camera")]
@@ -30,6 +32,16 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouch, IPlay
     #region GETTERSETTER Variable
     [HideInInspector]
     //getter setter
+    public override float WalkSpeed 
+    { 
+        get {return base.WalkSpeed;}
+        set 
+        {
+            _walkSpeed = value;
+            _runSpeed = _walkSpeed * _runMultiplier;
+            _crouchSpeed = _walkSpeed * _crouchMultiplier;
+        }
+    }
     public CharacterController CC {get { return _cc;} }
     public Vector3 InputMovement { get{ return _inputMovement;} set{_inputMovement = value;}} // Getting Input Movement from playercontroller
     public bool IsCrouching { get {return _isCrouch;}set{ _isCrouch = value;} }
@@ -39,6 +51,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouch, IPlay
     protected override void Awake()
     {
         base.Awake();
+
+        _getCanInputPlayer = GetComponent<ICanInputPlayer>();
+        _isInputPlayer = _getCanInputPlayer.IsInputPlayer;
+        _getCanInputPlayer.OnInputPlayerChange += CharaIdentity_OnInputPlayerChange; // Ditaro di sini biar ga ketinggalan sebelah, krn sebelah diubah di start
+
         if(_cc == null)_cc = GetComponent<CharacterController>();
         if(_followTarget == null) _followTarget = GetComponent<PlayableCamera>().GetFollowTarget;
     }
@@ -47,6 +64,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouch, IPlay
     {
         base.Update();
     }
+
+    #region Move
     public override void Move()
     {
         if(!IsInputPlayer)base.Move();
@@ -95,5 +114,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouch, IPlay
     {
         if(!IsInputPlayer)base.ForceStopMoving();
         else ForceStopPlayable();
+        if(IsMustLookForward)IsMustLookForward = false;
+    }
+    #endregion
+    private void CharaIdentity_OnInputPlayerChange(bool obj)
+    {
+        _isInputPlayer = obj;
     }
 }

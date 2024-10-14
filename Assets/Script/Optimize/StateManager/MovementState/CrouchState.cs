@@ -40,10 +40,10 @@ public class CrouchState : MovementState
             _stateMachine.SwitchState(_factory.IdleState());
         }
     }
-    public override void ExiState()
+    public override void ExitState()
     {
         // if(!_crouch.IsCrouching) //Matikan state animasi crouch
-        base.ExiState();
+        base.ExitState();
     }
     public override void PhysicsLogicUpdateState()
     {

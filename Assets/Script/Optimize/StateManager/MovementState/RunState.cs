@@ -44,9 +44,9 @@ public class RunState : MovementState
             _stateMachine.SwitchState(_factory.IdleState());
         }
     }
-    public override void ExiState()
+    public override void ExitState()
     {
-        base.ExiState();
+        base.ExitState();
         // //Matikan state animasi Run -> mau state tombol masih true pun tetep matiin krn ga ada animasi idle d run
     }
     public override void PhysicsLogicUpdateState()
