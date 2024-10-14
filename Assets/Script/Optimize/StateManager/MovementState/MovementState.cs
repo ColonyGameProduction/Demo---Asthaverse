@@ -8,17 +8,17 @@ using UnityEngine;
 public abstract class MovementState : CharacterBaseState<MovementStateMachine>
 {
     protected MovementStateFactory _factory;
-    protected IStandMovement _standMovement;
-    protected ICrouch _crouch;
+    protected IStandMovementData _standMovement;
+    protected ICrouchMovementData _crouch;
     protected IPlayableMovementDataNeeded _playableData;
     public MovementState(MovementStateMachine stateMachine, MovementStateFactory factory) : base(stateMachine) 
     {
         _factory = factory;
-        if(stateMachine is IStandMovement s)
+        if(stateMachine is IStandMovementData s)
         {
             _standMovement = s;
         }
-        if(stateMachine is ICrouch c)
+        if(stateMachine is ICrouchMovementData c)
         {
             _crouch = c;
         }
@@ -32,9 +32,9 @@ public abstract class MovementState : CharacterBaseState<MovementStateMachine>
         base.EnterState();
     }
 
-    public override void ExiState()
+    public override void ExitState()
     {
-        base.ExiState();
+        base.ExitState();
     }
     public virtual void PhysicsLogicUpdateState(){}
 

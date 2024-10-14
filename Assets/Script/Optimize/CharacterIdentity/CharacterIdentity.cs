@@ -9,60 +9,84 @@ using UnityEngine;
 /// </summary>
 public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 {
-    protected GameManager _gm;
+    #region Normal Variable
+    [Header("CHARACTER SCRIPTABLE OBJECT STAT")]
+    [SerializeField] protected EntityStatSO _characterStatSO;
+
     [Header("Manager/Machine")]
     //Untuk ambil bool
     [SerializeField] protected MovementStateMachine _moveStateMachine;
-    [Space(1)]
-    [Header("Input Control Now")]
-    [SerializeField]protected bool _isInputPlayer;
-    public Action<bool> OnInputPlayerChange;
-    [Space(1)]
-    [Header("Health")]
-    [SerializeField] protected float _totalHealth;
-    protected float _health;
-    [Space(1)]
-    [Header("Weapon")]
-    [SerializeField] protected List<WeaponData> _weaponLists;
-    [SerializeField] protected int _currWeaponIdx;
+    [SerializeField] protected UseWeaponStateMachine _useWeaponStateMachine;
+    protected FOVMachine _fovMachine;
+    protected GameManager _gm;
 
+    #region CHARACTER STATS
+    [Space(1)]
+    [Header("Character Stats")]
+    [SerializeField] private string _charaName;
+
+    [Space(1)]
+    [Header("   Health")]
+    [SerializeField] protected float _totalHealth;
+    protected float _currhealth;
+
+    [Space(1)]
+    [Header("   Armour")]
+    protected armourType _armourType;
+    protected float _armour;
+
+    [Space(1)]
+    [Header("   Weapon")]
+    [SerializeField] protected List<WeaponData> _weaponLists = new List<WeaponData>();
+    [SerializeField] protected int _currWeaponIdx;
+    protected float _aimAccuracy;
+
+    [Space(1)]
+    [Header("   Stealth")]
+    protected float _stealthStats;
+    #endregion
+
+    [Space(5)]
+    [Header("No Inspector Variable")]
     //Thing needed to getcomponent
     //Get Standmovement bool -> isIdle, isWalking, isRunning
     protected IMovement _getMoveFunction;
-    protected IStandMovement _getStandMovementBool;
+    protected IStandMovementData _getStandMovementData;
+    protected IUseWeapon _getUseWeaponFunction;
+    protected INormalUseWeaponData _getNormalUseWeaponData;
+    #endregion
 
+    #region GETTERSETTER Variable
     [HideInInspector]
     //getter setter
-    public bool IsInputPlayer 
-    { 
-        get { return _isInputPlayer; } 
-        set
-        { 
-            if(IsInputPlayer != value)
-            {
-                _isInputPlayer = value;
-                OnInputPlayerChange?.Invoke(_isInputPlayer);
-            }
-        } 
-    }
+    public float StealthStat { get{ return _stealthStats; }}
     public float TotalHealth {get { return _totalHealth; } }
-    public float HealthNow {get {return _health; } }
+    public float HealthNow {get {return _currhealth; } }
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
     public MovementStateMachine MovementStateMachine {get { return _moveStateMachine;}}
-    public IStandMovement GetStandMovementBool {get { return _getStandMovementBool;}}
+    public IStandMovementData GetStandMovementData {get { return _getStandMovementData;}}
     public IMovement GetMoveFunction {get { return _getMoveFunction;}}
+    public UseWeaponStateMachine UseWeaponStateMachine {get { return _useWeaponStateMachine;}}
+    public IUseWeapon GetUseWeaponFunction {get { return _getUseWeaponFunction;}}
+    public INormalUseWeaponData GetNormalUseWeaponData {get { return _getNormalUseWeaponData;}}
+    #endregion
     protected virtual void Awake()
     {
         if(_moveStateMachine == null) _moveStateMachine = GetComponent<MovementStateMachine>();
         _getMoveFunction = GetComponent<IMovement>();
-        _getStandMovementBool = GetComponent<IStandMovement>();
+        _getStandMovementData = GetComponent<IStandMovementData>();
+
+        _getUseWeaponFunction = GetComponent<IUseWeapon>();
+        _getNormalUseWeaponData = GetComponent<INormalUseWeaponData>();
+        _fovMachine = GetComponent<FOVMachine>();
+
+        InitializeCharacter();
+        InitializeWeapon();
     }
     protected virtual void Start() 
     {
         _gm = GameManager.instance;
-        InitializeHealth();
-        InitializeWeapon();
     }
 
     #region Health
@@ -70,10 +94,10 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     {
         if(HealthNow <= 0)return;
 
-        _health -= Damage;
+        _currhealth -= Damage;
         if(HealthNow <= 0)
         {
-            _health = 0;
+            _currhealth = 0;
             Death();
         }
     }
@@ -81,18 +105,41 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     {
         if(HealthNow == TotalHealth)return;
 
-        _health += Healing;
-        if(HealthNow >= TotalHealth) _health = TotalHealth;
+        _currhealth += Healing;
+        if(HealthNow >= TotalHealth) _currhealth = TotalHealth;
     }
 
     public virtual void Death()
     {
         //Do something
     }
-    public virtual void InitializeHealth()
+
+    public virtual void InitializeCharacter()
     {
-        _health = TotalHealth;
+        if(_characterStatSO == null) return;
+        _charaName = _characterStatSO.entityName;
+
+        _totalHealth = _characterStatSO.health;
+        _currhealth = _totalHealth;
+
+        MovementStateMachine.WalkSpeed = _characterStatSO.speed;
+
+        _armourType = _characterStatSO.armourType;
+        _armour = _characterStatSO.armor;
+
+        _aimAccuracy = _characterStatSO.acuracy;
+        _stealthStats = _characterStatSO.stealth;
+
+        _fovMachine.viewRadius = _characterStatSO.FOVRadius;
+        
+        if(_weaponLists.Count > 0)_weaponLists.Clear();
+        foreach(WeaponStatSO weaponStat in _characterStatSO.weaponStat)
+        {
+            WeaponData newWeapData = new WeaponData(weaponStat);
+            _weaponLists.Add(newWeapData);
+        }
     }
+
     #endregion
     
     #region Weapon
@@ -106,5 +153,6 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         _currWeaponIdx = 0;
 
     }
+    public abstract void ReloadWeapon();
     #endregion
 }

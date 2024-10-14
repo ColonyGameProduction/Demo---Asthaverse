@@ -12,5 +12,8 @@ public abstract class BaseState
     //if in Update frame, do what
     public abstract void UpdateState();
     //If going to exit state, do what
-    public abstract void ExiState();
+    public virtual void ExitState()
+    {
+
+    }
 }

@@ -18,11 +18,19 @@ public abstract class  CharacterBaseState<T> : BaseState where T : CharacterStat
     }
     public override void EnterState()
     {
-        _stateMachine.CharaAnimator?.SetBool(StateAnimationName, true);
+        StateAnimationOn(StateAnimationName);
     }
 
-    public override void ExiState()
+    public override void ExitState()
     {
-        _stateMachine.CharaAnimator?.SetBool(StateAnimationName, false);
+        StateAnimationOff(StateAnimationName);
+    }
+    protected void StateAnimationOn(string animationName)
+    {
+        _stateMachine.CharaAnimator?.SetBool(animationName, true);
+    }
+    protected void StateAnimationOff(string animationName)
+    {
+        _stateMachine.CharaAnimator?.SetBool(animationName, false);
     }
 }
