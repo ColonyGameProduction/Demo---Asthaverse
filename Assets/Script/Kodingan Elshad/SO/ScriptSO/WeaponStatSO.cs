@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "WeaponStatSO", menuName = "ScriptableObject/WeaponStatSO" )]
+[CreateAssetMenu(fileName = "WeaponStatSO", menuName = "ScriptableObject/WeaponStatSO")]
 public class WeaponStatSO : ScriptableObject
 {
     public string weaponName;               //nama senjatanya
@@ -20,7 +20,7 @@ public class WeaponStatSO : ScriptableObject
     public float totalBullet;                    //jumlah magazine yang dibawa
     public float currBullet;                    //jumlah magazine yang dibawa
     public bool allowHoldDownButton;        //true jika senjatanya automatic
-                                            
+
     public void Initialise()
     {
         totalBullet = magSize * magSpare;

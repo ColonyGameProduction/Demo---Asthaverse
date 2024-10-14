@@ -93,7 +93,6 @@ public class EnemyAI : ExecuteLogic
                     lastSeenPosition = visibleTargets[0].position;
                     
                 }
-                Debug.Log("idle");
                 break;
             case alertState.Hunted:
                 enemyNavmesh.isStopped = false;
@@ -117,11 +116,9 @@ public class EnemyAI : ExecuteLogic
                         lastSeenPosition = Vector3.zero;
                     }
                 }
-                Debug.Log("hunted");
                 break;
             case alertState.Engage:
                 FOVStateHandler();
-                Debug.Log("engage");
                 Shoot();
                 break;
         }
@@ -136,7 +133,6 @@ public class EnemyAI : ExecuteLogic
 
     private void ChangingState()
     {
-        Debug.Log(maxAlertValue);
         if (visibleTargets.Count > 0)
         {
             foreach(Transform transform in visibleTargets)
@@ -150,9 +146,9 @@ public class EnemyAI : ExecuteLogic
                 }
                 else
                 {
-                    if (maxAlertValue > transform.GetComponent<PlayerAction>().GetPlayerStat().stealth || maxAlertValue == 0)
+                    if (maxAlertValue > transform.GetComponent<FriendsAI>().GetFriendsStat().stealth || maxAlertValue == 0)
                     {
-                        maxAlertValue = transform.GetComponent<PlayerAction>().GetPlayerStat().stealth;
+                        maxAlertValue = transform.GetComponent<FriendsAI>().GetFriendsStat().stealth;
                     }
                 }
             }
@@ -314,15 +310,12 @@ public class EnemyAI : ExecuteLogic
             case FOVDistState.far:                
                 Moving(visibleTargets[0].position);
                 Shoot();
-                Debug.Log("Far");
                 break;
             case FOVDistState.middle:
                 Shoot();
-                Debug.Log("Middle");
                 break; 
             case FOVDistState.close:
                 Shoot();
-                Debug.Log("Close");
                 break;
         }
         

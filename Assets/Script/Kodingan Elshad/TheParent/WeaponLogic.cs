@@ -1,12 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 public class WeaponLogicHandler
 {    
 
     //Logic Shooting
     public void ShootingPerformed(Vector3 origin, Vector3 direction, WeaponStatSO weaponStat, LayerMask entityMask)
+    {       
+        weaponStat.currBullet -= weaponStat.bulletPerTap;
+        if (weaponStat.bulletPerTap > 1)
+        {
+            for(int i = 0; i < weaponStat.bulletPerTap; i++)
+            {
+                BulletShoot(origin,direction,weaponStat,entityMask);
+            }
+
+        }   
+        else
+        {
+            BulletShoot(origin, direction, weaponStat, entityMask);
+        }
+
+    }
+    
+    public void BulletShoot(Vector3 origin, Vector3 direction, WeaponStatSO weaponStat, LayerMask entityMask)
     {
         float x = Random.Range(-weaponStat.recoil, weaponStat.recoil);
         float y = Random.Range(-weaponStat.recoil, weaponStat.recoil);
@@ -17,7 +36,8 @@ public class WeaponLogicHandler
         // Debug.Log(origin + " " + direction + " " + weaponStat + " " + entityMask);
 
         RaycastHit hit;
-        if(Physics.Raycast(origin, direction, out hit, weaponStat.range, entityMask))
+
+        if (Physics.Raycast(origin, direction, out hit, weaponStat.range, entityMask))
         {
             Debug.DrawRay(origin, bulletDirection * weaponStat.range, Color.black);
 
@@ -33,7 +53,6 @@ public class WeaponLogicHandler
             Debug.DrawRay(origin, hit.point, Color.black);
             //Debug.Log(hit.point);
         }
-
     }
 
     public void CalculateDamage(WeaponStatSO weapon, GameObject entityGameObject)
