@@ -157,7 +157,6 @@ public class EnemyAI : ExecuteLogic
                         if(enemyState == alertState.Idle)
                         {
                             tempAlertValue = transform.GetComponent<PlayerAction>().GetPlayerStat().stealth;
-                            Debug.Log(maxAlertValue);
                         }
                         else
                         {
@@ -278,7 +277,7 @@ public class EnemyAI : ExecuteLogic
     private void Shooting()
     {
         Vector3 dis = visibleTargets[0].transform.position - transform.position;
-        if(visibleTargets.Count > 0)Shoot(FOVPoint.position, dis, weapon, isItEnemy);
+        if(visibleTargets.Count > 0)Shoot(FOVPoint.position, dis, enemyStat , weapon, isItEnemy);
     }
 
     public IEnumerator FindTargetWithDelay(float delay)
@@ -361,37 +360,52 @@ public class EnemyAI : ExecuteLogic
             {
                 case FOVDistState.far:
                     enemyNavmesh.speed = enemyStat.speed;
-                    if (distance >= viewRadius)
+                    if(visibleTargets.Count != 0)
                     {
-                        if (otherVisibleTargets.Count != 0)
+                        foreach (Transform enemy in visibleTargets)
                         {
-                            Moving(otherVisibleTargets[0].position);
-                        }
-                        else
-                        {
-                            Moving(lastSeenPosition);
-                            if (Vector3.Distance(transform.position, lastSeenPosition) < 0.5f)
+                            tempDistance = 0;
+                            if (tempDistance > Vector3.Distance(transform.position, enemy.position) || tempDistance == 0)
                             {
-                                lastSeenPosition = Vector3.zero;
+                                Moving(enemy.position);
                             }
                         }
-                    }
-                    else
-                    {
-                        Moving(visibleTargets[0].position);
-                    }
+                    }                    
+                    EnemyOutOfBounds();
                     break;
                 case FOVDistState.middle:
+                    EnemyOutOfBounds();
                     Shoot();
                     break;
                 case FOVDistState.close:
+                    EnemyOutOfBounds();
                     Shoot();
                     break;
             }
-        }
+        }               
+    }
 
-        
-        
+    private void EnemyOutOfBounds()
+    {
+        if (visibleTargets.Count == 0)
+        {
+            if (otherVisibleTargets.Count != 0)
+            {
+                Moving(otherVisibleTargets[0].position);
+            }
+            else
+            {
+                if (lastSeenPosition != Vector3.zero)
+                {
+                    Moving(lastSeenPosition);
+                }
+                if (Vector3.Distance(transform.position, lastSeenPosition) < 0.5f)
+                {
+                    lastSeenPosition = Vector3.zero;
+                }
+            }
+        }
+       
     }
 
     public float GetEnemyHP()

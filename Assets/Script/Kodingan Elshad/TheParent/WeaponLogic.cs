@@ -7,28 +7,32 @@ public class WeaponLogicHandler
 {    
 
     //Logic Shooting
-    public void ShootingPerformed(Vector3 origin, Vector3 direction, WeaponStatSO weaponStat, LayerMask entityMask)
+    public void ShootingPerformed(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask)
     {       
         weaponStat.currBullet -= weaponStat.bulletPerTap;
         if (weaponStat.bulletPerTap > 1)
         {
             for(int i = 0; i < weaponStat.bulletPerTap; i++)
             {
-                BulletShoot(origin,direction,weaponStat,entityMask);
+                BulletShoot(origin, direction, entityStat, weaponStat, entityMask);
             }
 
         }   
         else
         {
-            BulletShoot(origin, direction, weaponStat, entityMask);
+            BulletShoot(origin, direction, entityStat, weaponStat, entityMask);
         }
 
     }
     
-    public void BulletShoot(Vector3 origin, Vector3 direction, WeaponStatSO weaponStat, LayerMask entityMask)
+    public void BulletShoot(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask)
     {
-        float x = Random.Range(-weaponStat.recoil, weaponStat.recoil);
-        float y = Random.Range(-weaponStat.recoil, weaponStat.recoil);
+        float recoilMod = weaponStat.recoil + ((100 - entityStat.acuracy) * weaponStat.recoil / 100);
+
+        Debug.Log (recoilMod);
+
+        float x = Random.Range(-recoilMod, recoilMod);
+        float y = Random.Range(-recoilMod, recoilMod);
 
         Vector3 recoil = new Vector3(x, y, 0);
         Vector3 bulletDirection = (direction + recoil).normalized;  
