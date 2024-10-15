@@ -73,7 +73,7 @@ public class PlayerAction : ExecuteLogic
     private void Start()
     {
 
-        StartCoroutine("BreadCrumbsDrop", .3f);
+        StartCoroutine("BreadCrumbsDrop", 1f);
 
         gm = GameManager.instance;
         testAnimation = GetComponent<AnimationTestScript>();
