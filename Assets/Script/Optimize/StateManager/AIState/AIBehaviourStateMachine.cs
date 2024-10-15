@@ -8,6 +8,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     [Header("Other Important Variable")]
     [SerializeField] protected FOVMachine _fovMachine;
     [SerializeField] protected CharacterIdentity _charaIdentity;
+    [SerializeField] protected MovementStateMachine _moveStateMachine;
+    [SerializeField] protected UseWeaponStateMachine _useWeaponStateMachine;
     
     // [Header("Private Variable")]
 
@@ -18,5 +20,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         if(_charaIdentity == null)_charaIdentity = GetComponent<CharacterIdentity>();
 
         if(_fovMachine == null)_fovMachine = GetComponent<FOVMachine>();
+        
+        if(_moveStateMachine == null) _moveStateMachine = GetComponent<MovementStateMachine>();
+        if(_useWeaponStateMachine == null) _useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
     }
 }

@@ -44,6 +44,8 @@ public class GameInputManager : MonoBehaviour
     }
     private void Start() 
     {
+
+
         _gm = GameManager.instance;
     }
 

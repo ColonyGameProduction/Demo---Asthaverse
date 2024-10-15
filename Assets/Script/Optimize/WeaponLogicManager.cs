@@ -10,25 +10,25 @@ public class WeaponLogicManager : MonoBehaviour
         Instance = this;
     }
     //Logic Shooting
-    public void ShootingPerformed(Vector3 origin, Vector3 direction, WeaponStatSO weaponStat, LayerMask entityMask)
+    public void ShootingPerformed(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask)
     {       
         weaponStat.currBullet -= weaponStat.bulletPerTap;
         if (weaponStat.bulletPerTap > 1)
         {
             for(int i = 0; i < weaponStat.bulletPerTap; i++)
             {
-                BulletShoot(origin,direction,weaponStat,entityMask);
+                BulletShoot(origin,direction, aimAccuracy, weaponStat,entityMask);
             }
 
         }   
         else
         {
-            BulletShoot(origin, direction, weaponStat, entityMask);
+            BulletShoot(origin, direction, aimAccuracy, weaponStat, entityMask);
         }
 
     }
     
-    public void BulletShoot(Vector3 origin, Vector3 direction, WeaponStatSO weaponStat, LayerMask entityMask)
+    public void BulletShoot(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask)
     {
         float x = Random.Range(-weaponStat.recoil, weaponStat.recoil);
         float y = Random.Range(-weaponStat.recoil, weaponStat.recoil);

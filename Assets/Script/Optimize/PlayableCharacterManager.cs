@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,6 +9,9 @@ using UnityEngine;
 public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 {
     #region Normal Variable
+    [Header("Test")]
+    public PlayableCharacterIdentity _chose;
+
     [Header("Manager Variable")]
     GameManager _gm;
     GameInputManager _gameInputManager;
@@ -15,6 +19,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     [Header("Character")]
     [SerializeField] private List<PlayableCharacterIdentity> _charaIdentities = new List<PlayableCharacterIdentity>();
     private static bool _isSwitchingCharacter;
+    private static bool _isAddingRemovingCharacter;
     [SerializeField] private int _totalFriendInControl;
     
     [Space(1)]
@@ -65,6 +70,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     #region GETTERSETTER Variable
     //Getter Setter
     public static bool IsSwitchingCharacter { get { return _isSwitchingCharacter;}}
+    public static bool IsAddingRemovingCharacter { get { return _isAddingRemovingCharacter;}}
     public static bool IsCommandingFriend { get { return _isCommandingFriend;}}
     public static bool IsHoldInPlaceFriend { get { return _isHoldInPlaceFriend;}}
     public PlayableCharacterIdentity PlayableCharaNow { get { return _charaIdentities[_currCharaidx];}}
@@ -94,9 +100,20 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     // Update is called once per frame
     public void Update()
     {
+        if(Input.GetKeyDown(KeyCode.P) && _chose != null && !IsAddingRemovingCharacter)
+        {
+
+            AddPlayableCharacter(_chose);
+        }
+        if(Input.GetKeyDown(KeyCode.O) && _chose != null && !IsAddingRemovingCharacter)
+        {
+            RemovePlayableCharacter(_chose);
+        }
         GameInput_Movement();
     }
 
+
+    #region character
     #region Character Switching
     // Ganti Karakter
     //     Logic 'Switch Character'
@@ -105,11 +122,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         _isSwitchingCharacter = true;
         //Matikan semua pergerakan dan aim dan lainnya - in state machine and player identities
 
-        foreach(PlayableCharacterIdentity chara in _charaIdentities)
-        {
-            chara.GetMoveFunction?.ForceStopMoving();
-            chara.GetUseWeaponFunction?.ForceStopUseWeapon();
-        }
+        ForceStopAllCharacterState();
         _currPlayableUseWeaponData.OnTurningOffScope -= UseWeaponData_OnTurningOffScope;
 
         PlayableCharaNow.IsInputPlayer = false;
@@ -122,7 +135,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
         //kategori untuk friendsAI
         // PlayableCharaNow.FriendID = 1;
-        if(PlayableCharaNow.FriendAIStateMachine.IsToldHold) PlayableCharaNow.FriendAIStateMachine.IsToldHold = false;
+
 
 
         //Time to change Chara
@@ -145,6 +158,8 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         PlayableCharaNow.FriendAIStateMachine.enabled = false;
         PlayableCharaNow.FOVMachine.enabled = false;
 
+        if(PlayableCharaNow.FriendAIStateMachine.IsToldHold) PlayableCharaNow.FriendAIStateMachine.IsToldHold = false;
+
         PlayableCharaNow.IsInputPlayer = true;
         SetAllCurr();
 
@@ -153,8 +168,9 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         _currPlayableUseWeaponData.OnTurningOffScope += UseWeaponData_OnTurningOffScope;
         //kategori kamera
         _currPlayableCamera.GetFollowCamera.Priority = 2;
-
+        
         //kategori untuk friendsAI
+        PlayableCharaNow.FriendID = 0;
         int nextCharaidx = _currCharaidx + 1;
         for(int i=1; i <= _charaIdentities.Count - 1; i++)
         {
@@ -164,10 +180,6 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
             //Di sini nanti jg taro di AI controllernya, posisi update mereka yang biasa
             _charaIdentities[nextCharaidx].FriendAIStateMachine.GiveUpdateFriendDirection(PlayableCharaNow.transform, PlayableCharaNow.GetFriendsNormalPosition[i-1].transform, _friendsCommandPosition[i-1].transform);
 
-            // if(IsHoldInPlaceFriend)
-            // {
-            //     _friendsCommandPosition[i-1].transform.position = _charaIdentities[nextCharaidx].transform.position;
-            // }
             if(_charaIdentities[nextCharaidx].FriendAIStateMachine.IsToldHold)
             {
                 _friendsCommandPosition[i-1].transform.position = _charaIdentities[nextCharaidx].transform.position;
@@ -178,8 +190,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
                 _charaIdentities[nextCharaidx].FriendAIStateMachine.enabled = true;
                 _charaIdentities[nextCharaidx].FOVMachine.enabled = true;
             }
-            // _charaIdentities[nextCharaidx].MovementStateMachine.GiveAIDirection();
-            // Debug.Log(nextCharaidx + " aa"+ i);
+
             ++nextCharaidx;
         }
         
@@ -218,8 +229,77 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     }
     #endregion
 
-    #region Camera Effect
+    #region Character Add or Remove
+    public void AddPlayableCharacter(PlayableCharacterIdentity _chosenChara)
+    {
+        if(_charaIdentities.Contains(_chosenChara) || (_chosenChara == PlayableCharaNow)) return;
+
+        _isAddingRemovingCharacter = true;ForceStopAllCharacterState();
+        _charaIdentities.Add(_chosenChara);
+
+        _chosenChara.FriendAIStateMachine.enabled = true;
+        _chosenChara.FOVMachine.enabled = true;
+
+        _charaIdentities = _charaIdentities.OrderBy(chara => chara.gameObject.name).ToList();
+        SettingCharacterFriends_AddingRemoving();
+        _isAddingRemovingCharacter = false;
+    }
     
+    public void RemovePlayableCharacter(PlayableCharacterIdentity _chosenChara)
+    {
+        if(!_charaIdentities.Contains(_chosenChara) || (_chosenChara == PlayableCharaNow)) return;
+        //ntr yg ini diseeting lg si, bs aja playablechara nya ntr diganti dulu wkwk
+
+
+        _isAddingRemovingCharacter = true;
+        ForceStopAllCharacterState();
+
+        _chosenChara.FriendAIStateMachine.enabled = false;
+        _chosenChara.FOVMachine.enabled = false;
+        if(_chosenChara.FriendAIStateMachine.IsToldHold) _chosenChara.FriendAIStateMachine.IsToldHold = false;
+
+
+        _charaIdentities.Remove(_chosenChara);
+
+        SettingCharacterFriends_AddingRemoving();
+        _isAddingRemovingCharacter = false;
+    }
+
+    private void SettingCharacterFriends_AddingRemoving()
+    {
+
+        int nextCharaidx = _currCharaidx + 1;
+        for(int i=1; i <= _charaIdentities.Count - 1; i++)
+        {
+
+            if(nextCharaidx == _charaIdentities.Count)nextCharaidx = 0;
+            
+            _charaIdentities[nextCharaidx].FriendID = i;
+            //Di sini nanti jg taro di AI controllernya, posisi update mereka yang biasa
+            _charaIdentities[nextCharaidx].FriendAIStateMachine.GiveUpdateFriendDirection(PlayableCharaNow.transform, PlayableCharaNow.GetFriendsNormalPosition[i-1].transform, _friendsCommandPosition[i-1].transform);
+
+            if(_charaIdentities[nextCharaidx].FriendAIStateMachine.IsToldHold)
+            {
+                _friendsCommandPosition[i-1].transform.position = _charaIdentities[nextCharaidx].transform.position;
+            }
+
+            ++nextCharaidx;
+        }
+
+    }
+    #endregion
+    private void ForceStopAllCharacterState()
+    {
+        foreach(PlayableCharacterIdentity chara in _charaIdentities)
+        {
+            chara.GetMoveFunction?.ForceStopMoving();
+            chara.GetUseWeaponFunction?.ForceStopUseWeapon();
+
+        }
+    }
+
+    #endregion
+    #region Camera Effect
     public void ScopeCamera(int charaIdx)
     {
         _isScope = true;
@@ -254,13 +334,15 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     #region Command Friend
     public void ChangeFriendCommandPosition(int friendID, Vector3 newPos)
     {
+        // if(friendID >= _charaIdentities.Count) return; // krn karakter nya mungkin cuma 2, tp kok friend id ada 2
         _friendsCommandPosition[friendID - 1].transform.position = newPos;
     }
     public void ChangeHoldInput(bool change, int friendID)
     {
-        if(friendID < 1) return;
+        // if(friendID < 1 || friendID >= _charaIdentities.Count) return;
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
+            Debug.Log(chara.FriendID + " " + friendID);
             if(chara.FriendID == friendID)
             {
                 chara.FriendAIStateMachine.IsToldHold = change;
@@ -275,6 +357,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     {
         if(IsSwitchingCharacter)return false;
         if(IsCommandingFriend)return false;
+        if(IsAddingRemovingCharacter)return false;
         return true;
     }
     #endregion

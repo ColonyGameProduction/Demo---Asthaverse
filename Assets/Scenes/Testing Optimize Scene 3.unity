@@ -5800,6 +5800,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fovMachine: {fileID: 0}
   _charaIdentity: {fileID: 0}
+  _moveStateMachine: {fileID: 0}
+  _useWeaponStateMachine: {fileID: 0}
   _mainPlayableMaxDistance: 3.5
 --- !u!114 &743586312
 MonoBehaviour:
@@ -7147,7 +7149,8 @@ MonoBehaviour:
   _playableCharaManager: {fileID: 849947679}
   _groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
+  _maxCommandDistance: 100
   _commandUIContainer: {fileID: 1192563506}
 --- !u!114 &849947681
 MonoBehaviour:
@@ -9313,7 +9316,7 @@ Transform:
   m_GameObject: {fileID: 1156905590}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: 0, z: -6.75}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9485,6 +9488,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fovMachine: {fileID: 0}
   _charaIdentity: {fileID: 0}
+  _moveStateMachine: {fileID: 0}
+  _useWeaponStateMachine: {fileID: 0}
   _mainPlayableMaxDistance: 3.5
 --- !u!114 &1156905606
 MonoBehaviour:
@@ -12476,6 +12481,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fovMachine: {fileID: 2017098529}
   _charaIdentity: {fileID: 2017098526}
+  _moveStateMachine: {fileID: 0}
+  _useWeaponStateMachine: {fileID: 0}
   _alertValue: 0
   _maxAlertValue: 0
   _patrolPath:
@@ -12829,6 +12836,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fovMachine: {fileID: 2066745672}
   _charaIdentity: {fileID: 2066745668}
+  _moveStateMachine: {fileID: 0}
+  _useWeaponStateMachine: {fileID: 0}
   _mainPlayableMaxDistance: 3.5
 --- !u!114 &2066745672
 MonoBehaviour:

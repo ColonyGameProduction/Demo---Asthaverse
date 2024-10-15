@@ -7,23 +7,44 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     [Header("Enemy Alert Value")]
     [SerializeField] private float _alertValue;
     [SerializeField] private float _maxAlertValue;
-    [Header("Enemy States")]
+    [Header("Enemy AI States")]
+    [SerializeField] protected bool _isAIIdle;
     protected alertState _enemyState;
+    protected EnemyAIState _currState;
+    protected EnemyAIStateFactory _states;
     
     [Header("Patrol Path")]
     [SerializeField] private GameObject[] _patrolPath;
     private bool _switchingPath;
     private int _currPath;
     private Vector3 _enemyCharaLastSeenPosition;
-    
-    public override void SwitchState(BaseState newState)
+
+    #region GETTERSETTER Variable
+    public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
+    #endregion
+    protected override void Awake() 
     {
-        throw new System.NotImplementedException();
+        base.Awake();
+        _states = new EnemyAIStateFactory(this);
+    }
+    private void Start() 
+    {
+        SwitchState(_states.AI_IdleState());
     }
     private void Update() 
     {
+        _currState?.UpdateState();
         ChangingEnemyState();
         StateChecker();
+    }
+    public override void SwitchState(BaseState newState)
+    {
+        if(_currState != null)
+        {
+            _currState?.ExitState();
+        }
+        _currState = newState as EnemyAIState;
+        _currState?.EnterState();
     }
     public void ChangingEnemyState()
     {

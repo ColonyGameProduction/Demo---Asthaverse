@@ -9,6 +9,7 @@ public class PlayableCharacterCommandManager : MonoBehaviour
 {
     [SerializeField] private PlayableCharacterManager _playableCharaManager;
     [SerializeField] private LayerMask _groundMask;
+    [SerializeField] private float _maxCommandDistance = 100f;
     private int _selectedFriendID = -1;
 
     [SerializeField] private GameObject _commandUIContainer;
@@ -21,8 +22,6 @@ public class PlayableCharacterCommandManager : MonoBehaviour
         _playableCharaManager.OnCommandHoldInput += PlayableCharaManager_OnCommandHoldInput;
         _playableCharaManager.OnCommandUnHoldInput += PlayableCharaManager_OnCommandUnHoldInput;
     }
-
-
 
     void Update()
     {
@@ -41,9 +40,10 @@ public class PlayableCharacterCommandManager : MonoBehaviour
                 Vector3 rayOrigin = Camera.main.transform.position;
                 Vector3 rayDirection = Camera.main.transform.forward.normalized;
 
-                Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.red, 2f);
+                Debug.DrawRay(rayOrigin, rayDirection * _maxCommandDistance, Color.red, 2f);
+                
 
-                if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, _groundMask))
+                if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, _maxCommandDistance, _groundMask))
                 {
                     // Set the destination for the selected friend based on the mouse click
                     _playableCharaManager.ChangeFriendCommandPosition(_selectedFriendID, hit.point);

@@ -14,29 +14,25 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public bool isStop;
     public GameObject objectDir;
 
-    [Space(5)]
-    [Header("Other Component Variable")]
-    protected MovementStateFactory _states;
-
-    
-    [Header("AI")]
-    [SerializeField]protected NavMeshAgent _agentNavMesh;
-    protected NavMeshPath _checkPath;
-
-    [Header("Move Speed List - Each State")]
-    [SerializeField] protected float _walkSpeed;
-    [SerializeField] protected float _runMultiplier;
-    protected float _runSpeed;
+    [Space(1)]
+    [Header("Move States - Stand")]
     [SerializeField] protected bool _isIdle;
     [SerializeField] protected bool _isWalking;
     [SerializeField] protected bool _isRun;
-
-
-    [Space(5)]
-    [Header("No Inspector Variable")]
+    protected MovementStateFactory _states;
     protected MovementState _currState;
-    protected float _currSpeed;
+
+    [Space(1)]
+    [Header("NavMesh Component")]
+    [SerializeField]protected NavMeshAgent _agentNavMesh;
     protected Vector3 _currAIDirPos;
+
+    [Space(1)]
+    [Header("Move Speed - State Multiplier")]
+    [SerializeField] protected float _runMultiplier;
+    protected float _walkSpeed;
+    protected float _runSpeed;
+    protected float _currSpeed;
 
     #endregion
 
@@ -58,52 +54,37 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         }
     }
     public float RunSpeed { get {return _runSpeed;}}
-    public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
+    
     public bool IsIdle {get {return _isIdle;} set{ _isIdle = value;} }
     public bool IsWalking {get {return _isWalking;}set{ _isWalking = value;} }
     public bool IsRunning { get {return _isRun;}set{ _isRun = value;} }
+
     public NavMeshAgent AgentNavMesh {get {return _agentNavMesh;}}
+    public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
     
     #endregion
 
     protected override void Awake() 
-    {
-        //Cek path biar tau ini go idle or not
-        _checkPath = new NavMeshPath();
-
-        
+    {        
         base.Awake();
-
 
         _states = new MovementStateFactory(this);
 
         if(AgentNavMesh == null)_agentNavMesh = GetComponent<NavMeshAgent>();
     }
-
-
     private void Start() 
     {
         SwitchState(_states.IdleState());
     }
     protected virtual void Update() 
     {
-        if(isGo && objectDir != null)
-        {
-            isGo = false;
-            GiveAIDirection(objectDir.transform.position);
-        }
-        if(isStop)
-        {
-            isStop = false;
-            ForceStopMoving();
-        }
         _currState?.UpdateState();
-        // if(objectDir!=null)Move();
     }
     private void FixedUpdate() 
     {
         _currState?.PhysicsLogicUpdateState();
     }
+
     public override void SwitchState(BaseState newState)
     {
         if(_currState != null)
@@ -113,6 +94,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         _currState = newState as MovementState;
         _currState?.EnterState();
     }
+
     #region Move
     /// <summary>
     /// if AI -> Get Destination, if Player -> Get Direction -> Tp krn ini purely buat AI jd d sini aja
@@ -138,12 +120,6 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     //function to check if ai should move or not
     public bool IsTargetTheSamePositionAsTransform()
     {
-        // if(CurrAIDirection == null) return true;
-
-        // if(AgentNavMesh.destination != CurrAIDirection.position)
-        // {
-        //     AgentNavMesh.destination = CurrAIDirection.position;
-        // }
         if(AgentNavMesh.destination != CurrAIDirPos)
         {
             AgentNavMesh.destination = CurrAIDirPos;
@@ -163,14 +139,6 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         return false;
     }
 
-    public void GiveAIDirection(Vector3 newPos)
-    {
-        _currAIDirPos = newPos;
-    }
-    public void ChangeCurrSpeed(float newSpeed)
-    {
-        if(_currSpeed != newSpeed)_currSpeed = newSpeed;
-    }
     public virtual void ForceStopMoving()
     {
         ForceAIStopMoving();
@@ -184,10 +152,16 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         IsWalking = false;
         IsRunning = false;
         // CharaAnimator.SetBool("Scope", false);
+    }
 
-
-        Debug.Log("DoneMove");
+    public void GiveAIDirection(Vector3 newPos)
+    {
+        _currAIDirPos = newPos;
     }
     #endregion
 
+    public void ChangeCurrSpeed(float newSpeed)
+    {
+        if(_currSpeed != newSpeed)_currSpeed = newSpeed;
+    }
 }

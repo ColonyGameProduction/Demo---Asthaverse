@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class FOVMachine : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class FOVMachine : MonoBehaviour
     [SerializeField] private MeshFilter _viewMeshFilter;
     private Mesh _viewMesh;
     private Vector3 _enemyCharalastSeenPosition;
+    private float _currDistance, _tempDistance;
     #endregion
     
     #region States
@@ -65,6 +67,7 @@ public class FOVMachine : MonoBehaviour
     {
         while (true)
         {
+            Debug.Log("Is Ienumerator First?");
             yield return new WaitForSeconds(delay);
             FindVisibleTargetsForEnemy();
             SplittingTheObject();
@@ -357,7 +360,11 @@ public class FOVMachine : MonoBehaviour
     #region States Function
     private void FOVStateHandler()
     {
+        Debug.Log("Is Update First?");
         float distance;
+        // _currDistance = Mathf.Infinity;
+
+        // foreach()
         if (_visibleTargets.Count > 0)
         {
             distance = Vector3.Distance(transform.position, _visibleTargets[0].position);

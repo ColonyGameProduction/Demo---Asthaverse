@@ -5,46 +5,51 @@ using UnityEngine;
 public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalUseWeaponData
 {
     #region Normal Variable
-    [Header("Test")]
     [Header("Testing")]
     public bool isGo;
     public bool isStop;
     public GameObject target;
-    [Space(5)]
-    [Header("Other Component Variable")]
-    protected UseWeaponStateFactory _states;
-    protected CharacterIdentity _charaIdentity;
 
-    [Header("State Bool")]
+    [Space(1)]
+    [Header("Use Weapon States - Normal")]
     [SerializeField] protected bool _isIdle;
     [SerializeField] protected bool _isAiming;
     [SerializeField] protected bool _isUsingWeapon;
     [SerializeField] protected bool _isReloading;
+    protected UseWeaponStateFactory _states;
+    protected UseWeaponState _currState;
+
+    [Space(1)]
+    [Header("Spam Weapon State Change Delay Time")]
     [SerializeField] protected float _notAimSpamClickDelayTime = 0.1f;
     protected bool _canReload = true;
     protected bool _isfireRateOn;
 
-    [Space(5)]
-    [Header("No Inspector Variable")]
-    protected UseWeaponState _currState;
+    [Space(1)]
+    [Header("Weapon Logic Component")]
+    protected float _charaAimAccuracy;
     protected Transform _currChosenTarget;
     protected WeaponData _currWeapon;
+
+    [Space(1)]
+    [Header("ShootPoint - AI")]
+    [Tooltip("Kalo AI isinya FOV, kalo player gausa isi krn ud lsg diisi camera.main")]
+    [SerializeField] protected Transform _originShootPoint_AIContainer; 
     protected Transform _currOriginShootPoint, _currDirectionShootPoint;
     protected Vector3 _originShootPosition, _directionShootPosition;
 
-    [Space(5)]
-    [Header("Weapon Logic & Layermask")]
+    [Space(1)]
+    [Header("Enemy Character Layermask")]
     [SerializeField] protected LayerMask _charaEnemyMask;
-    [Tooltip("Kalo AI isinya FOV, kalo player gausa isi krn ud lsg diisi camera.main")]
-    [SerializeField] protected Transform _originShootPoint_AIContainer; 
 
-    protected WeaponLogicHandler _weaponLogicHandler;
+    [Space(1)]
+    [Header("Saving other component data")]
+    protected CharacterIdentity _charaIdentity;
     protected WeaponLogicManager _weaponLogicManager;
     
-
     #endregion
+    
     #region GETTERSETTER Variable
-    public WeaponData CurrWeapon{get{return _currWeapon;} }
     public bool IsIdle { get {return _isIdle;} set{ _isIdle = value;} }
     public bool IsAiming { get {return _isAiming;} set{ _isAiming = value;} }
     public bool IsUsingWeapon { get {return _isUsingWeapon;} set{ _isUsingWeapon = value;} }
@@ -65,10 +70,13 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     
     public bool CanReload { get {return _canReload;} set {_canReload = value;}}
     public bool IsFireRateOn { get{return _isfireRateOn;} set {_isfireRateOn = value;}}
+
+    public WeaponData CurrWeapon{get{return _currWeapon;} }
+    public Transform ChosenTarget { get {return _currChosenTarget;}}
+    public float CharaAimAccuracy { get { return _charaAimAccuracy;}set { _charaAimAccuracy = value;}}
+
     public Transform CurrOriginShootPoint { get{return _currOriginShootPoint;}}
     public Transform CurrDirectionShootPoint { get{return _currDirectionShootPoint;}}
-    public Transform ChosenTarget { get {return _currChosenTarget;}}
-
 
     #endregion
 
@@ -85,36 +93,26 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
             _currDirectionShootPoint = _currChosenTarget;
         }
         
-        //nyari fov jg bs disini, kalo fov null
+        if(_originShootPoint_AIContainer == null)_originShootPoint_AIContainer = GetComponent<FOVMachine>().GetFOVPoint;
 
         _states = new UseWeaponStateFactory(this);
     }
     private void Start() 
     {
         _weaponLogicManager = WeaponLogicManager.Instance;
+
         SetCurrWeapon();
+        
         SwitchState(_states.IdleWeaponState());
     }
     protected virtual void Update()
     {
-        if(!IsInputPlayer)
-        {
-            if(isGo && target != null)
-            {
-                isGo = false;
-                GiveChosenTarget(target.transform);
-            }
-            if(isStop)
-            {
-                isStop = false;
-                _currChosenTarget = null;
-            }
-        }
         _currState?.UpdateState();
     }
     private void FixedUpdate() {
         _currState?.PhysicsLogicUpdateState();
     }
+
     public override void SwitchState(BaseState newState)
     {
         if(_currState != null)
@@ -124,6 +122,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         _currState = newState as UseWeaponState;
         _currState?.EnterState();
     }
+    
     #region UseWeapon
     public virtual void UseWeapon()
     {
@@ -134,7 +133,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         if(CurrWeapon.currBullet > 0 && !_isfireRateOn)
         {
             SetShootPosition();
-            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CurrWeapon.weaponStatSO, _charaEnemyMask);
+            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask);
             CurrWeapon.currBullet -= 1;
             if(!CurrWeapon.weaponStatSO.allowHoldDownButton)IsUsingWeapon = false;
             StartCoroutine(FireRate(CurrWeapon.weaponStatSO.fireRate));
@@ -159,6 +158,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
         _isfireRateOn = false;
     }
+
     public void ReloadWeapon()
     {
         StartCoroutine(ReloadWeaponActive(CurrWeapon.weaponStatSO.reloadTime));
@@ -181,6 +181,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         yield return new WaitForSeconds(_notAimSpamClickDelayTime);
         CanReload = true;
     }
+
     public virtual void ForceStopUseWeapon()
     {
         if(_currState == _states.AimWeaponState() || _currState == _states.UsingWeaponState())

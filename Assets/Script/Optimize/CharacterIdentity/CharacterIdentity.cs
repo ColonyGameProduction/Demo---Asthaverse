@@ -39,7 +39,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     [Header("   Weapon")]
     [SerializeField] protected List<WeaponData> _weaponLists = new List<WeaponData>();
     [SerializeField] protected int _currWeaponIdx;
-    protected float _aimAccuracy;
+
 
     [Space(1)]
     [Header("   Stealth")]
@@ -131,7 +131,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         _armourType = _characterStatSO.armourType;
         _armour = _characterStatSO.armor;
 
-        _aimAccuracy = _characterStatSO.acuracy;
+        _useWeaponStateMachine.CharaAimAccuracy = _characterStatSO.acuracy;
         _stealthStats = _characterStatSO.stealth;
 
         _fovMachine.viewRadius = _characterStatSO.FOVRadius;

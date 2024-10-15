@@ -9,14 +9,6 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     [Header ("Playable Character Variable")]
 
     [Space(2)]
-    [Header("Other Component Variable")]
-    protected ICanInputPlayer _getCanInputPlayer;
-    protected ICanSwitchWeapon _getCanSwitchWeapon;
-    
-    [Space(1)]
-    [Header("Weapon Logic & Layermask")]
-
-    [Space(1)]
     [Header("State Bool - Advanced use")]
     [SerializeField] protected bool _isSwitchingWeapon;
     protected bool _canSwitchWeapon = true;
@@ -24,6 +16,12 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     [SerializeField] protected bool _isSilentKill;
     protected bool _canSilentKill = true;
     [SerializeField] protected float _silentKillDuration; // ini sementara ampe ada animasi
+
+    [Space(1)]
+    [Header("Saving other component data")]
+    protected ICanInputPlayer _getCanInputPlayer;
+    protected ICanSwitchWeapon _getCanSwitchWeapon;
+
     #endregion
     #region GETTERSETTER Variable
     public bool IsSwitchingWeapon
