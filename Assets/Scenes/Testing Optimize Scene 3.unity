@@ -2260,6 +2260,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 275599268}
+  - component: {fileID: 275599270}
   m_Layer: 0
   m_Name: WeaponManager
   m_TagString: Untagged
@@ -2338,6 +2339,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d5ea681c149b09441949b00548119c82, type: 2}
   - {fileID: 11400000, guid: cd2e758b83c1d7a459a23c5505d5fdd3, type: 2}
   - {fileID: 11400000, guid: 133f43a972ed0d943a29e84eed99189f, type: 2}
+--- !u!114 &275599270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227831813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5213727cc95cecc4494f076732481665, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &277967138
 GameObject:
   m_ObjectHideFlags: 0
@@ -5948,16 +5961,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1069478232}
-  isGo: 0
-  isStop: 0
-  objectDir: {fileID: 1786254555}
   _isIdle: 0
   _isWalking: 0
   _isRun: 0
   _agentNavMesh: {fileID: 743586305}
   _runMultiplier: 2
   _crouchMultiplier: 0.5
+  _crawlMultiplier: 0.2
   _isCrouch: 0
+  _isCrawl: 0
   _charaGameObject: {fileID: 439030860}
   _rotateSpeed: 10
   _followTarget: {fileID: 1611590578}
@@ -5975,6 +5987,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18892f13798866408103a2d16e06911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ded: 0
+  reviv: 0
   _characterStatSO: {fileID: 11400000, guid: d3bb0fe73d042574499e6afcb92c01ea, type: 2}
   _moveStateMachine: {fileID: 743586308}
   _useWeaponStateMachine: {fileID: 743586310}
@@ -6034,9 +6048,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fovMachine: {fileID: 0}
-  _charaIdentity: {fileID: 0}
-  _moveStateMachine: {fileID: 0}
-  _useWeaponStateMachine: {fileID: 0}
+  _playableCharaIdentity: {fileID: 0}
+  _playableMoveStateMachine: {fileID: 0}
+  _playableUseWeaponStateMachine: {fileID: 0}
   _mainPlayableMaxDistance: 3.5
   _isAIIdle: 0
 --- !u!114 &743586312
@@ -6068,6 +6082,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _viewMeshFilter: {fileID: 2095406103}
+  _findTargetDelay: 0.2
   _currstate: 0
 --- !u!1 &745014793
 GameObject:
@@ -7719,6 +7734,7 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
+  - component: {fileID: 963194230}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -7834,6 +7850,50 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &963194230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    quality: 3
+    frameInfluence: 0.1
+    jitterScale: 1
+    mipBias: 0
+    varianceClampScale: 0.9
+    contrastAdaptiveSharpening: 0
 --- !u!1 &981631379
 GameObject:
   m_ObjectHideFlags: 0
@@ -9623,16 +9683,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 151174312}
-  isGo: 0
-  isStop: 0
-  objectDir: {fileID: 1786254555}
   _isIdle: 0
   _isWalking: 0
   _isRun: 0
   _agentNavMesh: {fileID: 1156905599}
   _runMultiplier: 2
   _crouchMultiplier: 0.5
+  _crawlMultiplier: 0.2
   _isCrouch: 0
+  _isCrawl: 0
   _charaGameObject: {fileID: 1911957387}
   _rotateSpeed: 10
   _followTarget: {fileID: 2085741375}
@@ -9665,6 +9724,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18892f13798866408103a2d16e06911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ded: 0
+  reviv: 0
   _characterStatSO: {fileID: 11400000, guid: f81fe461a29266540868cd75ae4260aa, type: 2}
   _moveStateMachine: {fileID: 1156905601}
   _useWeaponStateMachine: {fileID: 1156905604}
@@ -9724,9 +9785,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fovMachine: {fileID: 0}
-  _charaIdentity: {fileID: 0}
-  _moveStateMachine: {fileID: 0}
-  _useWeaponStateMachine: {fileID: 0}
+  _playableCharaIdentity: {fileID: 0}
+  _playableMoveStateMachine: {fileID: 0}
+  _playableUseWeaponStateMachine: {fileID: 0}
   _mainPlayableMaxDistance: 3.5
   _isAIIdle: 0
 --- !u!114 &1156905606
@@ -9758,6 +9819,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _viewMeshFilter: {fileID: 946796282}
+  _findTargetDelay: 0.2
   _currstate: 0
 --- !u!1 &1191237419
 GameObject:
@@ -11603,11 +11665,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18892f13798866408103a2d16e06911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ded: 0
+  reviv: 0
   _characterStatSO: {fileID: 0}
   _moveStateMachine: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _charaName: 
-  _totalHealth: 1000
+  _totalHealth: 5e+10
   _weaponLists:
   - weaponStatSO: {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
     totalBullet: 0
@@ -12081,6 +12145,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18892f13798866408103a2d16e06911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ded: 0
+  reviv: 0
   _characterStatSO: {fileID: 0}
   _moveStateMachine: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
@@ -12835,9 +12901,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1083558674}
-  isGo: 0
-  isStop: 0
-  objectDir: {fileID: 1786254555}
   _isIdle: 0
   _isWalking: 0
   _isRun: 0
@@ -12871,6 +12934,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7d91f4939b4af84bbaaacb0ec5394fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ded: 0
+  reviv: 0
   _characterStatSO: {fileID: 11400000, guid: 39b2e1a08d768ac44afd216a51e00f2f, type: 2}
   _moveStateMachine: {fileID: 2017098524}
   _useWeaponStateMachine: {fileID: 2017098527}
@@ -12922,7 +12987,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fovMachine: {fileID: 2017098529}
-  _charaIdentity: {fileID: 2017098526}
   _moveStateMachine: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _alertValue: 0
@@ -12961,6 +13025,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _viewMeshFilter: {fileID: 301498856}
+  _findTargetDelay: 0.2
   _currstate: 0
 --- !u!1 &2047355710
 GameObject:
@@ -13176,16 +13241,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1031462396}
-  isGo: 0
-  isStop: 0
-  objectDir: {fileID: 1786254555}
   _isIdle: 0
   _isWalking: 0
   _isRun: 0
   _agentNavMesh: {fileID: 2066745663}
   _runMultiplier: 2
   _crouchMultiplier: 0.5
+  _crawlMultiplier: 0.2
   _isCrouch: 0
+  _isCrawl: 0
   _charaGameObject: {fileID: 2047355711}
   _rotateSpeed: 10
   _followTarget: {fileID: 1586786643}
@@ -13218,6 +13282,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18892f13798866408103a2d16e06911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ded: 0
+  reviv: 0
   _characterStatSO: {fileID: 11400000, guid: 031ce61ad42360e479e9b1e671470dea, type: 2}
   _moveStateMachine: {fileID: 2066745666}
   _useWeaponStateMachine: {fileID: 2066745669}
@@ -13277,9 +13343,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _fovMachine: {fileID: 2066745672}
-  _charaIdentity: {fileID: 2066745668}
-  _moveStateMachine: {fileID: 0}
-  _useWeaponStateMachine: {fileID: 0}
+  _playableCharaIdentity: {fileID: 0}
+  _playableMoveStateMachine: {fileID: 0}
+  _playableUseWeaponStateMachine: {fileID: 0}
   _mainPlayableMaxDistance: 3.5
   _isAIIdle: 0
 --- !u!114 &2066745672
@@ -13311,6 +13377,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _viewMeshFilter: {fileID: 961320782}
+  _findTargetDelay: 0.2
   _currstate: 0
 --- !u!1 &2085741374
 GameObject:

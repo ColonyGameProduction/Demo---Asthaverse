@@ -9,10 +9,6 @@ using UnityEngine.AI;
 public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMovementData
 {
     #region Normal Variable
-    [Header("Testing")]
-    public bool isGo;
-    public bool isStop;
-    public GameObject objectDir;
 
     [Space(1)]
     [Header("Move States - Stand")]
@@ -147,8 +143,10 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     {
         AgentNavMesh.speed = 0;
         AgentNavMesh.ResetPath();
+
         _currAIDirPos = transform.position;
         AgentNavMesh.velocity = Vector3.zero;
+
         IsWalking = false;
         IsRunning = false;
         // CharaAnimator.SetBool("Scope", false);

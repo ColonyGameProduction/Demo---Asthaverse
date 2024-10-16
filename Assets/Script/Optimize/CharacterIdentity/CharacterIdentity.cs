@@ -9,6 +9,10 @@ using UnityEngine;
 /// </summary>
 public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 {
+    [Header("test")]
+    public bool ded;
+    public bool reviv;
+
     #region Normal Variable
     [Header("CHARACTER SCRIPTABLE OBJECT STAT")]
     [SerializeField] protected EntityStatSO _characterStatSO;
@@ -19,6 +23,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     [SerializeField] protected UseWeaponStateMachine _useWeaponStateMachine;
     protected FOVMachine _fovMachine;
     protected GameManager _gm;
+    protected Animator _animator;
 
     #region CHARACTER STATS
     [Space(1)]
@@ -47,14 +52,6 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     protected float _stealthStats;
     #endregion
 
-    [Space(5)]
-    [Header("No Inspector Variable")]
-    //Thing needed to getcomponent
-    //Get Standmovement bool -> isIdle, isWalking, isRunning
-    protected IMovement _getMoveFunction;
-    protected IStandMovementData _getStandMovementData;
-    protected IUseWeapon _getUseWeaponFunction;
-    protected INormalUseWeaponData _getNormalUseWeaponData;
     #endregion
 
     #region GETTERSETTER Variable
@@ -67,20 +64,15 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
     public MovementStateMachine MovementStateMachine {get { return _moveStateMachine;}}
-    public IStandMovementData GetStandMovementData {get { return _getStandMovementData;}}
-    public IMovement GetMoveFunction {get { return _getMoveFunction;}}
     public UseWeaponStateMachine UseWeaponStateMachine {get { return _useWeaponStateMachine;}}
-    public IUseWeapon GetUseWeaponFunction {get { return _getUseWeaponFunction;}}
-    public INormalUseWeaponData GetNormalUseWeaponData {get { return _getNormalUseWeaponData;}}
+
     #endregion
     protected virtual void Awake()
     {
+        if(_animator == null)_animator = GetComponent<Animator>();
         if(_moveStateMachine == null) _moveStateMachine = GetComponent<MovementStateMachine>();
-        _getMoveFunction = GetComponent<IMovement>();
-        _getStandMovementData = GetComponent<IStandMovementData>();
+        if(_useWeaponStateMachine == null) _useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
 
-        _getUseWeaponFunction = GetComponent<IUseWeapon>();
-        _getNormalUseWeaponData = GetComponent<INormalUseWeaponData>();
         _fovMachine = GetComponent<FOVMachine>();
 
         InitializeCharacter();
@@ -91,6 +83,14 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         _gm = GameManager.instance;
     }
 
+    protected virtual void Update()
+    {
+        if(ded)
+        {
+            ded = false;
+            Hurt (HealthNow);
+        }
+    }
     #region Health
     public virtual void Hurt(float Damage)
     {
@@ -114,7 +114,12 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     public virtual void Death()
     {
         _isDead = true;
+        _useWeaponStateMachine.ForceStopUseWeapon();
+        _moveStateMachine.ForceStopMoving();
+        if(_fovMachine.enabled)_fovMachine.StopFOVMachine();
+        _fovMachine.enabled = false;
     }
+    
 
     public virtual void InitializeCharacter()
     {

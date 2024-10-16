@@ -3,14 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class dialogue_Lines
-{
-    public DialogueType dialogueType;
-    public DialogueCharacterName charaName;
-
-    public string dialogueLine;
-}
-public class SODialogues : ScriptableObject
+public class SODialoguesList : ScriptableObject
 {
     #if UNITY_EDITOR
     [MenuItem("SO/SODialogues")]
@@ -25,9 +18,15 @@ public class SODialogues : ScriptableObject
         Selection.activeObject = asset;
     }
     #endif
-    // public DialogueSubTitle_Episode1
-    [Tooltip("Check this if you want the sub to be close straight away after finish")]
-    public bool isCloseAfterFinish;
-    public string VA_AudioName;
-    public List<dialogue_Lines> dialogue_Lines;
+
+    public List<SODialogues> dialoguesList;
+    public SODialogues SearchDialogues(DialogueSubTitle_Episode1 title)
+    {
+        foreach(SODialogues dialogue in dialoguesList)
+        {
+            if(dialogue.subtitle_Ep1 == title) return dialogue;
+        }
+        return null;
+    }
 }
+

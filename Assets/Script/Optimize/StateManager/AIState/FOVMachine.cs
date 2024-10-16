@@ -30,9 +30,12 @@ public class FOVMachine : MonoBehaviour
     [SerializeField] private LayerMask _charaEnemyMask;
     [SerializeField] private LayerMask _groundMask;
     [SerializeField] private MeshFilter _viewMeshFilter;
+    [SerializeField] private float _findTargetDelay = 0.2f;
     private Mesh _viewMesh;
     private Vector3 _enemyCharalastSeenPosition;
     private float _currDistance, _tempDistance;
+
+    private IEnumerator _findTarget;
     #endregion
     
     #region States
@@ -53,7 +56,7 @@ public class FOVMachine : MonoBehaviour
         _viewMesh.name = "View Mesh";
         _viewMeshFilter.mesh = _viewMesh;
 
-        StartCoroutine(FindTargetWithDelay(.2f));//mungkin kalo pake manager ini bisa kali
+        StartFOVMachine();
     }
 
     private void LateUpdate()
@@ -356,7 +359,7 @@ public class FOVMachine : MonoBehaviour
         }
     }
     #endregion
-
+    
     #region States Function
     private void FOVStateHandler()
     {
@@ -404,4 +407,21 @@ public class FOVMachine : MonoBehaviour
         
     }
     #endregion
+
+    public void StopFOVMachine()
+    {
+        _currstate = FOVDistState.far;
+        if(_findTarget != null)StopCoroutine(_findTarget);
+        _findTarget = null;
+
+        _viewMesh.Clear();
+        VisibleTargets.Clear();
+        OtherVisibleTargets.Clear();
+        
+    }
+    public void StartFOVMachine()
+    {
+        _findTarget = FindTargetWithDelay(_findTargetDelay);
+        StartCoroutine(_findTarget);
+    }
 }

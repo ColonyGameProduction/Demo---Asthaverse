@@ -31,7 +31,7 @@ public class RunState : MovementState
             if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
             if(!_standMovement.IsRunning)
             {
-                if(_crouch != null && _crouch.IsCrouching) _stateMachine.SwitchState(_factory.CrouchState());
+                if(_groundMovement != null && _groundMovement.IsCrouching) _stateMachine.SwitchState(_factory.CrouchState());
                 else
                 {
                     _stateMachine.SwitchState(_factory.WalkState());

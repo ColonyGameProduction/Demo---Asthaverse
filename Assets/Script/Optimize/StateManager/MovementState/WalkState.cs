@@ -26,7 +26,7 @@ public class WalkState : MovementState
         if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
         {
             if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
-            if(_crouch != null && _crouch.IsCrouching)_stateMachine.SwitchState(_factory.CrouchState());
+            if(_groundMovement != null && _groundMovement.IsCrouching)_stateMachine.SwitchState(_factory.CrouchState());
             else if(_standMovement.IsRunning)_stateMachine.SwitchState(_factory.RunState());
 
         }

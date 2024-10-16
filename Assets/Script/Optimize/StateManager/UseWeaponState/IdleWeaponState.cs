@@ -15,7 +15,7 @@ public class IdleWeaponState : UseWeaponState
     }
     public override void UpdateState()
     {
-        if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter)return;
+        if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || _stateMachine.IsCharacterDead)return;
 
         if(_normalUse.IsAiming)
         {
