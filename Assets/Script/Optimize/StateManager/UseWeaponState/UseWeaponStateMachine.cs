@@ -133,7 +133,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         if(CurrWeapon.currBullet > 0 && !_isfireRateOn)
         {
             SetShootPosition();
-            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask);
+            //_weaponLogicHandler.ShootingPerformed(_originShootPosition, _directionShootPosition, CurrWeapon.weaponStatSO, _charaEnemyMask); (Perlu Entity Stat njel buat shoot untuk masukin stat)
             CurrWeapon.currBullet -= 1;
             if(!CurrWeapon.weaponStatSO.allowHoldDownButton)IsUsingWeapon = false;
             StartCoroutine(FireRate(CurrWeapon.weaponStatSO.fireRate));
