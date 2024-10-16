@@ -29,6 +29,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     [Header("   Health")]
     [SerializeField] protected float _totalHealth;
     protected float _currhealth;
+    protected bool _isDead;
 
     [Space(1)]
     [Header("   Armour")]
@@ -62,6 +63,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     public float StealthStat { get{ return _stealthStats; }}
     public float TotalHealth {get { return _totalHealth; } }
     public float HealthNow {get {return _currhealth; } }
+    public bool IsDead {get { return _isDead;}}
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
     public MovementStateMachine MovementStateMachine {get { return _moveStateMachine;}}
@@ -111,7 +113,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 
     public virtual void Death()
     {
-        //Do something
+        _isDead = true;
     }
 
     public virtual void InitializeCharacter()
