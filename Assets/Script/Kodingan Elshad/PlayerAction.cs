@@ -73,7 +73,7 @@ public class PlayerAction : ExecuteLogic
     private void Start()
     {
 
-        StartCoroutine("BreadCrumbsDrop", 1f);
+        StartCoroutine("BreadCrumbsDrop", .3f);
 
         gm = GameManager.instance;
         testAnimation = GetComponent<AnimationTestScript>();
@@ -212,7 +212,7 @@ public class PlayerAction : ExecuteLogic
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
         {
-            Shoot(Camera.main.transform.position, Camera.main.transform.forward, activeWeapon, enemyMask);
+            Shoot(Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask);
             StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
             isShooting = false;
             if (activeWeapon.currBullet == 0 && activeWeapon.totalBullet > 0)
@@ -275,7 +275,7 @@ public class PlayerAction : ExecuteLogic
             if(activeWeapon != null)
             {
 
-                Shoot(Camera.main.transform.position, Camera.main.transform.forward, activeWeapon, enemyMask);
+                Shoot(Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask);
                 StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
                 if (activeWeapon.currBullet == 0)
                 {
