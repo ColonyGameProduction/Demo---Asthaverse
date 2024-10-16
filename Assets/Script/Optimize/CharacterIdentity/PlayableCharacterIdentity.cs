@@ -13,7 +13,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [Header("Friend Data Helper")]
     [SerializeField] protected GameObject[] _friendsNormalPosition;
     protected int _friendID;
-
+    
     [Space(5)]
     [Header("No Inspector Variable")]
     //Thing needed to getcomponent

@@ -7,23 +7,44 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     [Header("Enemy Alert Value")]
     [SerializeField] private float _alertValue;
     [SerializeField] private float _maxAlertValue;
-    [Header("Enemy States")]
+    [Header("Enemy AI States")]
+    [SerializeField] protected bool _isAIIdle;
     protected alertState _enemyState;
+    protected EnemyAIState _currState;
+    protected EnemyAIStateFactory _states;
     
     [Header("Patrol Path")]
     [SerializeField] private GameObject[] _patrolPath;
     private bool _switchingPath;
     private int _currPath;
     private Vector3 _enemyCharaLastSeenPosition;
-    
-    public override void SwitchState(BaseState newState)
+
+    #region GETTERSETTER Variable
+    public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
+    #endregion
+    protected override void Awake() 
     {
-        throw new System.NotImplementedException();
+        base.Awake();
+        _states = new EnemyAIStateFactory(this);
+    }
+    private void Start() 
+    {
+        SwitchState(_states.AI_IdleState());
     }
     private void Update() 
     {
+        _currState?.UpdateState();
         ChangingEnemyState();
         StateChecker();
+    }
+    public override void SwitchState(BaseState newState)
+    {
+        if(_currState != null)
+        {
+            _currState?.ExitState();
+        }
+        _currState = newState as EnemyAIState;
+        _currState?.EnterState();
     }
     public void ChangingEnemyState()
     {
@@ -95,14 +116,14 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                 if(_charaIdentity.GetNormalUseWeaponData.IsUsingWeapon)_charaIdentity.UseWeaponStateMachine.ForceStopUseWeapon();
                 if (_fovMachine.OtherVisibleTargets.Count > 0)
                 {
-                    _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.OtherVisibleTargets[0]);
+                    _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.OtherVisibleTargets[0].position);
 
                 }
                 else
                 {
                     if (_enemyCharaLastSeenPosition != Vector3.zero)
                     {
-                        _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.VisibleTargets[0]);
+                        _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.VisibleTargets[0].position);
                     }
                     else
                     {
@@ -123,7 +144,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                     case FOVDistState.far:
                         if(_fovMachine.VisibleTargets.Count > 0)
                         {
-                            _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.VisibleTargets[0]);
+                            _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.VisibleTargets[0].position);
                             _charaIdentity.UseWeaponStateMachine.GiveChosenTarget(_fovMachine.VisibleTargets[0]);
                         }
                         Debug.Log("Far");
@@ -169,7 +190,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                     _switchingPath = false;
                 }
             }
-            _charaIdentity.MovementStateMachine.GiveAIDirection(_patrolPath[_currPath].transform);
+            _charaIdentity.MovementStateMachine.GiveAIDirection(_patrolPath[_currPath].transform.position);
         }
     }
 

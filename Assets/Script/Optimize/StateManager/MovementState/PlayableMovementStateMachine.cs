@@ -8,30 +8,29 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovemen
     [Header ("Playable Character Variable")]
 
     [Space(2)]
-    [Header("Other Component Variable")]
-    [SerializeField] private CharacterController _cc;
-    protected ICanInputPlayer _getCanInputPlayer;
-
-    [Header("For Rotation")]
-    [SerializeField] private Transform _charaGameObject;
-    [SerializeField] private float _rotateSpeed;
-
-    [Header("Move Speed List - Crouch State")]
+    [Header("Move States - Crouch State")]
     [SerializeField] protected float _crouchMultiplier;
     private float _crouchSpeed;
     [SerializeField] protected bool _isCrouch;
 
+    [Space(1)]
+    [Header("For Rotation")]
+    [SerializeField] private Transform _charaGameObject;
+    [SerializeField] private float _rotateSpeed;
+
+    [Space(1)]
     [Header("Movement - Camera")]
     [SerializeField] private Transform _followTarget;
     [SerializeField] protected bool _isMustLookForward;
 
-    [Header("No Inspector Variable")]
+    [Space(1)]
+    [Header("Saving other component data")]
+    [SerializeField] private CharacterController _cc;
+    protected ICanInputPlayer _getCanInputPlayer;
     protected Vector3 _inputMovement;
     #endregion
     
     #region GETTERSETTER Variable
-    [HideInInspector]
-    //getter setter
     public override float WalkSpeed 
     { 
         get {return base.WalkSpeed;}
@@ -42,11 +41,14 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovemen
             _crouchSpeed = _walkSpeed * _crouchMultiplier;
         }
     }
+
     public CharacterController CC {get { return _cc;} }
     public Vector3 InputMovement { get{ return _inputMovement;} set{_inputMovement = value;}} // Getting Input Movement from playercontroller
+
     public bool IsCrouching { get {return _isCrouch;}set{ _isCrouch = value;} }
     public bool IsMustLookForward { get{return _isMustLookForward;} set{_isMustLookForward = value;} } // Kan kalo nembak gitu hrs liat ke depan selalu, jd is true
     public float CrouchSpeed {get{return _crouchSpeed;}}
+
     #endregion
     protected override void Awake()
     {
@@ -58,11 +60,6 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovemen
 
         if(_cc == null)_cc = GetComponent<CharacterController>();
         if(_followTarget == null) _followTarget = GetComponent<PlayableCamera>().GetFollowTarget;
-    }
-
-    protected override void Update()
-    {
-        base.Update();
     }
 
     #region Move
@@ -97,6 +94,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovemen
         }
     }
 
+    //Rotating to the aim direction when idle
     public void Idle_RotateAim()
     {
         Vector3 flatForward = new Vector3(_followTarget.forward.x, 0, _followTarget.forward.z).normalized;
@@ -106,9 +104,12 @@ public class PlayableMovementStateMachine : MovementStateMachine, ICrouchMovemen
     public void ForceStopPlayable()
     {
         InputMovement = Vector3.zero;
+        _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+
         IsWalking = false;
         IsRunning = false;
         IsCrouching = false;
+        
     }
     public override void ForceStopMoving()
     {

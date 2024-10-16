@@ -40,3 +40,11 @@ public enum FOVDistState
     close,
 }
 
+public enum GameState
+{
+    Play,
+    Cinematic,
+    Pause,
+    Finish
+}
+

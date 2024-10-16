@@ -13,10 +13,12 @@ public class IdleState : MovementState
     bool wasCrouch;
     //Di idle state ini, walaupun misal isRun atau isCrouch masih nyala, tetap bisa ke state ini, yg penting inputnya tidak ada 
     // dan karena crouch ada idle animation, jd crouch tetap di posisi animasi crouch; sedangkan run tidak. Ketika isCrouch = false, maka animasinya akan dimatikan
+
     public IdleState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
     {
         // StateAnimationName = "IdleAnimation";
     }
+    
     public override void EnterState()
     {
         Debug.Log("Idle" + _stateMachine.gameObject.name);
@@ -30,7 +32,7 @@ public class IdleState : MovementState
     public override void UpdateState()
     {
         //Kalo lg switch kan semuanya di force balik idle, dn kalo lwt sini ya gabisa ngapa ngapain :D
-        if(PlayableCharacterManager.IsSwitchingCharacter)return;
+        if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter)return;
 
         //If there's an input movement: dalam hal ini kalo inputnya player berarti input movement tidak sama dengan 0 ATAU kalau input dari AI berarti currAIDirectionnya itu ga null, maka kita akan masuk ke state selanjutnya tergantung syarat yg ada
         if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
@@ -59,7 +61,7 @@ public class IdleState : MovementState
     }
     public override void ExitState()
     {
-        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && _stateMachine.CurrAIDirection != null)) _standMovement.IsIdle = false; //kyk gini krn bs aja keluar krn crouch state di atas
+        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform())) _standMovement.IsIdle = false; //kyk gini krn bs aja keluar krn crouch state di atas
         // base.EnterState(); //Stop Idle Anim
     }
         

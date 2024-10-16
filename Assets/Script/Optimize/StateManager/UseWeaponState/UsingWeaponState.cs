@@ -15,27 +15,7 @@ public class UsingWeaponState : UseWeaponState
     }
     public override void UpdateState()
     {
-        if(_normalUse.IsUsingWeapon)
-        {
-            if(!_stateMachine.IsInputPlayer)
-            {
-                if(_stateMachine.ChosenTarget != null)
-                {
-                    _stateMachine.UseWeapon();
-                }
-                else
-                {
-                    //we're gonna talk about this later
-                    _normalUse.IsAiming = false;
-                    _normalUse.IsUsingWeapon = false;
-                    _stateMachine.SwitchState(_factory.IdleWeaponState());
-                }
-            }
-            else
-            {
-                _stateMachine.UseWeapon();
-            }
-        }
+        
         if(_advancedUse != null && _advancedUse.IsSilentKill)
         {
             _stateMachine.SwitchState(_factory.SilentKillState());
@@ -69,5 +49,29 @@ public class UsingWeaponState : UseWeaponState
         // base.ExiState(); // Matikan Animasi shooting
         //kalo aim jg off
         if(!_normalUse.IsAiming && _stateMachine.CharaAnimator.GetBool("Scope")) StateAnimationOff("Scope");
+    }
+    public override void PhysicsLogicUpdateState()
+    {
+        if(_normalUse.IsUsingWeapon)
+        {
+            if(!_stateMachine.IsInputPlayer)
+            {
+                if(_stateMachine.ChosenTarget != null)
+                {
+                    _stateMachine.UseWeapon();
+                }
+                else
+                {
+                    //we're gonna talk about this later
+                    _normalUse.IsAiming = false;
+                    _normalUse.IsUsingWeapon = false;
+                    _stateMachine.SwitchState(_factory.IdleWeaponState());
+                }
+            }
+            else
+            {
+                _stateMachine.UseWeapon();
+            }
+        }
     }
 }

@@ -29,6 +29,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     [Header("   Health")]
     [SerializeField] protected float _totalHealth;
     protected float _currhealth;
+    protected bool _isDead;
 
     [Space(1)]
     [Header("   Armour")]
@@ -39,7 +40,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     [Header("   Weapon")]
     [SerializeField] protected List<WeaponData> _weaponLists = new List<WeaponData>();
     [SerializeField] protected int _currWeaponIdx;
-    protected float _aimAccuracy;
+
 
     [Space(1)]
     [Header("   Stealth")]
@@ -62,6 +63,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     public float StealthStat { get{ return _stealthStats; }}
     public float TotalHealth {get { return _totalHealth; } }
     public float HealthNow {get {return _currhealth; } }
+    public bool IsDead {get { return _isDead;}}
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
     public MovementStateMachine MovementStateMachine {get { return _moveStateMachine;}}
@@ -111,12 +113,16 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 
     public virtual void Death()
     {
-        //Do something
+        _isDead = true;
     }
 
     public virtual void InitializeCharacter()
     {
-        if(_characterStatSO == null) return;
+        if(_characterStatSO == null) 
+        {
+            _currhealth = TotalHealth;
+            return;
+        }
         _charaName = _characterStatSO.entityName;
 
         _totalHealth = _characterStatSO.health;
@@ -127,7 +133,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         _armourType = _characterStatSO.armourType;
         _armour = _characterStatSO.armor;
 
-        _aimAccuracy = _characterStatSO.acuracy;
+        _useWeaponStateMachine.CharaAimAccuracy = _characterStatSO.acuracy;
         _stealthStats = _characterStatSO.stealth;
 
         _fovMachine.viewRadius = _characterStatSO.FOVRadius;

@@ -59,6 +59,7 @@ public class WeaponLogicHandler
 
     public void CalculateDamage(WeaponStatSO weapon, GameObject entityGameObject)
     {
+        Debug.Log("???");
         IHealth _getHealthFunction;
         _getHealthFunction =  entityGameObject.transform.GetComponent<IHealth>();
         if(_getHealthFunction == null) _getHealthFunction = entityGameObject.transform.GetComponentInParent<IHealth>();

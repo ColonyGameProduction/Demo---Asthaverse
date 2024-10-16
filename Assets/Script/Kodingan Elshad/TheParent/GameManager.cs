@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using System.Diagnostics.CodeAnalysis;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,6 +26,17 @@ public class GameManager : MonoBehaviour
 
     public GameObject[] breadcrumbsGameObject;
 
+    [Header("States")]
+    [SerializeField] private GameState _currState;
+    private bool _isPause;
+    
+    [Header("Event")]
+    public Action<bool> OnPlayerPause;
+
+    #region GETTER SETTER VARIABLE
+    public GameState GetCurrState { get { return _currState; } }
+    #endregion
+
     private void Awake()
     {
         instance = this;
@@ -32,6 +44,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        _currState = GameState.Play;
+
         playableCharacterNum = 0;
         FollowCamerasRefrence();
         CreatingBreadcrumbs();
@@ -57,6 +74,21 @@ public class GameManager : MonoBehaviour
             breadcrumbsGameObject[i].layer = 7;
             breadcrumbsGameObject[i].SetActive(false);
             
+        }
+    }
+
+    public void Pause()
+    {
+        _isPause = !_isPause;
+        OnPlayerPause?.Invoke(_isPause);
+        
+        if(_isPause)
+        {
+            _currState = GameState.Pause;
+        }
+        else
+        {
+            _currState = GameState.Play;
         }
     }
 }
