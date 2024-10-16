@@ -319,7 +319,10 @@ public class EnemyAI : ExecuteLogic
                 tempDistance = 0;
                 if(tempDistance > Vector3.Distance(transform.position, enemy.position) || tempDistance == 0)
                 {
+                    Vector3 dis = enemy.position - transform.position;
                     tempDistance = Vector3.Distance(transform.position, enemy.position);
+                    transform.forward = Vector3.Slerp(transform.forward, dis.normalized, 10f);
+                    
                     lastSeenPosition = enemy.position;
                 }
             }
@@ -389,11 +392,7 @@ public class EnemyAI : ExecuteLogic
     {
         if (visibleTargets.Count == 0)
         {
-            if (otherVisibleTargets.Count != 0)
-            {
-                Moving(otherVisibleTargets[0].position);
-            }
-            else
+            if (otherVisibleTargets.Count == 0)
             {
                 if (lastSeenPosition != Vector3.zero)
                 {
@@ -403,6 +402,11 @@ public class EnemyAI : ExecuteLogic
                 {
                     lastSeenPosition = Vector3.zero;
                 }
+            }
+            else
+            {
+                Moving(otherVisibleTargets[0].position);
+                lastSeenPosition = otherVisibleTargets[0].position;
             }
         }
        

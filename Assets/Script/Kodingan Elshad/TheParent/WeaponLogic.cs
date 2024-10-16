@@ -29,8 +29,6 @@ public class WeaponLogicHandler
     {
         float recoilMod = weaponStat.recoil + ((100 - entityStat.acuracy) * weaponStat.recoil / 100);
 
-        Debug.Log (recoilMod);
-
         float x = Random.Range(-recoilMod, recoilMod);
         float y = Random.Range(-recoilMod, recoilMod);
 
