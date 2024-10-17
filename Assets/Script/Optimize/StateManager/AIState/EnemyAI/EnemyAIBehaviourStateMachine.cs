@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
 {
+    [Header("State Machine")]
+    [SerializeField] private MovementStateMachine _moveStateMachine;
+    [SerializeField] private UseWeaponStateMachine _useWeaponStateMachine;
+    
+
     [Header("Enemy Alert Value")]
     [SerializeField] private float _alertValue;
     [SerializeField] private float _maxAlertValue;
     [Header("Enemy AI States")]
-    [SerializeField] protected bool _isAIIdle;
-    protected alertState _enemyState;
-    protected EnemyAIState _currState;
-    protected EnemyAIStateFactory _states;
+    [SerializeField] private bool _isAIIdle;
+    private IFOVMachineState _getFOVState;
+    private alertState _enemyState;
+    private EnemyAIState _currState;
+    private EnemyAIStateFactory _states;
     
     [Header("Patrol Path")]
     [SerializeField] private GameObject[] _patrolPath;
@@ -21,19 +27,29 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
 
     #region GETTERSETTER Variable
     public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
+    public MovementStateMachine GetMoveStateMachine { get { return _moveStateMachine; } }
+    public UseWeaponStateMachine GetUseWeaponStateMachine { get {return _useWeaponStateMachine;}}
+    public IFOVMachineState GetFOVState { get { return _getFOVState;}}
     #endregion
     protected override void Awake() 
     {
         base.Awake();
+        _getFOVState = _fovMachine as IFOVMachineState;
+        
+
         _states = new EnemyAIStateFactory(this);
     }
     private void Start() 
     {
+        if(_moveStateMachine == null) _moveStateMachine = _charaIdentity.MovementStateMachine;
+        if(_useWeaponStateMachine == null) _useWeaponStateMachine = _charaIdentity.UseWeaponStateMachine;
+
         SwitchState(_states.AI_IdleState());
     }
     private void Update() 
     {
         _currState?.UpdateState();
+        
         ChangingEnemyState();
         StateChecker();
     }
@@ -100,7 +116,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
         switch (_enemyState)
         {
             case alertState.Idle:
-                if(_charaIdentity.GetNormalUseWeaponData.IsUsingWeapon)_charaIdentity.UseWeaponStateMachine.ForceStopUseWeapon();
+                if(_useWeaponStateMachine.IsUsingWeapon)_useWeaponStateMachine.ForceStopUseWeapon();
                 if(_fovMachine.VisibleTargets.Count == 0)
                 {
                     Patrol();
@@ -113,7 +129,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                 Debug.Log("idle");
                 break;
             case alertState.Hunted:
-                if(_charaIdentity.GetNormalUseWeaponData.IsUsingWeapon)_charaIdentity.UseWeaponStateMachine.ForceStopUseWeapon();
+                if(_useWeaponStateMachine.IsUsingWeapon)_useWeaponStateMachine.ForceStopUseWeapon();
                 if (_fovMachine.OtherVisibleTargets.Count > 0)
                 {
                     _charaIdentity.MovementStateMachine.GiveAIDirection(_fovMachine.OtherVisibleTargets[0].position);
@@ -139,7 +155,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                 break;
             case alertState.Engage:
                 Debug.Log("engage");
-                switch(_fovMachine.CurrState)
+                switch(_getFOVState.CurrState)
                 {
                     case FOVDistState.far:
                         if(_fovMachine.VisibleTargets.Count > 0)
@@ -190,7 +206,11 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                     _switchingPath = false;
                 }
             }
-            _charaIdentity.MovementStateMachine.GiveAIDirection(_patrolPath[_currPath].transform.position);
+            _moveStateMachine.GiveAIDirection(_patrolPath[_currPath].transform.position);
+        }
+        else
+        {
+            _moveStateMachine.GiveAIDirection(transform.position);
         }
     }
 

@@ -7,21 +7,15 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     #region Normal Variable
     [Header("Other Important Variable")]
     [SerializeField] protected FOVMachine _fovMachine;
-    [SerializeField] protected CharacterIdentity _charaIdentity;
-    [SerializeField] protected MovementStateMachine _moveStateMachine;
-    [SerializeField] protected UseWeaponStateMachine _useWeaponStateMachine;
-    
-    // [Header("Private Variable")]
+    public FOVMachine GetFOVMachine { get { return _fovMachine; } }
 
     #endregion
-    protected virtual void Awake() 
+    protected override void Awake() 
     {
         //Dari Chara Identity bisa akses ke semua yg berhubungan dgn characteridentity
-        if(_charaIdentity == null)_charaIdentity = GetComponent<CharacterIdentity>();
+        base.Awake();
 
         if(_fovMachine == null)_fovMachine = GetComponent<FOVMachine>();
         
-        if(_moveStateMachine == null) _moveStateMachine = GetComponent<MovementStateMachine>();
-        if(_useWeaponStateMachine == null) _useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
     }
 }

@@ -16,7 +16,7 @@ public class CrouchState : MovementState
     {
         base.EnterState(); // Jalankan animasi
         Debug.Log("Crouching" + _stateMachine.gameObject.name);
-        _stateMachine.ChangeCurrSpeed(_crouch.CrouchSpeed);
+        _stateMachine.ChangeCurrSpeed(_groundMovement.CrouchSpeed);
 
         //mungkin di sini bisa ditambah kalau masuknya zero atau masih idle dan iscrouching false, maka animasi dimatikan trus lsg ke exit
     }
@@ -26,7 +26,7 @@ public class CrouchState : MovementState
         if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
         {
             if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
-            if(!_crouch.IsCrouching)
+            if(!_groundMovement.IsCrouching)
             {
                 if(_standMovement.IsRunning)
                 {
@@ -43,6 +43,8 @@ public class CrouchState : MovementState
     public override void ExitState()
     {
         // if(!_crouch.IsCrouching) //Matikan state animasi crouch
+        if(_stateMachine.IsCharacterDead)_groundMovement.IsCrouching = false;
+        
         base.ExitState();
     }
     public override void PhysicsLogicUpdateState()

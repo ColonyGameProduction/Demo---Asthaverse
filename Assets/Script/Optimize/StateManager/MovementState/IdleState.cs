@@ -24,7 +24,7 @@ public class IdleState : MovementState
         Debug.Log("Idle" + _stateMachine.gameObject.name);
         
         //Making sure that it's idle animation that plays
-        if(_crouch != null && _crouch.IsCrouching)wasCrouch = true;
+        if(_groundMovement != null && _groundMovement.IsCrouching)wasCrouch = true;
         _standMovement.IsIdle = true;
         _stateMachine.CharaAnimator?.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_HORIZONTAL, 0);
         _stateMachine.CharaAnimator?.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_VERTICAL, 0);
@@ -34,10 +34,12 @@ public class IdleState : MovementState
         //Kalo lg switch kan semuanya di force balik idle, dn kalo lwt sini ya gabisa ngapa ngapain :D
         if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter)return;
 
+        
         //If there's an input movement: dalam hal ini kalo inputnya player berarti input movement tidak sama dengan 0 ATAU kalau input dari AI berarti currAIDirectionnya itu ga null, maka kita akan masuk ke state selanjutnya tergantung syarat yg ada
         if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
         {
-            if(_crouch != null && _crouch.IsCrouching)_stateMachine.SwitchState(_factory.CrouchState());
+            if(_groundMovement != null && _groundMovement.IsCrawling)_stateMachine.SwitchState(_factory.CrawlState());
+            else if(_groundMovement != null && _groundMovement.IsCrouching)_stateMachine.SwitchState(_factory.CrouchState());
             else if(_standMovement.IsRunning)_stateMachine.SwitchState(_factory.RunState());
             else _stateMachine.SwitchState(_factory.WalkState());
 
@@ -53,7 +55,7 @@ public class IdleState : MovementState
         //     if(!_crouch.IsCrouching)_stateMachine.SwitchState(_factory.CrouchState()); //lwt bntr utk stop animasi
         // }
 
-        if(wasCrouch && !_crouch.IsCrouching)
+        if(wasCrouch && !_groundMovement.IsCrouching)
         {
             wasCrouch = false;
             _stateMachine.SwitchState(_factory.CrouchState());

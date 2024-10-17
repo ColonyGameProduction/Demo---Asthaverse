@@ -44,7 +44,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
     [Space(1)]
     [Header("Saving other component data")]
-    protected CharacterIdentity _charaIdentity;
+
     protected WeaponLogicManager _weaponLogicManager;
     
     #endregion
@@ -86,14 +86,11 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
         if(_originShootPoint_AIContainer == null)_originShootPoint_AIContainer = GetComponent<FOVMachine>().GetFOVPoint;
         
-        _charaIdentity = GetComponent<CharacterIdentity>();
         if(!IsInputPlayer)
         {
             _currOriginShootPoint = _originShootPoint_AIContainer;
             _currDirectionShootPoint = _currChosenTarget;
         }
-        
-        if(_originShootPoint_AIContainer == null)_originShootPoint_AIContainer = GetComponent<FOVMachine>().GetFOVPoint;
 
         _states = new UseWeaponStateFactory(this);
     }
@@ -133,7 +130,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         if(CurrWeapon.currBullet > 0 && !_isfireRateOn)
         {
             SetShootPosition();
-            //_weaponLogicHandler.ShootingPerformed(_originShootPosition, _directionShootPosition, CurrWeapon.weaponStatSO, _charaEnemyMask); (Perlu Entity Stat njel buat shoot untuk masukin stat)
+            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask);
             CurrWeapon.currBullet -= 1;
             if(!CurrWeapon.weaponStatSO.allowHoldDownButton)IsUsingWeapon = false;
             StartCoroutine(FireRate(CurrWeapon.weaponStatSO.fireRate));

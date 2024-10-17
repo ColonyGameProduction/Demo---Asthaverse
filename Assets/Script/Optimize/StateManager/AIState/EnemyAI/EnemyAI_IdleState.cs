@@ -11,12 +11,17 @@ public class EnemyAI_IdleState : EnemyAIState
 
     public override void EnterState()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public override void UpdateState()
     {
-        throw new System.NotImplementedException();
+        if(_stateMachine.IsCharacterDead)
+        {
+            if(_stateMachine.GetMoveStateMachine.CurrAIDirPos != _stateMachine.transform.position)_stateMachine.GetMoveStateMachine.ForceStopMoving();
+            return;
+        }
+        
     }
     
 }

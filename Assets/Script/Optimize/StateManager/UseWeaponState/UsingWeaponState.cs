@@ -56,7 +56,7 @@ public class UsingWeaponState : UseWeaponState
         {
             if(!_stateMachine.IsInputPlayer)
             {
-                if(_stateMachine.ChosenTarget != null)
+                if(_stateMachine.ChosenTarget != null && !_stateMachine.ChosenTarget.GetComponent<CharacterIdentity>().IsDead)
                 {
                     _stateMachine.UseWeapon();
                 }
