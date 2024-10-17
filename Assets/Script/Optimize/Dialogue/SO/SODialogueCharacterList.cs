@@ -26,4 +26,8 @@ public class SODialogueCharacterList : ScriptableObject
     #endif
 
     public List<DialogueCharacter> CharacterList;
+    public DialogueCharacter SearchCharacter(int idx)
+    {
+        return CharacterList[idx];
+    }
 }

@@ -12,6 +12,9 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     private Transform _friendsDefaultDirection;
     private Transform _friendsCommandDirection;
     private Transform _currPlayable;
+    [SerializeField] protected PlayableCharacterIdentity _playableCharaIdentity;
+    [SerializeField] protected PlayableMovementStateMachine _playableMoveStateMachine;
+    [SerializeField] protected PlayableUseWeaponStateMachine _playableUseWeaponStateMachine;
 
     [SerializeField] private float _mainPlayableMaxDistance;
 
@@ -29,10 +32,16 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
 
     public bool IsInputPlayer {get {return _isInputPlayer;}}
+
+    public PlayableCharacterIdentity GetPlayableCharaIdentity { get { return _playableCharaIdentity; } }    
+    public PlayableMovementStateMachine GetMoveStateMachine { get { return _playableMoveStateMachine; } }
+    public PlayableUseWeaponStateMachine GetUseWeaponStateMachine { get {return _playableUseWeaponStateMachine;}}
     #endregion
     protected override void Awake()
     {
         base.Awake();
+        _playableCharaIdentity = _charaIdentity as PlayableCharacterIdentity;
+        
 
         _getCanInputPlayer = GetComponent<ICanInputPlayer>();
         _isInputPlayer = _getCanInputPlayer.IsInputPlayer;
@@ -42,36 +51,49 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     }
     void Start()
     {
+        _playableMoveStateMachine = _playableCharaIdentity.GetPlayableMovementData;
+        _playableUseWeaponStateMachine = _playableCharaIdentity.GetPlayableUseWeaponData;
+
         // SwitchState(_states.AI_IdleState());
     }
 
     
     void Update()
     {
-        if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || _isInputPlayer) 
+        if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || _isInputPlayer || _playableCharaIdentity.IsAnimatingOtherAnimation) 
         {
-            if(_charaIdentity.MovementStateMachine.CurrAIDirPos != transform.position)_charaIdentity.MovementStateMachine.ForceStopMoving();
+            if(_playableMoveStateMachine.CurrAIDirPos != transform.position)_playableMoveStateMachine.ForceStopMoving();
             return;
             // if(_charaIdentity.MovementStateMachine.CurrAIDirection != null)_charaIdentity.MovementStateMachine.ForceStopMoving();
             // return;
         }
-         
 
         if(!PlayableCharacterManager.IsCommandingFriend)
         {
             if(!IsToldHold)
             {
-                if(_charaIdentity.MovementStateMachine.IsIdle && !IsFriendTooFarFromPlayer()) _charaIdentity.MovementStateMachine.GiveAIDirection(transform.position);
-                else _charaIdentity.MovementStateMachine.GiveAIDirection(_friendsDefaultDirection.position);
+                if(_playableMoveStateMachine.IsIdle && !IsFriendTooFarFromPlayer()) _playableMoveStateMachine.GiveAIDirection(transform.position);
+                else _playableMoveStateMachine.GiveAIDirection(_friendsDefaultDirection.position);
             }
             else
             {
-                _charaIdentity.MovementStateMachine.GiveAIDirection(_friendsCommandDirection.position);
+                if(_charaIdentity.IsDead)
+                {
+                    isToldHold = false;
+                }
+                else _playableMoveStateMachine.GiveAIDirection(_friendsCommandDirection.position);
             }
         }
         else
         {
-            _charaIdentity.MovementStateMachine.GiveAIDirection(_friendsCommandDirection.position);
+            if(_charaIdentity.IsDead)
+            {
+                _playableMoveStateMachine.GiveAIDirection(_friendsDefaultDirection.position);
+            }
+            else
+            {
+                _playableMoveStateMachine.GiveAIDirection(_friendsCommandDirection.position);
+            }
         }
     }
     public override void SwitchState(BaseState newState)

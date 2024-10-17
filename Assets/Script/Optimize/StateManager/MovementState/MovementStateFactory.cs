@@ -5,7 +5,7 @@ using UnityEngine;
 public class MovementStateFactory
 {
     MovementStateMachine _machine;
-    MovementState _idle, _walk, _run, _crouch;
+    MovementState _idle, _walk, _run, _crouch, _crawl;
     public MovementStateFactory (MovementStateMachine machine)
     {
         _machine = machine;
@@ -30,5 +30,10 @@ public class MovementStateFactory
     {
         if(_crouch == null)_crouch = new CrouchState(_machine, this);
         return _crouch;
+    }
+    public MovementState CrawlState()
+    {
+        if(_crawl == null)_crawl = new CrawlState(_machine, this);
+        return _crawl;
     }
 }

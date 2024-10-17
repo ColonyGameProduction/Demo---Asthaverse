@@ -10,8 +10,9 @@ public abstract class CharacterStateMachine : BaseStateMachine
     protected bool _isInputPlayer;
     public bool IsInputPlayer {get {return _isInputPlayer;}}
 
-    protected virtual void Awake() 
+    protected override void Awake() 
     {
+        base.Awake();
         if(_animator == null)_animator = GetComponent<Animator>();
     }
 }

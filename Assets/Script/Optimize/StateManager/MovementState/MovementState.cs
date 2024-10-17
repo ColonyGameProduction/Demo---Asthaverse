@@ -10,7 +10,7 @@ public abstract class MovementState : CharacterBaseState<MovementStateMachine>
     [Header("To Get the data from statemachine class and child class in a group")]
     protected MovementStateFactory _factory;
     protected IStandMovementData _standMovement;
-    protected ICrouchMovementData _crouch;
+    protected IGroundMovementData _groundMovement;
     protected IPlayableMovementDataNeeded _playableData;
     public MovementState(MovementStateMachine stateMachine, MovementStateFactory factory) : base(stateMachine) 
     {
@@ -19,9 +19,9 @@ public abstract class MovementState : CharacterBaseState<MovementStateMachine>
         {
             _standMovement = s;
         }
-        if(stateMachine is ICrouchMovementData c)
+        if(stateMachine is IGroundMovementData g)
         {
-            _crouch = c;
+            _groundMovement = g;
         }
         if(stateMachine is IPlayableMovementDataNeeded m)
         {
