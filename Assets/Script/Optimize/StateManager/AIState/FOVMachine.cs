@@ -14,7 +14,7 @@ public class FOVMachine : MonoBehaviour
     [SerializeField] private float _edgeDistanceTreshold;
 
     [Header("Untuk Besarnya FOV")]
-    [SerializeField] private float _viewRadius;
+    [SerializeField] protected float _viewRadius;
     [Range(0, 360)]
     [SerializeField] private float _viewAngle;
 
@@ -22,8 +22,8 @@ public class FOVMachine : MonoBehaviour
     [SerializeField] private float _meshResolution;
     [Header("")]
     [SerializeField] private Transform _FOVPoint;
-    [SerializeField] private List<Transform> _visibleTargets = new List<Transform>();
-    [SerializeField] private List<Transform> _otherVisibleTargets = new List<Transform>();
+    [SerializeField] protected List<Transform> _visibleTargets = new List<Transform>();
+    [SerializeField] protected List<Transform> _otherVisibleTargets = new List<Transform>();
 
     [Header("Misc")]
     [SerializeField] private string _enemyCharaTag;
@@ -32,15 +32,13 @@ public class FOVMachine : MonoBehaviour
     [SerializeField] private MeshFilter _viewMeshFilter;
     [SerializeField] private float _findTargetDelay = 0.2f;
     private Mesh _viewMesh;
-    private Vector3 _enemyCharalastSeenPosition;
+    protected Vector3 _enemyCharalastSeenPosition;
     private float _currDistance, _tempDistance;
 
     private IEnumerator _findTarget;
     #endregion
     
-    #region States
-    [SerializeField] private FOVDistState _currstate;
-    #endregion
+    
 
     #region GETTER SETTER
     public float viewRadius {get {return _viewRadius;} set { _viewRadius = value;}}
@@ -49,8 +47,8 @@ public class FOVMachine : MonoBehaviour
     public List<Transform> OtherVisibleTargets {get {return _otherVisibleTargets;} }
     public Vector3 EnemyCharalastSeenPosition {get {return _enemyCharalastSeenPosition;} set { _enemyCharalastSeenPosition = value;}}
     #endregion
-    public FOVDistState CurrState { get{return _currstate;} }
-    private void Start()
+    
+    protected virtual void Start()
     {
         _viewMesh = new Mesh();
         _viewMesh.name = "View Mesh";
@@ -360,57 +358,10 @@ public class FOVMachine : MonoBehaviour
     }
     #endregion
     
-    #region States Function
-    private void FOVStateHandler()
+
+
+    public virtual void StopFOVMachine()
     {
-        Debug.Log("Is Update First?");
-        float distance;
-        // _currDistance = Mathf.Infinity;
-
-        // foreach()
-        if (_visibleTargets.Count > 0)
-        {
-            distance = Vector3.Distance(transform.position, _visibleTargets[0].position);
-            _enemyCharalastSeenPosition = _visibleTargets[0].position;
-        }
-        else
-        {            
-            distance = Vector3.Distance(transform.position, _enemyCharalastSeenPosition);
-        }
-
-
-        if (distance <= _viewRadius && distance > _viewRadius - (_viewRadius/3))
-        {
-            _currstate = FOVDistState.far;
-        }
-        else if(distance <= _viewRadius - (_viewRadius / 3) && distance > _viewRadius - (_viewRadius / 3 * 2))
-        {
-            _currstate = FOVDistState.middle;
-        }
-        else if(distance <= _viewRadius - (_viewRadius / 3*2) && distance >= 0)
-        {
-            _currstate = FOVDistState.close;
-        }
-
-        // switch(FOVState)
-        // {
-        //     case FOVDistState.far:                
-        //         Debug.Log("Far");
-        //         break;
-        //     case FOVDistState.middle:
-        //         Debug.Log("Middle");
-        //         break; 
-        //     case FOVDistState.close:
-        //         Debug.Log("Close");
-        //         break;
-        // }
-        
-    }
-    #endregion
-
-    public void StopFOVMachine()
-    {
-        _currstate = FOVDistState.far;
         if(_findTarget != null)StopCoroutine(_findTarget);
         _findTarget = null;
 
@@ -419,7 +370,7 @@ public class FOVMachine : MonoBehaviour
         OtherVisibleTargets.Clear();
         
     }
-    public void StartFOVMachine()
+    public virtual void StartFOVMachine()
     {
         _findTarget = FindTargetWithDelay(_findTargetDelay);
         StartCoroutine(_findTarget);

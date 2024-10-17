@@ -7,7 +7,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     #region Normal Variable
     [Header("Other Important Variable")]
     [SerializeField] protected FOVMachine _fovMachine;
-    
+    public FOVMachine GetFOVMachine { get { return _fovMachine; } }
 
     #endregion
     protected override void Awake() 

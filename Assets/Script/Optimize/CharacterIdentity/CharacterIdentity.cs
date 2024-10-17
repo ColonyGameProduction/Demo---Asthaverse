@@ -23,7 +23,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     [SerializeField] protected UseWeaponStateMachine _useWeaponStateMachine;
     protected FOVMachine _fovMachine;
     protected GameManager _gm;
-    protected Animator _animator;
+    [SerializeField]protected Animator _animator;
 
     #region CHARACTER STATS
     [Space(1)]

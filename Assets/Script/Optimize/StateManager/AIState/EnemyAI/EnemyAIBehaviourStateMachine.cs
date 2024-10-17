@@ -14,6 +14,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     [SerializeField] private float _maxAlertValue;
     [Header("Enemy AI States")]
     [SerializeField] private bool _isAIIdle;
+    private IFOVMachineState _getFOVState;
     private alertState _enemyState;
     private EnemyAIState _currState;
     private EnemyAIStateFactory _states;
@@ -28,12 +29,13 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
     public MovementStateMachine GetMoveStateMachine { get { return _moveStateMachine; } }
     public UseWeaponStateMachine GetUseWeaponStateMachine { get {return _useWeaponStateMachine;}}
+    public IFOVMachineState GetFOVState { get { return _getFOVState;}}
     #endregion
     protected override void Awake() 
     {
         base.Awake();
-
-        ;
+        _getFOVState = _fovMachine as IFOVMachineState;
+        
 
         _states = new EnemyAIStateFactory(this);
     }
@@ -47,6 +49,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     private void Update() 
     {
         _currState?.UpdateState();
+        
         ChangingEnemyState();
         StateChecker();
     }
@@ -152,7 +155,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                 break;
             case alertState.Engage:
                 Debug.Log("engage");
-                switch(_fovMachine.CurrState)
+                switch(_getFOVState.CurrState)
                 {
                     case FOVDistState.far:
                         if(_fovMachine.VisibleTargets.Count > 0)
@@ -203,7 +206,11 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                     _switchingPath = false;
                 }
             }
-            _charaIdentity.MovementStateMachine.GiveAIDirection(_patrolPath[_currPath].transform.position);
+            _moveStateMachine.GiveAIDirection(_patrolPath[_currPath].transform.position);
+        }
+        else
+        {
+            _moveStateMachine.GiveAIDirection(transform.position);
         }
     }
 
