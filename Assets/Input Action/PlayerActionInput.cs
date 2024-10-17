@@ -152,6 +152,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SkillButton"",
+                    ""type"": ""Button"",
+                    ""id"": ""7579b67e-6e66-4fe5-8f32-a21a83d7a398"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -352,6 +361,17 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a8a77be8-faad-4d6d-b4fb-11793bee0786"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SkillButton"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -374,6 +394,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_HoldPosition = m_InputPlayerAction.FindAction("HoldPosition", throwIfNotFound: true);
         m_InputPlayerAction_UnHoldPosition = m_InputPlayerAction.FindAction("UnHoldPosition", throwIfNotFound: true);
         m_InputPlayerAction_Interact = m_InputPlayerAction.FindAction("Interact", throwIfNotFound: true);
+        m_InputPlayerAction_SkillButton = m_InputPlayerAction.FindAction("SkillButton", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -449,6 +470,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_HoldPosition;
     private readonly InputAction m_InputPlayerAction_UnHoldPosition;
     private readonly InputAction m_InputPlayerAction_Interact;
+    private readonly InputAction m_InputPlayerAction_SkillButton;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -467,6 +489,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @HoldPosition => m_Wrapper.m_InputPlayerAction_HoldPosition;
         public InputAction @UnHoldPosition => m_Wrapper.m_InputPlayerAction_UnHoldPosition;
         public InputAction @Interact => m_Wrapper.m_InputPlayerAction_Interact;
+        public InputAction @SkillButton => m_Wrapper.m_InputPlayerAction_SkillButton;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -518,6 +541,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @SkillButton.started += instance.OnSkillButton;
+            @SkillButton.performed += instance.OnSkillButton;
+            @SkillButton.canceled += instance.OnSkillButton;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -564,6 +590,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @SkillButton.started -= instance.OnSkillButton;
+            @SkillButton.performed -= instance.OnSkillButton;
+            @SkillButton.canceled -= instance.OnSkillButton;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -597,5 +626,6 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnHoldPosition(InputAction.CallbackContext context);
         void OnUnHoldPosition(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnSkillButton(InputAction.CallbackContext context);
     }
 }
