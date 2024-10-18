@@ -14,7 +14,7 @@ public class WalkState : MovementState
     public override void EnterState()
     {
         base.EnterState(); // Jalankan animasi
-        Debug.Log("Walking" + _stateMachine.gameObject.name);
+        // Debug.Log("Walking" + _stateMachine.gameObject.name);
 
         _standMovement.IsWalking = true;
         //Menganti kecepatan

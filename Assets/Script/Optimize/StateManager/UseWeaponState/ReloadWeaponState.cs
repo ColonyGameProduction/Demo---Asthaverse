@@ -20,7 +20,7 @@ public class ReloadWeaponState : UseWeaponState
             _playableData.TellToTurnOffScope();
         }
 
-        Debug.Log("Reload Weapon" + _stateMachine.gameObject.name);
+        // Debug.Log("Reload Weapon" + _stateMachine.gameObject.name);
     }
     public override void UpdateState()
     {

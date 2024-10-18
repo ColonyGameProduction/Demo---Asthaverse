@@ -30,6 +30,13 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     protected float _runSpeed;
     protected float _currSpeed;
 
+    [Space(1)]
+    [Header("AI Rotation")]
+    protected Vector3 _posToLookAt;
+    protected bool _askAIToLookWhileIdle;
+
+    public Action<Vector3> OnIsTheSamePosition;
+
     #endregion
 
     #region CONST Variable
@@ -57,6 +64,8 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     public NavMeshAgent AgentNavMesh {get {return _agentNavMesh;}}
     public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
+    public bool AskAIToLookWhileIdle {get {return _askAIToLookWhileIdle;} set{_askAIToLookWhileIdle = value;}}
+    
     
     #endregion
 
@@ -120,6 +129,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         {
             AgentNavMesh.destination = CurrAIDirPos;
         }
+        // Debug.Log(AgentNavMesh.hasPath + " " + gameObject.name);
         if(!AgentNavMesh.hasPath)return true;
         else
         {
@@ -132,7 +142,15 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
             }
         }
 
+        OnIsTheSamePosition?.Invoke(AgentNavMesh.destination);
         return false;
+    }
+
+    public void IdleAI_RotateToEnemy()
+    {
+        Vector3 facedir = (_posToLookAt - transform.position).normalized;
+        Quaternion rotateTo = Quaternion.LookRotation(facedir);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
     }
 
     public virtual void ForceStopMoving()
@@ -155,6 +173,10 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public void GiveAIDirection(Vector3 newPos)
     {
         _currAIDirPos = newPos;
+    }
+    public void GiveAIPlaceToLook(Vector3 posToLook)
+    {
+        _posToLookAt = posToLook;
     }
     #endregion
 

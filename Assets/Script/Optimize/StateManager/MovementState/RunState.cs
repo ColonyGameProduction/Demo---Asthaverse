@@ -16,7 +16,7 @@ public class RunState : MovementState
     {
         base.EnterState(); 
         // base.EnterState(); // Jalankan animasi
-        Debug.Log("Running" + _stateMachine.gameObject.name);
+        // Debug.Log("Running" + _stateMachine.gameObject.name);
 
         //Mengganti kecepatan
         _stateMachine.ChangeCurrSpeed(_stateMachine.RunSpeed);

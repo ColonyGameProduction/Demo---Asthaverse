@@ -21,7 +21,7 @@ public class IdleState : MovementState
     
     public override void EnterState()
     {
-        Debug.Log("Idle" + _stateMachine.gameObject.name);
+        // Debug.Log("Idle" + _stateMachine.gameObject.name);
         
         //Making sure that it's idle animation that plays
         if(_groundMovement != null && _groundMovement.IsCrouching)wasCrouch = true;
@@ -32,7 +32,7 @@ public class IdleState : MovementState
     public override void UpdateState()
     {
         //Kalo lg switch kan semuanya di force balik idle, dn kalo lwt sini ya gabisa ngapa ngapain :D
-        if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter)return;
+        if(_groundMovement != null && (PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter))return;
 
         
         //If there's an input movement: dalam hal ini kalo inputnya player berarti input movement tidak sama dengan 0 ATAU kalau input dari AI berarti currAIDirectionnya itu ga null, maka kita akan masuk ke state selanjutnya tergantung syarat yg ada
@@ -46,6 +46,12 @@ public class IdleState : MovementState
         }
         
         if(_stateMachine.IsInputPlayer &&_playableData.IsMustLookForward)_playableData.Idle_RotateAim();
+
+        if(!_stateMachine.IsInputPlayer && _stateMachine.IsTargetTheSamePositionAsTransform())
+        {
+            if(_stateMachine.AskAIToLookWhileIdle)_stateMachine.IdleAI_RotateToEnemy();
+        }
+
         //Ini emang sudah diam di tmpt
         ///Urusan animasi aja, soalnya kek kondisi crouch kan dia msh bs idle
         ///

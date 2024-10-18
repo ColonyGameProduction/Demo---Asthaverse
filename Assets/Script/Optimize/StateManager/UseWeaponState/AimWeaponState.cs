@@ -12,7 +12,7 @@ public class AimWeaponState : UseWeaponState
     public override void EnterState()
     {
         base.EnterState(); //Do animation
-        Debug.Log("Aim Weapon" + _stateMachine.gameObject.name);
+        // Debug.Log("Aim Weapon" + _stateMachine.gameObject.name);
     }
     public override void UpdateState()
     {

@@ -3671,7 +3671,6 @@ GameObject:
   - component: {fileID: 439030860}
   - component: {fileID: 439030863}
   - component: {fileID: 439030862}
-  - component: {fileID: 439030861}
   m_Layer: 7
   m_Name: PlayerObj
   m_TagString: Player
@@ -3699,29 +3698,6 @@ Transform:
   - {fileID: 1069478230}
   m_Father: {fileID: 1347309374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &439030861
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 439030859}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &439030862
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5861,7 +5837,7 @@ GameObject:
   - component: {fileID: 743586312}
   - component: {fileID: 743586304}
   - component: {fileID: 743586305}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player 3
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -6074,8 +6050,6 @@ MonoBehaviour:
   _meshResolution: 0.5
   _FOVPoint: {fileID: 2095406101}
   _visibleTargets: []
-  _otherVisibleTargets: []
-  _enemyCharaTag: Enemy
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 256
@@ -7420,7 +7394,7 @@ MonoBehaviour:
   _instantiateParent: {fileID: 1987224369}
   _breadCrumbsList: []
   _breadCrumbsSpawnDelay: 0.3
-  _breadCrumbsGoneMaxTimer: 2
+  _breadCrumbsGoneMaxTimer: 4
   _totalBreadCrumbs: 50
 --- !u!1 &859698410
 GameObject:
@@ -9946,7 +9920,7 @@ GameObject:
   - component: {fileID: 1156905606}
   - component: {fileID: 1156905598}
   - component: {fileID: 1156905599}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player 2
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -10074,7 +10048,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ded: 0
   reviv: 0
-  _characterStatSO: {fileID: 11400000, guid: f81fe461a29266540868cd75ae4260aa, type: 2}
+  _characterStatSO: {fileID: 11400000, guid: 78ac99ab9c521f949b44b30310e67cba, type: 2}
   _moveStateMachine: {fileID: 1156905601}
   _useWeaponStateMachine: {fileID: 1156905604}
   _animator: {fileID: 151174312}
@@ -10159,8 +10133,6 @@ MonoBehaviour:
   _meshResolution: 0.5
   _FOVPoint: {fileID: 946796280}
   _visibleTargets: []
-  _otherVisibleTargets: []
-  _enemyCharaTag: Enemy
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 256
@@ -12439,6 +12411,7 @@ GameObject:
   - component: {fileID: 1786254558}
   - component: {fileID: 1786254559}
   - component: {fileID: 1786254560}
+  - component: {fileID: 1786254561}
   m_Layer: 7
   m_Name: test
   m_TagString: Untagged
@@ -12512,6 +12485,19 @@ MonoBehaviour:
   _currWeaponIdx: 0
   _isInputPlayer: 0
   _friendsNormalPosition: []
+--- !u!114 &1786254561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786254555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d3dd591c7735a74486929ba4a35afe6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  focus: {fileID: 0}
 --- !u!1001 &1817375226
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12816,7 +12802,6 @@ GameObject:
   - component: {fileID: 1911957387}
   - component: {fileID: 1911957390}
   - component: {fileID: 1911957389}
-  - component: {fileID: 1911957388}
   m_Layer: 7
   m_Name: PlayerObj
   m_TagString: Player
@@ -12844,29 +12829,6 @@ Transform:
   - {fileID: 151174310}
   m_Father: {fileID: 745014794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &1911957388
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1911957386}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1911957389
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13265,7 +13227,7 @@ Transform:
   m_GameObject: {fileID: 2017098522}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.95, y: 0, z: 10.3}
+  m_LocalPosition: {x: 34, y: 0, z: -30.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13337,12 +13299,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8977702fd2d5e64f9b037b2fe9c8f90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fovMachine: {fileID: 2017098529}
+  _fovMachine: {fileID: 0}
   _moveStateMachine: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _alertValue: 0
   _maxAlertValue: 0
+  _alertValueCountMultiplier: 10
   _isAIIdle: 0
+  _isAIHunted: 0
+  _isAIEngage: 0
   _patrolPath:
   - {fileID: 1690937460}
   - {fileID: 34346502}
@@ -13356,7 +13321,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2017098522}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7be4cff0915c4ea48bb48046475801e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 03639a8c6be2ed74bac451f5a427ab2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _stopView: 0
@@ -13367,8 +13332,6 @@ MonoBehaviour:
   _meshResolution: 0.5
   _FOVPoint: {fileID: 301498854}
   _visibleTargets: []
-  _otherVisibleTargets: []
-  _enemyCharaTag: Player
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 128
@@ -13377,6 +13340,9 @@ MonoBehaviour:
     m_Bits: 64
   _viewMeshFilter: {fileID: 301498856}
   _findTargetDelay: 0.2
+  _currstate: 0
+  _otherVisibleTargets: []
+  _enemyCharaTag: Player
 --- !u!1 &2047355710
 GameObject:
   m_ObjectHideFlags: 0
@@ -13388,7 +13354,6 @@ GameObject:
   - component: {fileID: 2047355711}
   - component: {fileID: 2047355714}
   - component: {fileID: 2047355713}
-  - component: {fileID: 2047355715}
   m_Layer: 7
   m_Name: PlayerObj
   m_TagString: Player
@@ -13466,29 +13431,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047355710}
   m_Mesh: {fileID: 0}
---- !u!136 &2047355715
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2047355710}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2066745654
 GameObject:
   m_ObjectHideFlags: 0
@@ -13506,7 +13448,7 @@ GameObject:
   - component: {fileID: 2066745672}
   - component: {fileID: 2066745662}
   - component: {fileID: 2066745663}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player 1
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -13634,7 +13576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ded: 0
   reviv: 0
-  _characterStatSO: {fileID: 11400000, guid: 031ce61ad42360e479e9b1e671470dea, type: 2}
+  _characterStatSO: {fileID: 11400000, guid: aee2290065d7285488cdea12fbc8bb54, type: 2}
   _moveStateMachine: {fileID: 2066745666}
   _useWeaponStateMachine: {fileID: 2066745669}
   _animator: {fileID: 1031462396}
@@ -13719,8 +13661,6 @@ MonoBehaviour:
   _meshResolution: 0.5
   _FOVPoint: {fileID: 961320780}
   _visibleTargets: []
-  _otherVisibleTargets: []
-  _enemyCharaTag: Enemy
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 256

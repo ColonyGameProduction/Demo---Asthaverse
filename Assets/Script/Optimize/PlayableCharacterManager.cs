@@ -203,7 +203,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     {
         yield return new WaitForSeconds(_switchDelayDuration);
         _isSwitchingCharacter = false;
-        Debug.Log(IsSwitchingCharacter);
+        // Debug.Log(IsSwitchingCharacter);
     }
 
     // delay untuk perpindahan kamera

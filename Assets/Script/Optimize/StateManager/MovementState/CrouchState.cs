@@ -15,7 +15,7 @@ public class CrouchState : MovementState
     public override void EnterState()
     {
         base.EnterState(); // Jalankan animasi
-        Debug.Log("Crouching" + _stateMachine.gameObject.name);
+        // Debug.Log("Crouching" + _stateMachine.gameObject.name);
         _stateMachine.ChangeCurrSpeed(_groundMovement.CrouchSpeed);
 
         //mungkin di sini bisa ditambah kalau masuknya zero atau masih idle dan iscrouching false, maka animasi dimatikan trus lsg ke exit

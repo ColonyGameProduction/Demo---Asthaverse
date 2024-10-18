@@ -10,12 +10,12 @@ public class IdleWeaponState : UseWeaponState
     }
     public override void EnterState()
     {
-        Debug.Log("Idle Weapon" + _stateMachine.gameObject.name);
+        // Debug.Log("Idle Weapon" + _stateMachine.gameObject.name);
         _stateMachine.IsIdle = true;
     }
     public override void UpdateState()
     {
-        if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || _stateMachine.IsCharacterDead)return;
+        if((_advancedUse != null && (PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter)) || _stateMachine.IsCharacterDead)return;
 
         if(_normalUse.IsAiming)
         {

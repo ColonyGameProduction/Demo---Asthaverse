@@ -11,7 +11,7 @@ public class UsingWeaponState : UseWeaponState
     public override void EnterState()
     {
         // base.EnterState(); // Mainkan animasi
-        Debug.Log("Use Weapon" + _stateMachine.gameObject.name);
+        // Debug.Log("Use Weapon" + _stateMachine.gameObject.name);
     }
     public override void UpdateState()
     {
@@ -60,7 +60,7 @@ public class UsingWeaponState : UseWeaponState
                 {
                     _stateMachine.UseWeapon();
                 }
-                else
+                else 
                 {
                     //we're gonna talk about this later
                     _normalUse.IsAiming = false;

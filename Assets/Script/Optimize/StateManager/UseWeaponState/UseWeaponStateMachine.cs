@@ -144,7 +144,9 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     protected virtual void SetShootPosition()
     {
         _originShootPosition = CurrOriginShootPoint.position;
-        _directionShootPosition = CurrDirectionShootPoint.position;
+        _directionShootPosition = CurrDirectionShootPoint.position - transform.position;
+        // Debug.Log()
+        Debug.Log("Shoot direction " + _directionShootPosition);
     }
 
     protected IEnumerator FireRate(float fireRateTime)

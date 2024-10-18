@@ -1,62 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Jobs;
 
-public class FOVMachineAdvanced : FOVMachine, IFOVMachineState
+public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
 {
     #region Normal Variable
     [SerializeField] private FOVDistState _currstate;
-    public FOVDistState CurrState { get{return _currstate;} }
+
+    [Header("Misc - Advanced")]
+    [SerializeField] protected List<Transform> _otherVisibleTargets = new List<Transform>();
+    [SerializeField] protected string _enemyCharaTag;
+    protected Transform _closestBreadCrumbs;
+
     #endregion
-    private void Update() 
-    {
-        FOVStateHandler();
-    }
+    #region GETTER SETTER VARIABLE
+    
+    public FOVDistState CurrState { get{return _currstate;} } // enemy ada d mana
+    public List<Transform> OtherVisibleTargets {get {return _otherVisibleTargets;} }
+    public Transform ClosestBreadCrumbs {get {return _closestBreadCrumbs;}}
+    #endregion
+    
 
     #region States Function
-    private void FOVStateHandler()
+    public void FOVStateHandler()
     {
-        Debug.Log("Is Update First?");
-        float distance;
+        // Debug.Log("FOV_Is Update First?");
+        // float distance;
         // _currDistance = Mathf.Infinity;
 
-        // foreach()
-        if (_visibleTargets.Count > 0)
+        // foreach()s
+
+        GetClosestEnemy();
+        
+
+        if(_closestDistance > viewRadius || VisibleTargets.Count == 0)
         {
-            distance = Vector3.Distance(transform.position, _visibleTargets[0].position);
-            _enemyCharalastSeenPosition = _visibleTargets[0].position;
+            _currstate = FOVDistState.none;
         }
-        else
-        {            
-            distance = Vector3.Distance(transform.position, _enemyCharalastSeenPosition);
-        }
-
-
-        if (distance <= _viewRadius && distance > _viewRadius - (_viewRadius/3))
+        else if (_closestDistance <= _viewRadius && _closestDistance > _viewRadius - (_viewRadius/3))
         {
             _currstate = FOVDistState.far;
         }
-        else if(distance <= _viewRadius - (_viewRadius / 3) && distance > _viewRadius - (_viewRadius / 3 * 2))
+        else if(_closestDistance <= _viewRadius - (_viewRadius / 3) && _closestDistance > _viewRadius - (_viewRadius / 3 * 2))
         {
             _currstate = FOVDistState.middle;
         }
-        else if(distance <= _viewRadius - (_viewRadius / 3*2) && distance >= 0)
+        else if(_closestDistance <= _viewRadius - (_viewRadius / 3*2) && _closestDistance >= 0)
         {
             _currstate = FOVDistState.close;
         }
-
-        // switch(FOVState)
-        // {
-        //     case FOVDistState.far:                
-        //         Debug.Log("Far");
-        //         break;
-        //     case FOVDistState.middle:
-        //         Debug.Log("Middle");
-        //         break; 
-        //     case FOVDistState.close:
-        //         Debug.Log("Close");
-        //         break;
-        // }
         
     }
     #endregion
@@ -69,6 +62,71 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState
     {
         _currstate = FOVDistState.far;
         base.StopFOVMachine();
+        OtherVisibleTargets.Clear();
+    }
+    protected override void FindTargetFunction()
+    {
+        base.FindTargetFunction();
+        SplittingTheObject();
         
     }
+
+    public void GetClosestBreadCrumbs()
+    {
+        float _tempDistanceEnemy = Mathf.Infinity;
+        _closestBreadCrumbs = null;
+        if(OtherVisibleTargets.Count > 0)
+        {
+            foreach(Transform bread in OtherVisibleTargets)
+            {
+                if(bread.position == transform.position)continue;
+                float currDis = Vector3.Distance(transform.position, bread.position);
+
+                if(_tempDistanceEnemy > currDis)
+                {
+                    _tempDistanceEnemy = currDis;
+                    _closestBreadCrumbs = bread;
+                }
+            }
+        }
+        _closestDistance = _tempDistanceEnemy;
+        if(_closestBreadCrumbs != null)
+        {
+            _hasToCheckEnemyLastSeenPosition = true;
+            _enemyCharalastSeenPosition = _closestBreadCrumbs.position;
+        }
+        
+    }
+
+    private void SplittingTheObject()
+    {
+        List<Transform> toRemove = new List<Transform>();
+        toRemove.Clear();
+        _otherVisibleTargets.Clear();
+
+        foreach (Transform transform in _visibleTargets)
+        {
+            if (!transform.gameObject.CompareTag(_enemyCharaTag))
+            {
+                _otherVisibleTargets.Add(transform);
+                toRemove.Add(transform);
+            }
+        }
+        foreach (Transform transform in toRemove)
+        {
+            _visibleTargets.Remove(transform);
+        }
+    }
+    public float GetMinimalPlayableStealth()
+    {
+        float minStealth = Mathf.Infinity;
+        foreach(Transform enemy in VisibleTargets)
+        {
+            CharacterIdentity chara = enemy.GetComponent<CharacterIdentity>();
+            // Debug.Log(chara.gameObject);
+            if(minStealth > chara.StealthStat)minStealth = chara.StealthStat;
+        }
+        return minStealth;
+    }
 }
+
