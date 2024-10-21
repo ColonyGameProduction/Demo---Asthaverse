@@ -5943,7 +5943,7 @@ MonoBehaviour:
   _agentNavMesh: {fileID: 743586305}
   _runMultiplier: 2
   _crouchMultiplier: 0.5
-  _crawlMultiplier: 0.2
+  _crawlMultiplier: 0.4
   _isCrouch: 0
   _isCrawl: 0
   _charaGameObject: {fileID: 439030860}
@@ -10011,7 +10011,7 @@ MonoBehaviour:
   _agentNavMesh: {fileID: 1156905599}
   _runMultiplier: 2
   _crouchMultiplier: 0.5
-  _crawlMultiplier: 0.2
+  _crawlMultiplier: 0.4
   _isCrouch: 0
   _isCrawl: 0
   _charaGameObject: {fileID: 1911957387}
@@ -13448,6 +13448,8 @@ GameObject:
   - component: {fileID: 2066745672}
   - component: {fileID: 2066745662}
   - component: {fileID: 2066745663}
+  - component: {fileID: 2066745674}
+  - component: {fileID: 2066745673}
   m_Layer: 7
   m_Name: Player 1
   m_TagString: Player
@@ -13669,6 +13671,41 @@ MonoBehaviour:
     m_Bits: 64
   _viewMeshFilter: {fileID: 961320782}
   _findTargetDelay: 0.2
+--- !u!135 &2066745673
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066745654}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &2066745674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066745654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 938ccd322f3a5944d82553e88d0fa99e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chosenDed: {fileID: 0}
+  characterIdentity: {fileID: 0}
 --- !u!1 &2085741374
 GameObject:
   m_ObjectHideFlags: 0

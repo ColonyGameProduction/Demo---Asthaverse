@@ -116,14 +116,20 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         {
             newIdx = 0;
         }
-        while(_charaIdentities[newIdx].IsDead)
+        if(_charaIdentities[newIdx].IsDead)
         {
-            newIdx++;
-            if(newIdx == _charaIdentities.Count)
+            for(int i=0; i < _charaIdentities.Count; i++)
             {
-                newIdx = 0;
+                newIdx++;
+                if(newIdx == _charaIdentities.Count)
+                {
+                    newIdx = 0;
+                }
+                if(!_charaIdentities[newIdx].IsDead)break;
             }
         }
+        
+
         if(newIdx == _currCharaidx && !_isFirstTimeSwitch) return; //Kalo balik lg ke karakter awal yauda gausa ganti
 
         _isFirstTimeSwitch = false;

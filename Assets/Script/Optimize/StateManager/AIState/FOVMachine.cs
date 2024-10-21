@@ -298,12 +298,10 @@ public class FOVMachine : MonoBehaviour
                     if(_visibleTargets.Count > 0)
                     {
                         if(_visibleTargets.Contains(target))continue;
-                        else if (!_visibleTargets.Contains(target))
-                        {
-                            CharacterIdentity chara = target.GetComponent<CharacterIdentity>();
-                            if(chara != null && chara.IsDead)continue;
-                        }
                     }
+                    CharacterIdentity chara = target.GetComponent<CharacterIdentity>();
+                    if(chara != null && chara.IsDead)continue;
+                    
                     _visibleTargets.Add(target);
                 }
             }

@@ -100,6 +100,26 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
         if(_moveStateMachine.IsRunning) _moveStateMachine.IsRunning = false;
         if (_patrolPath.Length > 1)
         {
+            if(_charaIdentity.MovementStateMachine.IsIdle)
+            {
+                if (!_switchingPath)
+                {
+                    _currPath++;
+                }
+                else
+                {
+                    _currPath--;
+                }
+
+                if (_currPath == _patrolPath.Length - 1)
+                {
+                    _switchingPath = true;
+                }
+                else if (_currPath == 0)
+                {
+                    _switchingPath = false;
+                }
+            }
             _moveStateMachine.GiveAIDirection(_patrolPath[_currPath].transform.position);
         }
         else
@@ -128,11 +148,11 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
                     // _stateMachine.GetFOVMachine.IHaveCheckEnemyLastPosition();
                     GetMoveStateMachine.GiveAIDirection(GetFOVMachine.EnemyCharalastSeenPosition);
 
-                    // if(Vector3.Distance(transform.position, GetFOVMachine.EnemyCharalastSeenPosition) < 0.5f)
-                    // {
-                    //     GetFOVMachine.IHaveCheckEnemyLastPosition();
-                    //     GetMoveStateMachine.ForceStopMoving();
-                    // }
+                    if(Vector3.Distance(transform.position, GetFOVMachine.EnemyCharalastSeenPosition) < 0.5f)
+                    {
+                        GetFOVMachine.IHaveCheckEnemyLastPosition();
+                        GetMoveStateMachine.ForceStopMoving();
+                    }
                 }
                 
             }
@@ -143,23 +163,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     {
         if(IsAIIdle && GetFOVState.CurrState == FOVDistState.none && agentPos.x == _patrolPath[_currPath].transform.position.x && agentPos.z == _patrolPath[_currPath].transform.position.z)
         {
-            if (!_switchingPath)
-            {
-                _currPath++;
-            }
-            else
-            {
-                _currPath--;
-            }
-
-            if (_currPath == _patrolPath.Length - 1)
-            {
-                _switchingPath = true;
-            }
-            else if (_currPath == 0)
-            {
-                _switchingPath = false;
-            }
+            
         }
         else if(!IsAIIdle && _fovMachine.HasToCheckEnemyLastSeenPosition && GetFOVMachine.ClosestEnemy == null && GetFOVAdvancedData.ClosestBreadCrumbs == null && GetFOVMachine.EnemyCharalastSeenPosition.x == agentPos.x && GetFOVMachine.EnemyCharalastSeenPosition.z == agentPos.z)
         {

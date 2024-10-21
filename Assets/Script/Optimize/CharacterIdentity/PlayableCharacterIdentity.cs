@@ -130,6 +130,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     }
     private IEnumerator Reviving()
     {
+        Debug.Log("reviving");
         yield return new WaitForSeconds(2f);
         _fovMachine.enabled = true;
 
@@ -138,6 +139,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
         _isDead = false;
         _isAnimatingOtherAnimation = false;
+        Debug.Log("reviving Done");
     }
     
     public void TurnOnOffFriendAI(bool isTurnOn)

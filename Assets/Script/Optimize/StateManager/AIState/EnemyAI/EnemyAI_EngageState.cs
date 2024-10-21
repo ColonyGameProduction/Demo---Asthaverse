@@ -45,7 +45,7 @@ public class EnemyAI_EngageState : EnemyAIState
                 _stateMachine.GetMoveStateMachine.GiveAIPlaceToLook(_stateMachine.GetFOVMachine.ClosestEnemy.position);
                 if(!_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = true;
                 //kalo masuk sini pasti ada enemy, kalo ga pasti jd none || aturan d bwh jaga jaga biar ga error
-                // if(_stateMachine.GetFOVMachine.ClosestEnemy != null)StartShooting();
+                if(_stateMachine.GetFOVMachine.ClosestEnemy != null)StartShooting();
 
             }
         }
@@ -78,12 +78,12 @@ public class EnemyAI_EngageState : EnemyAIState
             {
                 // _stateMachine.GetFOVMachine.IHaveCheckEnemyLastPosition();
                 _stateMachine.GetMoveStateMachine.GiveAIDirection(_stateMachine.GetFOVMachine.EnemyCharalastSeenPosition);
-                Debug.Log("wehn enggage but no person");
-                // if(Vector3.Distance(_stateMachine.transform.position, _stateMachine.GetFOVMachine.EnemyCharalastSeenPosition) < 0.5f)
-                // {
-                //     _stateMachine.GetFOVMachine.IHaveCheckEnemyLastPosition();
-                //     _stateMachine.GetMoveStateMachine.ForceStopMoving();
-                // }
+                // Debug.Log("wehn enggage but no person");
+                if(Vector3.Distance(_stateMachine.transform.position, _stateMachine.GetFOVMachine.EnemyCharalastSeenPosition) < 0.5f)
+                {
+                    _stateMachine.GetFOVMachine.IHaveCheckEnemyLastPosition();
+                    _stateMachine.GetMoveStateMachine.ForceStopMoving();
+                }
             }
             
         }

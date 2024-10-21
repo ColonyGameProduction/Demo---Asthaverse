@@ -45,7 +45,7 @@ public class WeaponLogicManager : MonoBehaviour
         Debug.Log(origin + " and " + bulletDirection);
         if (Physics.Raycast(origin, direction, out hit, weaponStat.range, entityMask))
         {
-            // Debug.DrawRay(origin, bulletDirection * weaponStat.range, Color.black);
+            Debug.DrawRay(origin, bulletDirection * weaponStat.range, Color.black);
 
             GameObject entityGameObject = hit.collider.gameObject;
 
