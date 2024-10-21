@@ -111,10 +111,12 @@ public class FriendsAI : ExecuteLogic
             if (friendsID == 1)
             {
                 MoveToDestination(GetNavMesh(), destination[2].transform.position);
+                SnapToWallIfNeeded(destination[2].transform.position); // kalo misalkan dia deket sama tembok ato nempel dia bakal posisiin diri secara otomatis ke tembok
             }
             else if (friendsID == 2)
             {
                 MoveToDestination(GetNavMesh(), destination[3].transform.position);
+                SnapToWallIfNeeded(destination[3].transform.position); // kalo misalkan dia deket sama tembok ato nempel dia bakal posisiin diri secara otomatis ke tembok
             }
         }
         else
@@ -127,6 +129,29 @@ public class FriendsAI : ExecuteLogic
             {
                 MoveToDestination(GetNavMesh(), destination[1].transform.position);
             }
+        }
+    }
+
+    // untuk snap ke wall secara mandiri wkwk
+    private void SnapToWallIfNeeded(Vector3 destinationPosition)
+    {
+        RaycastHit hit;
+        Vector3 direction = (destinationPosition - transform.position).normalized;
+
+        // shoot ray buat ngedetect wall
+        if (Physics.Raycast(transform.position, direction, out hit, 2f, LayerMask.GetMask("Wall")))
+        {
+            // nah kalo misalkan ray ngedetect wall, snap ke poin dimana ray shoot
+            Vector3 snapPosition = hit.point;
+
+            // pas pengen nempel tembok posisiin si friend aga menjauh dari tembok posisinya biar nggk nempel
+            snapPosition += hit.normal * 0.5f;  
+
+            // Set AI position and rotation towards the wall nah ini buat nge-set posisi sama rotasi si friend 
+            GetNavMesh().enabled = false; 
+            transform.position = snapPosition;
+            transform.rotation = Quaternion.LookRotation(-hit.normal); // rotate si friend biar ngadep ke tembok
+            GetNavMesh().enabled = true;  
         }
     }
 

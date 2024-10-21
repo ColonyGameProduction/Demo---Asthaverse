@@ -165,6 +165,32 @@ public class ExecuteLogic : AILogic
         }
     }
 
+    public void PlayFootstepsSound(AudioSource footstepsAudio)
+    {
+        if (!footstepsAudio.isPlaying)
+        {
+            footstepsAudio.Play();
+            NotifyEnemies(footstepsAudio);
+        }
+    }
+
+    public void PlayWhistleSound(AudioSource whistleAudio)
+    {
+        whistleAudio.Play();
+        NotifyEnemies(whistleAudio);
+    }
+
+    // ini tuh logic buat ngasih tau si enemy kalo yang lagi dia denger tuh audio apa
+    public void NotifyEnemies(AudioSource audio)
+    {
+        EnemySoundDetection[] enemies = FindObjectsOfType<EnemySoundDetection>();
+
+        foreach (EnemySoundDetection enemy in enemies)
+        {
+            enemy.HearSound(gameObject, audio); // ngasih tau setiap enemy dia dengan sound apa
+        }
+    }
+
 
     //Logic 'Switch Character'
     public void SwitchCharacter()

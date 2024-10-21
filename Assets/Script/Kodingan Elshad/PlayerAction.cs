@@ -48,6 +48,10 @@ public class PlayerAction : ExecuteLogic
     
     private int curWeapon;
 
+    [Header("Audio Source")]
+    public AudioSource footstepsAudio;
+    public AudioSource whistleAudio;
+
     [SerializeField]
     // private GameObject command;
     public GameObject command;
@@ -56,6 +60,9 @@ public class PlayerAction : ExecuteLogic
     public bool isCommandActive = false;
     public bool isHoldPosition = false;
     private int selectedFriendID = -1;
+
+    //check character move or nah
+    public bool isWalking;
 
     //supaya input action bisa digunakan
     private void Awake()
@@ -223,6 +230,15 @@ public class PlayerAction : ExecuteLogic
     private void Update()
     {
         // Input yang ini itu sementara aja
+        if (isWalking)
+        {
+            PlayFootstepsSound(footstepsAudio);
+        }
+
+        if (Input.GetKeyDown(KeyCode.X)) // kalo pencet x nanti dia siul
+        {
+            PlayWhistleSound(whistleAudio);
+        }
 
         // Select the AI friend by pressing keys 1, 2, etc.
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -242,7 +258,7 @@ public class PlayerAction : ExecuteLogic
 
             Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.red, 2f);
 
-            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground")))
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground", "Wall")))
             {
                 // Set the destination for the selected friend based on the mouse click
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
@@ -296,10 +312,12 @@ public class PlayerAction : ExecuteLogic
         if(move == Vector2.zero)
         {
             testAnimation?.animator.SetBool("Move", false);
+            isWalking = false;
         }
         else
         {
             testAnimation?.animator.SetBool("Move", true);
+            isWalking = true;
         }
 
         testAnimation?.WalkAnimation(move);
