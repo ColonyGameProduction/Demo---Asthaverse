@@ -59,7 +59,7 @@ public class EnemyAI_IdleState : EnemyAIState
         if(_stateMachine.GetFOVState.CurrState == FOVDistState.none) //no person
         {
             if(_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = false;
-            _stateMachine.Patrol();
+            Patrol();
         }
     }
     public override void ExitState()
@@ -67,6 +67,20 @@ public class EnemyAI_IdleState : EnemyAIState
         if(_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = false;
 
         _stateMachine.IsAIIdle = false;
+    }
+
+    public void Patrol()
+    {
+        if(_stateMachine.GetMoveStateMachine.IsRunning) _stateMachine.GetMoveStateMachine.IsRunning = false;
+        if (_stateMachine.PatrolPath.Length > 1)
+        {
+            _stateMachine.GetMoveStateMachine.GiveAIDirection(_stateMachine.PatrolPath[_stateMachine.CurrPath].position);
+            
+        }
+        else
+        {
+            _stateMachine.GetMoveStateMachine.GiveAIDirection(_stateMachine.transform.position);
+        }
     }
     
 }

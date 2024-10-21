@@ -45,7 +45,8 @@ public class EnemyAI_EngageState : EnemyAIState
                 _stateMachine.GetMoveStateMachine.GiveAIPlaceToLook(_stateMachine.GetFOVMachine.ClosestEnemy.position);
                 if(!_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = true;
                 //kalo masuk sini pasti ada enemy, kalo ga pasti jd none || aturan d bwh jaga jaga biar ga error
-                if(_stateMachine.GetFOVMachine.ClosestEnemy != null)StartShooting();
+                // if(_stateMachine.GetFOVMachine.ClosestEnemy != null)StartShooting();
+                // Debug.Log("pew pew pew");
 
             }
         }
@@ -67,26 +68,7 @@ public class EnemyAI_EngageState : EnemyAIState
     private void WhenEnemyMissingInEngage()
     {
         StopShooting();
-        _stateMachine.GetFOVAdvancedData.GetClosestBreadCrumbs();
-        if(_stateMachine.GetFOVAdvancedData.ClosestBreadCrumbs != null)
-        {
-            _stateMachine.GetMoveStateMachine.GiveAIDirection(_stateMachine.GetFOVAdvancedData.ClosestBreadCrumbs.position);
-        }
-        else
-        {
-            if(_stateMachine.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
-            {
-                // _stateMachine.GetFOVMachine.IHaveCheckEnemyLastPosition();
-                _stateMachine.GetMoveStateMachine.GiveAIDirection(_stateMachine.GetFOVMachine.EnemyCharalastSeenPosition);
-                // Debug.Log("wehn enggage but no person");
-                if(Vector3.Distance(_stateMachine.transform.position, _stateMachine.GetFOVMachine.EnemyCharalastSeenPosition) < 0.5f)
-                {
-                    _stateMachine.GetFOVMachine.IHaveCheckEnemyLastPosition();
-                    _stateMachine.GetMoveStateMachine.ForceStopMoving();
-                }
-            }
-            
-        }
+        _stateMachine.RunningToEnemyLastPosition();
     }
     private void StopShooting()
     {
@@ -95,7 +77,7 @@ public class EnemyAI_EngageState : EnemyAIState
     }
     private void StartShooting()
     {
-        Debug.Log("shoot di 2" + _stateMachine.GetFOVMachine.ClosestEnemy.position);
+        // Debug.Log("shoot di 2" + _stateMachine.GetFOVMachine.ClosestEnemy.position);
         _stateMachine.GetUseWeaponStateMachine.GiveChosenTarget(_stateMachine.GetFOVMachine.ClosestEnemy);
         if(!_stateMachine.GetUseWeaponStateMachine.IsAiming)_stateMachine.GetUseWeaponStateMachine.IsAiming = true;
         if(!_stateMachine.GetUseWeaponStateMachine.IsUsingWeapon)_stateMachine.GetUseWeaponStateMachine.IsUsingWeapon = true;

@@ -6,6 +6,7 @@ using UnityEngine.Rendering;
 
 public class FOVMachine : MonoBehaviour
 {
+    public bool STOP;
     #region Variable for Creating FOV and CheckTarget
     [Header("To TUrn Off FOV")]
     [SerializeField] private bool _stopView;
@@ -33,8 +34,7 @@ public class FOVMachine : MonoBehaviour
     [SerializeField] private float _findTargetDelay = 0.2f;
     private float _timer = 0;
     private Mesh _viewMesh;
-    protected bool _hasToCheckEnemyLastSeenPosition;
-    protected Vector3 _enemyCharalastSeenPosition;
+    
     protected float _closestDistance;
     protected Transform _closestEnemy;
     
@@ -48,9 +48,9 @@ public class FOVMachine : MonoBehaviour
     public float viewRadius {get {return _viewRadius;} set { _viewRadius = value;}}
     public Transform GetFOVPoint { get { return _FOVPoint; } }
     public List<Transform> VisibleTargets {get {return _visibleTargets;} }
-    public Vector3 EnemyCharalastSeenPosition {get {return _enemyCharalastSeenPosition;} set { _enemyCharalastSeenPosition = value;}}
+    
     public Transform ClosestEnemy {get {return _closestEnemy;}}
-    public bool HasToCheckEnemyLastSeenPosition {get {return _hasToCheckEnemyLastSeenPosition;}}
+    
 
     #endregion
     
@@ -288,10 +288,11 @@ public class FOVMachine : MonoBehaviour
             Transform target = targetInViewRadius[i].transform;
             Vector3 dirToTarget = (target.position - _FOVPoint.position).normalized;
 
+            
             //jika arah nya berada di dalam FOV
-            if (Vector3.Angle(transform.forward, dirToTarget) < _viewAngle / 2)
+            if (Vector3.Angle(_FOVPoint.forward, dirToTarget) < _viewAngle / 2)
             {
-                
+                // Debug.Log("Normal ANGLE" + _FOVPoint.forward + " " + dirToTarget + " " + Vector3.Angle(_FOVPoint.forward, dirToTarget) + " raaa " + transform.forward + " " + dirToTarget + " " + Vector3.Angle(transform.forward, dirToTarget)); // later
                 float distanceToTarget = Vector3.Distance(_FOVPoint.position, target.position);
                 if (!Physics.Raycast(_FOVPoint.position, dirToTarget, distanceToTarget, _groundMask))
                 {
@@ -390,7 +391,7 @@ public class FOVMachine : MonoBehaviour
         }
     }
 
-    public void GetClosestEnemy()
+    public virtual void GetClosestEnemy()
     {
         float _tempDistanceEnemy = Mathf.Infinity;
         _closestEnemy = null;
@@ -398,7 +399,7 @@ public class FOVMachine : MonoBehaviour
         {
             foreach(Transform enemy in VisibleTargets)
             {
-                Debug.Log("Shoot dirrr23" + enemy.position);
+                // Debug.Log("Shoot dirrr23" + enemy.position);
                 float currDis = Vector3.Distance(transform.position, enemy.position);
                 if(_tempDistanceEnemy > currDis)
                 {
@@ -408,16 +409,8 @@ public class FOVMachine : MonoBehaviour
             }
         }
         _closestDistance = _tempDistanceEnemy;
-        if(_closestEnemy != null)
-        {
-            _hasToCheckEnemyLastSeenPosition = true;
-            _enemyCharalastSeenPosition = _closestEnemy.position;
-        }
         
     }
-    public void IHaveCheckEnemyLastPosition()
-    {
-        _hasToCheckEnemyLastSeenPosition = false;
-    }
+    
     
 }

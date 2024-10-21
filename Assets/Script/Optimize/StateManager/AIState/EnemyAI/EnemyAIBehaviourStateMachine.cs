@@ -15,7 +15,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     [SerializeField] private float _maxAlertValue;
     [SerializeField] private float _alertValueCountMultiplier = 10f;
     [Header("Enemy AI States")]
-    [SerializeField] private bool _isAIIdle, _isAIHunted, _isAIEngage;
+    [SerializeField] private bool _isAIIdle, _isAIHunted, _isAIEngage, _isIdlePatroling;
     private IFOVMachineState _getFOVState;
     private IHuntPlayable _getFOVAdvancedData;
     private EnemyAIState _currState;
@@ -23,7 +23,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     private EnemyAIStateFactory _states;
     
     [Header("Patrol Path")]
-    [SerializeField] private GameObject[] _patrolPath;
+    [SerializeField] private Transform[] _patrolPath;
     private bool _switchingPath;
     private int _currPath;
     private Vector3 _enemyCharaLastSeenPosition;
@@ -32,6 +32,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
     public bool IsAIHunted {get {return _isAIHunted;} set{ _isAIHunted = value;} }
     public bool IsAIEngage {get {return _isAIEngage;} set{ _isAIEngage = value;} }
+    // public bool IsIdlePatroling {get {return _isIdlePatroling;} set{ _isIdlePatroling = value;} }
 
     public float AlertValue {get {return _alertValue;} set { _alertValue = value;}}
     public float MaxAlertValue {get {return _maxAlertValue;} set { _maxAlertValue = value;}}
@@ -41,7 +42,11 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     public UseWeaponStateMachine GetUseWeaponStateMachine { get {return _useWeaponStateMachine;}}
     public IFOVMachineState GetFOVState { get { return _getFOVState;}}
     public IHuntPlayable GetFOVAdvancedData { get { return _getFOVAdvancedData;}}
+
+    public Transform[] PatrolPath {get {return _patrolPath;} }
+    public int CurrPath {get {return _currPath;} }
     #endregion
+
     protected override void Awake() 
     {
         base.Awake();
@@ -54,12 +59,9 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     {
         if(_moveStateMachine == null) _moveStateMachine = _charaIdentity.MovementStateMachine;
         if(_useWeaponStateMachine == null) _useWeaponStateMachine = _charaIdentity.UseWeaponStateMachine;
-        // _moveStateMachine.OnIsTheSamePosition += MoveStateMachine_OnIsTheSamePosition;
+        _moveStateMachine.OnIsTheSamePosition += MoveStateMachine_OnIsTheSamePosition;
         SwitchState(_states.AI_IdleState());
     }
-
-
-
     private void Update() 
     {
         
@@ -68,7 +70,6 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
         _currState?.UpdateState();
 
     }
-
     public void CalculateAlertValue()
     {
         if(_fovMachine.VisibleTargets.Count > 0)
@@ -79,7 +80,11 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
         else
         {
             //kalau 2-2nya null meaning 
-            if(_alertValue >= 0 && _fovMachine.VisibleTargets.Count == 0 && _getFOVAdvancedData.OtherVisibleTargets.Count == 0 && (IsAIIdle || (!IsAIIdle && !_fovMachine.HasToCheckEnemyLastSeenPosition)))
+            // if(_alertValue >= 0 && _fovMachine.VisibleTargets.Count == 0 && _getFOVAdvancedData.OtherVisibleTargets.Count == 0 && (IsAIIdle || (!IsAIIdle && !_fovMachine.HasToCheckEnemyLastSeenPosition)))
+            // {
+            //     _alertValue -= Time.deltaTime * _alertValueCountMultiplier;
+            // }
+            if(_alertValue >= 0 && _fovMachine.VisibleTargets.Count == 0 && _getFOVAdvancedData.OtherVisibleTargets.Count == 0 && (IsAIIdle || (!IsAIIdle && GetMoveStateMachine.IsIdle)))
             {
                 _alertValue -= Time.deltaTime * _alertValueCountMultiplier;
             }
@@ -95,38 +100,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
         _currState?.EnterState();
     }
 
-    public void Patrol()
-    {
-        if(_moveStateMachine.IsRunning) _moveStateMachine.IsRunning = false;
-        if (_patrolPath.Length > 1)
-        {
-            if(_charaIdentity.MovementStateMachine.IsIdle)
-            {
-                if (!_switchingPath)
-                {
-                    _currPath++;
-                }
-                else
-                {
-                    _currPath--;
-                }
-
-                if (_currPath == _patrolPath.Length - 1)
-                {
-                    _switchingPath = true;
-                }
-                else if (_currPath == 0)
-                {
-                    _switchingPath = false;
-                }
-            }
-            _moveStateMachine.GiveAIDirection(_patrolPath[_currPath].transform.position);
-        }
-        else
-        {
-            _moveStateMachine.GiveAIDirection(transform.position);
-        }
-    }
+    
 
     public void RunningTowardsEnemy()
     {
@@ -136,39 +110,53 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
         }
         else 
         {
-            GetFOVAdvancedData.GetClosestBreadCrumbs();
-            if(GetFOVAdvancedData.ClosestBreadCrumbs != null)
+            RunningToEnemyLastPosition();
+        }
+    }
+    public void RunningToEnemyLastPosition()
+    {
+        GetFOVAdvancedData.GetClosestBreadCrumbs();
+        if(GetFOVAdvancedData.ClosestBreadCrumbs != null)
+        {
+            GetMoveStateMachine.GiveAIDirection(GetFOVAdvancedData.ClosestBreadCrumbs.position);
+        }
+        else
+        {
+            if(GetFOVAdvancedData.HasToCheckEnemyLastSeenPosition)
             {
-                GetMoveStateMachine.GiveAIDirection(GetFOVAdvancedData.ClosestBreadCrumbs.position);
-            }
-            else
-            {
-                if(GetFOVMachine.HasToCheckEnemyLastSeenPosition)
-                {
-                    // _stateMachine.GetFOVMachine.IHaveCheckEnemyLastPosition();
-                    GetMoveStateMachine.GiveAIDirection(GetFOVMachine.EnemyCharalastSeenPosition);
+                // _stateMachine.GetFOVMachine.IHaveCheckEnemyLastPosition();
+                GetMoveStateMachine.GiveAIDirection(GetFOVAdvancedData.EnemyCharalastSeenPosition);
 
-                    if(Vector3.Distance(transform.position, GetFOVMachine.EnemyCharalastSeenPosition) < 0.5f)
-                    {
-                        GetFOVMachine.IHaveCheckEnemyLastPosition();
-                        GetMoveStateMachine.ForceStopMoving();
-                    }
-                }
-                
+                GetFOVAdvancedData.IsCheckingEnemyLastPosition();
             }
+            
         }
     }
 
     private void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos)
     {
-        if(IsAIIdle && GetFOVState.CurrState == FOVDistState.none && agentPos.x == _patrolPath[_currPath].transform.position.x && agentPos.z == _patrolPath[_currPath].transform.position.z)
+        if(IsAIIdle && GetFOVState.CurrState == FOVDistState.none && agentPos == _patrolPath[_currPath].position)
         {
+            // _isIdlePatroling = false;
+
+            if (!_switchingPath)
+            {
+                _currPath++;
+            }
+            else
+            {
+                _currPath--;
+            }
+
+            if (_currPath == _patrolPath.Length - 1)
+            {
+                _switchingPath = true;
+            }
+            else if (_currPath == 0)
+            {
+                _switchingPath = false;
+            }
             
-        }
-        else if(!IsAIIdle && _fovMachine.HasToCheckEnemyLastSeenPosition && GetFOVMachine.ClosestEnemy == null && GetFOVAdvancedData.ClosestBreadCrumbs == null && GetFOVMachine.EnemyCharalastSeenPosition.x == agentPos.x && GetFOVMachine.EnemyCharalastSeenPosition.z == agentPos.z)
-        {
-            GetFOVMachine.IHaveCheckEnemyLastPosition();
-            GetMoveStateMachine.ForceStopMoving();
         }
     }
 

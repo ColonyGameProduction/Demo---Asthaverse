@@ -13,12 +13,17 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
     [SerializeField] protected string _enemyCharaTag;
     protected Transform _closestBreadCrumbs;
 
+    protected bool _hasToCheckEnemyLastSeenPosition;
+    protected Vector3 _enemyCharalastSeenPosition;
+
     #endregion
     #region GETTER SETTER VARIABLE
     
     public FOVDistState CurrState { get{return _currstate;} } // enemy ada d mana
     public List<Transform> OtherVisibleTargets {get {return _otherVisibleTargets;} }
     public Transform ClosestBreadCrumbs {get {return _closestBreadCrumbs;}}
+    public Vector3 EnemyCharalastSeenPosition {get {return _enemyCharalastSeenPosition;} set { _enemyCharalastSeenPosition = value;}}
+    public bool HasToCheckEnemyLastSeenPosition {get {return _hasToCheckEnemyLastSeenPosition;}}
     #endregion
     
 
@@ -70,6 +75,25 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
         SplittingTheObject();
         
     }
+    private void SplittingTheObject()
+    {
+        List<Transform> toRemove = new List<Transform>();
+        toRemove.Clear();
+        _otherVisibleTargets.Clear();
+
+        foreach (Transform transform in _visibleTargets)
+        {
+            if (!transform.gameObject.CompareTag(_enemyCharaTag))
+            {
+                _otherVisibleTargets.Add(transform);
+                toRemove.Add(transform);
+            }
+        }
+        foreach (Transform transform in toRemove)
+        {
+            _visibleTargets.Remove(transform);
+        }
+    }
 
     public void GetClosestBreadCrumbs()
     {
@@ -97,26 +121,17 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
         }
         
     }
-
-    private void SplittingTheObject()
+    public override void GetClosestEnemy()
     {
-        List<Transform> toRemove = new List<Transform>();
-        toRemove.Clear();
-        _otherVisibleTargets.Clear();
-
-        foreach (Transform transform in _visibleTargets)
+        base.GetClosestEnemy();
+        if(_closestEnemy != null)
         {
-            if (!transform.gameObject.CompareTag(_enemyCharaTag))
-            {
-                _otherVisibleTargets.Add(transform);
-                toRemove.Add(transform);
-            }
+            _hasToCheckEnemyLastSeenPosition = true;
+            _enemyCharalastSeenPosition = _closestEnemy.position;
         }
-        foreach (Transform transform in toRemove)
-        {
-            _visibleTargets.Remove(transform);
-        }
+        
     }
+
     public float GetMinimalPlayableStealth()
     {
         float minStealth = Mathf.Infinity;
@@ -127,6 +142,15 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
             if(minStealth > chara.StealthStat)minStealth = chara.StealthStat;
         }
         return minStealth;
+    }
+    public void GoToEnemyLastSeenPosition(Vector3 enemyCharaLastSeenPosition)
+    {
+        _hasToCheckEnemyLastSeenPosition = true;
+        _enemyCharalastSeenPosition = _closestEnemy.position;
+    }
+    public void IsCheckingEnemyLastPosition()
+    {
+        _hasToCheckEnemyLastSeenPosition = false;
     }
 }
 

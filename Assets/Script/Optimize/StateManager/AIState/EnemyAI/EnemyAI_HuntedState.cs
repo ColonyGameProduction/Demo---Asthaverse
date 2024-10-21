@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyAI_HuntedState : EnemyAIState
 {
+    float tempAlertValue = 0;
     public EnemyAI_HuntedState(EnemyAIBehaviourStateMachine stateMachine, EnemyAIStateFactory factory) : base(stateMachine, factory)
     {
         
@@ -19,6 +20,24 @@ public class EnemyAI_HuntedState : EnemyAIState
 
     public override void UpdateState()
     {
+        _stateMachine.GetFOVState.FOVStateHandler();
+        if(_stateMachine.GetFOVState.CurrState != FOVDistState.none)
+        {
+            if(_stateMachine.GetFOVState.CurrState == FOVDistState.middle)
+            {
+                // _stateMachine.MaxAlertValue *= 0.5f;
+                tempAlertValue = _stateMachine.MaxAlertValue*0.5f;
+                if(_stateMachine.AlertValue < tempAlertValue) _stateMachine.AlertValue = tempAlertValue + 10f;
+            }
+            else if(_stateMachine.GetFOVState.CurrState == FOVDistState.close)
+            {
+                // _stateMachine.MaxAlertValue = 0f;
+                tempAlertValue = _stateMachine.MaxAlertValue;
+                if(_stateMachine.AlertValue < tempAlertValue) _stateMachine.AlertValue = tempAlertValue + 10f;
+            }
+            // Debug.Log("HALOOO");
+        }
+
         if(_stateMachine.AlertValue < _stateMachine.MaxAlertValue / 2 || _stateMachine.IsCharacterDead)
         {
             _stateMachine.SwitchState(_factory.AI_IdleState());
@@ -28,7 +47,9 @@ public class EnemyAI_HuntedState : EnemyAIState
             _stateMachine.SwitchState(_factory.AI_EngageState());
         }
 
-        _stateMachine.GetFOVMachine.GetClosestEnemy();
+
+
+        // _stateMachine.GetFOVMachine.GetClosestEnemy();
         _stateMachine.RunningTowardsEnemy();
 
 
@@ -37,5 +58,6 @@ public class EnemyAI_HuntedState : EnemyAIState
     {
         _stateMachine.IsAIHunted = false;
     }
+    
     
 }

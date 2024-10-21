@@ -130,19 +130,23 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
             AgentNavMesh.destination = CurrAIDirPos;
         }
         // Debug.Log(AgentNavMesh.hasPath + " " + gameObject.name);
-        if(!AgentNavMesh.hasPath)return true;
+        if(!AgentNavMesh.hasPath)
+        {
+            OnIsTheSamePosition?.Invoke(CurrAIDirPos);
+            return true;
+        }
         else
         {
             if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentNavMesh.radius)
             {
 
                 AgentNavMesh.ResetPath();
+                OnIsTheSamePosition?.Invoke(CurrAIDirPos);
 
                 return true;
             }
         }
 
-        OnIsTheSamePosition?.Invoke(AgentNavMesh.destination);
         return false;
     }
 

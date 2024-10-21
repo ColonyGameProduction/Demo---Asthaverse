@@ -350,7 +350,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         // if(friendID < 1 || friendID >= _charaIdentities.Count) return;
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
-            Debug.Log(chara.FriendID + " " + friendID);
+            // Debug.Log(chara.FriendID + " " + friendID);
             if(chara.FriendID == friendID)
             {
                 chara.FriendAIStateMachine.IsToldHold = change;

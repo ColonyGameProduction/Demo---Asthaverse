@@ -42,7 +42,7 @@ public class WeaponLogicManager : MonoBehaviour
         // Debug.Log(origin + " " + direction + " " + weaponStat + " " + entityMask);
 
         RaycastHit hit;
-        Debug.Log(origin + " and " + bulletDirection);
+        // Debug.Log(origin + " and " + bulletDirection);
         if (Physics.Raycast(origin, direction, out hit, weaponStat.range, entityMask))
         {
             Debug.DrawRay(origin, bulletDirection * weaponStat.range, Color.black);
@@ -56,7 +56,7 @@ public class WeaponLogicManager : MonoBehaviour
         else
         {
             hit.point = origin + bulletDirection * weaponStat.range;
-            Debug.DrawRay(origin, hit.point, Color.black);
+            Debug.DrawRay(origin, hit.point, Color.red);
             //Debug.Log(hit.point);
         }
     }
@@ -66,6 +66,7 @@ public class WeaponLogicManager : MonoBehaviour
         IHealth _getHealthFunction;
         _getHealthFunction =  entityGameObject.transform.GetComponent<IHealth>();
         // if(_getHealthFunction == null) _getHealthFunction = entityGameObject.transform.GetComponentInParent<IHealth>();
+        // Debug.Log("Halooo????");
         if(_getHealthFunction != null)
         {
             _getHealthFunction.Hurt(weapon.baseDamage);
