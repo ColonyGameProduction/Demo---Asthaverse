@@ -32,7 +32,10 @@ public class FriendsAI : ExecuteLogic
     [SerializeField] private MeshFilter viewMeshFilter;
     private Mesh viewMesh;
 
-    
+    [SerializeField]
+    private EntityStatSO character;
+
+
     private bool commandActive = false;
     private bool holdPositionActive = false;
 
@@ -219,4 +222,10 @@ public class FriendsAI : ExecuteLogic
             FindVisibleTargetsForEnemy(viewRadius, viewAngle, visibleTargets, FOVPoint, enemyMask, groundMask);
         }
     }
+
+    public EntityStatSO GetFriendsStat()
+    {
+        return character;
+    }
+
 }

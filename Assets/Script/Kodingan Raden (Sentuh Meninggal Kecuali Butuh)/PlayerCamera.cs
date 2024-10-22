@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+//Mengurusi camera per karakter, ngurusin pergerakan dan camera effect: night vis or scope effect
 public class PlayerCamera : MonoBehaviour
 {
     [Header("Reference to Follow Target")]

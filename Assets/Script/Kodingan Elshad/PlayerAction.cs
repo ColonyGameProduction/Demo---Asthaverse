@@ -5,16 +5,21 @@ using UnityEngine.InputSystem;
 using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using System;
 
 //kelas untuk player action seperti attacking, scope, dan Silent kill
 
 public class PlayerAction : ExecuteLogic
 {
+    [Header("TRest")]
+    [SerializeField]PlayableMovementStateMachine stateMachine;
     GameManager gm;
     private PlayerActionInput inputActions;
     private bool isShooting = false;
     private bool isReloading = false;
     private bool fireRateOn = false;
+    private bool isRun = false;
+    private bool IsCrouching = false;
 
     [Header("Untuk Movement dan Kamera")]
     [SerializeField]
@@ -48,10 +53,6 @@ public class PlayerAction : ExecuteLogic
     
     private int curWeapon;
 
-    [Header("Audio Source")]
-    public AudioSource footstepsAudio;
-    public AudioSource whistleAudio;
-
     [SerializeField]
     // private GameObject command;
     public GameObject command;
@@ -61,8 +62,7 @@ public class PlayerAction : ExecuteLogic
     public bool isHoldPosition = false;
     private int selectedFriendID = -1;
 
-    //check character move or nah
-    public bool isWalking;
+    private int currBreadCrumbs;
 
     //supaya input action bisa digunakan
     private void Awake()
@@ -72,10 +72,19 @@ public class PlayerAction : ExecuteLogic
 
     private void Start()
     {
+
+        StartCoroutine("BreadCrumbsDrop", .3f);
+
         gm = GameManager.instance;
         testAnimation = GetComponent<AnimationTestScript>();
 
         //membuat event untuk menjalankan aksi yang dipakai oleh player
+        inputActions.InputPlayerAction.Run.performed += Run_performed;
+        inputActions.InputPlayerAction.Run.canceled += Run_canceled;
+
+        inputActions.InputPlayerAction.Crouch.performed += Crouch_performed;
+        inputActions.InputPlayerAction.Crouch.canceled += Crouch_canceled;
+
         inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
         inputActions.InputPlayerAction.Shooting.canceled += Shooting_canceled;
 
@@ -98,29 +107,28 @@ public class PlayerAction : ExecuteLogic
         StartingSetup();
     }
 
-    private bool Run()
+    private void Crouch_canceled(InputAction.CallbackContext context)
     {
-        if (inputActions.InputPlayerAction.Run.ReadValue<float>() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        IsCrouching = false;
     }
 
-    private bool Crouch()
+    private void Crouch_performed(InputAction.CallbackContext context)
     {
-        if (inputActions.InputPlayerAction.Crouch.ReadValue<float>() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if(isRun)isRun = false;
+        IsCrouching = true;
     }
+
+    private void Run_canceled(InputAction.CallbackContext context)
+    {
+        isRun = false;
+    }
+
+    private void Run_performed(InputAction.CallbackContext context)
+    {
+        if(IsCrouching)IsCrouching = false;
+        isRun = true;
+    }
+
 
     private void Reload_performed(InputAction.CallbackContext obj)
     {
@@ -204,7 +212,7 @@ public class PlayerAction : ExecuteLogic
         //only once
         if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
         {
-            Shoot(Camera.main.transform.position, aim.transform.position, activeWeapon, enemyMask);
+            Shoot(Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask);
             StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
             isShooting = false;
             if (activeWeapon.currBullet == 0 && activeWeapon.totalBullet > 0)
@@ -230,15 +238,6 @@ public class PlayerAction : ExecuteLogic
     private void Update()
     {
         // Input yang ini itu sementara aja
-        if (isWalking)
-        {
-            PlayFootstepsSound(footstepsAudio);
-        }
-
-        if (Input.GetKeyDown(KeyCode.X)) // kalo pencet x nanti dia siul
-        {
-            PlayWhistleSound(whistleAudio);
-        }
 
         // Select the AI friend by pressing keys 1, 2, etc.
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -258,12 +257,14 @@ public class PlayerAction : ExecuteLogic
 
             Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.red, 2f);
 
-            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground", "Wall")))
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground")))
             {
                 // Set the destination for the selected friend based on the mouse click
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
             }
         }
+        // Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
+        // dataMovement.InputMovement = move;
     }
 
     private void FixedUpdate()
@@ -274,7 +275,7 @@ public class PlayerAction : ExecuteLogic
             if(activeWeapon != null)
             {
 
-                Shoot(Camera.main.transform.position, aim.transform.position, activeWeapon, enemyMask);
+                Shoot(Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask);
                 StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
                 if (activeWeapon.currBullet == 0)
                 {
@@ -296,11 +297,11 @@ public class PlayerAction : ExecuteLogic
         Vector3 flatForward = new Vector3(followTarget.forward.x, 0, followTarget.forward.z).normalized;
         Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;        
 
-        if (Crouch())
+        if (IsCrouching)
         {
             CC.SimpleMove(direction * (moveSpeed - 2));
         }
-        else if (Run())
+        else if (isRun)
         {
             CC.SimpleMove(direction * (moveSpeed + 2));
         }
@@ -312,12 +313,10 @@ public class PlayerAction : ExecuteLogic
         if(move == Vector2.zero)
         {
             testAnimation?.animator.SetBool("Move", false);
-            isWalking = false;
         }
         else
         {
             testAnimation?.animator.SetBool("Move", true);
-            isWalking = true;
         }
 
         testAnimation?.WalkAnimation(move);
@@ -389,6 +388,18 @@ public class PlayerAction : ExecuteLogic
         fireRateOn = value;
     }
 
-    
+    private IEnumerator BreadCrumbsDrop(float delay)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(delay);
+            BreadcrumbsFollowPlayer(this, ref currBreadCrumbs);
+        }
+    }
+
+    public EntityStatSO GetPlayerStat()
+    {
+        return character;
+    }
 
 }

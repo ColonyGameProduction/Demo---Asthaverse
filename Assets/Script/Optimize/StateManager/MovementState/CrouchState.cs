@@ -2,22 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Crouch
+/// </summary>
 public class CrouchState : MovementState
 {
-    public override void UpdateState(MovementStateManager stateManager)
+    public CrouchState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
     {
-        throw new System.NotImplementedException();
+        // StateAnimationName = "Crouch";
+        StateAnimationName = "Move";
     }
-
-    // Start is called before the first frame update
-    void Start()
+    public override void EnterState()
     {
-        
+        base.EnterState(); // Jalankan animasi
+        Debug.Log("Crouching" + _stateMachine.gameObject.name);
+        _stateMachine.ChangeCurrSpeed(_groundMovement.CrouchSpeed);
+
+        //mungkin di sini bisa ditambah kalau masuknya zero atau masih idle dan iscrouching false, maka animasi dimatikan trus lsg ke exit
     }
-
-    // Update is called once per frame
-    void Update()
+    public override void UpdateState()
     {
+        //sama seperti walk dkk
+        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
+        {
+            if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
+            if(!_groundMovement.IsCrouching)
+            {
+                if(_standMovement.IsRunning)
+                {
+                    _stateMachine.SwitchState(_factory.RunState());
+                }
+                else _stateMachine.SwitchState(_factory.WalkState());
+            }
+        }
+        else if((_stateMachine.IsInputPlayer && _playableData.InputMovement == Vector3.zero) || (!_stateMachine.IsInputPlayer && _stateMachine.IsTargetTheSamePositionAsTransform()))
+        {
+            _stateMachine.SwitchState(_factory.IdleState());
+        }
+    }
+    public override void ExitState()
+    {
+        // if(!_crouch.IsCrouching) //Matikan state animasi crouch
+        if(_stateMachine.IsCharacterDead)_groundMovement.IsCrouching = false;
         
+        base.ExitState();
+    }
+    public override void PhysicsLogicUpdateState()
+    {
+        if(_stateMachine.IsInputPlayer)_stateMachine.Move();
     }
 }

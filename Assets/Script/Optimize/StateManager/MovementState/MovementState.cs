@@ -2,16 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class MovementState : CharacterBaseState<MovementStateManager>
+/// <summary>
+/// Movement state -> semua state pergerakan: Idle, Walk, Run, Crouch
+/// </summary>
+public abstract class MovementState : CharacterBaseState<MovementStateMachine>
 {
-    public override void EnterState(MovementStateManager stateManager)
+    [Header("To Get the data from statemachine class and child class in a group")]
+    protected MovementStateFactory _factory;
+    protected IStandMovementData _standMovement;
+    protected IGroundMovementData _groundMovement;
+    protected IPlayableMovementDataNeeded _playableData;
+    public MovementState(MovementStateMachine stateMachine, MovementStateFactory factory) : base(stateMachine) 
     {
-        base.EnterState(stateManager);
+        _factory = factory;
+        if(stateMachine is IStandMovementData s)
+        {
+            _standMovement = s;
+        }
+        if(stateMachine is IGroundMovementData g)
+        {
+            _groundMovement = g;
+        }
+        if(stateMachine is IPlayableMovementDataNeeded m)
+        {
+            _playableData = m;
+        }
+    }
+    public override void EnterState()
+    {
+        base.EnterState();
     }
 
-    public override void ExiState(MovementStateManager stateManager)
+    public override void ExitState()
     {
-        base.EnterState(stateManager);
+        base.ExitState();
     }
+    public virtual void PhysicsLogicUpdateState(){}
 
 }

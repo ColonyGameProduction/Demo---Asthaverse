@@ -22,6 +22,8 @@ public enum weaponType
     MachineGun,
 }
 
+///summary
+///Enum ini penanda, karakter saat ini lg kondisi dikontrol AI atau dikontrol Player atau ga
 //untuk alert system enemy
 public enum alertState
 {
@@ -29,3 +31,20 @@ public enum alertState
     Hunted,
     Engage,
 }
+
+
+public enum FOVDistState
+{
+    far,
+    middle,
+    close,
+}
+
+public enum GameState
+{
+    Play,
+    Cinematic,
+    Pause,
+    Finish
+}
+
