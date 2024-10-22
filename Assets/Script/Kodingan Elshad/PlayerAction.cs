@@ -20,6 +20,7 @@ public class PlayerAction : ExecuteLogic
     private bool fireRateOn = false;
     private bool isRun = false;
     private bool IsCrouching = false;
+    private bool isMoving = false;
 
     [Header("Untuk Movement dan Kamera")]
     [SerializeField]
@@ -45,6 +46,10 @@ public class PlayerAction : ExecuteLogic
     [SerializeField]
     private WeaponStatSO[] weaponStat;
     private WeaponStatSO activeWeapon;
+
+    [Header("Audio")]
+    public AudioSource footstepsSource;
+    public AudioSource whistleSource;
 
     [SerializeField]
     private EntityStatSO character;
@@ -99,6 +104,7 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.UnCommand.performed += UnCommand_performed;
         inputActions.InputPlayerAction.HoldPosition.performed += HoldPosition_performed;
         inputActions.InputPlayerAction.UnHoldPosition.performed += UnHoldPosition_performed;
+        inputActions.InputPlayerAction.Whistle.performed += Whistle_Performed;
 
         CC = GetComponent<CharacterController>();
 
@@ -235,9 +241,31 @@ public class PlayerAction : ExecuteLogic
         isShooting = false;
     }
 
+    // event ketika 'Whistle' dilakukan
+    private void Whistle_Performed(InputAction.CallbackContext context)
+    {
+        PlayWhistleSound(whistleSource);
+    }
+
     private void Update()
     {
         // Input yang ini itu sementara aja
+
+        // ketika player move maka sound footsteps bakal aktif
+        if (isMoving)
+        {
+            PlayFootstepsSound(footstepsSource);
+        }
+
+        // ketika player crouch maka volume sound footsteps bakal berkurang
+        if (IsCrouching)
+        {
+            footstepsSource.volume = 0.2f;
+        }
+        else
+        {
+            footstepsSource.volume = 1.0f;
+        }
 
         // Select the AI friend by pressing keys 1, 2, etc.
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -313,10 +341,12 @@ public class PlayerAction : ExecuteLogic
         if(move == Vector2.zero)
         {
             testAnimation?.animator.SetBool("Move", false);
+            isMoving = false;
         }
         else
         {
             testAnimation?.animator.SetBool("Move", true);
+            isMoving = true;
         }
 
         testAnimation?.WalkAnimation(move);
