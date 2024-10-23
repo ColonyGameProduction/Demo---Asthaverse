@@ -12,7 +12,7 @@ public class EnemyAI_IdleState : EnemyAIState
     public override void EnterState()
     {
         _stateMachine.IsAIIdle = true;
-        if(_stateMachine.GetUseWeaponStateMachine.IsUsingWeapon)_stateMachine.GetUseWeaponStateMachine.ForceStopUseWeapon();
+        if(_stateMachine.GetUseWeaponStateMachine.IsUsingWeapon || _stateMachine.GetUseWeaponStateMachine.IsAiming)_stateMachine.GetUseWeaponStateMachine.ForceStopUseWeapon();
     }
 
     public override void UpdateState()

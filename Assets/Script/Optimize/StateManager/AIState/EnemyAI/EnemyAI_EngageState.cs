@@ -45,7 +45,7 @@ public class EnemyAI_EngageState : EnemyAIState
                 _stateMachine.GetMoveStateMachine.GiveAIPlaceToLook(_stateMachine.GetFOVMachine.ClosestEnemy.position);
                 if(!_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = true;
                 //kalo masuk sini pasti ada enemy, kalo ga pasti jd none || aturan d bwh jaga jaga biar ga error
-                // if(_stateMachine.GetFOVMachine.ClosestEnemy != null)StartShooting();
+                if(_stateMachine.GetFOVMachine.ClosestEnemy != null)StartShooting();
                 // Debug.Log("pew pew pew");
 
             }
