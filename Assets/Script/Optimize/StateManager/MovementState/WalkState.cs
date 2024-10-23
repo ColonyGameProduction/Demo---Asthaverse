@@ -9,14 +9,15 @@ public class WalkState : MovementState
 {
     public WalkState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
     {
-        StateAnimationName = "Move";
+        StateAnimationName = "Walk";
     }
     public override void EnterState()
     {
-        base.EnterState(); // Jalankan animasi
-        // Debug.Log("Walking" + _stateMachine.gameObject.name);
+        
+        base.EnterState();
 
         _standMovement.IsWalking = true;
+
         //Menganti kecepatan
         _stateMachine.ChangeCurrSpeed(_stateMachine.WalkSpeed);
     }
@@ -38,7 +39,7 @@ public class WalkState : MovementState
     public override void ExitState()
     {
         _standMovement.IsWalking = false;
-        base.ExitState(); // Matikan animasi
+        base.ExitState();
     }
     public override void PhysicsLogicUpdateState()
     {

@@ -12,6 +12,8 @@ public abstract class MovementState : CharacterBaseState<MovementStateMachine>
     protected IStandMovementData _standMovement;
     protected IGroundMovementData _groundMovement;
     protected IPlayableMovementDataNeeded _playableData;
+
+    protected const string ANIMATION_MOVE_PARAMETER_ISMOVING = "IsMoving";
     public MovementState(MovementStateMachine stateMachine, MovementStateFactory factory) : base(stateMachine) 
     {
         _factory = factory;

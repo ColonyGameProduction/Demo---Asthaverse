@@ -5,16 +5,17 @@ using UnityEngine;
 public class ReloadWeaponState : UseWeaponState
 {
     bool isDoReloading;
+
     public ReloadWeaponState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine, factory)
     {
-
+        StateAnimationName = "Reload";
     }
     public override void EnterState()
     {
-        // base.EnterState(); mainkan animasi
-
+        // mainkan animasi
+        // _stateMachine.CharaAnimator.
         isDoReloading = false;
-        
+        _stateMachine.CurrAnimTime = 0;
         if(_stateMachine.IsInputPlayer)
         {
             _playableData.TellToTurnOffScope();
@@ -24,13 +25,21 @@ public class ReloadWeaponState : UseWeaponState
     }
     public override void UpdateState()
     {
+        // _stateMachine.CharaAnimator.Play("Crouch", 1, _currAnimTIme);
+        if(!_normalUse.IsAiming)StateAnimationOff("Aim");
+
+
+        
+
+
         if(!isDoReloading && _normalUse.IsReloading)
         {
             isDoReloading = true;
-            _stateMachine.ReloadWeapon();
+            base.EnterState();
         }
         else if(isDoReloading && !_normalUse.IsReloading)
         {
+            // base.ExitState();
             if(_advancedUse != null && _advancedUse.IsSilentKill)
             {
                 _stateMachine.SwitchState(_factory.SilentKillState());
@@ -56,6 +65,11 @@ public class ReloadWeaponState : UseWeaponState
             }
 
         }
+        // if(isDoReloading)
+        // {
+            
+            
+        // }
     }
     public override void ExitState()
     {

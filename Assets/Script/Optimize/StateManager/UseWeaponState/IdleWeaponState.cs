@@ -10,7 +10,13 @@ public class IdleWeaponState : UseWeaponState
     }
     public override void EnterState()
     {
-        // Debug.Log("Idle Weapon" + _stateMachine.gameObject.name);
+        
+        if(!_stateMachine.IsIdle)
+        {
+            // Debug.Log("what");
+            _stateMachine.OnWasUsinghGun?.Invoke();
+        }
+
         _stateMachine.IsIdle = true;
     }
     public override void UpdateState()

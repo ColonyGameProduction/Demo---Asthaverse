@@ -214,6 +214,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: Aim
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Reload
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1430099841771323386}
   m_Solo: 0
@@ -295,6 +298,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Fire
     m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: Aim
+    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: IsMoving
     m_EventTreshold: 0
@@ -349,7 +355,7 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
+  - m_ConditionMode: 2
     m_ConditionEvent: Aim
     m_EventTreshold: 0
   - m_ConditionMode: 2
@@ -380,7 +386,7 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
+  - m_ConditionMode: 2
     m_ConditionEvent: Aim
     m_EventTreshold: 0
   - m_ConditionMode: 2
@@ -502,13 +508,13 @@ AnimatorStateTransition:
     m_ConditionEvent: IsMoving
     m_EventTreshold: 0
   - m_ConditionMode: 1
-    m_ConditionEvent: Crouch
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
     m_ConditionEvent: Fire
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Reload
+    m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: Aim
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3198349007570053497}
@@ -733,9 +739,6 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: Aim
-    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Fire
     m_EventTreshold: 0
@@ -850,9 +853,6 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: IsMoving
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: Crouch
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Fire
@@ -1176,7 +1176,8 @@ AnimatorState:
   - {fileID: -7094825699309383092}
   - {fileID: 4061796396872802741}
   - {fileID: -999077403067445084}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 50821518255049854}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -1303,28 +1304,6 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!1101 &-1230775752828847105
-AnimatorStateTransition:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_Conditions: []
-  m_DstStateMachine: {fileID: 0}
-  m_DstState: {fileID: 1430099841771323386}
-  m_Solo: 0
-  m_Mute: 0
-  m_IsExit: 0
-  serializedVersion: 3
-  m_TransitionDuration: 0.25
-  m_TransitionOffset: 0
-  m_ExitTime: 0
-  m_HasExitTime: 0
-  m_HasFixedDuration: 1
-  m_InterruptionSource: 0
-  m_OrderedInterruption: 1
-  m_CanTransitionToSelf: 1
 --- !u!1101 &-999077403067445084
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1394,6 +1373,9 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Aim
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Fire
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6536260926323784558}
@@ -1525,6 +1507,19 @@ BlendTree:
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 2
+--- !u!114 &-664708009694620847
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee3d6338d73bda540987fb474458173f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationClipName: Rifle_Crouch_Aim_Reload
 --- !u!1102 &-642437379506045882
 AnimatorState:
   serializedVersion: 6
@@ -1540,7 +1535,6 @@ AnimatorState:
   - {fileID: 8906067563235741409}
   - {fileID: 7863680054056147321}
   - {fileID: -6745625121535825031}
-  - {fileID: -1230775752828847105}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -1567,7 +1561,7 @@ AnimatorController:
   m_AnimatorParameters:
   - m_Name: IdleCounter
     m_Type: 1
-    m_DefaultFloat: 0
+    m_DefaultFloat: 1
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
@@ -1651,9 +1645,9 @@ AnimatorController:
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
   - serializedVersion: 5
-    m_Name: Stand Aim Upper
-    m_StateMachine: {fileID: 2979282202768058742}
-    m_Mask: {fileID: 31900000, guid: 5e34df4fc899dca4ab0b9ef8e322a8e7, type: 2}
+    m_Name: Crouch Aim
+    m_StateMachine: {fileID: 8426655415588508435}
+    m_Mask: {fileID: 0}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
@@ -1663,9 +1657,9 @@ AnimatorController:
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
   - serializedVersion: 5
-    m_Name: Crouch Aim
-    m_StateMachine: {fileID: 8426655415588508435}
-    m_Mask: {fileID: 0}
+    m_Name: Stand Aim Upper
+    m_StateMachine: {fileID: 2979282202768058742}
+    m_Mask: {fileID: 31900000, guid: 5e34df4fc899dca4ab0b9ef8e322a8e7, type: 2}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0
@@ -1711,6 +1705,19 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &50821518255049854
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee3d6338d73bda540987fb474458173f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationClipName: Rifle_Stand_Aim_Reload
 --- !u!1101 &76261056649835298
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1736,6 +1743,19 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &297057569324269987
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee3d6338d73bda540987fb474458173f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationClipName: Rifle_Stand_Aim_Reload
 --- !u!1102 &326585221680301446
 AnimatorState:
   serializedVersion: 6
@@ -1990,6 +2010,19 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!114 &1505658584416688277
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee3d6338d73bda540987fb474458173f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationClipName: Rifle_Crouch_Aim_Reload
 --- !u!1101 &1531193547803227088
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -2206,7 +2239,8 @@ AnimatorState:
   - {fileID: -4982986223109795259}
   - {fileID: -3562083067586843756}
   - {fileID: 7640559800730937108}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -664708009694620847}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -2231,6 +2265,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 2
     m_ConditionEvent: Reload
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Fire
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6003914056825509971}
@@ -2261,7 +2298,8 @@ AnimatorState:
   - {fileID: -3372207276069679569}
   - {fileID: 1085118021909346658}
   - {fileID: 6186279834351149116}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 1505658584416688277}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -2291,7 +2329,8 @@ AnimatorState:
   - {fileID: 3362028071838902677}
   - {fileID: 1531193547803227088}
   - {fileID: 27364738841130858}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 297057569324269987}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -2887,13 +2926,13 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Crouch
-    m_EventTreshold: 0
-  - m_ConditionMode: 1
     m_ConditionEvent: Reload
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: IsMoving
+    m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: Crouch
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3343312637309221934}
@@ -3205,6 +3244,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: Aim
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Reload
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6536260926323784558}
   m_Solo: 0
@@ -3280,11 +3322,11 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 2
-    m_ConditionEvent: Fire
-    m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: Reload
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Fire
     m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: IsMoving

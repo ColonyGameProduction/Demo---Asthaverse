@@ -528,7 +528,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         {   
             if(!_currPlayableUseWeaponStateMachine.IsAiming)_currPlayableUseWeaponStateMachine.IsAiming = true;
             _currPlayableUseWeaponStateMachine.IsUsingWeapon = true;
-            _currPlayableMoveStateMachine.IsMustLookForward = true;
+            if(!_currPlayableMoveStateMachine.IsMustLookForward)_currPlayableMoveStateMachine.IsMustLookForward = true;
         }
     }
     private void GameInput_OnShootingCanceled()
@@ -536,8 +536,12 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         if(CanDoThisFunction())
         {
             _currPlayableUseWeaponStateMachine.IsUsingWeapon = false;
-            _currPlayableMoveStateMachine.IsMustLookForward = false;
-            if(!IsScope)_currPlayableUseWeaponStateMachine.IsAiming = false;
+            if(!IsScope)
+            {
+                _currPlayableMoveStateMachine.IsMustLookForward = false;
+                _currPlayableUseWeaponStateMachine.IsAiming = false;
+            }
+
         }
     }
     private void GameInput_OnScopePerformed()

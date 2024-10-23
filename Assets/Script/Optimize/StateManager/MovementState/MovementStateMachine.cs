@@ -12,11 +12,18 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     [Space(1)]
     [Header("Move States - Stand")]
-    [SerializeField] protected bool _isIdle;
+    [SerializeField] protected bool _isIdle = true;
     [SerializeField] protected bool _isWalking;
     [SerializeField] protected bool _isRun;
+    
     protected MovementStateFactory _states;
     protected MovementState _currState;
+
+    [Header("Move Animator Component")]
+    [SerializeField] protected float _idleCounter;
+    [SerializeField] protected float[] _idleRelaxTargetTime;
+    [SerializeField] protected UseWeaponStateMachine useWeaponStateMachine;
+    protected bool _wasAiming;
 
     [Space(1)]
     [Header("NavMesh Component")]
@@ -43,6 +50,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     //CONST
     public const string ANIMATION_MOVE_PARAMETER_HORIZONTAL = "Horizontal";
     public const string ANIMATION_MOVE_PARAMETER_VERTICAL = "Vertical";
+    public const string ANIMATION_MOVE_PARAMETER_IDLECOUNTER ="IdleCounter";
     #endregion
 
     #region GETTERSETTER Variable
@@ -66,6 +74,9 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
     public bool AskAIToLookWhileIdle {get {return _askAIToLookWhileIdle;} set{_askAIToLookWhileIdle = value;}}
     
+    public float IdleCounter {get {return _idleCounter;}}
+    public float[] IdleRelaxTargetTime {get {return _idleRelaxTargetTime;}}
+    public bool WasAiming {get {return _wasAiming;}set{_wasAiming = value;}}
     
     #endregion
 
@@ -79,8 +90,17 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     }
     private void Start() 
     {
+        if(useWeaponStateMachine == null)useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
+        if(useWeaponStateMachine)useWeaponStateMachine.OnWasUsinghGun += UseWeapon_OnWasUsinghGun;
+        ChangeIdleCounterNormal();
         SwitchState(_states.IdleState());
     }
+
+    private void UseWeapon_OnWasUsinghGun()
+    {
+        _wasAiming = true;
+    }
+
     protected virtual void Update() 
     {
         _currState?.UpdateState();
@@ -187,5 +207,19 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public void ChangeCurrSpeed(float newSpeed)
     {
         if(_currSpeed != newSpeed)_currSpeed = newSpeed;
+    }
+
+    public void ChangeIdleCounterAfterAim()
+    {
+        ChangeIdleCounter(0);
+    }
+    public void ChangeIdleCounterNormal()
+    {
+        ChangeIdleCounter(1);
+    }
+    public void ChangeIdleCounter(float x)
+    {
+        _idleCounter = x;
+        _animator.SetFloat(ANIMATION_MOVE_PARAMETER_IDLECOUNTER, _idleCounter);
     }
 }
