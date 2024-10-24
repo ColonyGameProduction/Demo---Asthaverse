@@ -133,7 +133,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         Debug.Log("reviving");
         yield return new WaitForSeconds(2f);
-        _animator.SetBool("Death", false);
+        _animator.SetTrigger("ReviveTrigger");
         _fovMachine.enabled = true;
 
         if(_getPlayableMovementStateData.IsCrawling)_getPlayableMovementStateData.IsCrawling = false;
