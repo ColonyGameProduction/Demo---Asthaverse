@@ -91,15 +91,12 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     private void Start() 
     {
         if(useWeaponStateMachine == null)useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
-        if(useWeaponStateMachine)useWeaponStateMachine.OnWasUsinghGun += UseWeapon_OnWasUsinghGun;
+        
         ChangeIdleCounterNormal();
         SwitchState(_states.IdleState());
     }
 
-    private void UseWeapon_OnWasUsinghGun()
-    {
-        _wasAiming = true;
-    }
+    
 
     protected virtual void Update() 
     {
