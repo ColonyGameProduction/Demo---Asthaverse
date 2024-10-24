@@ -161,6 +161,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NightVision"",
+                    ""type"": ""Button"",
+                    ""id"": ""fc427d59-c9d3-4f11-89aa-58cc4e6f4251"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -372,6 +381,17 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""SkillButton"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9920ae0b-8d2d-4c44-bf96-86f1558d8c1a"",
+                    ""path"": ""<Keyboard>/n"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NightVision"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -395,6 +415,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_UnHoldPosition = m_InputPlayerAction.FindAction("UnHoldPosition", throwIfNotFound: true);
         m_InputPlayerAction_Interact = m_InputPlayerAction.FindAction("Interact", throwIfNotFound: true);
         m_InputPlayerAction_SkillButton = m_InputPlayerAction.FindAction("SkillButton", throwIfNotFound: true);
+        m_InputPlayerAction_NightVision = m_InputPlayerAction.FindAction("NightVision", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -471,6 +492,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_UnHoldPosition;
     private readonly InputAction m_InputPlayerAction_Interact;
     private readonly InputAction m_InputPlayerAction_SkillButton;
+    private readonly InputAction m_InputPlayerAction_NightVision;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -490,6 +512,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @UnHoldPosition => m_Wrapper.m_InputPlayerAction_UnHoldPosition;
         public InputAction @Interact => m_Wrapper.m_InputPlayerAction_Interact;
         public InputAction @SkillButton => m_Wrapper.m_InputPlayerAction_SkillButton;
+        public InputAction @NightVision => m_Wrapper.m_InputPlayerAction_NightVision;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -544,6 +567,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @SkillButton.started += instance.OnSkillButton;
             @SkillButton.performed += instance.OnSkillButton;
             @SkillButton.canceled += instance.OnSkillButton;
+            @NightVision.started += instance.OnNightVision;
+            @NightVision.performed += instance.OnNightVision;
+            @NightVision.canceled += instance.OnNightVision;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -593,6 +619,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @SkillButton.started -= instance.OnSkillButton;
             @SkillButton.performed -= instance.OnSkillButton;
             @SkillButton.canceled -= instance.OnSkillButton;
+            @NightVision.started -= instance.OnNightVision;
+            @NightVision.performed -= instance.OnNightVision;
+            @NightVision.canceled -= instance.OnNightVision;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -627,5 +656,6 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnUnHoldPosition(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnSkillButton(InputAction.CallbackContext context);
+        void OnNightVision(InputAction.CallbackContext context);
     }
 }
