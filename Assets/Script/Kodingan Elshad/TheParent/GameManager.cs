@@ -29,9 +29,11 @@ public class GameManager : MonoBehaviour
     [Header("States")]
     [SerializeField] private GameState _currState;
     private bool _isPause;
-    
+
     [Header("Event")]
     public Action<bool> OnPlayerPause;
+
+    public Action<EnemyAI> enemy;
 
     #region GETTER SETTER VARIABLE
     public GameState GetCurrState { get { return _currState; } }
@@ -91,4 +93,6 @@ public class GameManager : MonoBehaviour
             _currState = GameState.Play;
         }
     }
+
+    
 }
