@@ -1,14 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.EventSystems.EventTrigger;
+
 
 public class EnemyAI : ExecuteLogic
 {
+    EnemyManager EM;
+
     public bool stopMoving;
     private float timer;
     //hal yang diperlukan untuk pathfinding
+    [SerializeField]
     private NavMeshAgent enemyNavmesh;
 
     [Header("Untuk mengkalkulasi sudut benda")]
@@ -22,6 +28,7 @@ public class EnemyAI : ExecuteLogic
     [SerializeField] private float meshResolution;
     [Header("")]
     [SerializeField] private Transform FOVPoint;
+    [SerializeField] private Transform POI;
     [SerializeField] private List<Transform> visibleTargets = new List<Transform>();
     [SerializeField] private List<Transform> otherVisibleTargets = new List<Transform>();
     [Header("Misc")]
@@ -57,12 +64,21 @@ public class EnemyAI : ExecuteLogic
     private Vector3 lastSeenPosition;
     private float distance;
     private float tempDistance;
+    private float tempPOIDistance;
+    private Vector3 tempLastSeenPos;
+    private Transform tempPOI;
 
+    
 
     private void Start()
     {
-        distance = 0;
+        EM = EnemyManager.instance;
 
+        EM.enemyHunted += CombatStateHunted;
+        EM.closestPOI += ClosestPOI;
+        EM.enemyEngage += CombatStateEngage;
+
+        distance = 0;
         currPath = 0;
         patrolPath[0] = transform.position;
 
@@ -71,7 +87,6 @@ public class EnemyAI : ExecuteLogic
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
         StartCoroutine(FindTargetWithDelay(.2f));
-        enemyNavmesh = GetComponent<NavMeshAgent>();
         enemyHP = enemyStat.health;
         weapon = enemyStat.weaponStat[0];
     }
@@ -83,6 +98,7 @@ public class EnemyAI : ExecuteLogic
 
     private void Update()
     {
+
         ChangingState();
         
         switch (enemyState)
@@ -92,6 +108,7 @@ public class EnemyAI : ExecuteLogic
                 if (visibleTargets.Count == 0)
                 {
                     enemyNavmesh.speed = enemyStat.speed;
+                    enemyNavmesh.isStopped = false;
                     Patrol();
                 }
                 else
@@ -104,9 +121,26 @@ public class EnemyAI : ExecuteLogic
                 }
                 break;
             case alertState.Hunted:
+                if(POI == null)
+                {
+                    if(visibleTargets.Count != 0 || otherVisibleTargets.Count != 0)
+                    {
+                        EM.enemyHunted?.Invoke(this);
+                    }
+                    else if(visibleTargets.Count == 0 && otherVisibleTargets.Count == 0)
+                    {
+                        if(EM.enemyCaptain.Contains(this))
+                        {
+                            EM.enemyCaptain.Remove(this);
+                        }
+                    }
+                }
+
+                enemyNavmesh.speed = enemyStat.speed;
                 enemyNavmesh.isStopped = false;
                 if (otherVisibleTargets.Count > 0)
                 {
+                    lastSeenPosition = otherVisibleTargets[0].position;
                     Moving(otherVisibleTargets[0].position);
                 }
                 else
@@ -117,7 +151,12 @@ public class EnemyAI : ExecuteLogic
                     }
                     else if(otherVisibleTargets.Count != 0 && lastSeenPosition == Vector3.zero)
                     {
+                        lastSeenPosition = otherVisibleTargets[0].position;
                         Moving(otherVisibleTargets[0].position);
+                    }
+                    else if (otherVisibleTargets.Count == 0 && lastSeenPosition == Vector3.zero && POI != null)
+                    {
+                        Moving(POI.position);
                     }
                     else
                     {
@@ -126,11 +165,44 @@ public class EnemyAI : ExecuteLogic
 
                     if (Vector3.Distance(transform.position, lastSeenPosition) < 0.5f)
                     {
+                        EM.lastPosIsFound.Invoke(this);
                         lastSeenPosition = Vector3.zero;
+                    }
+
+                    if (POI != null && Vector3.Distance(transform.position, POI.position) < 0.5f)
+                    {
+                        if(EM.POIPosList.Count > 0)
+                        {
+                            ClosestPOI();
+                        }
+                        else
+                        {
+                            EM.tempPOIPosList.Clear();
+                            if(EM.enemyList.Contains(this))
+                            {
+                                EM.enemyList.Remove(this);
+                            }
+                            POI = null;
+                        }
                     }
                 }
                 break;
             case alertState.Engage:
+                enemyNavmesh.speed = enemyStat.speed;
+                enemyNavmesh.isStopped = false;
+
+                if(visibleTargets.Count != 0 || otherVisibleTargets.Count != 0)
+                {
+                    EM.enemyEngage?.Invoke(this);
+                }
+                else if (visibleTargets.Count == 0 && otherVisibleTargets.Count == 0)
+                {
+                    if (EM.enemyCaptain.Contains(this))
+                    {
+                        EM.enemyCaptain.Remove(this);
+                    }
+                }
+
                 FOVStateHandler();
                 Shoot();
                 break;
@@ -144,13 +216,131 @@ public class EnemyAI : ExecuteLogic
 
     }      
 
+    private void ClosestPOI()
+    {
+        if(!EM.enemyList.Contains(this))
+        {
+            return;
+        }
+
+        tempPOIDistance = 0;
+        tempPOI = null;
+
+        if(EM.POIPosList.Count > 0)
+        {
+            foreach (Transform currPOI in EM.POIPosList)
+            {
+
+                if (tempPOIDistance > Vector3.Distance(transform.position, currPOI.position) || tempPOIDistance == 0)
+                {
+                    tempPOIDistance = Vector3.Distance(transform.position, currPOI.position);
+                    tempPOI = currPOI;
+                }
+            }
+
+            enemyState = alertState.Hunted;
+            lastSeenPosition = Vector3.zero;
+            POI = tempPOI;
+            EM.POIPosList.Remove(POI);
+        }
+
+    }
+
+    private void CombatStateHunted(EnemyAI enemy)
+    {
+        if(enemy == this)
+        {
+            if (!EM.enemyList.Contains(this))
+            {
+                EM.enemyList.Add(enemy);
+            }
+
+            if (!EM.enemyCaptain.Contains(this))
+            {
+                EM.enemyCaptain.Add(enemy);
+            }
+
+            return;
+        }        
+
+        if(Vector3.Distance(enemy.transform.position, transform.position) < 100f || EM.enemyList.Contains(this))
+        {
+            maxAlertValue = enemy.maxAlertValue;
+            alertValue = enemy.alertValue;
+            enemyState = alertState.Hunted;
+
+            tempLastSeenPos = Vector3.zero;
+
+            foreach (EnemyAI enemyAI in EM.enemyCaptain)
+            {
+                if (Vector3.Distance(tempLastSeenPos, transform.position) > Vector3.Distance(enemyAI.lastSeenPosition, transform.position) || tempLastSeenPos == Vector3.zero)
+                {
+                    tempLastSeenPos = enemyAI.lastSeenPosition;
+                }
+            }
+
+            lastSeenPosition = tempLastSeenPos;
+
+            if (!EM.enemyList.Contains(this))
+            {
+                EM.enemyList.Add(this);
+            }
+        }
+    }
+
+    private void CombatStateEngage(EnemyAI enemy)
+    {
+        EM.POIPosList.Clear();
+        EM.tempPOIPosList.Clear();
+
+        if (enemy == this)
+        {
+                if (!EM.enemyList.Contains(this))
+            {
+                EM.enemyList.Add(enemy);
+            }
+
+            if (!EM.enemyCaptain.Contains(this))
+            {
+                EM.enemyCaptain.Add(enemy);
+            }
+
+            return;
+        }
+
+        if (Vector3.Distance(enemy.transform.position, transform.position) < 100f || EM.enemyList.Contains(this))
+        {
+            maxAlertValue = enemy.maxAlertValue;
+            alertValue = enemy.alertValue;
+            enemyState = alertState.Engage;
+
+            tempLastSeenPos = Vector3.zero;
+
+            foreach (EnemyAI enemyAI in EM.enemyCaptain)
+            {
+                if (Vector3.Distance(tempLastSeenPos, transform.position) > Vector3.Distance(enemyAI.lastSeenPosition, transform.position) || tempLastSeenPos == Vector3.zero)
+                {
+                    tempLastSeenPos = enemyAI.lastSeenPosition;
+                }
+            }
+
+            lastSeenPosition = tempLastSeenPos;
+
+            if (!EM.enemyList.Contains(this))
+            {
+                EM.enemyList.Add(this);
+            }
+        }
+    }
+
     private void ChangingState()
     {
         if (visibleTargets.Count > 0)
         {
             foreach (Transform transform in visibleTargets)
             {
-                Debug.Log("Shoot dirrr2222" + transform.position);
+
+
                 if (transform.GetComponent<PlayerAction>().enabled == true)
                 {
                     if (maxAlertValue > transform.GetComponent<PlayerAction>().GetPlayerStat().stealth || maxAlertValue == 0)
@@ -171,11 +361,11 @@ public class EnemyAI : ExecuteLogic
                     {
                         if (enemyState == alertState.Idle)
                         {
-                            tempAlertValue = transform.GetComponent<PlayerAction>().GetPlayerStat().stealth;
+                            tempAlertValue = transform.GetComponent<FriendsAI>().GetFriendsStat().stealth;
                         }
                         else
                         {
-                            maxAlertValue = transform.GetComponent<PlayerAction>().GetPlayerStat().stealth;
+                            maxAlertValue = transform.GetComponent<FriendsAI>().GetFriendsStat().stealth;
                         }
                     }
                 }
@@ -188,7 +378,7 @@ public class EnemyAI : ExecuteLogic
         }
         else
         {
-            if (alertValue >= 0 && otherVisibleTargets.Count == 0 && lastSeenPosition == Vector3.zero)
+            if (alertValue >= 0 && otherVisibleTargets.Count == 0 && lastSeenPosition == Vector3.zero && POI == null)
             {
                 alertValue -= Time.deltaTime * 10;
             }
@@ -256,6 +446,10 @@ public class EnemyAI : ExecuteLogic
                 }
             }
             Moving(patrolPath[currPath]);
+        }
+        else
+        {
+            Moving(patrolPath[0]);
         }
 
     }
@@ -373,6 +567,7 @@ public class EnemyAI : ExecuteLogic
                             if (tempDistance > Vector3.Distance(transform.position, enemy.position) || tempDistance == 0)
                             {
                                 Moving(enemy.position);
+                                lastSeenPosition = enemy.position;
                             }
                         }
                     }                    
