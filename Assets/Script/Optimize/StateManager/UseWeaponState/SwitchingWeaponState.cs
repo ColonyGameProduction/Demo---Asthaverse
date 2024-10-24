@@ -18,7 +18,7 @@ public class SwitchingWeaponState : UseWeaponState
             _playableData.TellToTurnOffScope();
         }
 
-        Debug.Log("Swithc" + _stateMachine.gameObject.name);
+        // Debug.Log("Swithc" + _stateMachine.gameObject.name);
     }
     public override void UpdateState()
     {

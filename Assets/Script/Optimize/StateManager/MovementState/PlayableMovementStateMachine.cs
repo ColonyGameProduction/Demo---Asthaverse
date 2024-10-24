@@ -117,12 +117,16 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     private void ForceStopPlayable()
     {
         InputMovement = Vector3.zero;
-        _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+        if(PlayableCharacterManager.IsSwitchingCharacter)_charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
 
         IsWalking = false;
         IsRunning = false;
         // IsCrouching = false; //biar kalo lg crouch di tmpt ga tb tb berdiri
         
+    }
+    public void SetCharaGameObjRotationToNormal()
+    {
+        _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
     }
     #endregion
     private void CharaIdentity_OnInputPlayerChange(bool obj)

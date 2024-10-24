@@ -472,6 +472,7 @@ public class EnemyAI : ExecuteLogic
     private void Shooting()
     {
         Vector3 dis = visibleTargets[0].transform.position - transform.position;
+        // Debug.Log("Shoot direction " + dis + " " + FOVPoint.position + " " + visibleTargets[0].transform.position);
         if(visibleTargets.Count > 0)Shoot(FOVPoint.position, dis, enemyStat , weapon, isItEnemy);
     }
 

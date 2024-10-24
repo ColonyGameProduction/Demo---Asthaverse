@@ -13,7 +13,7 @@ public class CrawlState : MovementState
     public override void EnterState()
     {
         base.EnterState(); // Jalankan animasi
-        Debug.Log("Crawling" + _stateMachine.gameObject.name);
+        // Debug.Log("Crawling" + _stateMachine.gameObject.name);
         _stateMachine.ChangeCurrSpeed(_groundMovement.CrawlSpeed);
 
         //mungkin di sini bisa ditambah kalau masuknya zero atau masih idle dan iscrouching false, maka animasi dimatikan trus lsg ke exit

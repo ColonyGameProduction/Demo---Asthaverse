@@ -6,12 +6,14 @@ public class UsingWeaponState : UseWeaponState
 {
     public UsingWeaponState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine, factory)
     {
-
+        StateAnimationName = "Fire";
     }
     public override void EnterState()
     {
-        // base.EnterState(); // Mainkan animasi
-        Debug.Log("Use Weapon" + _stateMachine.gameObject.name);
+        base.EnterState(); 
+        if(_normalUse.IsAiming && !_stateMachine.CharaAnimator.GetBool("Aim")) StateAnimationOn("Aim");
+        // Mainkan animasi
+        // Debug.Log("Use Weapon" + _stateMachine.gameObject.name);
     }
     public override void UpdateState()
     {
@@ -46,9 +48,9 @@ public class UsingWeaponState : UseWeaponState
     }
     public override void ExitState()
     {
-        // base.ExiState(); // Matikan Animasi shooting
+        base.ExitState(); // Matikan Animasi shooting
         //kalo aim jg off
-        if(!_normalUse.IsAiming && _stateMachine.CharaAnimator.GetBool("Scope")) StateAnimationOff("Scope");
+        if(!_normalUse.IsAiming && _stateMachine.CharaAnimator.GetBool("Aim")) StateAnimationOff("Aim");
     }
     public override void PhysicsLogicUpdateState()
     {
@@ -60,7 +62,7 @@ public class UsingWeaponState : UseWeaponState
                 {
                     _stateMachine.UseWeapon();
                 }
-                else
+                else 
                 {
                     //we're gonna talk about this later
                     _normalUse.IsAiming = false;

@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 public class FOVMachine : MonoBehaviour
 {
+    public bool STOP;
     #region Variable for Creating FOV and CheckTarget
     [Header("To TUrn Off FOV")]
     [SerializeField] private bool _stopView;
@@ -23,17 +25,19 @@ public class FOVMachine : MonoBehaviour
     [Header("")]
     [SerializeField] private Transform _FOVPoint;
     [SerializeField] protected List<Transform> _visibleTargets = new List<Transform>();
-    [SerializeField] protected List<Transform> _otherVisibleTargets = new List<Transform>();
 
     [Header("Misc")]
-    [SerializeField] private string _enemyCharaTag;
+    // [SerializeField] protected string _enemyCharaTag;
     [SerializeField] private LayerMask _charaEnemyMask;
     [SerializeField] private LayerMask _groundMask;
     [SerializeField] private MeshFilter _viewMeshFilter;
     [SerializeField] private float _findTargetDelay = 0.2f;
+    private float _timer = 0;
     private Mesh _viewMesh;
-    protected Vector3 _enemyCharalastSeenPosition;
-    private float _currDistance, _tempDistance;
+    
+    protected float _closestDistance;
+    protected Transform _closestEnemy;
+    
 
     private IEnumerator _findTarget;
     #endregion
@@ -44,8 +48,10 @@ public class FOVMachine : MonoBehaviour
     public float viewRadius {get {return _viewRadius;} set { _viewRadius = value;}}
     public Transform GetFOVPoint { get { return _FOVPoint; } }
     public List<Transform> VisibleTargets {get {return _visibleTargets;} }
-    public List<Transform> OtherVisibleTargets {get {return _otherVisibleTargets;} }
-    public Vector3 EnemyCharalastSeenPosition {get {return _enemyCharalastSeenPosition;} set { _enemyCharalastSeenPosition = value;}}
+    
+    public Transform ClosestEnemy {get {return _closestEnemy;}}
+    
+
     #endregion
     
     protected virtual void Start()
@@ -56,6 +62,7 @@ public class FOVMachine : MonoBehaviour
 
         StartFOVMachine();
     }
+
 
     private void LateUpdate()
     {
@@ -68,31 +75,16 @@ public class FOVMachine : MonoBehaviour
     {
         while (true)
         {
-            Debug.Log("Is Ienumerator First?");
+            // Debug.Log("FOV_Is Ienumerator First?");
             yield return new WaitForSeconds(delay);
-            FindVisibleTargetsForEnemy();
-            SplittingTheObject();
+            FindTargetFunction();
         }
     }
-    private void SplittingTheObject()
+    protected virtual void FindTargetFunction()
     {
-        List<Transform> toRemove = new List<Transform>();
-        toRemove.Clear();
-        _otherVisibleTargets.Clear();
-
-        foreach (Transform transform in _visibleTargets)
-        {
-            if (!transform.gameObject.CompareTag(_enemyCharaTag))
-            {
-                _otherVisibleTargets.Add(transform);
-                toRemove.Add(transform);
-            }
-        }
-        foreach (Transform transform in toRemove)
-        {
-            _visibleTargets.Remove(transform);
-        }
+        FindVisibleTargetsForEnemy();
     }
+    
 
     //Untuk membuat FOV nya
     public void DrawFieldOfView()
@@ -296,14 +288,21 @@ public class FOVMachine : MonoBehaviour
             Transform target = targetInViewRadius[i].transform;
             Vector3 dirToTarget = (target.position - _FOVPoint.position).normalized;
 
+            
             //jika arah nya berada di dalam FOV
-            if (Vector3.Angle(transform.forward, dirToTarget) < _viewAngle / 2)
+            if (Vector3.Angle(_FOVPoint.forward, dirToTarget) < _viewAngle / 2)
             {
-                
+                // Debug.Log("Normal ANGLE" + _FOVPoint.forward + " " + dirToTarget + " " + Vector3.Angle(_FOVPoint.forward, dirToTarget) + " raaa " + transform.forward + " " + dirToTarget + " " + Vector3.Angle(transform.forward, dirToTarget)); // later
                 float distanceToTarget = Vector3.Distance(_FOVPoint.position, target.position);
                 if (!Physics.Raycast(_FOVPoint.position, dirToTarget, distanceToTarget, _groundMask))
                 {
-                    if(_visibleTargets.Count > 0)if(_visibleTargets.Contains(target))continue;
+                    if(_visibleTargets.Count > 0)
+                    {
+                        if(_visibleTargets.Contains(target))continue;
+                    }
+                    CharacterIdentity chara = target.GetComponent<CharacterIdentity>();
+                    if(chara != null && chara.IsDead)continue;
+                    
                     _visibleTargets.Add(target);
                 }
             }
@@ -367,12 +366,51 @@ public class FOVMachine : MonoBehaviour
 
         _viewMesh.Clear();
         VisibleTargets.Clear();
-        OtherVisibleTargets.Clear();
+
         
     }
     public virtual void StartFOVMachine()
     {
-        _findTarget = FindTargetWithDelay(_findTargetDelay);
-        StartCoroutine(_findTarget);
+        // _findTarget = FindTargetWithDelay(_findTargetDelay);
+        // StartCoroutine(_findTarget);
+
+        //No coroutine this time so I can control if the delay has come, this will go first before the other checks enemy distance etc
+        _timer = _findTargetDelay;
+        
     }
+    public virtual void FOVJob()
+    {
+        if(_timer > 0)
+        {
+            _timer -= Time.deltaTime;
+        }
+        else if(_timer <= 0)
+        {
+            _timer = _findTargetDelay;
+            FindTargetFunction();
+        }
+    }
+
+    public virtual void GetClosestEnemy()
+    {
+        float _tempDistanceEnemy = Mathf.Infinity;
+        _closestEnemy = null;
+        if(VisibleTargets.Count > 0)
+        {
+            foreach(Transform enemy in VisibleTargets)
+            {
+                // Debug.Log("Shoot dirrr23" + enemy.position);
+                float currDis = Vector3.Distance(transform.position, enemy.position);
+                if(_tempDistanceEnemy > currDis)
+                {
+                    _tempDistanceEnemy = currDis;
+                    _closestEnemy = enemy;
+                }
+            }
+        }
+        _closestDistance = _tempDistanceEnemy;
+        
+    }
+    
+    
 }

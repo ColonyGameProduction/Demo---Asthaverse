@@ -35,9 +35,10 @@ public enum alertState
 
 public enum FOVDistState
 {
+    none,
     far,
     middle,
-    close,
+    close
 }
 
 public enum GameState

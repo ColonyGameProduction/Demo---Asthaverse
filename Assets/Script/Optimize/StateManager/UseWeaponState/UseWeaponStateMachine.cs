@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,12 +13,16 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
     [Space(1)]
     [Header("Use Weapon States - Normal")]
-    [SerializeField] protected bool _isIdle;
+    [SerializeField] protected bool _isIdle = true;
     [SerializeField] protected bool _isAiming;
     [SerializeField] protected bool _isUsingWeapon;
     [SerializeField] protected bool _isReloading;
     protected UseWeaponStateFactory _states;
     protected UseWeaponState _currState;
+
+    [Header("Animator Component")]
+    protected int _currActiveAnimLayer;
+    protected float _currAnimTIme;
 
     [Space(1)]
     [Header("Spam Weapon State Change Delay Time")]
@@ -46,13 +51,27 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     [Header("Saving other component data")]
 
     protected WeaponLogicManager _weaponLogicManager;
+
+    public Action OnWasUsinghGun;
     
     #endregion
     
     #region GETTERSETTER Variable
     public bool IsIdle { get {return _isIdle;} set{ _isIdle = value;} }
     public bool IsAiming { get {return _isAiming;} set{ _isAiming = value;} }
-    public bool IsUsingWeapon { get {return _isUsingWeapon;} set{ _isUsingWeapon = value;} }
+    public bool IsUsingWeapon 
+    { 
+        get {return _isUsingWeapon;} 
+        set{ 
+            if(value) 
+            {
+                if(CurrWeapon.totalBullet > 0)_isUsingWeapon = value;
+            }
+            
+            else _isUsingWeapon = value;
+            
+        } 
+    }
     public bool IsReloading 
     { 
         get {return _isReloading;} 
@@ -77,6 +96,8 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
     public Transform CurrOriginShootPoint { get{return _currOriginShootPoint;}}
     public Transform CurrDirectionShootPoint { get{return _currDirectionShootPoint;}}
+    public int CurrActiveAnimLayer { get {return _currActiveAnimLayer;}}
+    public float CurrAnimTime {get {return _currAnimTIme;}set {_currAnimTIme = value;}}
 
     #endregion
 
@@ -134,17 +155,28 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
             CurrWeapon.currBullet -= 1;
             if(!CurrWeapon.weaponStatSO.allowHoldDownButton)IsUsingWeapon = false;
             StartCoroutine(FireRate(CurrWeapon.weaponStatSO.fireRate));
-            if (CurrWeapon.currBullet == 0 && CurrWeapon.totalBullet > 0)
+            if (CurrWeapon.currBullet == 0)
             {
-                if(!CanReload)CanReload = true;
-                IsReloading = true;
+                if(CurrWeapon.totalBullet > 0)
+                {
+                    if(!CanReload)CanReload = true;
+                    IsReloading = true;
+                }
+                else 
+                {
+                    IsUsingWeapon = false;
+                }
+                
             }
+            
         }
     }
     protected virtual void SetShootPosition()
     {
         _originShootPosition = CurrOriginShootPoint.position;
-        _directionShootPosition = CurrDirectionShootPoint.position;
+        _directionShootPosition = CurrDirectionShootPoint.position - transform.position;
+        // Debug.Log()
+        Debug.Log("Shoot direction " + _directionShootPosition);
     }
 
     protected IEnumerator FireRate(float fireRateTime)
@@ -164,11 +196,17 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     {
         //DoAnimation
         yield return new WaitForSeconds(reloadTime);
+        ReloadAnimationFinished();
+        
+    }
+    public void ReloadAnimationFinished()
+    {
+        _animator.SetBool("Reload", false);
         _charaIdentity.ReloadWeapon();
         CanReload = false;
         IsReloading = false;
-        
     }
+    
     public void CanReloadWeapon_Coroutine()
     {
         StartCoroutine(CanReloadWeapon());
