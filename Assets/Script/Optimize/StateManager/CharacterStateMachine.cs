@@ -7,8 +7,8 @@ public abstract class CharacterStateMachine : BaseStateMachine
     [SerializeField]protected Animator _animator;
     public Animator CharaAnimator {get {return _animator;}}
 
-    protected bool _isInputPlayer;
-    public bool IsInputPlayer {get {return _isInputPlayer;}}
+    protected bool _isAIInput = true;
+    public bool IsAIInput {get {return _isAIInput;}}
 
     protected override void Awake() 
     {

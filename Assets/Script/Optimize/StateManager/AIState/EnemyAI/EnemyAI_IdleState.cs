@@ -4,82 +4,82 @@ using UnityEngine;
 
 public class EnemyAI_IdleState : EnemyAIState
 {
-    public EnemyAI_IdleState(EnemyAIBehaviourStateMachine stateMachine, EnemyAIStateFactory factory) : base(stateMachine, factory)
+    public EnemyAI_IdleState(EnemyAIBehaviourStateMachine currStateMachine, EnemyAIStateFactory factory) : base(currStateMachine, factory)
     {
         
     }
 
     public override void EnterState()
     {
-        _stateMachine.IsAIIdle = true;
-        if(_stateMachine.GetUseWeaponStateMachine.IsUsingWeapon || _stateMachine.GetUseWeaponStateMachine.IsAiming)_stateMachine.GetUseWeaponStateMachine.ForceStopUseWeapon();
+        _sm.IsAIIdle = true;
+        if(_sm.GetUseWeaponStateMachine.IsUsingWeapon || _sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.ForceStopUseWeapon();
     }
 
     public override void UpdateState()
     {
-        if(_stateMachine.IsCharacterDead)
+        if(_sm.IsCharacterDead)
         {
-            if(_stateMachine.GetMoveStateMachine.CurrAIDirPos != _stateMachine.transform.position)_stateMachine.GetMoveStateMachine.ForceStopMoving();
+            if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
             return;
         }
 
-        _stateMachine.GetFOVState.FOVStateHandler();
-        if(_stateMachine.GetFOVState.CurrState != FOVDistState.none)
+        _sm.GetFOVState.FOVStateHandler();
+        if(_sm.GetFOVState.CurrState != FOVDistState.none)
         {
             // if(_stateMachine.GetFOVMachine.VisibleTargets.Count > 0)
             // {
                 //do we need to check closest enemy again?
-                if(_stateMachine.GetMoveStateMachine.CurrAIDirPos != _stateMachine.transform.position)_stateMachine.GetMoveStateMachine.ForceStopMoving();
-                _stateMachine.GetMoveStateMachine.GiveAIPlaceToLook(_stateMachine.GetFOVMachine.ClosestEnemy.position);
-                if(!_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = true;
+                if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
+                _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position);
+                if(!_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = true;
             
             // }
-            if(_stateMachine.GetFOVState.CurrState == FOVDistState.middle)
+            if(_sm.GetFOVState.CurrState == FOVDistState.middle)
             {
-                // _stateMachine.MaxAlertValue *= 0.5f;
-                _stateMachine.AlertValue = _stateMachine.MaxAlertValue*0.5f + 10;
+                // _sm.MaxAlertValue *= 0.5f;
+                _sm.AlertValue = _sm.MaxAlertValue*0.5f + 10;
             }
-            else if(_stateMachine.GetFOVState.CurrState == FOVDistState.close)
+            else if(_sm.GetFOVState.CurrState == FOVDistState.close)
             {
-                // _stateMachine.MaxAlertValue = 0f;
-                _stateMachine.AlertValue = _stateMachine.MaxAlertValue + 10;
+                // _sm.MaxAlertValue = 0f;
+                _sm.AlertValue = _sm.MaxAlertValue + 10;
             }
             // Debug.Log("HALOOO");
         }
 
-        if(_stateMachine.AlertValue >= _stateMachine.MaxAlertValue / 2 && _stateMachine.AlertValue < _stateMachine.MaxAlertValue)
+        if(_sm.AlertValue >= _sm.MaxAlertValue / 2 && _sm.AlertValue < _sm.MaxAlertValue)
         {
-            _stateMachine.SwitchState(_factory.AI_HuntedState());
+            _sm.SwitchState(_factory.AI_HuntedState());
         }
-        else if(_stateMachine.AlertValue >= _stateMachine.MaxAlertValue)
+        else if(_sm.AlertValue >= _sm.MaxAlertValue)
         {
-            _stateMachine.SwitchState(_factory.AI_EngageState());
+            _sm.SwitchState(_factory.AI_EngageState());
         }
 
-        if(_stateMachine.GetFOVState.CurrState == FOVDistState.none) //no person
+        if(_sm.GetFOVState.CurrState == FOVDistState.none) //no person
         {
-            if(_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = false;
+            if(_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = false;
             Patrol();
         }
     }
     public override void ExitState()
     {
-        if(_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = false;
+        if(_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = false;
 
-        _stateMachine.IsAIIdle = false;
+        _sm.IsAIIdle = false;
     }
 
     public void Patrol()
     {
-        if(_stateMachine.GetMoveStateMachine.IsRunning) _stateMachine.GetMoveStateMachine.IsRunning = false;
-        if (_stateMachine.PatrolPath.Length > 1)
+        if(_sm.GetMoveStateMachine.IsRunning) _sm.GetMoveStateMachine.IsRunning = false;
+        if (_sm.PatrolPath.Length > 1)
         {
-            _stateMachine.GetMoveStateMachine.GiveAIDirection(_stateMachine.PatrolPath[_stateMachine.CurrPath].position);
+            _sm.GetMoveStateMachine.SetAIDirection(_sm.PatrolPath[_sm.CurrPath].position);
             
         }
         else
         {
-            _stateMachine.GetMoveStateMachine.GiveAIDirection(_stateMachine.transform.position);
+            _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
         }
     }
     

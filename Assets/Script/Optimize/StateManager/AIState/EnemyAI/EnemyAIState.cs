@@ -5,11 +5,11 @@ using UnityEngine;
 public class EnemyAIState : BaseState
 {
     protected EnemyAIStateFactory _factory;
-    protected EnemyAIBehaviourStateMachine _stateMachine;
-    public EnemyAIState(EnemyAIBehaviourStateMachine stateMachine, EnemyAIStateFactory factory)
+    protected EnemyAIBehaviourStateMachine _sm;
+    public EnemyAIState(EnemyAIBehaviourStateMachine currStateMachine, EnemyAIStateFactory factory)
     {
         _factory = factory;
-        _stateMachine = stateMachine;
+        _sm = currStateMachine;
     }
     public override void EnterState()
     {

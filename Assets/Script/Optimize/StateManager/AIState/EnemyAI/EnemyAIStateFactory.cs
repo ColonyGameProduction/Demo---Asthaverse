@@ -6,9 +6,9 @@ public class EnemyAIStateFactory
 {
     EnemyAIBehaviourStateMachine _machine;
     EnemyAIState _idle, _hunted, _engage;
-    public EnemyAIStateFactory (EnemyAIBehaviourStateMachine machine)
+    public EnemyAIStateFactory (EnemyAIBehaviourStateMachine currStateMachine)
     {
-        _machine = machine;
+        _machine = currStateMachine;
     }
     
     public EnemyAIState AI_IdleState()

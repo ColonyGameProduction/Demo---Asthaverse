@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalUseWeaponData
 {
@@ -21,6 +22,8 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     protected UseWeaponState _currState;
 
     [Header("Animator Component")]
+    [SerializeField] protected Rig _rigController;
+    
     protected int _currActiveAnimLayer;
     protected float _currAnimTIme;
 
@@ -92,7 +95,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
     public WeaponData CurrWeapon{get{return _currWeapon;} }
     public Transform ChosenTarget { get {return _currChosenTarget;}}
-    public float CharaAimAccuracy { get { return _charaAimAccuracy;}set { _charaAimAccuracy = value;}}
+    public virtual float CharaAimAccuracy { get { return _charaAimAccuracy; }}
 
     public Transform CurrOriginShootPoint { get{return _currOriginShootPoint;}}
     public Transform CurrDirectionShootPoint { get{return _currDirectionShootPoint;}}
@@ -107,7 +110,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
         if(_originShootPoint_AIContainer == null)_originShootPoint_AIContainer = GetComponent<FOVMachine>().GetFOVPoint;
         
-        if(!IsInputPlayer)
+        if(IsAIInput)
         {
             _currOriginShootPoint = _originShootPoint_AIContainer;
             _currDirectionShootPoint = _currChosenTarget;
@@ -239,4 +242,8 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         _currWeapon = _charaIdentity.CurrWeapon;
         // pas ganti weapon, ini dipanggil
     }
+    public void ActivateRigAim() => _rigController.weight = 1;
+    public void DeactivateRigAim() => _rigController.weight = 0;
+
+    public void SetCharaAimAccuracy(float newAccuracy) => _charaAimAccuracy = newAccuracy;
 }

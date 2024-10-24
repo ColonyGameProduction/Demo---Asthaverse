@@ -19,16 +19,12 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     protected MovementStateFactory _states;
     protected MovementState _currState;
 
-    [Header("Move Animator Component")]
-    [SerializeField] protected float _idleCounter;
-    [SerializeField] protected float[] _idleRelaxTargetTime;
-    [SerializeField] protected UseWeaponStateMachine useWeaponStateMachine;
-    protected bool _wasAiming;
-
     [Space(1)]
-    [Header("NavMesh Component")]
-    [SerializeField]protected NavMeshAgent _agentNavMesh;
-    protected Vector3 _currAIDirPos;
+    [Header("Move Animator Component")]
+    [SerializeField] protected float[] _idleAnimCycleTimeTarget;
+    protected float _idleAnimCycleIdx;
+    protected bool _wasCharacterAiming;
+
 
     [Space(1)]
     [Header("Move Speed - State Multiplier")]
@@ -38,45 +34,42 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     protected float _currSpeed;
 
     [Space(1)]
+    [Header("NavMesh Component")]
+    protected NavMeshAgent _agentNavMesh;
+    protected Vector3 _currAIDirPos; //Current AI Direction Position
+
+    [Space(1)]
     [Header("AI Rotation")]
-    protected Vector3 _posToLookAt;
-    protected bool _askAIToLookWhileIdle;
+    protected Vector3 _idleAILookTarget; //position for AI To look at
+    protected bool _allowLookTargetWhileIdle;
 
     public Action<Vector3> OnIsTheSamePosition;
 
     #endregion
 
     #region CONST Variable
-    //CONST
+
     public const string ANIMATION_MOVE_PARAMETER_HORIZONTAL = "Horizontal";
     public const string ANIMATION_MOVE_PARAMETER_VERTICAL = "Vertical";
     public const string ANIMATION_MOVE_PARAMETER_IDLECOUNTER ="IdleCounter";
     #endregion
 
     #region GETTERSETTER Variable
-    //Getter Setter
-    public virtual float WalkSpeed 
-    { 
-        get {return _walkSpeed;}
-        set 
-        {
-            _walkSpeed = value;
-            _runSpeed = _walkSpeed * _runMultiplier;
-        }
-    }
-    public float RunSpeed { get {return _runSpeed;}}
-    
+
     public bool IsIdle {get {return _isIdle;} set{ _isIdle = value;} }
     public bool IsWalking {get {return _isWalking;}set{ _isWalking = value;} }
     public bool IsRunning { get {return _isRun;}set{ _isRun = value;} }
 
+    public float IdleAnimCycleIdx {get {return _idleAnimCycleIdx;}}
+    public float[] IdleAnimCycleTimeTarget {get {return _idleAnimCycleTimeTarget;}}
+    public bool WasCharacterAiming {get {return _wasCharacterAiming;}set{_wasCharacterAiming = value;}}
+
+    public float WalkSpeed { get {return _walkSpeed;}}
+    public float RunSpeed { get {return _runSpeed;}}
+
     public NavMeshAgent AgentNavMesh {get {return _agentNavMesh;}}
     public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
-    public bool AskAIToLookWhileIdle {get {return _askAIToLookWhileIdle;} set{_askAIToLookWhileIdle = value;}}
-    
-    public float IdleCounter {get {return _idleCounter;}}
-    public float[] IdleRelaxTargetTime {get {return _idleRelaxTargetTime;}}
-    public bool WasAiming {get {return _wasAiming;}set{_wasAiming = value;}}
+    public bool AllowLookTargetWhileIdle {get {return _allowLookTargetWhileIdle;} set{_allowLookTargetWhileIdle = value;}}
     
     #endregion
 
@@ -89,14 +82,10 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         if(AgentNavMesh == null)_agentNavMesh = GetComponent<NavMeshAgent>();
     }
     private void Start() 
-    {
-        if(useWeaponStateMachine == null)useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
-        
-        ChangeIdleCounterNormal();
+    {        
+        SetIdleAnimToNormal();
         SwitchState(_states.IdleState());
     }
-
-    
 
     protected virtual void Update() 
     {
@@ -118,15 +107,19 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     }
 
     #region Move
-    /// <summary>
-    /// if AI -> Get Destination, if Player -> Get Direction -> Tp krn ini purely buat AI jd d sini aja
-    /// </summary>
     
     public virtual void Move()
     {
         MoveAI(CurrAIDirPos);
     }
-    //Function to make AI move based on direction
+
+    public virtual void ForceStopMoving()
+    {
+        ForceAIStopMoving();
+    }
+    #endregion
+
+    #region AI ONLY
     protected void MoveAI(Vector3 direction)
     {
         if(AgentNavMesh.speed != _currSpeed)AgentNavMesh.speed = _currSpeed;
@@ -138,9 +131,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, animatedFaceDir.z);
 
     }
-
-    //function to check if ai should move or not
-    public bool IsTargetTheSamePositionAsTransform()
+    public bool IsAIAtDirPos()
     {
         if(AgentNavMesh.destination != CurrAIDirPos)
         {
@@ -152,32 +143,18 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
             OnIsTheSamePosition?.Invoke(CurrAIDirPos);
             return true;
         }
-        else
+
+        if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentNavMesh.radius)
         {
-            if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentNavMesh.radius)
-            {
+            AgentNavMesh.ResetPath();
+            OnIsTheSamePosition?.Invoke(CurrAIDirPos);
 
-                AgentNavMesh.ResetPath();
-                OnIsTheSamePosition?.Invoke(CurrAIDirPos);
-
-                return true;
-            }
+            return true;
         }
-
+        
         return false;
     }
 
-    public void IdleAI_RotateToEnemy()
-    {
-        Vector3 facedir = (_posToLookAt - transform.position).normalized;
-        Quaternion rotateTo = Quaternion.LookRotation(facedir);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
-    }
-
-    public virtual void ForceStopMoving()
-    {
-        ForceAIStopMoving();
-    }
     private void ForceAIStopMoving()
     {
         AgentNavMesh.speed = 0;
@@ -191,32 +168,46 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         // CharaAnimator.SetBool("Scope", false);
     }
 
-    public void GiveAIDirection(Vector3 newPos)
+    public void SetAIDirection(Vector3 newPos)
     {
         _currAIDirPos = newPos;
     }
-    public void GiveAIPlaceToLook(Vector3 posToLook)
+    public void SetAITargetToLook(Vector3 posToLook)
     {
-        _posToLookAt = posToLook;
+        _idleAILookTarget = posToLook;
+    }
+    public void RotateAIToTarget_Idle()
+    {
+        Vector3 facedir = (_idleAILookTarget - transform.position).normalized;
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
     }
     #endregion
 
+    #region Movement Speed
+    public virtual void InitializeMovementSpeed(float speed)
+    {
+        _walkSpeed = speed;
+        _runSpeed = _walkSpeed * _runMultiplier;
+    }
     public void ChangeCurrSpeed(float newSpeed)
     {
         if(_currSpeed != newSpeed)_currSpeed = newSpeed;
     }
+    #endregion
 
-    public void ChangeIdleCounterAfterAim()
+    #region IdleAnim
+    public void SetIdleAnimAfterAim()
     {
-        ChangeIdleCounter(0);
+        SetIdleAnimCycleIdx(0);
     }
-    public void ChangeIdleCounterNormal()
+    public void SetIdleAnimToNormal()
     {
-        ChangeIdleCounter(1);
+        SetIdleAnimCycleIdx(1);
     }
-    public void ChangeIdleCounter(float x)
+    public void SetIdleAnimCycleIdx(float x)
     {
-        _idleCounter = x;
-        _animator.SetFloat(ANIMATION_MOVE_PARAMETER_IDLECOUNTER, _idleCounter);
+        _idleAnimCycleIdx = x;
+        _animator.SetFloat(ANIMATION_MOVE_PARAMETER_IDLECOUNTER, IdleAnimCycleIdx);
     }
+    #endregion
 }

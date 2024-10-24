@@ -70,7 +70,7 @@ public class WeaponLogicManager : MonoBehaviour
         if(_getHealthFunction != null)
         {
             _getHealthFunction.Hurt(weapon.baseDamage);
-            Debug.Log(entityGameObject.name + " Hit!" + " HP:" + _getHealthFunction.HealthNow);
+            Debug.Log(entityGameObject.name + " Hit!" + " HP:" + _getHealthFunction.CurrHealth);
         }
  
     }

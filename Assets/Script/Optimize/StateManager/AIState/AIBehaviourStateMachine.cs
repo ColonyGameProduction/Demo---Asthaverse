@@ -7,6 +7,9 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     #region Normal Variable
     [Header("Other Important Variable")]
     [SerializeField] protected FOVMachine _fovMachine;
+    [SerializeField] protected Transform _aimAIPoint;
+    #endregion
+    #region  GETTER SETTER VARIABLE
     public FOVMachine GetFOVMachine { get { return _fovMachine; } }
 
     #endregion
@@ -17,5 +20,13 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
         if(_fovMachine == null)_fovMachine = GetComponent<FOVMachine>();
         
+    }
+    public void AimAIPointLookAt(Transform lookAt)
+    {
+        if(lookAt != null) _aimAIPoint.LookAt(lookAt);
+        else
+        {
+            if(_aimAIPoint.localRotation != Quaternion.identity)_aimAIPoint.localRotation = Quaternion.Euler(0, 0, 0);
+        }
     }
 }

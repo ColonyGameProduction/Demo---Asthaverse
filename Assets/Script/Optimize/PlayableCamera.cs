@@ -38,6 +38,8 @@ public class PlayableCamera : MonoBehaviour
         // move the camera x and y axis with rotating follow target from player
         _followTarget.rotation *= Quaternion.AngleAxis(mouseX, Vector3.up);
         _followTarget.rotation *= Quaternion.AngleAxis(-mouseY, Vector3.right);
+        
+        
 
         // prevent camera moving out of bounds
         Vector3 angles = _followTarget.localEulerAngles;
@@ -55,8 +57,10 @@ public class PlayableCamera : MonoBehaviour
         }
 
         _followTarget.localEulerAngles = angles;
+        
 
     }
+
     public void ChangeCameraFOV(float newFOV)
     {
         _followCamera.m_Lens.FieldOfView = newFOV;

@@ -4,44 +4,44 @@ using UnityEngine;
 
 public class IdleWeaponState : UseWeaponState
 {
-    public IdleWeaponState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine, factory)
+    public IdleWeaponState(UseWeaponStateMachine currStateMachine, UseWeaponStateFactory factory) : base(currStateMachine, factory)
     {   
 
     }
     public override void EnterState()
     {
         
-        if(!_stateMachine.IsIdle)
+        if(!_sm.IsIdle)
         {
             // Debug.Log("what");
-            _stateMachine.OnWasUsinghGun?.Invoke();
+            _sm.OnWasUsinghGun?.Invoke();
         }
 
-        _stateMachine.IsIdle = true;
+        _sm.IsIdle = true;
     }
     public override void UpdateState()
     {
-        if((_advancedUse != null && (PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter)) || _stateMachine.IsCharacterDead)return;
+        if((_advancedUse != null && (PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter)) || _sm.IsCharacterDead)return;
 
         if(_normalUse.IsAiming)
         {
-            _stateMachine.SwitchState(_factory.AimWeaponState());
+            _sm.SwitchState(_factory.AimWeaponState());
         }
         else if(_advancedUse != null && _advancedUse.IsSilentKill)
         {
-            _stateMachine.SwitchState(_factory.SilentKillState());
+            _sm.SwitchState(_factory.SilentKillState());
         }
         else if(_advancedUse != null && _advancedUse.IsSwitchingWeapon)
         {
-            _stateMachine.SwitchState(_factory.SwitchingWeaponState());
+            _sm.SwitchState(_factory.SwitchingWeaponState());
         }
         else if(_normalUse.IsReloading)
         {
-            _stateMachine.SwitchState(_factory.ReloadWeaponState());
+            _sm.SwitchState(_factory.ReloadWeaponState());
         }
     }
     public override void ExitState()
     {
-        _stateMachine.IsIdle = false;
+        _sm.IsIdle = false;
     }
 }

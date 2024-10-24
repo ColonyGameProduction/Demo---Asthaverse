@@ -10,119 +10,103 @@ using UnityEngine;
 /// </summary>
 public class IdleState : MovementState
 {
-    float _timeCounter;
-    float _currTargetTime;
-    float _nextChangeTarget;
+    float _timeCounter, _currTargetTime, _nextIdleAnimIdxTarget;
     bool _isIdleAnimChanging;
     const float epsilon = 0.0001f;
     const string ANIMATION_MOVE_PARAMETER_CROUCH = "Crouch";
-    //Di idle state ini, walaupun misal isRun atau isCrouch masih nyala, tetap bisa ke state ini, yg penting inputnya tidak ada 
-    // dan karena crouch ada idle animation, jd crouch tetap di posisi animasi crouch; sedangkan run tidak. Ketika isCrouch = false, maka animasinya akan dimatikan
 
-    public IdleState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
-    {
-        
-    }
+    public IdleState(MovementStateMachine currStateMachine, MovementStateFactory factory) : base(currStateMachine, factory){}
     
     public override void EnterState()
     {   
-        _isIdleAnimChanging = false;
-
-        if(_stateMachine.WasAiming)
-        {
-            _stateMachine.WasAiming = false;
-            _stateMachine.ChangeIdleCounterAfterAim();
-            _timeCounter = 0;
-            _currTargetTime = _stateMachine.IdleRelaxTargetTime[0];
-
-        }
+        ResetIdleAnimCycle();
         
-        else if(_stateMachine.IdleCounter == 1)
-        {
-            _timeCounter = _stateMachine.IdleRelaxTargetTime[0];
-            _currTargetTime = _stateMachine.IdleRelaxTargetTime[1];
-        }
-        
-        
-        _standMovement.IsIdle = true;
+        _standData.IsIdle = true;
 
-        _stateMachine.CharaAnimator?.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_HORIZONTAL, 0);
-        _stateMachine.CharaAnimator?.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_VERTICAL, 0);
-        StateAnimationOff(ANIMATION_MOVE_PARAMETER_ISMOVING);
-
+        StopMovementAnimation();
     }
     public override void UpdateState()
     {
-        //Kalo lg switch kan semuanya di force balik idle, dn kalo lwt sini ya gabisa ngapa ngapain :D
-        if(_groundMovement != null && (PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter))return;
+        if(_playableData != null && (PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter))return;
 
-        if(!_isIdleAnimChanging) IdleAnimationChanger();
-        else if(_isIdleAnimChanging) IdleAnimationChanging();
-        
-        //If there's an input movement: dalam hal ini kalo inputnya player berarti input movement tidak sama dengan 0 ATAU kalau input dari AI berarti currAIDirectionnya itu ga null, maka kita akan masuk ke state selanjutnya tergantung syarat yg ada
-        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
+        if((!_sm.IsAIInput && _playableData.InputMovement != Vector3.zero) || (_sm.IsAIInput && !_sm.IsAIAtDirPos()))
         {
-            if(_groundMovement != null && _groundMovement.IsCrawling)_stateMachine.SwitchState(_factory.CrawlState());
-            else if(_groundMovement != null && _groundMovement.IsCrouching)_stateMachine.SwitchState(_factory.CrouchState());
-            else if(_standMovement.IsRunning)_stateMachine.SwitchState(_factory.RunState());
-            else _stateMachine.SwitchState(_factory.WalkState());
-
+            if(_groundData != null && _groundData.IsCrawling)_sm.SwitchState(_factory.CrawlState());
+            else if(_groundData != null && _groundData.IsCrouching)_sm.SwitchState(_factory.CrouchState());
+            else if(_standData.IsRunning)_sm.SwitchState(_factory.RunState());
+            else _sm.SwitchState(_factory.WalkState());
         }
         
-        if(_stateMachine.IsInputPlayer &&_playableData.IsMustLookForward)_playableData.Idle_RotateAim();
+        CheckMustRotateWhileIdle();
 
-        if(!_stateMachine.IsInputPlayer && _stateMachine.IsTargetTheSamePositionAsTransform())
-        {
-            if(_stateMachine.AskAIToLookWhileIdle)_stateMachine.IdleAI_RotateToEnemy();
-        }
-
-        if(_stateMachine.WasAiming)
-        {
-            _isIdleAnimChanging = false;
-            _stateMachine.WasAiming = false;
-            _stateMachine.ChangeIdleCounterAfterAim();
-            _timeCounter = 0;
-            _currTargetTime = _stateMachine.IdleRelaxTargetTime[0];
-
-        }
-        if(_groundMovement != null && _groundMovement.IsCrouching)
-        {
-            if(_stateMachine.IdleCounter > 1) 
-            {
-                _stateMachine.ChangeIdleCounterNormal();
-                _timeCounter = _stateMachine.IdleRelaxTargetTime[0];
-                _currTargetTime = _stateMachine.IdleRelaxTargetTime[1];
-            }
-            StateAnimationOn(ANIMATION_MOVE_PARAMETER_CROUCH);
-        }
-        else if(_groundMovement != null && !_groundMovement.IsCrouching)
-        {
-            StateAnimationOff(ANIMATION_MOVE_PARAMETER_CROUCH);
-        }
+        CheckingIdleAnimationCycle();
+        if(_groundData != null) CheckIsCrouchWhileIdle();
     }
     public override void ExitState()
     {
-        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform())) _standMovement.IsIdle = false; //kyk gini krn bs aja keluar krn crouch state di atas
+        if((!_sm.IsAIInput && _playableData.InputMovement != Vector3.zero) || (_sm.IsAIInput && !_sm.IsAIAtDirPos())) _standData.IsIdle = false; //kyk gini krn bs aja keluar krn crouch state di atas
         // base.EnterState(); //Stop Idle Anim
-        StateAnimationOn(ANIMATION_MOVE_PARAMETER_ISMOVING);
-        if(_stateMachine.IdleCounter > 1)_stateMachine.ChangeIdleCounterNormal();
+        SetAnimParamActive(ANIMATION_MOVE_PARAMETER_ISMOVING);
+        if(_sm.IdleAnimCycleIdx > 1)_sm.SetIdleAnimToNormal();
+    }
+    private void CheckMustRotateWhileIdle()
+    {
+        if(!_sm.IsAIInput && _playableData.IsMustLookForward)_playableData.RotateToAim_Idle();
+        if(_sm.IsAIInput && _sm.IsAIAtDirPos())if(_sm.AllowLookTargetWhileIdle)_sm.RotateAIToTarget_Idle();
+    }
+    private void CheckIsCrouchWhileIdle()
+    {
+        if(_groundData.IsCrouching)
+        {
+            if(_sm.IdleAnimCycleIdx > 1) 
+            {
+                _sm.SetIdleAnimToNormal();
+                _timeCounter = _sm.IdleAnimCycleTimeTarget[0];
+                _currTargetTime = _sm.IdleAnimCycleTimeTarget[1];
+            }
+            SetAnimParamActive(ANIMATION_MOVE_PARAMETER_CROUCH);
+        }
+        else
+        {
+            SetAnimParamInactive(ANIMATION_MOVE_PARAMETER_CROUCH);
+        }
+    }
+    private void StopMovementAnimation()
+    {
+        _sm.CharaAnimator?.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_HORIZONTAL, 0);
+        _sm.CharaAnimator?.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_VERTICAL, 0);
+        SetAnimParamInactive(ANIMATION_MOVE_PARAMETER_ISMOVING);
     }
 
-    public void IdleAnimationChanger()
+    #region Idle Anim Cycle
+    private void CheckingIdleAnimationCycle()
+    {
+        if(!_isIdleAnimChanging) IdleAnimCycleTimerUpdate();
+        else if(_isIdleAnimChanging) ChangingIdleAnimation();
+        if(_sm.WasCharacterAiming)
+        {
+            _isIdleAnimChanging = false;
+            _sm.WasCharacterAiming = false;
+            _sm.SetIdleAnimAfterAim();
+            _timeCounter = 0;
+            _currTargetTime = _sm.IdleAnimCycleTimeTarget[0];
+        }
+    }
+    private void IdleAnimCycleTimerUpdate()
     {
         // Debug.Log("Time COUNTERR" + _timeCounter);
         if(_timeCounter < _currTargetTime)_timeCounter += Time.deltaTime;
         else if(_timeCounter >= _currTargetTime)
         {
-            if(_stateMachine.IdleCounter >= 0)
+            if(_sm.IdleAnimCycleIdx >= 0)
             {
-                if(_stateMachine.IdleCounter == 0 || _groundMovement == null || (_groundMovement != null && !_groundMovement.IsCrouching))
+                if(_sm.IdleAnimCycleIdx == 0 || _groundData == null || (_groundData != null && !_groundData.IsCrouching))
                 {
-                    if(_stateMachine.IdleCounter < 3)
+                    if(_sm.IdleAnimCycleIdx < 3)
                     {
-                        float x = _stateMachine.IdleCounter + 1;
-                        if(x < 3)_currTargetTime = _stateMachine.IdleRelaxTargetTime[(int)x];
-                        _nextChangeTarget = x;
+                        float x = _sm.IdleAnimCycleIdx + 1;
+                        if(x < 3)_currTargetTime = _sm.IdleAnimCycleTimeTarget[(int)x];
+                        _nextIdleAnimIdxTarget = x;
                         _isIdleAnimChanging = true;
                         // _stateMachine.ChangeIdleCounter(x);
                     }
@@ -132,16 +116,37 @@ public class IdleState : MovementState
         }
         
     }
-    public void IdleAnimationChanging()
+    private void ChangingIdleAnimation()
     {   
-        float tempCounter = Mathf.Lerp(_stateMachine.IdleCounter, _nextChangeTarget, Time.deltaTime * 2);
-        if(_nextChangeTarget - tempCounter < epsilon)tempCounter = _nextChangeTarget;
-        _stateMachine.ChangeIdleCounter(tempCounter);
-        if(_stateMachine.IdleCounter == _nextChangeTarget)
+        float tempCounter = Mathf.Lerp(_sm.IdleAnimCycleIdx, _nextIdleAnimIdxTarget, Time.deltaTime * 2);
+        if(_nextIdleAnimIdxTarget - tempCounter < epsilon)tempCounter = _nextIdleAnimIdxTarget;
+        _sm.SetIdleAnimCycleIdx(tempCounter);
+        if(_sm.IdleAnimCycleIdx == _nextIdleAnimIdxTarget)
         {
             _isIdleAnimChanging = false;
-            _stateMachine.ChangeIdleCounter(_nextChangeTarget);
+            _sm.SetIdleAnimCycleIdx(_nextIdleAnimIdxTarget);
         }
     }
+
+    private void ResetIdleAnimCycle()
+    {
+        _isIdleAnimChanging = false;
+
+        if(_sm.WasCharacterAiming)
+        {
+            _sm.WasCharacterAiming = false;
+            _sm.SetIdleAnimAfterAim();
+            _timeCounter = 0;
+            _currTargetTime = _sm.IdleAnimCycleTimeTarget[0];
+
+        }
+        
+        else if(_sm.IdleAnimCycleIdx == 1)
+        {
+            _timeCounter = _sm.IdleAnimCycleTimeTarget[0];
+            _currTargetTime = _sm.IdleAnimCycleTimeTarget[1];
+        }
+    }
+    #endregion
         
 }

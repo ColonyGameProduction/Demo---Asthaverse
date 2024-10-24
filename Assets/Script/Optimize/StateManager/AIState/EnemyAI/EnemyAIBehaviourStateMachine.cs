@@ -26,7 +26,6 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     [SerializeField] private Transform[] _patrolPath;
     private bool _switchingPath;
     private int _currPath;
-    private Vector3 _enemyCharaLastSeenPosition;
 
     #region GETTERSETTER Variable
     public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
@@ -106,7 +105,8 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     {
         if(GetFOVMachine.ClosestEnemy != null)
         {
-            GetMoveStateMachine.GiveAIDirection(GetFOVMachine.ClosestEnemy.position);
+            GetMoveStateMachine.SetAIDirection(GetFOVMachine.ClosestEnemy.position);
+            AimAIPointLookAt(GetFOVMachine.ClosestEnemy);
         }
         else 
         {
@@ -115,17 +115,18 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     }
     public void RunningToEnemyLastPosition()
     {
+        AimAIPointLookAt(null);
         GetFOVAdvancedData.GetClosestBreadCrumbs();
         if(GetFOVAdvancedData.ClosestBreadCrumbs != null)
         {
-            GetMoveStateMachine.GiveAIDirection(GetFOVAdvancedData.ClosestBreadCrumbs.position);
+            GetMoveStateMachine.SetAIDirection(GetFOVAdvancedData.ClosestBreadCrumbs.position);
         }
         else
         {
             if(GetFOVAdvancedData.HasToCheckEnemyLastSeenPosition)
             {
                 // _stateMachine.GetFOVMachine.IHaveCheckEnemyLastPosition();
-                GetMoveStateMachine.GiveAIDirection(GetFOVAdvancedData.EnemyCharalastSeenPosition);
+                GetMoveStateMachine.SetAIDirection(GetFOVAdvancedData.EnemyCharalastSeenPosition);
 
                 GetFOVAdvancedData.IsCheckingEnemyLastPosition();
             }

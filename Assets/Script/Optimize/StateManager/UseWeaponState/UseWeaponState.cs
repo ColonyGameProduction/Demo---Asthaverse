@@ -4,26 +4,19 @@ using UnityEngine;
 
 public abstract class UseWeaponState : CharacterBaseState<UseWeaponStateMachine>
 {
-    [Header("To Get the data from statemachine class and child class in a group")]
     protected UseWeaponStateFactory _factory;
-    protected INormalUseWeaponData _normalUse;
-    protected IAdvancedUseWeaponData _advancedUse;
-    protected IPlayableUseWeaponDataNeeded _playableData;
-    protected UseWeaponState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine)
+    protected INormalUseWeaponData _normalUse; //normal data -> reload, shoot etc
+    protected IAdvancedUseWeaponData _advancedUse; //data kayak silentkill, switch weapon
+    protected IPlayableUseWeaponDataNeeded _playableData; //data tambahan dr playable
+    protected UseWeaponState(UseWeaponStateMachine currStateMachine, UseWeaponStateFactory factory) : base(currStateMachine)
     {
         _factory = factory;
-        if(stateMachine is INormalUseWeaponData n)
-        {
-            _normalUse = n;
-        }
-        if(stateMachine is IAdvancedUseWeaponData a)
-        {
-            _advancedUse = a;
-        }
-        if(stateMachine is IPlayableUseWeaponDataNeeded p)
-        {
-            _playableData = p;
-        }
+        if(currStateMachine is INormalUseWeaponData n) _normalUse = n;
+
+        if(currStateMachine is IAdvancedUseWeaponData a) _advancedUse = a;
+
+        if(currStateMachine is IPlayableUseWeaponDataNeeded p) _playableData = p;
+
     }
     public override void EnterState()
     {

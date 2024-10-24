@@ -4,38 +4,38 @@ using UnityEngine;
 
 public class CrawlState : MovementState
 {
-    public CrawlState(MovementStateMachine stateMachine, MovementStateFactory factory) : base(stateMachine, factory)
+    public CrawlState(MovementStateMachine currStateMachine, MovementStateFactory factory) : base(currStateMachine, factory)
     {
         // StateAnimationName = "Crawl";
-        StateAnimationName = "Move";
+        _activeStateAnimParamName = "Move";
     }
 
     public override void EnterState()
     {
         base.EnterState(); // Jalankan animasi
         // Debug.Log("Crawling" + _stateMachine.gameObject.name);
-        _stateMachine.ChangeCurrSpeed(_groundMovement.CrawlSpeed);
+        _sm.ChangeCurrSpeed(_groundData.CrawlSpeed);
 
         //mungkin di sini bisa ditambah kalau masuknya zero atau masih idle dan iscrouching false, maka animasi dimatikan trus lsg ke exit
     }
     public override void UpdateState()
     {
         //satu-satunya ke sini adalah lwt ai, yg gerakin ai, input player ga mungkin
-        if(!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform())
+        if(_sm.IsAIInput && !_sm.IsAIAtDirPos())
         {
-            _stateMachine.Move();
-            if(!_stateMachine.IsCharacterDead)_stateMachine.SwitchState(_factory.IdleState());
+            _sm.Move();
+            if(!_sm.IsCharacterDead)_sm.SwitchState(_factory.IdleState());
         }
-        else if(_stateMachine.IsTargetTheSamePositionAsTransform())
+        else if(_sm.IsAIAtDirPos())
         {
-            _stateMachine.SwitchState(_factory.IdleState());
+            _sm.SwitchState(_factory.IdleState());
         }
     }
     public override void ExitState()
     {
         // if(!_crouch.IsCrouching) //Matikan state animasi crouch
-        Debug.Log(_stateMachine.IsCharacterDead);
-        if(!_stateMachine.IsCharacterDead)_groundMovement.IsCrawling = false;
+        Debug.Log(_sm.IsCharacterDead);
+        if(!_sm.IsCharacterDead)_groundData.IsCrawling = false;
         
         base.ExitState();
     }

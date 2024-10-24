@@ -6,17 +6,17 @@ public class ReloadWeaponState : UseWeaponState
 {
     bool isDoReloading;
 
-    public ReloadWeaponState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine, factory)
+    public ReloadWeaponState(UseWeaponStateMachine currStateMachine, UseWeaponStateFactory factory) : base(currStateMachine, factory)
     {
-        StateAnimationName = "Reload";
+        _activeStateAnimParamName = "Reload";
     }
     public override void EnterState()
     {
         // mainkan animasi
         // _stateMachine.CharaAnimator.
         isDoReloading = false;
-        _stateMachine.CurrAnimTime = 0;
-        if(_stateMachine.IsInputPlayer)
+        _sm.CurrAnimTime = 0;
+        if(!_sm.IsAIInput)
         {
             _playableData.TellToTurnOffScope();
         }
@@ -26,7 +26,7 @@ public class ReloadWeaponState : UseWeaponState
     public override void UpdateState()
     {
         // _stateMachine.CharaAnimator.Play("Crouch", 1, _currAnimTIme);
-        if(!_normalUse.IsAiming)StateAnimationOff("Aim");
+        if(!_normalUse.IsAiming)SetAnimParamInactive("Aim");
 
 
         
@@ -42,26 +42,26 @@ public class ReloadWeaponState : UseWeaponState
             // base.ExitState();
             if(_advancedUse != null && _advancedUse.IsSilentKill)
             {
-                _stateMachine.SwitchState(_factory.SilentKillState());
+                _sm.SwitchState(_factory.SilentKillState());
             }
             else if(_advancedUse != null && _advancedUse.IsSwitchingWeapon)
             {
-                _stateMachine.SwitchState(_factory.SwitchingWeaponState());
+                _sm.SwitchState(_factory.SwitchingWeaponState());
             }
             else if(_normalUse.IsAiming)
             {
                 if(_normalUse.IsUsingWeapon)
                 {
-                    _stateMachine.SwitchState(_factory.UsingWeaponState());
+                    _sm.SwitchState(_factory.UsingWeaponState());
                 }
                 else
                 {
-                    _stateMachine.SwitchState(_factory.AimWeaponState());
+                    _sm.SwitchState(_factory.AimWeaponState());
                 }
             }
             else
             {
-                _stateMachine.SwitchState(_factory.IdleWeaponState());
+                _sm.SwitchState(_factory.IdleWeaponState());
             }
 
         }
@@ -73,7 +73,7 @@ public class ReloadWeaponState : UseWeaponState
     }
     public override void ExitState()
     {
-        _stateMachine.CanReloadWeapon_Coroutine();
+        _sm.CanReloadWeapon_Coroutine();
     }
 
 }

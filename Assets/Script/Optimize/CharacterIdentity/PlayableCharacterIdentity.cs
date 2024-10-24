@@ -3,17 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper, ICanInputPlayer, ICanSwitchWeapon
+public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper, IReceiveInputFromPlayer, ICanSwitchWeapon
 {
     
     [Space(1)]
     [Header("Input Control Now")]
-    [SerializeField]protected bool _isInputPlayer;
-    public event Action<bool> OnInputPlayerChange;
+    [SerializeField]protected bool _isPlayerInput;
+    public event Action<bool> OnIsPlayerInputChange;
 
     [Header("Friend Data Helper")]
     [SerializeField] protected GameObject[] _friendsNormalPosition;
     protected int _friendID;
+    [SerializeField] private EntityStatSO _friendStatSO;
+        #region Friend STATS
+
+    [Space(1)]
+    [Header("   Health")]
+    [SerializeField] protected float _totalHealthFriend;
+    protected float _currHealthFriend;
+
+    [Space(1)]
+    [Header("   Armour")]
+    protected armourType _armourTypeFriend;
+    protected float _armourFriend;
+
+    [Space(1)]
+    [Header("   Stealth")]
+    protected float _stealthStatsFriend;
+        #endregion
     
     [Space(5)]
     [Header("No Inspector Variable")]
@@ -29,19 +46,47 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     private bool _isAnimatingOtherAnimation;
     #region GETTERSETTER Variable
 
+    public override float StealthStat 
+    { 
+        get{ 
+            if(IsPlayerInput)return _stealthStats; 
+            else return _stealthStatsFriend; 
+        }
+    }
+    public override float TotalHealth
+    { 
+        get{ 
+            if(IsPlayerInput)return _totalHealth; 
+            else return _totalHealthFriend; 
+        }
+    }
+    public override float CurrHealth
+    { 
+        get
+        { 
+            if(IsPlayerInput)return _currHealth; 
+            else return _currHealthFriend; 
+        }
+        set
+        {
+            if(IsPlayerInput) _currHealth = value; 
+            else _currHealthFriend = value; 
+        }
+    }
+
     [Header("Event")]
     public Action OnPlayableDeath;
     [HideInInspector]
     //Getter Setter
-    public bool IsInputPlayer 
+    public bool IsPlayerInput 
     { 
-        get { return _isInputPlayer; } 
+        get { return _isPlayerInput; } 
         set
         { 
-            if(IsInputPlayer != value)
+            if(_isPlayerInput != value)
             {
-                _isInputPlayer = value;
-                OnInputPlayerChange?.Invoke(_isInputPlayer);
+                _isPlayerInput = value;
+                OnIsPlayerInputChange?.Invoke(_isPlayerInput);
             }
         } 
     }
@@ -64,6 +109,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _getPlayableMovementStateData = MovementStateMachine as PlayableMovementStateMachine;
         _getPlayableUseWeaponStateData = UseWeaponStateMachine as PlayableUseWeaponStateMachine;
         _getPlayableCamera = GetComponent<PlayableCamera>();
+        InitializeFriend();
 
 
         _friendAIStateMachine = GetComponent<FriendAIBehaviourStateMachine>();
@@ -78,7 +124,26 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             Revive();
         }
     }
-    
+
+    public void InitializeFriend()
+    {
+        if(_friendStatSO == null) 
+        {
+            _currHealthFriend = _totalHealthFriend;
+            return;
+        }
+
+        _totalHealthFriend = _friendStatSO.health;
+        _currHealthFriend = _totalHealthFriend;
+
+        _armourTypeFriend = _friendStatSO.armourType;
+        _armourFriend = _friendStatSO.armor;
+
+        GetPlayableUseWeaponData.SetCharaFriendAccuracy(_friendStatSO.acuracy);
+        _stealthStatsFriend = _friendStatSO.stealth;
+
+    }
+
     public override void ReloadWeapon()
     {
         float bulletNeed = CurrWeapon.weaponStatSO.magSize - CurrWeapon.currBullet;
@@ -111,7 +176,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public IEnumerator DeathANim()
     {
         yield return new WaitForSeconds(2f); // ded anim
-        if(IsInputPlayer)OnPlayableDeath?.Invoke();
+        if(IsPlayerInput)OnPlayableDeath?.Invoke();
         _getPlayableMovementStateData.SetCharaGameObjRotationToNormal();
         _isAnimatingOtherAnimation = false;
         if(!_getPlayableMovementStateData.IsCrawling)
@@ -137,7 +202,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _fovMachine.enabled = true;
 
         if(_getPlayableMovementStateData.IsCrawling)_getPlayableMovementStateData.IsCrawling = false;
-        _currhealth = _totalHealth;
+        ResetHealth();
 
         _isDead = false;
         _isAnimatingOtherAnimation = false;
@@ -156,4 +221,12 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             if(FOVMachine.enabled) FOVMachine.enabled = isTurnOn;
         }
     }
+
+    public void ResetHealth()
+    {
+        _currHealth = _totalHealth;
+        _currHealthFriend = _totalHealthFriend;
+    }
+
+
 }

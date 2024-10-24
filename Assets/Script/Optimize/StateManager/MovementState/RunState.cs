@@ -5,42 +5,18 @@ using UnityEngine;
 /// <summary>
 /// State Run
 /// </summary>
-public class RunState : MovementState
+public class RunState : WalkState
 {    
-    public RunState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
-    {
-        // StateAnimationName = "Sprint";
-        StateAnimationName = "Run";
-    }
+    public RunState(MovementStateMachine currStateMachine, MovementStateFactory factory) : base(currStateMachine, factory) =>_activeStateAnimParamName = "Run";
     public override void EnterState()
     {
         base.EnterState(); 
-        
-        //Mengganti kecepatan
-        _stateMachine.ChangeCurrSpeed(_stateMachine.RunSpeed);
 
-        //Harus membuat semua state aim di aim manager, false, dn balik ke posisi not aiming
+        _sm.ChangeCurrSpeed(_sm.RunSpeed);
     }
     public override void UpdateState()
     {
-        //Menunggu syarat
-        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
-        {
-            if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
-            if(!_standMovement.IsRunning)
-            {
-                if(_groundMovement != null && _groundMovement.IsCrouching) _stateMachine.SwitchState(_factory.CrouchState());
-                else
-                {
-                    _stateMachine.SwitchState(_factory.WalkState());
-                }
-            }
-        
-        }
-        else if((_stateMachine.IsInputPlayer && _playableData.InputMovement == Vector3.zero) || (!_stateMachine.IsInputPlayer && _stateMachine.IsTargetTheSamePositionAsTransform()))
-        {
-            _stateMachine.SwitchState(_factory.IdleState());
-        }
+        base.UpdateState();
     }
     public override void ExitState()
     {
@@ -49,6 +25,17 @@ public class RunState : MovementState
     }
     public override void PhysicsLogicUpdateState()
     {
-        if(_stateMachine.IsInputPlayer)_stateMachine.Move();
+        if(!_sm.IsAIInput)_sm.Move();
+    }
+    protected override void CheckStateWhileMoving()
+    {
+        if(!_standData.IsRunning)
+        {
+            if(_groundData != null && _groundData.IsCrouching) _sm.SwitchState(_factory.CrouchState());
+            else
+            {
+                _sm.SwitchState(_factory.WalkState());
+            }
+        }
     }
 }

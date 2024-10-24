@@ -7,42 +7,41 @@ using UnityEngine;
 /// </summary>
 public class WalkState : MovementState
 {
-    public WalkState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
-    {
-        StateAnimationName = "Walk";
-    }
+    public WalkState(MovementStateMachine currStateMachine, MovementStateFactory factory) : base(currStateMachine, factory) => _activeStateAnimParamName = "Walk";
     public override void EnterState()
     {
-        
         base.EnterState();
 
-        _standMovement.IsWalking = true;
+        _standData.IsWalking = true;
 
-        //Menganti kecepatan
-        _stateMachine.ChangeCurrSpeed(_stateMachine.WalkSpeed);
+        _sm.ChangeCurrSpeed(_sm.WalkSpeed);
     }
     public override void UpdateState()
     {
-        //Menunggu logika lain yang dapat mengubah statenya sembari melakukan pergerakan, untuk AI ditaro di update state, untuk Input player di physisc logic atau fixed update
-        if((_stateMachine.IsInputPlayer && _playableData.InputMovement != Vector3.zero) || (!_stateMachine.IsInputPlayer && !_stateMachine.IsTargetTheSamePositionAsTransform()))
+        if((!_sm.IsAIInput && _playableData.InputMovement != Vector3.zero) || (_sm.IsAIInput && !_sm.IsAIAtDirPos()))
         {
-            if(!_stateMachine.IsInputPlayer)_stateMachine.Move();
-            if(_groundMovement != null && _groundMovement.IsCrouching)_stateMachine.SwitchState(_factory.CrouchState());
-            else if(_standMovement.IsRunning)_stateMachine.SwitchState(_factory.RunState());
+            if(_sm.IsAIInput)_sm.Move();
+            CheckStateWhileMoving();
 
         }
-        else if((_stateMachine.IsInputPlayer && _playableData.InputMovement == Vector3.zero) || (!_stateMachine.IsInputPlayer && _stateMachine.IsTargetTheSamePositionAsTransform()))
+        else if((!_sm.IsAIInput && _playableData.InputMovement == Vector3.zero) || (_sm.IsAIInput && _sm.IsAIAtDirPos()))
         {
-            _stateMachine.SwitchState(_factory.IdleState());
+            _sm.SwitchState(_factory.IdleState());
         }
     }
     public override void ExitState()
     {
-        _standMovement.IsWalking = false;
+        _standData.IsWalking = false;
         base.ExitState();
     }
     public override void PhysicsLogicUpdateState()
     {
-        if(_stateMachine.IsInputPlayer)_stateMachine.Move();
+        if(!_sm.IsAIInput)_sm.Move();
+    }
+
+    protected virtual void CheckStateWhileMoving()
+    {
+        if(_groundData != null && _groundData.IsCrouching)_sm.SwitchState(_factory.CrouchState());
+        else if(_standData.IsRunning)_sm.SwitchState(_factory.RunState());
     }
 }

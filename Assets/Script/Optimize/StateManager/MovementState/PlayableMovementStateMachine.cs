@@ -9,12 +9,12 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     [Space(2)]
     [Header("Move States - Crouch State")]
+    [SerializeField] protected bool _isCrouch;
+    [SerializeField] protected bool _isCrawl;
     [SerializeField] protected float _crouchMultiplier;
     [SerializeField] protected float _crawlMultiplier;
     private float _crouchSpeed;
     private float _crawlSpeed;
-    [SerializeField] protected bool _isCrouch;
-    [SerializeField] protected bool _isCrawl;
 
     [Space(1)]
     [Header("For Rotation")]
@@ -23,66 +23,66 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     [Space(1)]
     [Header("Movement - Camera")]
-    [SerializeField] private Transform _followTarget;
+    private Transform _playableLookTarget;
     [SerializeField] protected bool _isMustLookForward;
 
     [Space(1)]
     [Header("Saving other component data")]
-    [SerializeField] private CharacterController _cc;
-    protected ICanInputPlayer _getCanInputPlayer;
+    private CharacterController _cc;
+    protected IReceiveInputFromPlayer _canReceivePlayerInput;
     protected Vector3 _inputMovement;
     #endregion
     
     #region GETTERSETTER Variable
-    public override float WalkSpeed 
-    { 
-        get {return base.WalkSpeed;}
-        set 
-        {
-            _walkSpeed = value;
-            _runSpeed = _walkSpeed * _runMultiplier;
-            _crouchSpeed = _walkSpeed * _crouchMultiplier;
-            _crawlSpeed = _walkSpeed * _crawlMultiplier;
-        }
-    }
 
-    public CharacterController CC {get { return _cc;} }
-    public Vector3 InputMovement { get{ return _inputMovement;} set{_inputMovement = value;}} // Getting Input Movement from playercontroller
-
-    public bool IsMustLookForward { get{return _isMustLookForward;} set{_isMustLookForward = value;} } // Kan kalo nembak gitu hrs liat ke depan selalu, jd is true
     public float CrouchSpeed {get{return _crouchSpeed;}}
     public bool IsCrouching { get {return _isCrouch;}set{ _isCrouch = value;} }
     public float CrawlSpeed { get{return _crawlSpeed;}}
     public bool IsCrawling {  get {return _isCrawl;}set{ _isCrawl = value;} }
+
+    public bool IsMustLookForward { get{return _isMustLookForward;} set{_isMustLookForward = value;} } // Kan kalo nembak gitu hrs liat ke depan selalu, jd is true
+
+    public CharacterController CC {get { return _cc;} }
+    public Vector3 InputMovement { get{ return _inputMovement;} set{_inputMovement = value;}} // Getting Input Movement from playercontroller
+
 
     #endregion
     protected override void Awake()
     {
         base.Awake();
 
-        _getCanInputPlayer = GetComponent<ICanInputPlayer>();
-        _isInputPlayer = _getCanInputPlayer.IsInputPlayer;
-        _getCanInputPlayer.OnInputPlayerChange += CharaIdentity_OnInputPlayerChange; // Ditaro di sini biar ga ketinggalan sebelah, krn sebelah diubah di start
+        _canReceivePlayerInput = GetComponent<IReceiveInputFromPlayer>();
+        _isAIInput = !_canReceivePlayerInput.IsPlayerInput;
+        _canReceivePlayerInput.OnIsPlayerInputChange += CharaIdentity_OnIsPlayerInputChange; //When IsInputPlayerChange
 
         if(_cc == null)_cc = GetComponent<CharacterController>();
-        if(_followTarget == null) _followTarget = GetComponent<PlayableCamera>().GetFollowTarget;
+        if(_playableLookTarget == null) _playableLookTarget = GetComponent<PlayableCamera>().GetFollowTarget;
     }
 
     #region Move
     public override void Move()
     {
-        if(!IsInputPlayer)base.Move();
-        else MovePlayableChara(InputMovement);
+        if(!IsAIInput) MovePlayableChara(InputMovement);
+        else base.Move();
     }
     /// <summary>
     /// Move yang digunakan untuk kontrol dgn input dari player
     /// </summary>
+    public override void ForceStopMoving()
+    {
+        if(!IsAIInput)ForceStopPlayable(); 
+        else base.ForceStopMoving();
+
+        if(IsMustLookForward)IsMustLookForward = false;
+    }
+    #endregion
+    #region PlayableChara Only
     private void MovePlayableChara(Vector3 direction)
     {
         Vector3 movement = new Vector3(direction.x, 0, direction.y).normalized;
 
-        Vector3 flatForward = new Vector3(_followTarget.forward.x, 0, _followTarget.forward.z).normalized;
-        Vector3 Facedir = flatForward * movement.z + _followTarget.right * movement.x; 
+        Vector3 flatForward = new Vector3(_playableLookTarget.forward.x, 0, _playableLookTarget.forward.z).normalized;
+        Vector3 Facedir = flatForward * movement.z + _playableLookTarget.right * movement.x; 
 
         CC.SimpleMove(Facedir * _currSpeed);
 
@@ -100,37 +100,32 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         }
     }
 
-    //Rotating to the aim direction when idle
-    public void Idle_RotateAim()
+    public void RotateToAim_Idle()
     {
-        Vector3 flatForward = new Vector3(_followTarget.forward.x, 0, _followTarget.forward.z).normalized;
+        Vector3 flatForward = new Vector3(_playableLookTarget.forward.x, 0, _playableLookTarget.forward.z).normalized;
         RotatePlayableChara(flatForward);
     }
 
-
-    public override void ForceStopMoving()
-    {
-        if(!IsInputPlayer)base.ForceStopMoving();
-        else ForceStopPlayable();
-        if(IsMustLookForward)IsMustLookForward = false;
-    }
     private void ForceStopPlayable()
     {
         InputMovement = Vector3.zero;
-        if(PlayableCharacterManager.IsSwitchingCharacter)_charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+        if(PlayableCharacterManager.IsSwitchingCharacter)SetCharaGameObjRotationToNormal();
 
         IsWalking = false;
         IsRunning = false;
         // IsCrouching = false; //biar kalo lg crouch di tmpt ga tb tb berdiri
-        
     }
-    public void SetCharaGameObjRotationToNormal()
+    public void SetCharaGameObjRotationToNormal() => _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+    #endregion
+
+    #region Movement Speed
+
+    public override void InitializeMovementSpeed(float speed)
     {
-        _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+        base.InitializeMovementSpeed(speed);
+        _crouchSpeed = _walkSpeed * _crouchMultiplier;
+        _crawlSpeed = _walkSpeed * _crawlMultiplier;
     }
     #endregion
-    private void CharaIdentity_OnInputPlayerChange(bool obj)
-    {
-        _isInputPlayer = obj;
-    }
+    private void CharaIdentity_OnIsPlayerInputChange(bool isPlayerInput) => _isAIInput = !isPlayerInput;
 }

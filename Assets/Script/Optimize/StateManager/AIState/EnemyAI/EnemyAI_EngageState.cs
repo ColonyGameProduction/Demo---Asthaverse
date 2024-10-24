@@ -5,81 +5,81 @@ using UnityEngine;
 
 public class EnemyAI_EngageState : EnemyAIState
 {
-    public EnemyAI_EngageState(EnemyAIBehaviourStateMachine stateMachine, EnemyAIStateFactory factory) : base(stateMachine, factory)
+    public EnemyAI_EngageState(EnemyAIBehaviourStateMachine currStateMachine, EnemyAIStateFactory factory) : base(currStateMachine, factory)
     {
         
     }
 
     public override void EnterState()
     {
-        _stateMachine.IsAIEngage = true;
-        if(!_stateMachine.GetUseWeaponStateMachine.IsAiming)_stateMachine.GetUseWeaponStateMachine.IsAiming = true;
+        _sm.IsAIEngage = true;
+        if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
     }
 
     public override void UpdateState()
     {
-        if(_stateMachine.AlertValue < _stateMachine.MaxAlertValue / 2 || _stateMachine.IsCharacterDead)
+        if(_sm.AlertValue < _sm.MaxAlertValue / 2 || _sm.IsCharacterDead)
         {
-            _stateMachine.SwitchState(_factory.AI_IdleState());
+            _sm.SwitchState(_factory.AI_IdleState());
         }
-        else if(_stateMachine.AlertValue >= _stateMachine.MaxAlertValue / 2 && _stateMachine.AlertValue < _stateMachine.MaxAlertValue)
+        else if(_sm.AlertValue >= _sm.MaxAlertValue / 2 && _sm.AlertValue < _sm.MaxAlertValue)
         {
-            _stateMachine.SwitchState(_factory.AI_HuntedState());
+            _sm.SwitchState(_factory.AI_HuntedState());
         }
 
-        _stateMachine.GetFOVState.FOVStateHandler();
+        _sm.GetFOVState.FOVStateHandler();
 
-        if(_stateMachine.GetFOVState.CurrState != FOVDistState.none)
+        if(_sm.GetFOVState.CurrState != FOVDistState.none)
         {
-            if(_stateMachine.GetFOVState.CurrState == FOVDistState.far)
+            if(_sm.GetFOVState.CurrState == FOVDistState.far)
             {
-                // _stateMachine.RunningTowardsEnemy();
+                // _sm.RunningTowardsEnemy();
                 StopShooting();
-                if(_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = false;
-                _stateMachine.GetMoveStateMachine.GiveAIDirection(_stateMachine.GetFOVMachine.ClosestEnemy.position);
+                if(_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = false;
+                _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position);
             }
-            else if(_stateMachine.GetFOVState.CurrState == FOVDistState.middle || _stateMachine.GetFOVState.CurrState == FOVDistState.close)
+            else if(_sm.GetFOVState.CurrState == FOVDistState.middle || _sm.GetFOVState.CurrState == FOVDistState.close)
             {
-                if(_stateMachine.GetMoveStateMachine.CurrAIDirPos != _stateMachine.transform.position)_stateMachine.GetMoveStateMachine.ForceStopMoving(); //Stop gerak
+                if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving(); //Stop gerak
 
-                _stateMachine.GetMoveStateMachine.GiveAIPlaceToLook(_stateMachine.GetFOVMachine.ClosestEnemy.position);
-                if(!_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = true;
+                _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position);
+                if(!_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = true;
                 //kalo masuk sini pasti ada enemy, kalo ga pasti jd none || aturan d bwh jaga jaga biar ga error
-                if(_stateMachine.GetFOVMachine.ClosestEnemy != null)StartShooting();
-                // Debug.Log("pew pew pew");
+                if(_sm.GetFOVMachine.ClosestEnemy != null)StartShooting();
+                Debug.Log("pew pew pew");
 
             }
         }
-        if(_stateMachine.GetFOVState.CurrState == FOVDistState.none || _stateMachine.GetFOVMachine.ClosestEnemy == null)
+        if(_sm.GetFOVState.CurrState == FOVDistState.none || _sm.GetFOVMachine.ClosestEnemy == null)
         {
-            if(_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = false;
+            if(_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = false;
             WhenEnemyMissingInEngage();
         }
         
     }
     public override void ExitState()
     {
-        if(_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle)_stateMachine.GetMoveStateMachine.AskAIToLookWhileIdle = false;
+        if(_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = false;
 
-        if(_stateMachine.GetUseWeaponStateMachine.ChosenTarget != null)_stateMachine.GetUseWeaponStateMachine.GiveChosenTarget(null);
-        if(_stateMachine.GetUseWeaponStateMachine.IsUsingWeapon)_stateMachine.GetUseWeaponStateMachine.IsUsingWeapon = false;
-        _stateMachine.IsAIEngage = false;
+        if(_sm.GetUseWeaponStateMachine.ChosenTarget != null)_sm.GetUseWeaponStateMachine.GiveChosenTarget(null);
+        if(_sm.GetUseWeaponStateMachine.IsUsingWeapon)_sm.GetUseWeaponStateMachine.IsUsingWeapon = false;
+        _sm.IsAIEngage = false;
     }
     private void WhenEnemyMissingInEngage()
     {
         StopShooting();
-        _stateMachine.RunningToEnemyLastPosition();
+        _sm.RunningToEnemyLastPosition();
     }
     private void StopShooting()
     {
-        if(_stateMachine.GetUseWeaponStateMachine.ChosenTarget != null)_stateMachine.GetUseWeaponStateMachine.GiveChosenTarget(null);
-        if(_stateMachine.GetUseWeaponStateMachine.IsUsingWeapon)_stateMachine.GetUseWeaponStateMachine.IsUsingWeapon = false;
+        if(_sm.GetUseWeaponStateMachine.ChosenTarget != null)_sm.GetUseWeaponStateMachine.GiveChosenTarget(null);
+        if(_sm.GetUseWeaponStateMachine.IsUsingWeapon)_sm.GetUseWeaponStateMachine.IsUsingWeapon = false;
     }
     private void StartShooting()
     {
-        // Debug.Log("shoot di 2" + _stateMachine.GetFOVMachine.ClosestEnemy.position);
-        _stateMachine.GetUseWeaponStateMachine.GiveChosenTarget(_stateMachine.GetFOVMachine.ClosestEnemy);
-        if(!_stateMachine.GetUseWeaponStateMachine.IsAiming)_stateMachine.GetUseWeaponStateMachine.IsAiming = true;
-        if(!_stateMachine.GetUseWeaponStateMachine.IsUsingWeapon)_stateMachine.GetUseWeaponStateMachine.IsUsingWeapon = true;
+        // Debug.Log("shoot di 2" + _sm.GetFOVMachine.ClosestEnemy.position);
+        _sm.GetUseWeaponStateMachine.GiveChosenTarget(_sm.GetFOVMachine.ClosestEnemy);
+        if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
+        if(!_sm.GetUseWeaponStateMachine.IsUsingWeapon)_sm.GetUseWeaponStateMachine.IsUsingWeapon = true;
     }
 }

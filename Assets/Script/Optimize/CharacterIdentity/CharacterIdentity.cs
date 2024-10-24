@@ -33,7 +33,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     [Space(1)]
     [Header("   Health")]
     [SerializeField] protected float _totalHealth;
-    protected float _currhealth;
+    protected float _currHealth;
     protected bool _isDead;
 
     [Space(1)]
@@ -57,9 +57,9 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     #region GETTERSETTER Variable
     [HideInInspector]
     //getter setter
-    public float StealthStat { get{ return _stealthStats; }}
-    public float TotalHealth {get { return _totalHealth; } }
-    public float HealthNow {get {return _currhealth; } }
+    public virtual float StealthStat { get{ return _stealthStats; }}
+    public virtual float TotalHealth {get { return _totalHealth; } }
+    public virtual float CurrHealth {get {return _currHealth; } set { _currHealth = value; } }
     public bool IsDead {get { return _isDead;}}
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
@@ -89,31 +89,31 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         if(ded)
         {
             ded = false;
-            Hurt (HealthNow);
+            Hurt (CurrHealth);
         }
     }
     private void UseWeapon_OnWasUsinghGun()
     {
-        _moveStateMachine.WasAiming = true;
+        _moveStateMachine.WasCharacterAiming = true;
     }
     #region Health
     public virtual void Hurt(float Damage)
     {
-        if(HealthNow <= 0)return;
+        if(CurrHealth <= 0)return;
 
-        _currhealth -= Damage;
-        if(HealthNow <= 0)
+        CurrHealth -= Damage;
+        if(CurrHealth <= 0)
         {
-            _currhealth = 0;
+            CurrHealth = 0;
             Death();
         }
     }
     public virtual void Heal(float Healing)
     {
-        if(HealthNow == TotalHealth)return;
+        if(CurrHealth == TotalHealth)return;
 
-        _currhealth += Healing;
-        if(HealthNow >= TotalHealth) _currhealth = TotalHealth;
+        CurrHealth += Healing;
+        if(CurrHealth >= TotalHealth) CurrHealth = TotalHealth;
     }
 
     public virtual void Death()
@@ -132,20 +132,20 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     {
         if(_characterStatSO == null) 
         {
-            _currhealth = TotalHealth;
+            _currHealth = TotalHealth;
             return;
         }
         _charaName = _characterStatSO.entityName;
 
         _totalHealth = _characterStatSO.health;
-        _currhealth = _totalHealth;
+        _currHealth = _totalHealth;
 
-        MovementStateMachine.WalkSpeed = _characterStatSO.speed;
+        MovementStateMachine.InitializeMovementSpeed(_characterStatSO.speed);
 
         _armourType = _characterStatSO.armourType;
         _armour = _characterStatSO.armor;
 
-        _useWeaponStateMachine.CharaAimAccuracy = _characterStatSO.acuracy;
+        _useWeaponStateMachine.SetCharaAimAccuracy(_characterStatSO.acuracy);
         _stealthStats = _characterStatSO.stealth;
 
         _fovMachine.viewRadius = _characterStatSO.FOVRadius;

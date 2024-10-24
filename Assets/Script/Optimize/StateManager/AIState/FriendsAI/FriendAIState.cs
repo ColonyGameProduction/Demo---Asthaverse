@@ -5,11 +5,11 @@ using UnityEngine;
 public class FriendAIState : BaseState
 {
     protected FriendAIStateFactory _factory;
-    protected FriendAIBehaviourStateMachine _stateMachine;
-    public FriendAIState(FriendAIBehaviourStateMachine stateMachine, FriendAIStateFactory factory)
+    protected FriendAIBehaviourStateMachine _sm;
+    public FriendAIState(FriendAIBehaviourStateMachine currStateMachine, FriendAIStateFactory factory)
     {
         _factory = factory;
-        _stateMachine = stateMachine;
+        _sm = currStateMachine;
     }
     public override void EnterState()
     {

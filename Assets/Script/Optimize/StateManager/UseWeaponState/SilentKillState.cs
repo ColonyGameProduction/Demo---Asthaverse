@@ -5,7 +5,7 @@ using UnityEngine;
 public class SilentKillState : UseWeaponState
 {
     bool isDoSilentKill;
-    public SilentKillState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine, factory)
+    public SilentKillState(UseWeaponStateMachine currStateMachine, UseWeaponStateFactory factory) : base(currStateMachine, factory)
     {
 
     }
@@ -32,33 +32,33 @@ public class SilentKillState : UseWeaponState
         }
         else if(isDoSilentKill && !_advancedUse.IsSilentKill)
         {
-            if(_stateMachine.CurrWeapon.currBullet == 0 && !_normalUse.IsReloading)
+            if(_sm.CurrWeapon.currBullet == 0 && !_normalUse.IsReloading)
             {
                 _normalUse.IsReloading = true;
             }
             if(_advancedUse.IsSwitchingWeapon)
             {
-                _stateMachine.SwitchState(_factory.SwitchingWeaponState());
+                _sm.SwitchState(_factory.SwitchingWeaponState());
             }
             else if(_normalUse.IsReloading)
             {
-                _stateMachine.SwitchState(_factory.ReloadWeaponState());
+                _sm.SwitchState(_factory.ReloadWeaponState());
             }
             else if(_normalUse.IsAiming)
             {
                 
                 if(_normalUse.IsUsingWeapon)
                 {
-                    _stateMachine.SwitchState(_factory.UsingWeaponState());
+                    _sm.SwitchState(_factory.UsingWeaponState());
                 }
                 else
                 {
-                    _stateMachine.SwitchState(_factory.AimWeaponState());
+                    _sm.SwitchState(_factory.AimWeaponState());
                 }
             }
             else
             {
-                _stateMachine.SwitchState(_factory.IdleWeaponState());
+                _sm.SwitchState(_factory.IdleWeaponState());
             }
         }
     }

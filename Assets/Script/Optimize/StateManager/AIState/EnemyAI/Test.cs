@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Test : MonoBehaviour
@@ -7,7 +8,9 @@ public class Test : MonoBehaviour
     // Start is called before the first frame update
     float timemax = 0.2f;
     int count = 0;
-    public Transform focus;
+    public bool yes;
+    public Transform test;
+    public Transform lookat;
     void Start()
     {
         // StartCoroutine(testEnum());
@@ -46,6 +49,11 @@ public class Test : MonoBehaviour
         //     // if(count > 3)Debug.LogError("" + gameObject.activeSelf);
         // }
         // // Debug.Log("Frame end" + count);
-        if(focus != null)Debug.DrawRay(transform.position, focus.position, Color.black);
+        // if(focus != null)Debug.DrawRay(transform.position, focus.position, Color.black);
+        if(yes)
+        {
+
+            test.LookAt(new Vector3(lookat.position.x, lookat.position.y + 1.5f, lookat.position.z));
+        }
     }
 }

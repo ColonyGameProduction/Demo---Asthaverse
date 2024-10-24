@@ -6,9 +6,9 @@ public class UseWeaponStateFactory
 {
     UseWeaponStateMachine _machine;
     UseWeaponState _idleWeapon, _aimWeapon, _usingWeapon, _reloadWeapon, _switchingWeapon, _silentKill;
-    public UseWeaponStateFactory (UseWeaponStateMachine machine)
+    public UseWeaponStateFactory (UseWeaponStateMachine currStateMachine)
     {
-        _machine = machine;
+        _machine = currStateMachine;
     }
     
     public UseWeaponState IdleWeaponState()

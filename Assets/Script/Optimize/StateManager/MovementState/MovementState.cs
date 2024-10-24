@@ -7,27 +7,26 @@ using UnityEngine;
 /// </summary>
 public abstract class MovementState : CharacterBaseState<MovementStateMachine>
 {
-    [Header("To Get the data from statemachine class and child class in a group")]
     protected MovementStateFactory _factory;
-    protected IStandMovementData _standMovement;
-    protected IGroundMovementData _groundMovement;
-    protected IPlayableMovementDataNeeded _playableData;
+    protected IStandMovementData _standData; // Data berdiri -> isidle, iswalk dsb
+    protected IGroundMovementData _groundData; // Data tanah -> crouch, crawl
+    protected IPlayableMovementDataNeeded _playableData; // Data player tambahan
 
     protected const string ANIMATION_MOVE_PARAMETER_ISMOVING = "IsMoving";
-    public MovementState(MovementStateMachine stateMachine, MovementStateFactory factory) : base(stateMachine) 
+    public MovementState(MovementStateMachine currStateMachine, MovementStateFactory factory) : base(currStateMachine) 
     {
         _factory = factory;
-        if(stateMachine is IStandMovementData s)
+        if(currStateMachine is IStandMovementData s)_standData = s;
         {
-            _standMovement = s;
+            
         }
-        if(stateMachine is IGroundMovementData g)
+        if(currStateMachine is IGroundMovementData g)_groundData = g;
         {
-            _groundMovement = g;
+            
         }
-        if(stateMachine is IPlayableMovementDataNeeded m)
+        if(currStateMachine is IPlayableMovementDataNeeded m)_playableData = m;
         {
-            _playableData = m;
+            
         }
     }
     public override void EnterState()

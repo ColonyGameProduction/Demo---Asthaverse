@@ -5,58 +5,58 @@ using UnityEngine;
 public class EnemyAI_HuntedState : EnemyAIState
 {
     float tempAlertValue = 0;
-    public EnemyAI_HuntedState(EnemyAIBehaviourStateMachine stateMachine, EnemyAIStateFactory factory) : base(stateMachine, factory)
+    public EnemyAI_HuntedState(EnemyAIBehaviourStateMachine currStateMachine, EnemyAIStateFactory factory) : base(currStateMachine, factory)
     {
         
     }
 
     public override void EnterState()
     {
-        _stateMachine.IsAIHunted = true;
+        _sm.IsAIHunted = true;
         // if(_stateMachine.GetUseWeaponStateMachine.)_stateMachine.GetUseWeaponStateMachine.ForceStopUseWeapon();
-        if(!_stateMachine.GetUseWeaponStateMachine.IsAiming)_stateMachine.GetUseWeaponStateMachine.IsAiming = true;
+        if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
         
     }
 
     public override void UpdateState()
     {
-        _stateMachine.GetFOVState.FOVStateHandler();
-        if(_stateMachine.GetFOVState.CurrState != FOVDistState.none)
+        _sm.GetFOVState.FOVStateHandler();
+        if(_sm.GetFOVState.CurrState != FOVDistState.none)
         {
-            if(_stateMachine.GetFOVState.CurrState == FOVDistState.middle)
+            if(_sm.GetFOVState.CurrState == FOVDistState.middle)
             {
-                // _stateMachine.MaxAlertValue *= 0.5f;
-                tempAlertValue = _stateMachine.MaxAlertValue*0.5f;
-                if(_stateMachine.AlertValue < tempAlertValue) _stateMachine.AlertValue = tempAlertValue + 10f;
+                // _sm.MaxAlertValue *= 0.5f;
+                tempAlertValue = _sm.MaxAlertValue*0.5f;
+                if(_sm.AlertValue < tempAlertValue) _sm.AlertValue = tempAlertValue + 10f;
             }
-            else if(_stateMachine.GetFOVState.CurrState == FOVDistState.close)
+            else if(_sm.GetFOVState.CurrState == FOVDistState.close)
             {
-                // _stateMachine.MaxAlertValue = 0f;
-                tempAlertValue = _stateMachine.MaxAlertValue;
-                if(_stateMachine.AlertValue < tempAlertValue) _stateMachine.AlertValue = tempAlertValue + 10f;
+                // _sm.MaxAlertValue = 0f;
+                tempAlertValue = _sm.MaxAlertValue;
+                if(_sm.AlertValue < tempAlertValue) _sm.AlertValue = tempAlertValue + 10f;
             }
             // Debug.Log("HALOOO");
         }
 
-        if(_stateMachine.AlertValue < _stateMachine.MaxAlertValue / 2 || _stateMachine.IsCharacterDead)
+        if(_sm.AlertValue < _sm.MaxAlertValue / 2 || _sm.IsCharacterDead)
         {
-            _stateMachine.SwitchState(_factory.AI_IdleState());
+            _sm.SwitchState(_factory.AI_IdleState());
         }
-        else if(_stateMachine.AlertValue >= _stateMachine.MaxAlertValue)
+        else if(_sm.AlertValue >= _sm.MaxAlertValue)
         {
-            _stateMachine.SwitchState(_factory.AI_EngageState());
+            _sm.SwitchState(_factory.AI_EngageState());
         }
 
 
 
-        // _stateMachine.GetFOVMachine.GetClosestEnemy();
-        _stateMachine.RunningTowardsEnemy();
+        // _sm.GetFOVMachine.GetClosestEnemy();
+        _sm.RunningTowardsEnemy();
 
 
     }
     public override void ExitState()
     {
-        _stateMachine.IsAIHunted = false;
+        _sm.IsAIHunted = false;
     }
     
     

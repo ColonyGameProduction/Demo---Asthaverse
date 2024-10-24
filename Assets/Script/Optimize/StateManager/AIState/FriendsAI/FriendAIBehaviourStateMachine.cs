@@ -7,7 +7,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     #region  Normal Variable
     [Space(2)]
     [Header("Other Component Variable")]
-    protected ICanInputPlayer _getCanInputPlayer;
+    protected IReceiveInputFromPlayer _getCanInputPlayer;
     private bool isToldHold;
     private Transform _friendsDefaultDirection;
     private Transform _friendsCommandDirection;
@@ -22,7 +22,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     [SerializeField] protected bool _isAIIdle;
     protected FriendAIState _currState;
     protected FriendAIStateFactory _states;
-    protected bool _isInputPlayer;
+    protected bool _isAIInput;
 
     #endregion
 
@@ -31,7 +31,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
 
-    public bool IsInputPlayer {get {return _isInputPlayer;}}
+    public bool IsAIInput {get {return _isAIInput;}}
 
     public PlayableCharacterIdentity GetPlayableCharaIdentity { get { return _playableCharaIdentity; } }    
     public PlayableMovementStateMachine GetMoveStateMachine { get { return _playableMoveStateMachine; } }
@@ -43,9 +43,9 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         _playableCharaIdentity = _charaIdentity as PlayableCharacterIdentity;
         
 
-        _getCanInputPlayer = GetComponent<ICanInputPlayer>();
-        _isInputPlayer = _getCanInputPlayer.IsInputPlayer;
-        _getCanInputPlayer.OnInputPlayerChange += CharaIdentity_OnInputPlayerChange;
+        _getCanInputPlayer = GetComponent<IReceiveInputFromPlayer>();
+        _isAIInput = !_getCanInputPlayer.IsPlayerInput;
+        _getCanInputPlayer.OnIsPlayerInputChange += CharaIdentity_OnIsPlayerInputChange;
 
         _states = new FriendAIStateFactory(this);
     }
@@ -60,7 +60,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     
     void Update()
     {
-        if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || _isInputPlayer || _playableCharaIdentity.IsAnimatingOtherAnimation) 
+        if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || !IsAIInput || _playableCharaIdentity.IsAnimatingOtherAnimation) 
         {
             if(_playableMoveStateMachine.CurrAIDirPos != transform.position)_playableMoveStateMachine.ForceStopMoving();
             return;
@@ -72,8 +72,8 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         {
             if(!IsToldHold)
             {
-                if(_playableMoveStateMachine.IsIdle && !IsFriendTooFarFromPlayer()) _playableMoveStateMachine.GiveAIDirection(transform.position);
-                else _playableMoveStateMachine.GiveAIDirection(_friendsDefaultDirection.position);
+                if(_playableMoveStateMachine.IsIdle && !IsFriendTooFarFromPlayer()) _playableMoveStateMachine.SetAIDirection(transform.position);
+                else _playableMoveStateMachine.SetAIDirection(_friendsDefaultDirection.position);
             }
             else
             {
@@ -81,18 +81,18 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
                 {
                     isToldHold = false;
                 }
-                else _playableMoveStateMachine.GiveAIDirection(_friendsCommandDirection.position);
+                else _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
             }
         }
         else
         {
             if(_charaIdentity.IsDead)
             {
-                _playableMoveStateMachine.GiveAIDirection(_friendsDefaultDirection.position);
+                _playableMoveStateMachine.SetAIDirection(_friendsDefaultDirection.position);
             }
             else
             {
-                _playableMoveStateMachine.GiveAIDirection(_friendsCommandDirection.position);
+                _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
             }
         }
     }
@@ -105,9 +105,9 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         _currState = newState as FriendAIState;
         _currState?.EnterState();
     }
-    private void CharaIdentity_OnInputPlayerChange(bool obj)
+    private void CharaIdentity_OnIsPlayerInputChange(bool obj)
     {
-        _isInputPlayer = obj;
+        _isAIInput = !obj;
     }
     public void GiveUpdateFriendDirection(Transform currPlayable, Transform defaultPos, Transform commandPos)
     {   

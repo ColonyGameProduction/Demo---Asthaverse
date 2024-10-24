@@ -140,7 +140,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         CurrPlayableChara.OnPlayableDeath -= PlayableChara_OnPlayableDeath;
         _currPlayableUseWeaponStateMachine.OnTurningOffScope -= UseWeaponData_OnTurningOffScope;
 
-        CurrPlayableChara.IsInputPlayer = false;
+        CurrPlayableChara.IsPlayerInput = false;
         
         //Kategori kamera
         ResetScope(_currCharaidx);
@@ -171,7 +171,8 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         if(CurrPlayableChara.FriendAIStateMachine.IsToldHold) CurrPlayableChara.FriendAIStateMachine.IsToldHold = false;
 
         //Kembalikan semua control utk playable
-        CurrPlayableChara.IsInputPlayer = true;
+        CurrPlayableChara.IsPlayerInput = true;
+        CurrPlayableChara.ResetHealth();
         SetAllCurr();
 
         OnPlayerSwitch?.Invoke(CurrPlayableChara.transform); //Kasihtau breadcrumbs player barunya
@@ -192,7 +193,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
             _charaIdentities[nextCharaidx].FriendID = i;
             //Di sini nanti jg taro di AI controllernya, posisi update mereka yang biasa
             _charaIdentities[nextCharaidx].FriendAIStateMachine.GiveUpdateFriendDirection(CurrPlayableChara.transform, CurrPlayableChara.GetFriendsNormalPosition[i-1].transform, _friendsCommandPosition[i-1].transform);
-
+            _charaIdentities[nextCharaidx].ResetHealth();
             if(_charaIdentities[nextCharaidx].FriendAIStateMachine.IsToldHold)
             {
                 _friendsCommandPosition[i-1].transform.position = _charaIdentities[nextCharaidx].transform.position;

@@ -10,27 +10,29 @@ using UnityEngine;
 /// <typeparam name="T"></typeparam>
 public abstract class  CharacterBaseState<T> : BaseState where T : CharacterStateMachine
 {
-    protected T _stateMachine;
-    protected string StateAnimationName{get;set;}
-    public CharacterBaseState(T stateMachine)
+    protected T _sm; // STATE MACHINE
+    protected string _activeStateAnimParamName{get;set;} //Param -> Parameter
+    public CharacterBaseState(T currStateMachine)
     {
-        _stateMachine = stateMachine;
+        _sm = currStateMachine;
     }
     public override void EnterState()
     {
-        StateAnimationOn(StateAnimationName);
+        SetAnimParamActive(_activeStateAnimParamName);
     }
 
     public override void ExitState()
     {
-        StateAnimationOff(StateAnimationName);
+        SetAnimParamInactive(_activeStateAnimParamName);
     }
-    protected void StateAnimationOn(string animationName)
+
+
+    protected void SetAnimParamActive(string animationName)
     {
-        if(!_stateMachine.CharaAnimator.GetBool(animationName))_stateMachine.CharaAnimator?.SetBool(animationName, true);
+        if(!_sm.CharaAnimator.GetBool(animationName))_sm.CharaAnimator?.SetBool(animationName, true);
     }
-    protected void StateAnimationOff(string animationName)
+    protected void SetAnimParamInactive(string animationName)
     {
-        if(_stateMachine.CharaAnimator.GetBool(animationName))_stateMachine.CharaAnimator?.SetBool(animationName, false);
+        if(_sm.CharaAnimator.GetBool(animationName))_sm.CharaAnimator?.SetBool(animationName, false);
     }
 }

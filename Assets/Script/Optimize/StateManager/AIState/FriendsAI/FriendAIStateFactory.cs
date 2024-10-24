@@ -6,8 +6,8 @@ public class FriendAIStateFactory
 {
     FriendAIBehaviourStateMachine _machine;
     FriendAIState _idle;
-    public FriendAIStateFactory (FriendAIBehaviourStateMachine machine)
+    public FriendAIStateFactory (FriendAIBehaviourStateMachine currStateMachine)
     {
-        _machine = machine;
+        _machine = currStateMachine;
     }
 }
