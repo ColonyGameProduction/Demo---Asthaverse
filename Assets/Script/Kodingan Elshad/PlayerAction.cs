@@ -269,17 +269,17 @@ public class PlayerAction : ExecuteLogic
         // ketika player move maka sound footsteps bakal aktif
         if (isMoving)
         {
-            PlayFootstepsSound(footstepsSource);
+            //PlayFootstepsSound(footstepsSource);
         }
 
         // ketika player crouch maka volume sound footsteps bakal berkurang
         if (IsCrouching)
         {
-            footstepsSource.volume = 0.2f;
+            //footstepsSource.volume = 0.2f;
         }
         else
         {
-            footstepsSource.volume = 1.0f;
+            //footstepsSource.volume = 1.0f;
         }
 
         // Select the AI friend by pressing keys 1, 2, etc.

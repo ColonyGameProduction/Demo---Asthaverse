@@ -199,11 +199,13 @@ MonoBehaviour:
   isItEnemy:
     serializedVersion: 2
     m_Bits: 0
+  enemyState: 0
   alertValue: 0
   maxAlertValue: 0
   patrolPath:
   - {x: 25, y: 0, z: -8}
   - {x: 25, y: 0, z: -8}
+  friendAI: []
 --- !u!4 &2227553
 Transform:
   m_ObjectHideFlags: 0
@@ -1833,7 +1835,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &310354389
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1892,10 +1894,12 @@ MonoBehaviour:
   isItEnemy:
     serializedVersion: 2
     m_Bits: 0
+  enemyState: 0
   alertValue: 0
   maxAlertValue: 0
   patrolPath:
   - {x: 25, y: 0, z: -8}
+  friendAI: []
 --- !u!4 &310354391
 Transform:
   m_ObjectHideFlags: 0
@@ -2035,7 +2039,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &324495346
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2094,10 +2098,12 @@ MonoBehaviour:
   isItEnemy:
     serializedVersion: 2
     m_Bits: 0
+  enemyState: 0
   alertValue: 0
   maxAlertValue: 0
   patrolPath:
   - {x: 25, y: 0, z: -8}
+  friendAI: []
 --- !u!4 &324495348
 Transform:
   m_ObjectHideFlags: 0
@@ -4926,6 +4932,8 @@ MonoBehaviour:
   weaponStat:
   - {fileID: 11400000, guid: ce86a641912742b49adc7be1f7fd8c2e, type: 2}
   - {fileID: 11400000, guid: 4e797d732470a364584aa35fc319d05c, type: 2}
+  footstepsSource: {fileID: 0}
+  whistleSource: {fileID: 0}
   character: {fileID: 11400000, guid: 78ac99ab9c521f949b44b30310e67cba, type: 2}
   command: {fileID: 1543354274}
   isCommandActive: 0
@@ -5021,6 +5029,16 @@ MonoBehaviour:
     m_Bits: 64
   viewMeshFilter: {fileID: 1457320078}
   character: {fileID: 11400000, guid: d3bb0fe73d042574499e6afcb92c01ea, type: 2}
+  friendsState: 0
+  gotDetected: 0
+  detectedByEnemy: {fileID: 0}
+  friendsStat: {fileID: 11400000, guid: d3bb0fe73d042574499e6afcb92c01ea, type: 2}
+  friendsHP: 0
+  isItFriend:
+    serializedVersion: 2
+    m_Bits: 0
+  engageTimer: 0
+  detectedTimer: 0
 --- !u!1 &745014793
 GameObject:
   m_ObjectHideFlags: 0
@@ -8196,6 +8214,8 @@ MonoBehaviour:
   weaponStat:
   - {fileID: 11400000, guid: ddddea676c9c1d64683b955392c0bef3, type: 2}
   - {fileID: 11400000, guid: a97faab87db266d46b42e6f59adb7d4c, type: 2}
+  footstepsSource: {fileID: 0}
+  whistleSource: {fileID: 0}
   character: {fileID: 11400000, guid: 404520d3bc4bb0c45b8455162413b7d4, type: 2}
   command: {fileID: 138660905}
   isCommandActive: 0
@@ -8291,6 +8311,16 @@ MonoBehaviour:
     m_Bits: 64
   viewMeshFilter: {fileID: 946796282}
   character: {fileID: 11400000, guid: f81fe461a29266540868cd75ae4260aa, type: 2}
+  friendsState: 0
+  gotDetected: 0
+  detectedByEnemy: {fileID: 0}
+  friendsStat: {fileID: 11400000, guid: f81fe461a29266540868cd75ae4260aa, type: 2}
+  friendsHP: 0
+  isItFriend:
+    serializedVersion: 2
+    m_Bits: 0
+  engageTimer: 0
+  detectedTimer: 0
 --- !u!4 &1186429804 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4755716441238886717, guid: 9faaf32607770b5469cd14d9154e22ad, type: 3}
@@ -9730,7 +9760,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &1525295030
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -9789,10 +9819,12 @@ MonoBehaviour:
   isItEnemy:
     serializedVersion: 2
     m_Bits: 0
+  enemyState: 0
   alertValue: 0
   maxAlertValue: 0
   patrolPath:
   - {x: 25, y: 0, z: -8}
+  friendAI: []
 --- !u!4 &1525295032
 Transform:
   m_ObjectHideFlags: 0
@@ -10821,7 +10853,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &1775165108
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -10880,10 +10912,12 @@ MonoBehaviour:
   isItEnemy:
     serializedVersion: 2
     m_Bits: 0
+  enemyState: 0
   alertValue: 0
   maxAlertValue: 0
   patrolPath:
   - {x: 25, y: 0, z: -8}
+  friendAI: []
 --- !u!4 &1775165110
 Transform:
   m_ObjectHideFlags: 0
@@ -12118,6 +12152,8 @@ MonoBehaviour:
   weaponStat:
   - {fileID: 11400000, guid: a9d97bbad63f47d4a92e1eb934894ae8, type: 2}
   - {fileID: 11400000, guid: 4e797d732470a364584aa35fc319d05c, type: 2}
+  footstepsSource: {fileID: 0}
+  whistleSource: {fileID: 0}
   character: {fileID: 11400000, guid: aee2290065d7285488cdea12fbc8bb54, type: 2}
   command: {fileID: 486741365}
   isCommandActive: 0
@@ -12213,6 +12249,16 @@ MonoBehaviour:
     m_Bits: 320
   viewMeshFilter: {fileID: 961320782}
   character: {fileID: 11400000, guid: 031ce61ad42360e479e9b1e671470dea, type: 2}
+  friendsState: 0
+  gotDetected: 0
+  detectedByEnemy: {fileID: 0}
+  friendsStat: {fileID: 11400000, guid: 031ce61ad42360e479e9b1e671470dea, type: 2}
+  friendsHP: 0
+  isItFriend:
+    serializedVersion: 2
+    m_Bits: 0
+  engageTimer: 0
+  detectedTimer: 0
 --- !u!114 &2066745665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12338,7 +12384,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &2105910114
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -12397,10 +12443,12 @@ MonoBehaviour:
   isItEnemy:
     serializedVersion: 2
     m_Bits: 0
+  enemyState: 0
   alertValue: 0
   maxAlertValue: 0
   patrolPath:
   - {x: 0, y: 0, z: 0}
+  friendAI: []
 --- !u!4 &2105910116
 Transform:
   m_ObjectHideFlags: 0

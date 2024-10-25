@@ -197,6 +197,8 @@ public class EnemyAI : ExecuteLogic
                 enemyNavmesh.speed = enemyStat.speed;
                 enemyNavmesh.isStopped = false;
 
+                EM.isEngaging?.Invoke();
+
                 if(visibleTargets.Count != 0 || otherVisibleTargets.Count != 0)
                 {
                     EM.enemyEngage?.Invoke(this);
@@ -234,14 +236,33 @@ public class EnemyAI : ExecuteLogic
 
         for (int i = 0; i < friendAI.Count; i++)
         {
-            friendAI[i].gotDetected = true;
-            friendAI[i].detectedByEnemy = this;
+            if(friendAI[i].enabled)
+            {
+                friendAI[i].gotDetected = true;
+                friendAI[i].detectedTimer = .3f;
 
-            Vector3 friendDir = transform.position - friendAI[i].transform.position;
-            friendAI[i].transform.forward = Vector3.Slerp(friendAI[i].transform.forward, friendDir, friendAI[i].GetNavMesh().angularSpeed).normalized;
+                Debug.Log(friendAI[i].gameObject.name + " " + i);
+                Debug.Log(friendAI[i].gotDetected + " " + i);
 
-            friendAI[i].ResetDestination();
+                friendAI[i].detectedByEnemy = this;
+                
+
+
+                Vector3 friendDir = transform.position - friendAI[i].transform.position;
+                friendAI[i].transform.forward = Vector3.Slerp(friendAI[i].transform.forward, friendDir, friendAI[i].GetNavMesh().angularSpeed).normalized;
+
+                friendAI[i].ResetDestination();
+            }
+            //if (friendAI[i].detectedByEnemy == null)
+            //{
+            //    friendAI[i].gotDetected = false;
+            //}
+
+            
+
         }
+
+
     }
 
     private void ClosestPOI()

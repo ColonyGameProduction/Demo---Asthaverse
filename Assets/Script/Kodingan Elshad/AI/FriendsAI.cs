@@ -8,6 +8,7 @@ public class FriendsAI : ExecuteLogic
 {
 
     GameManager gm;
+    EnemyManager EM;
     private GameObject[] destination = new GameObject[4];
 
     public int friendsID;
@@ -56,6 +57,8 @@ public class FriendsAI : ExecuteLogic
     private WeaponStatSO currentWeapon;
     private WeaponStatSO[] weapon;
     public LayerMask isItFriend;
+    public float engageTimer;
+    public float detectedTimer;
 
     private bool isIdle;
 
@@ -66,6 +69,9 @@ public class FriendsAI : ExecuteLogic
         viewMeshFilter.mesh = viewMesh;
         StartCoroutine(FindTargetWithDelay(0.2f));
         gm = GameManager.instance;
+        EM = EnemyManager.instance;
+
+        EM.isEngaging += HandleState;
 
         weapon = friendsStat.weaponStat;
         currentWeapon = weapon[0];
@@ -80,66 +86,66 @@ public class FriendsAI : ExecuteLogic
     }
     void Update()
     {
+        if (detectedTimer > 0)
+        {
+            detectedTimer -= Time.deltaTime;
+        }
+        else
+        {
+            gotDetected = false;
+        }
+
         FindActivePlayerAction();
 
-        HandleState();
         switch (friendsState)
         {
             case alertState.Idle:
                 if (gotDetected)
                 {
-                    if (detectedByEnemy != null && detectedByEnemy.enemyState == alertState.Idle)
+                    if (friendsID == 1 && !commandActive)
                     {
-                       Debug.Log("Kabur");
-
-                        if (friendsID == 1 && !commandActive)
-                        {
-                            MoveDestinationAwayFromEnemy(ref destination[2], detectedByEnemy.transform.position);
-                        }
-                        if (friendsID == 2 && !commandActive)
-                        {
-                            MoveDestinationAwayFromEnemy(ref destination[3], detectedByEnemy.transform.position);
-                        }
+                        MoveDestinationAwayFromEnemy(ref destination[2], detectedByEnemy.transform.position);
+                    }
+                    if (friendsID == 2 && !commandActive)
+                    {
+                        MoveDestinationAwayFromEnemy(ref destination[3], detectedByEnemy.transform.position);
                     }
                 }
                 else
                 {
-                    Debug.Log("Normal");
                 }
                 break;
 
             case alertState.Hunted:
-                Debug.Log("NGUMPET");
 
                 if (gotDetected)
                 {
-                    if (detectedByEnemy != null && detectedByEnemy.enemyState == alertState.Idle)
+                    if (friendsID == 1 && !commandActive)
                     {
-                        Debug.Log("Kabur");
-
-                        if (friendsID == 1 && !commandActive)
-                        {
-                            MoveDestinationAwayFromEnemy(ref destination[2], detectedByEnemy.transform.position);
-                        }
-                        if (friendsID == 2 && !commandActive)
-                        {
-                            MoveDestinationAwayFromEnemy(ref destination[3], detectedByEnemy.transform.position);
-                        }
+                        MoveDestinationAwayFromEnemy(ref destination[2], detectedByEnemy.transform.position);
+                    }
+                    if (friendsID == 2 && !commandActive)
+                    {
+                        MoveDestinationAwayFromEnemy(ref destination[3], detectedByEnemy.transform.position);
                     }
                 }
 
                 break;
 
             case alertState.Engage:
+
+                if(engageTimer > 0)
+                {
+                    engageTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    friendsState = alertState.Idle;
+                }
+
                 isIdle = false;
                 Shoot();
                 break;
-        }
-
-        if (visibleTargets.Count == 0 || visibleTargets[0].gameObject.GetComponent<EnemyAI>())
-        {
-            gotDetected = false;
-            detectedByEnemy = null;
         }
 
         // Setiap frame, periksa status dari isCommand
@@ -173,17 +179,12 @@ public class FriendsAI : ExecuteLogic
 
     private void HandleState()
     {
-        if (detectedByEnemy != null)
-        {
-            if (detectedByEnemy.enemyState == alertState.Hunted)
-            {
-                friendsState = alertState.Hunted;
-            }
-            else if (detectedByEnemy.enemyState == alertState.Engage)
-            {
-                friendsState = alertState.Engage;
-            }
-        }
+
+        engageTimer = 0.3f;
+
+        friendsState = alertState.Engage;
+        gotDetected = false;
+
     }
 
     private void Shooting()
@@ -212,8 +213,17 @@ public class FriendsAI : ExecuteLogic
 
     public void ResetDestination()
     {
-        destination[2].transform.position = transform.position;
-        destination[3].transform.position = transform.position;
+        if(this.enabled)
+        {
+            if (friendsID == 1 && !commandActive)
+            {
+                destination[2].transform.position = transform.position;
+            }
+            if (friendsID == 2 && !commandActive)
+            {
+                destination[3].transform.position = transform.position;
+            }
+        }
     }
 
     private void MoveDestinationAwayFromEnemy(ref GameObject destination, Vector3 enemyPosition)
@@ -226,6 +236,7 @@ public class FriendsAI : ExecuteLogic
         {
             destination.transform.position += directionAwayFromEnemy;
         }
+        
 
         MoveToDestination(GetNavMesh(), destination.transform.position);
 
@@ -276,14 +287,17 @@ public class FriendsAI : ExecuteLogic
         }
         else
         {
-            if (friendsID == 1)
+            if(!gotDetected)
             {
-                MoveToDestination(GetNavMesh(), destination[0].transform.position);
-            }
-            else if (friendsID == 2)
-            {
-                MoveToDestination(GetNavMesh(), destination[1].transform.position);
-            }
+                if (friendsID == 1)
+                {
+                    MoveToDestination(GetNavMesh(), destination[0].transform.position);
+                }
+                else if (friendsID == 2)
+                {
+                    MoveToDestination(GetNavMesh(), destination[1].transform.position);
+                }
+            }            
         }
     }
 
