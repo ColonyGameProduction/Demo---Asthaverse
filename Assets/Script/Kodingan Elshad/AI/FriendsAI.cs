@@ -42,6 +42,22 @@ public class FriendsAI : ExecuteLogic
     private PlayerAction activePlayerAction;
 
 
+    public alertState friendsState;
+    public bool gotDetected = false;
+    public EnemyAI detectedByEnemy;
+
+    [Header("Untuk Stat")]
+    [SerializeField]
+    private EntityStatSO friendsStat;
+    [SerializeField]
+    private float friendsHP;
+    private bool isReloading = false;
+    private bool fireRateOn = false;
+    private WeaponStatSO currentWeapon;
+    private WeaponStatSO[] weapon;
+    public LayerMask isItFriend;
+
+    private bool isIdle;
 
     private void Start()
     {
@@ -50,6 +66,12 @@ public class FriendsAI : ExecuteLogic
         viewMeshFilter.mesh = viewMesh;
         StartCoroutine(FindTargetWithDelay(0.2f));
         gm = GameManager.instance;
+
+        weapon = friendsStat.weaponStat;
+        currentWeapon = weapon[0];
+
+        friendsState = alertState.Idle;
+        isIdle = true;
     }
 
     private void LateUpdate()
@@ -59,6 +81,66 @@ public class FriendsAI : ExecuteLogic
     void Update()
     {
         FindActivePlayerAction();
+
+        HandleState();
+        switch (friendsState)
+        {
+            case alertState.Idle:
+                if (gotDetected)
+                {
+                    if (detectedByEnemy != null && detectedByEnemy.enemyState == alertState.Idle)
+                    {
+                       Debug.Log("Kabur");
+
+                        if (friendsID == 1 && !commandActive)
+                        {
+                            MoveDestinationAwayFromEnemy(ref destination[2], detectedByEnemy.transform.position);
+                        }
+                        if (friendsID == 2 && !commandActive)
+                        {
+                            MoveDestinationAwayFromEnemy(ref destination[3], detectedByEnemy.transform.position);
+                        }
+                    }
+                }
+                else
+                {
+                    Debug.Log("Normal");
+                }
+                break;
+
+            case alertState.Hunted:
+                Debug.Log("NGUMPET");
+
+                if (gotDetected)
+                {
+                    if (detectedByEnemy != null && detectedByEnemy.enemyState == alertState.Idle)
+                    {
+                        Debug.Log("Kabur");
+
+                        if (friendsID == 1 && !commandActive)
+                        {
+                            MoveDestinationAwayFromEnemy(ref destination[2], detectedByEnemy.transform.position);
+                        }
+                        if (friendsID == 2 && !commandActive)
+                        {
+                            MoveDestinationAwayFromEnemy(ref destination[3], detectedByEnemy.transform.position);
+                        }
+                    }
+                }
+
+                break;
+
+            case alertState.Engage:
+                isIdle = false;
+                Shoot();
+                break;
+        }
+
+        if (visibleTargets.Count == 0 || visibleTargets[0].gameObject.GetComponent<EnemyAI>())
+        {
+            gotDetected = false;
+            detectedByEnemy = null;
+        }
 
         // Setiap frame, periksa status dari isCommand
         if (activePlayerAction != null && activePlayerAction.enabled)
@@ -89,6 +171,66 @@ public class FriendsAI : ExecuteLogic
         }
     }
 
+    private void HandleState()
+    {
+        if (detectedByEnemy != null)
+        {
+            if (detectedByEnemy.enemyState == alertState.Hunted)
+            {
+                friendsState = alertState.Hunted;
+            }
+            else if (detectedByEnemy.enemyState == alertState.Engage)
+            {
+                friendsState = alertState.Engage;
+            }
+        }
+    }
+
+    private void Shooting()
+    {
+        Vector3 dis = visibleTargets[0].transform.position - transform.position;
+        if (visibleTargets.Count > 0) Shoot(FOVPoint.position, dis, friendsStat, currentWeapon, isItFriend);
+
+        Debug.Log("Shoot");
+    }
+
+    private void Shoot()
+    {
+        if (!fireRateOn && !isReloading && visibleTargets.Count != 0)
+        {
+            Shooting();
+            StartCoroutine(FireRate(FireRateFlag, currentWeapon.fireRate));
+            if (currentWeapon.currBullet == 0)
+            {
+                isReloading = true;
+                Reload(currentWeapon);
+                StartCoroutine(ReloadTime(ReloadFlag, currentWeapon.reloadTime));
+            }
+
+        }
+    }
+
+    public void ResetDestination()
+    {
+        destination[2].transform.position = transform.position;
+        destination[3].transform.position = transform.position;
+    }
+
+    private void MoveDestinationAwayFromEnemy(ref GameObject destination, Vector3 enemyPosition)
+    {
+        Vector3 directionAwayFromEnemy = (transform.position - enemyPosition).normalized;
+
+        float distance = Vector3.Distance(transform.position, enemyPosition);
+
+        if (distance < detectedByEnemy.GetEnemyStat().FOVRadius)
+        {
+            destination.transform.position += directionAwayFromEnemy;
+        }
+
+        MoveToDestination(GetNavMesh(), destination.transform.position);
+
+    }
+
     private void FixedUpdate()
     {
         Move();
@@ -105,7 +247,7 @@ public class FriendsAI : ExecuteLogic
         CommandFollow();
     }
 
-    
+
     //untuk follow player
     private void CommandFollow()
     {
@@ -115,11 +257,21 @@ public class FriendsAI : ExecuteLogic
             {
                 MoveToDestination(GetNavMesh(), destination[2].transform.position);
                 SnapToWallIfNeeded(destination[2].transform.position); // kalo misalkan dia deket sama tembok ato nempel dia bakal posisiin diri secara otomatis ke tembok
+
+                if (gotDetected && isIdle)
+                {
+                    destination[2].transform.position = destination[0].transform.position;
+                }
             }
             else if (friendsID == 2)
             {
                 MoveToDestination(GetNavMesh(), destination[3].transform.position);
                 SnapToWallIfNeeded(destination[3].transform.position); // kalo misalkan dia deket sama tembok ato nempel dia bakal posisiin diri secara otomatis ke tembok
+
+                if (gotDetected && isIdle)
+                {
+                    destination[3].transform.position = destination[1].transform.position;
+                }
             }
         }
         else
@@ -221,6 +373,26 @@ public class FriendsAI : ExecuteLogic
             yield return new WaitForSeconds(delay);
             FindVisibleTargetsForEnemy(viewRadius, viewAngle, visibleTargets, FOVPoint, enemyMask, groundMask);
         }
+    }
+
+    public float GetFriendHP()
+    {
+        return friendsHP;
+    }
+
+    public void SetEnemyHP(float hp)
+    {
+        friendsHP = hp;
+    }
+
+    private void ReloadFlag(bool value)
+    {
+        isReloading = value;
+    }
+
+    private void FireRateFlag(bool value)
+    {
+        fireRateOn = value;
     }
 
     public EntityStatSO GetFriendsStat()

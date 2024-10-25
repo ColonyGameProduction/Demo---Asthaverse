@@ -198,11 +198,13 @@ MonoBehaviour:
   isItEnemy:
     serializedVersion: 2
     m_Bits: 0
+  enemyState: 0
   alertValue: 0
   maxAlertValue: 0
   patrolPath:
   - {x: 25, y: 0, z: -8}
   - {x: 25, y: 0, z: -8}
+  friendAI: []
 --- !u!4 &2227553
 Transform:
   m_ObjectHideFlags: 0
@@ -4279,6 +4281,7 @@ Transform:
   m_Children:
   - {fileID: 1347309374}
   - {fileID: 539561108}
+  - {fileID: 1887388950}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &743586302
@@ -4293,7 +4296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 259d9888c334b684d8efe57dddc5ca36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stopView: 1
+  stopView: 0
   stateMachine: {fileID: 0}
   playerGameObject: {fileID: 439030860}
   followTarget: {fileID: 1611590578}
@@ -4403,12 +4406,20 @@ MonoBehaviour:
   visibleTargets: []
   enemyMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   viewMeshFilter: {fileID: 1457320078}
   character: {fileID: 11400000, guid: d3bb0fe73d042574499e6afcb92c01ea, type: 2}
+  friendsState: 0
+  gotDetected: 0
+  detectedByEnemy: {fileID: 0}
+  friendsStat: {fileID: 11400000, guid: d3bb0fe73d042574499e6afcb92c01ea, type: 2}
+  friendsHP: 0
+  isItFriend:
+    serializedVersion: 2
+    m_Bits: 4416
 --- !u!82 &743586307
 AudioSource:
   m_ObjectHideFlags: 0
@@ -7245,7 +7256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a029e869171a244b47240e78fae34f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stopView: 1
+  stopView: 0
   friendsID: 0
   edgeResolveIteration: 4
   edgeDistanceTreshold: 0.5
@@ -7256,12 +7267,20 @@ MonoBehaviour:
   visibleTargets: []
   enemyMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   viewMeshFilter: {fileID: 946796282}
   character: {fileID: 11400000, guid: f81fe461a29266540868cd75ae4260aa, type: 2}
+  friendsState: 0
+  gotDetected: 0
+  detectedByEnemy: {fileID: 0}
+  friendsStat: {fileID: 11400000, guid: f81fe461a29266540868cd75ae4260aa, type: 2}
+  friendsHP: 0
+  isItFriend:
+    serializedVersion: 2
+    m_Bits: 4416
 --- !u!82 &1156905601
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8125,9 +8144,11 @@ MonoBehaviour:
   isItEnemy:
     serializedVersion: 2
     m_Bits: 0
+  enemyState: 0
   alertValue: 0
   maxAlertValue: 0
   patrolPath: []
+  friendAI: []
 --- !u!4 &1369132762
 Transform:
   m_ObjectHideFlags: 0
@@ -9017,7 +9038,7 @@ GameObject:
   - component: {fileID: 1643429135}
   - component: {fileID: 1643429134}
   - component: {fileID: 1643429133}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9868,14 +9889,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1887388949}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 4, y: 1, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1077971747}
   - {fileID: 227831814}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 743586300}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1897181811
 GameObject:
@@ -10015,7 +10036,7 @@ GameObject:
   - component: {fileID: 1996770348}
   - component: {fileID: 1996770347}
   - component: {fileID: 1996770346}
-  m_Layer: 6
+  m_Layer: 12
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10392,12 +10413,20 @@ MonoBehaviour:
   visibleTargets: []
   enemyMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   viewMeshFilter: {fileID: 961320782}
   character: {fileID: 11400000, guid: 031ce61ad42360e479e9b1e671470dea, type: 2}
+  friendsState: 0
+  gotDetected: 0
+  detectedByEnemy: {fileID: 0}
+  friendsStat: {fileID: 0}
+  friendsHP: 0
+  isItFriend:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &2066745665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10778,7 +10807,6 @@ SceneRoots:
   - {fileID: 2066745658}
   - {fileID: 1156905594}
   - {fileID: 743586300}
-  - {fileID: 1887388950}
   - {fileID: 2227553}
   - {fileID: 1369132762}
   - {fileID: 2143454058}

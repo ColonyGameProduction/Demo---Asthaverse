@@ -41,7 +41,7 @@ public class EnemyAI : ExecuteLogic
     public LayerMask isItEnemy;
 
     //Untuk Alert
-    alertState enemyState;
+    public alertState enemyState;
     FOVDistState FOVState;
     [SerializeField]
     private float alertValue;
@@ -58,6 +58,7 @@ public class EnemyAI : ExecuteLogic
     private float distance;
     private float tempDistance;
 
+    public List<FriendsAI> friendAI = new List<FriendsAI>();
 
     private void Start()
     {
@@ -100,7 +101,9 @@ public class EnemyAI : ExecuteLogic
                     enemyNavmesh.speed = 0;
                     transform.forward = Vector3.Slerp(transform.forward, dir, enemyNavmesh.angularSpeed).normalized;
                     lastSeenPosition = visibleTargets[0].position;
-                    
+
+                    ParsingToFriends();
+
                 }
                 break;
             case alertState.Hunted:
@@ -129,9 +132,12 @@ public class EnemyAI : ExecuteLogic
                         lastSeenPosition = Vector3.zero;
                     }
                 }
+
+                ParsingToFriends();
                 break;
             case alertState.Engage:
                 FOVStateHandler();
+                ParsingToFriends();
                 Shoot();
                 break;
         }
@@ -142,7 +148,28 @@ public class EnemyAI : ExecuteLogic
         }
 
 
-    }      
+    }
+
+    private void ParsingToFriends()
+    {
+        friendAI.Clear();
+
+        for (int i = 0; i < visibleTargets.Count; i++)
+        {
+            friendAI.Add(visibleTargets[i].gameObject.GetComponent<FriendsAI>());
+        }
+
+        for (int i = 0; i < friendAI.Count; i++)
+        {
+            friendAI[i].gotDetected = true;
+            friendAI[i].detectedByEnemy = this;
+
+            Vector3 friendDir = transform.position - friendAI[i].transform.position;
+            friendAI[i].transform.forward = Vector3.Slerp(friendAI[i].transform.forward, friendDir, friendAI[i].GetNavMesh().angularSpeed).normalized;
+
+            friendAI[i].ResetDestination();
+        }
+    }
 
     private void ChangingState()
     {
@@ -432,5 +459,8 @@ public class EnemyAI : ExecuteLogic
         fireRateOn = value;
     }
 
-    
+    public EntityStatSO GetEnemyStat()
+    {
+        return enemyStat;
+    }
 }

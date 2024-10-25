@@ -285,7 +285,7 @@ public class PlayerAction : ExecuteLogic
 
             Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.red, 2f);
 
-            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground")))
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground", "Wall")))
             {
                 // Set the destination for the selected friend based on the mouse click
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
