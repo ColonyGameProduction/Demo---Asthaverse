@@ -11,8 +11,10 @@ public class EnemyManager : MonoBehaviour
     public List<Transform> tempPOIPosList;
     public List<EnemyAI> enemyList;
     public List<EnemyAI> enemyCaptain;
+    public Action<EnemyAI> enemyIdle;
     public Action<EnemyAI> enemyHunted;
     public Action<EnemyAI> enemyEngage;
+    public Action isEngaging;
     public Action<EnemyAI> lastPosIsFound;
     public Action closestPOI;
 

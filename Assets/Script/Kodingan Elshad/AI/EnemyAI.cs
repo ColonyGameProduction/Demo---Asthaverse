@@ -195,6 +195,10 @@ public class EnemyAI : ExecuteLogic
                 enemyNavmesh.speed = enemyStat.speed;
                 enemyNavmesh.isStopped = false;
 
+                ParsingToFriends();
+
+                EM.isEngaging?.Invoke();
+
                 if(visibleTargets.Count != 0 || otherVisibleTargets.Count != 0)
                 {
                     EM.enemyEngage?.Invoke(this);
@@ -208,7 +212,6 @@ public class EnemyAI : ExecuteLogic
                 }
 
                 FOVStateHandler();
-                ParsingToFriends();
                 Shoot();
                 break;
         }

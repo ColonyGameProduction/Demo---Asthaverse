@@ -57,7 +57,11 @@ public class FriendsAI : ExecuteLogic
     private WeaponStatSO[] weapon;
     public LayerMask isItFriend;
 
+    EnemyManager EM;
+
     private bool isIdle;
+
+    private float timer;
 
     private void Start()
     {
@@ -66,6 +70,10 @@ public class FriendsAI : ExecuteLogic
         viewMeshFilter.mesh = viewMesh;
         StartCoroutine(FindTargetWithDelay(0.2f));
         gm = GameManager.instance;
+
+        EM = EnemyManager.instance;
+
+        //EM.isEngaging += HandleState;
 
         weapon = friendsStat.weaponStat;
         currentWeapon = weapon[0];
@@ -82,7 +90,6 @@ public class FriendsAI : ExecuteLogic
     {
         FindActivePlayerAction();
 
-        HandleState();
         switch (friendsState)
         {
             case alertState.Idle:
@@ -131,6 +138,15 @@ public class FriendsAI : ExecuteLogic
                 break;
 
             case alertState.Engage:
+                if (timer > 0)
+                {
+                    timer -= Time.deltaTime;
+                }
+                else
+                {
+                    friendsState = alertState.Idle;
+                }
+
                 isIdle = false;
                 Shoot();
                 break;
@@ -173,17 +189,8 @@ public class FriendsAI : ExecuteLogic
 
     private void HandleState()
     {
-        if (detectedByEnemy != null)
-        {
-            if (detectedByEnemy.enemyState == alertState.Hunted)
-            {
-                friendsState = alertState.Hunted;
-            }
-            else if (detectedByEnemy.enemyState == alertState.Engage)
-            {
-                friendsState = alertState.Engage;
-            }
-        }
+        friendsState = alertState.Engage;
+        timer = 0.3f;
     }
 
     private void Shooting()
@@ -212,6 +219,8 @@ public class FriendsAI : ExecuteLogic
 
     public void ResetDestination()
     {
+        Debug.Log(destination[2].gameObject + " a " + destination[3].gameObject + " b " + this.name);
+
         destination[2].transform.position = transform.position;
         destination[3].transform.position = transform.position;
     }
