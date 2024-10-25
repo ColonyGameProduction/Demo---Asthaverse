@@ -14,9 +14,7 @@ using System.Security.Cryptography;
  */
 
 public class ExecuteLogic : AILogic
-{
-
-    
+{    
 
     //setelah di extend, klean bisa make function ini tanpa perlu refrence
 
@@ -65,7 +63,7 @@ public class ExecuteLogic : AILogic
             weaponStatSO.totalBullet = 0;
         }        
 
-        Debug.Log("Reload");
+        //Debug.Log("Reload");
     }
 
     //untuk ganti weapon

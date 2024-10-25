@@ -113,7 +113,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
             _currDirectionShootPoint = _currChosenTarget;
         }
 
-        _states = new UseWeaponStateFactory(this);
+        _states = new UseWeaponStateFactory(this);  
     }
     private void Start() 
     {
@@ -137,7 +137,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         {
             _currState?.ExitState();
         }
-        _currState = newState as UseWeaponState;
+        _currState =  newState as UseWeaponState;
         _currState?.EnterState();
     }
     

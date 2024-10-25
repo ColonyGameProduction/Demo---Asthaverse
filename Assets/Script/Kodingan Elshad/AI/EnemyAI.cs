@@ -203,6 +203,8 @@ public class EnemyAI : ExecuteLogic
                     }
                 }
 
+                Debug.Log(this.gameObject.name + "engage");
+
                 FOVStateHandler();
                 Shoot();
                 break;
@@ -325,6 +327,10 @@ public class EnemyAI : ExecuteLogic
             }
 
             lastSeenPosition = tempLastSeenPos;
+
+            distance = Vector3.Distance(transform.position, lastSeenPosition);
+
+            FOVState = FOVDistState.far;
 
             if (!EM.enemyList.Contains(this))
             {
@@ -524,6 +530,10 @@ public class EnemyAI : ExecuteLogic
             }
             distance = tempDistance;
         }
+        else
+        {
+            
+        }
 
         if (distance <= viewRadius && distance > viewRadius - (viewRadius/3))
         {
@@ -555,10 +565,14 @@ public class EnemyAI : ExecuteLogic
         }
         else if(enemyState == alertState.Engage)
         {
+            Debug.Log(this.gameObject.name + FOVState);
             switch (FOVState)
             {
                 case FOVDistState.far:
+
                     enemyNavmesh.speed = enemyStat.speed;
+                    Debug.Log(this.gameObject.name + "Far");
+
                     if(visibleTargets.Count != 0)
                     {
                         foreach (Transform enemy in visibleTargets)
@@ -574,11 +588,23 @@ public class EnemyAI : ExecuteLogic
                     EnemyOutOfBounds();
                     break;
                 case FOVDistState.middle:
-                    EnemyOutOfBounds();
+
+                    enemyNavmesh.speed = 0;
+
+                    if(visibleTargets.Count == 0)
+                    {                        
+                        FOVState = FOVDistState.far;
+                    }
                     Shoot();
                     break;
                 case FOVDistState.close:
-                    EnemyOutOfBounds();
+
+                    enemyNavmesh.speed = 0;
+
+                    if (visibleTargets.Count == 0)
+                    {
+                        FOVState = FOVDistState.far;
+                    }
                     Shoot();
                     break;
             }
