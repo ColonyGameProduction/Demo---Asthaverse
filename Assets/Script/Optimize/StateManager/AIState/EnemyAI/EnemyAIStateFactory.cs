@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyAIStateFactory
 {
     EnemyAIBehaviourStateMachine _machine;
-    EnemyAIState _idle;
+    EnemyAIState _idle, _hunted, _engage;
     public EnemyAIStateFactory (EnemyAIBehaviourStateMachine machine)
     {
         _machine = machine;
@@ -13,8 +13,18 @@ public class EnemyAIStateFactory
     
     public EnemyAIState AI_IdleState()
     {
-        if(_idle == null)_idle = new EnemyAIState(_machine, this);
+        if(_idle == null)_idle = new EnemyAI_IdleState(_machine, this);
         return _idle;
+    }
+    public EnemyAIState AI_HuntedState()
+    {
+        if(_hunted == null)_hunted = new EnemyAI_HuntedState(_machine, this);
+        return _hunted;
+    }
+    public EnemyAIState AI_EngageState()
+    {
+        if(_engage == null)_engage = new EnemyAI_EngageState(_machine, this);
+        return _engage;
     }
 }
 

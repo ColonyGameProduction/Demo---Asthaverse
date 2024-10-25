@@ -21,7 +21,7 @@ public class SilentKillState : UseWeaponState
         //     _playableData.TellToTurnOffScope();
         // }
 
-        Debug.Log("SilentKill" + _stateMachine.gameObject.name);
+        // Debug.Log("SilentKill" + _stateMachine.gameObject.name);
     }
     public override void UpdateState()
     {

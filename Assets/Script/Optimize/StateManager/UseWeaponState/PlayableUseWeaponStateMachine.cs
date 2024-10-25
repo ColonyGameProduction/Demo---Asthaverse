@@ -144,8 +144,16 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     
     protected override void SetShootPosition()
     {
-        _originShootPosition = CurrOriginShootPoint.position;
-        _directionShootPosition = CurrDirectionShootPoint.forward;
+        if(_isInputPlayer)
+        {
+            _originShootPosition = CurrOriginShootPoint.position;
+            _directionShootPosition = CurrDirectionShootPoint.forward;
+        }
+        else
+        {
+            base.SetShootPosition();
+        }
+        
     }
     
     #endregion

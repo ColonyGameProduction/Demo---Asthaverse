@@ -10,14 +10,12 @@ public class RunState : MovementState
     public RunState(MovementStateMachine machine, MovementStateFactory factory) : base(machine, factory)
     {
         // StateAnimationName = "Sprint";
-        StateAnimationName = "Move";
+        StateAnimationName = "Run";
     }
     public override void EnterState()
     {
         base.EnterState(); 
-        // base.EnterState(); // Jalankan animasi
-        Debug.Log("Running" + _stateMachine.gameObject.name);
-
+        
         //Mengganti kecepatan
         _stateMachine.ChangeCurrSpeed(_stateMachine.RunSpeed);
 
