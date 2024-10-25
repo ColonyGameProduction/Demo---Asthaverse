@@ -6,6 +6,7 @@ using Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
 using System;
+using UnityEngine.Rendering;
 
 //kelas untuk player action seperti attacking, scope, dan Silent kill
 
@@ -99,6 +100,7 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
         inputActions.InputPlayerAction.Reload.performed += Reload_performed;
         inputActions.InputPlayerAction.Interact.performed += Interact_performed;
+        inputActions.InputPlayerAction.NightVision.performed += NightVision_performed;
 
         inputActions.InputPlayerAction.Command.performed += Command_performed;
         inputActions.InputPlayerAction.UnCommand.performed += UnCommand_performed;
@@ -111,6 +113,19 @@ public class PlayerAction : ExecuteLogic
         weaponStat = character.weaponStat;
 
         StartingSetup();
+    }
+
+    private void NightVision_performed(InputAction.CallbackContext context)
+    {
+        Volume nightVision = Camera.main.GetComponent<Volume>();
+        if(nightVision.enabled)
+        {
+            nightVision.enabled = false;
+        }
+        else
+        {
+            nightVision.enabled = true;
+        }
     }
 
     private void Crouch_canceled(InputAction.CallbackContext context)

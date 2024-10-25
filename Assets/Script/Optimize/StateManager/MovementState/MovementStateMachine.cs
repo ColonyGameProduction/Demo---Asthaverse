@@ -12,11 +12,18 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     [Space(1)]
     [Header("Move States - Stand")]
-    [SerializeField] protected bool _isIdle;
+    [SerializeField] protected bool _isIdle = true;
     [SerializeField] protected bool _isWalking;
     [SerializeField] protected bool _isRun;
+    
     protected MovementStateFactory _states;
     protected MovementState _currState;
+
+    [Header("Move Animator Component")]
+    [SerializeField] protected float _idleCounter;
+    [SerializeField] protected float[] _idleRelaxTargetTime;
+    [SerializeField] protected UseWeaponStateMachine useWeaponStateMachine;
+    protected bool _wasAiming;
 
     [Space(1)]
     [Header("NavMesh Component")]
@@ -30,12 +37,20 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     protected float _runSpeed;
     protected float _currSpeed;
 
+    [Space(1)]
+    [Header("AI Rotation")]
+    protected Vector3 _posToLookAt;
+    protected bool _askAIToLookWhileIdle;
+
+    public Action<Vector3> OnIsTheSamePosition;
+
     #endregion
 
     #region CONST Variable
     //CONST
     public const string ANIMATION_MOVE_PARAMETER_HORIZONTAL = "Horizontal";
     public const string ANIMATION_MOVE_PARAMETER_VERTICAL = "Vertical";
+    public const string ANIMATION_MOVE_PARAMETER_IDLECOUNTER ="IdleCounter";
     #endregion
 
     #region GETTERSETTER Variable
@@ -57,6 +72,11 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     public NavMeshAgent AgentNavMesh {get {return _agentNavMesh;}}
     public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
+    public bool AskAIToLookWhileIdle {get {return _askAIToLookWhileIdle;} set{_askAIToLookWhileIdle = value;}}
+    
+    public float IdleCounter {get {return _idleCounter;}}
+    public float[] IdleRelaxTargetTime {get {return _idleRelaxTargetTime;}}
+    public bool WasAiming {get {return _wasAiming;}set{_wasAiming = value;}}
     
     #endregion
 
@@ -70,8 +90,14 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     }
     private void Start() 
     {
+        if(useWeaponStateMachine == null)useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
+        
+        ChangeIdleCounterNormal();
         SwitchState(_states.IdleState());
     }
+
+    
+
     protected virtual void Update() 
     {
         _currState?.UpdateState();
@@ -120,19 +146,32 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         {
             AgentNavMesh.destination = CurrAIDirPos;
         }
-        if(!AgentNavMesh.hasPath)return true;
+        // Debug.Log(AgentNavMesh.hasPath + " " + gameObject.name);
+        if(!AgentNavMesh.hasPath)
+        {
+            OnIsTheSamePosition?.Invoke(CurrAIDirPos);
+            return true;
+        }
         else
         {
             if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentNavMesh.radius)
             {
 
                 AgentNavMesh.ResetPath();
+                OnIsTheSamePosition?.Invoke(CurrAIDirPos);
 
                 return true;
             }
         }
 
         return false;
+    }
+
+    public void IdleAI_RotateToEnemy()
+    {
+        Vector3 facedir = (_posToLookAt - transform.position).normalized;
+        Quaternion rotateTo = Quaternion.LookRotation(facedir);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
     }
 
     public virtual void ForceStopMoving()
@@ -156,10 +195,28 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     {
         _currAIDirPos = newPos;
     }
+    public void GiveAIPlaceToLook(Vector3 posToLook)
+    {
+        _posToLookAt = posToLook;
+    }
     #endregion
 
     public void ChangeCurrSpeed(float newSpeed)
     {
         if(_currSpeed != newSpeed)_currSpeed = newSpeed;
+    }
+
+    public void ChangeIdleCounterAfterAim()
+    {
+        ChangeIdleCounter(0);
+    }
+    public void ChangeIdleCounterNormal()
+    {
+        ChangeIdleCounter(1);
+    }
+    public void ChangeIdleCounter(float x)
+    {
+        _idleCounter = x;
+        _animator.SetFloat(ANIMATION_MOVE_PARAMETER_IDLECOUNTER, _idleCounter);
     }
 }

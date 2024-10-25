@@ -29,7 +29,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     private bool _isAnimatingOtherAnimation;
     #region GETTERSETTER Variable
 
-    [Header("Evenet")]
+    [Header("Event")]
     public Action OnPlayableDeath;
     [HideInInspector]
     //Getter Setter
@@ -112,6 +112,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         yield return new WaitForSeconds(2f); // ded anim
         if(IsInputPlayer)OnPlayableDeath?.Invoke();
+        _getPlayableMovementStateData.SetCharaGameObjRotationToNormal();
         _isAnimatingOtherAnimation = false;
         if(!_getPlayableMovementStateData.IsCrawling)
         {
@@ -130,7 +131,9 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     }
     private IEnumerator Reviving()
     {
+        Debug.Log("reviving");
         yield return new WaitForSeconds(2f);
+        _animator.SetTrigger("ReviveTrigger");
         _fovMachine.enabled = true;
 
         if(_getPlayableMovementStateData.IsCrawling)_getPlayableMovementStateData.IsCrawling = false;
@@ -138,6 +141,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
         _isDead = false;
         _isAnimatingOtherAnimation = false;
+        Debug.Log("reviving Done");
     }
     
     public void TurnOnOffFriendAI(bool isTurnOn)

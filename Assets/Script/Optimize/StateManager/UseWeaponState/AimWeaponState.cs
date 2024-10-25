@@ -7,12 +7,12 @@ public class AimWeaponState : UseWeaponState
 {
     public AimWeaponState(UseWeaponStateMachine stateMachine, UseWeaponStateFactory factory) : base(stateMachine, factory)
     {
-        StateAnimationName = "Scope";
+        StateAnimationName = "Aim";
     }
     public override void EnterState()
     {
         base.EnterState(); //Do animation
-        Debug.Log("Aim Weapon" + _stateMachine.gameObject.name);
+        // Debug.Log("Aim Weapon" + _stateMachine.gameObject.name);
     }
     public override void UpdateState()
     {
@@ -53,7 +53,10 @@ public class AimWeaponState : UseWeaponState
     }
     public override void ExitState()
     {
-        if(!_normalUse.IsAiming) base.ExitState();
+        if(!_normalUse.IsAiming)
+        {
+            base.ExitState();
+        }
         // base.ExiState(); //Turn Off Aiming ANimation if isAiming is false
     }
 }

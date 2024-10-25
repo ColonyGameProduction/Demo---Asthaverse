@@ -72,7 +72,8 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         if(_animator == null)_animator = GetComponent<Animator>();
         if(_moveStateMachine == null) _moveStateMachine = GetComponent<MovementStateMachine>();
         if(_useWeaponStateMachine == null) _useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
-
+        // Debug.Log(_useWeaponStateMachine + " tidak null");
+        if(_useWeaponStateMachine != null)_useWeaponStateMachine.OnWasUsinghGun += UseWeapon_OnWasUsinghGun;
         _fovMachine = GetComponent<FOVMachine>();
 
         InitializeCharacter();
@@ -90,6 +91,10 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
             ded = false;
             Hurt (HealthNow);
         }
+    }
+    private void UseWeapon_OnWasUsinghGun()
+    {
+        _moveStateMachine.WasAiming = true;
     }
     #region Health
     public virtual void Hurt(float Damage)
@@ -113,6 +118,8 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 
     public virtual void Death()
     {
+        _animator.SetBool("Death", true);
+        _animator.SetTrigger("DeathTrigger");
         _isDead = true;
         _useWeaponStateMachine.ForceStopUseWeapon();
         _moveStateMachine.ForceStopMoving();

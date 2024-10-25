@@ -27,10 +27,10 @@ public abstract class  CharacterBaseState<T> : BaseState where T : CharacterStat
     }
     protected void StateAnimationOn(string animationName)
     {
-        _stateMachine.CharaAnimator?.SetBool(animationName, true);
+        if(!_stateMachine.CharaAnimator.GetBool(animationName))_stateMachine.CharaAnimator?.SetBool(animationName, true);
     }
     protected void StateAnimationOff(string animationName)
     {
-        _stateMachine.CharaAnimator?.SetBool(animationName, false);
+        if(_stateMachine.CharaAnimator.GetBool(animationName))_stateMachine.CharaAnimator?.SetBool(animationName, false);
     }
 }
