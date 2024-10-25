@@ -17,17 +17,11 @@ public abstract class MovementState : CharacterBaseState<MovementStateMachine>
     {
         _factory = factory;
         if(currStateMachine is IStandMovementData s)_standData = s;
-        {
-            
-        }
+
         if(currStateMachine is IGroundMovementData g)_groundData = g;
-        {
-            
-        }
+
         if(currStateMachine is IPlayableMovementDataNeeded m)_playableData = m;
-        {
-            
-        }
+
     }
     public override void EnterState()
     {

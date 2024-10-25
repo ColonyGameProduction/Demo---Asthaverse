@@ -143,6 +143,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         CurrPlayableChara.IsPlayerInput = false;
         
         //Kategori kamera
+        ResetCameraHeight(_currCharaidx);
         ResetScope(_currCharaidx);
         ResetNightVision(_currCharaidx);
         _currPlayableCamera.GetFollowCamera.Priority = 1;//Prioritas kamera yg diikuti diturunkan
@@ -332,6 +333,10 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         _isNightVision = false;
         //do smth with camera
     }
+    public void ResetCameraHeight(int charaIdx) => _charaIdentities[charaIdx].GetPlayableCamera?.SetCameraHeight(true);
+    public void SetCameraHeightCrouch(int charaIdx) => _charaIdentities[charaIdx].GetPlayableCamera?.SetCameraHeight(false);
+
+
     #endregion
     #region  Weapon Data
     private void UseWeaponData_OnTurningOffScope()
@@ -410,7 +415,11 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
             if(_currPlayableMoveStateMachine.IsMustLookForward)_currPlayableMoveStateMachine.IsMustLookForward = false;
 
             if(IsScope)ResetScope(_currCharaidx);
-            if(_currPlayableMoveStateMachine.IsCrouching)_currPlayableMoveStateMachine.IsCrouching = false;
+            if(_currPlayableMoveStateMachine.IsCrouching)
+            {
+                _currPlayableMoveStateMachine.IsCrouching = false;
+                ResetCameraHeight(_currCharaidx);
+            }
             _currPlayableMoveStateMachine.IsRunning = true;
 
             foreach(PlayableCharacterIdentity chara in _charaIdentities)
@@ -439,6 +448,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         {
             if(_currPlayableMoveStateMachine.IsRunning)_currPlayableMoveStateMachine.IsRunning = false;
             _currPlayableMoveStateMachine.IsCrouching = true;
+            SetCameraHeightCrouch(_currCharaidx);
 
             foreach(PlayableCharacterIdentity chara in _charaIdentities)
             {
@@ -452,6 +462,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     private void GameInput_OnCrouchCanceled()
     {
         _currPlayableMoveStateMachine.IsCrouching = false;
+        ResetCameraHeight(_currCharaidx);
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
             if(chara == CurrPlayableChara)continue;

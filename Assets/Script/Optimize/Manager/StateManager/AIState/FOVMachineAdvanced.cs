@@ -13,8 +13,8 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
     [SerializeField] protected string _enemyCharaTag;
     protected Transform _closestBreadCrumbs;
 
-    protected bool _hasToCheckEnemyLastSeenPosition;
-    protected Vector3 _enemyCharalastSeenPosition;
+    [SerializeField]protected bool _hasToCheckEnemyLastSeenPosition;
+    [SerializeField]protected Vector3 _enemyCharalastSeenPosition;
 
     #endregion
     #region GETTER SETTER VARIABLE
@@ -143,14 +143,15 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
         }
         return minStealth;
     }
-    public void GoToEnemyLastSeenPosition(Vector3 enemyCharaLastSeenPosition)
-    {
-        _hasToCheckEnemyLastSeenPosition = true;
-        _enemyCharalastSeenPosition = _closestEnemy.position;
-    }
     public void IsCheckingEnemyLastPosition()
     {
         _hasToCheckEnemyLastSeenPosition = false;
     }
+    public void GoToEnemyLastSeenPosition(Vector3 enemyCharaLastSeenPosition)
+    {
+        _hasToCheckEnemyLastSeenPosition = true;
+        _enemyCharalastSeenPosition = enemyCharaLastSeenPosition;
+    }
+
 }
 

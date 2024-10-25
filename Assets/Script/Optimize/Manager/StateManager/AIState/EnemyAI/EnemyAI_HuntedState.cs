@@ -48,15 +48,26 @@ public class EnemyAI_HuntedState : EnemyAIState
         }
 
 
-
-        // _sm.GetFOVMachine.GetClosestEnemy();
         _sm.RunningTowardsEnemy();
+        if(_sm.CurrPOI == null)
+        {
+            if(_sm.GetFOVAdvancedData.HasToCheckEnemyLastSeenPosition) //meaning visible targets or other visible ada
+            {
+                _sm.EnemyAIManager.OnCaptainsStartHunting?.Invoke(_sm);
+            }
+            else
+            {
+                _sm.EnemyAIManager.EditEnemyCaptainList(_sm, false);
+            }
+
+        }
 
 
     }
     public override void ExitState()
     {
         _sm.IsAIHunted = false;
+        if(_sm.CurrPOI != null) _sm.CurrPOI = null;
     }
     
     

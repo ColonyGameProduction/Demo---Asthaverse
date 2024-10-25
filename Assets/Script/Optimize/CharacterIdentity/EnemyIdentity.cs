@@ -17,7 +17,8 @@ public class EnemyIdentity : CharacterIdentity
     public override void Death()
     {
         base.Death();
-        
+        EnemyAIManager.Instance.EditEnemyCaptainList(_enemyAIStateMachine, false);
+        EnemyAIManager.Instance.EditEnemyHearAnnouncementList(_enemyAIStateMachine, false);
         _enemyAIStateMachine.enabled = false;
     }
     

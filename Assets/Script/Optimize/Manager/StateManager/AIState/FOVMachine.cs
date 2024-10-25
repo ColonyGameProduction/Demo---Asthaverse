@@ -25,6 +25,9 @@ public class FOVMachine : MonoBehaviour
     [Header("")]
     [SerializeField] private Transform _FOVPoint;
     [SerializeField] protected List<Transform> _visibleTargets = new List<Transform>();
+    private Collider[] _targetInViewRadius;
+    [SerializeField] private int _targetInViewRadiusMax;
+    private int _currTotalTarget;
 
     [Header("Misc")]
     // [SerializeField] protected string _enemyCharaTag;
@@ -53,6 +56,10 @@ public class FOVMachine : MonoBehaviour
     
 
     #endregion
+    private void Awake() 
+    {
+        _targetInViewRadius = new Collider[_targetInViewRadiusMax];
+    }
     
     protected virtual void Start()
     {
@@ -279,13 +286,13 @@ public class FOVMachine : MonoBehaviour
         //Titik awal berada di posisi character
         //Selanjutnya akan membuat lingkaran sebesar 'viewRadius'
         //Jika collider game object nya memiliki mask yang ditentukan, maka akan disimpan
-        Collider[] targetInViewRadius = Physics.OverlapSphere(_FOVPoint.position, _viewRadius, _charaEnemyMask);
-
+        // _targetInViewRadius = Physics.OverlapSphere(_FOVPoint.position, _viewRadius, _charaEnemyMask);
+        _currTotalTarget = Physics.OverlapSphereNonAlloc(_FOVPoint.position, _viewRadius, _targetInViewRadius,_charaEnemyMask, QueryTriggerInteraction.UseGlobal);
         //Untuk mendeteksi jarak dan arah musuh/player
-        for (int i = 0; i < targetInViewRadius.Length; i++)
+        for (int i = 0; i < _currTotalTarget; i++)
         {
             //menghitung arah dari collider yang dideteksi
-            Transform target = targetInViewRadius[i].transform;
+            Transform target = _targetInViewRadius[i].transform;
             Vector3 dirToTarget = (target.position - _FOVPoint.position).normalized;
 
             
@@ -307,13 +314,6 @@ public class FOVMachine : MonoBehaviour
                 }
             }
         }
-        if(_visibleTargets != null)
-        {
-            foreach (Transform visibleTarget in _visibleTargets)
-            {
-                //Debug.DrawLine(FOVPoint.position, visibleTarget.transform.position, Color.red);
-            }
-        } 
     }
 
 

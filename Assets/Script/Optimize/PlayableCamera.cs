@@ -10,6 +10,11 @@ public class PlayableCamera : MonoBehaviour
     [Header("Reference to Follow Target")]
     [SerializeField] private Transform _followTarget;
 
+    [Header("Camera Height")]
+    [SerializeField] private float _normalHeight;
+    [SerializeField] private float _crouchHeight;
+    private bool _isNormalHeight = true;
+
     [Header("Adjust Camera Rotation Speed")]
     [SerializeField] private float _cameraRotationSpeed = 200f;
     //getter setter
@@ -64,5 +69,13 @@ public class PlayableCamera : MonoBehaviour
     public void ChangeCameraFOV(float newFOV)
     {
         _followCamera.m_Lens.FieldOfView = newFOV;
+    }
+    public void SetCameraHeight(bool isNormalHeight)
+    {
+        if(_isNormalHeight == isNormalHeight)return;
+        _isNormalHeight = isNormalHeight;
+        
+        float chosenHeight = isNormalHeight? _normalHeight : _crouchHeight;
+        _followTarget.localPosition = new Vector3(_followTarget.localPosition.x, chosenHeight, _followTarget.localPosition.z);
     }
 }

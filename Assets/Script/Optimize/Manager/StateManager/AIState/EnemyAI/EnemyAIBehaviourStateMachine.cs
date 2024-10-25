@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
 {
+    [Header("Manager")]
+    private EnemyAIManager _enemyAIManager;
     [Header("State Machine")]
     [SerializeField] private MovementStateMachine _moveStateMachine;
     [SerializeField] private UseWeaponStateMachine _useWeaponStateMachine;
@@ -14,13 +17,14 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     [SerializeField] private float _alertValue;
     [SerializeField] private float _maxAlertValue;
     [SerializeField] private float _alertValueCountMultiplier = 10f;
+
     [Header("Enemy AI States")]
     [SerializeField] private bool _isAIIdle, _isAIHunted, _isAIEngage, _isIdlePatroling;
     private IFOVMachineState _getFOVState;
     private IHuntPlayable _getFOVAdvancedData;
     private EnemyAIState _currState;
-    
     private EnemyAIStateFactory _states;
+    private Transform _currPOI;
     
     [Header("Patrol Path")]
     [SerializeField] private Transform[] _patrolPath;
@@ -28,6 +32,8 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     private int _currPath;
 
     #region GETTERSETTER Variable
+    public Transform CurrPOI {get { return _currPOI;} set { _currPOI = value;}}
+    public EnemyAIManager EnemyAIManager { get { return _enemyAIManager;}}
     public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
     public bool IsAIHunted {get {return _isAIHunted;} set{ _isAIHunted = value;} }
     public bool IsAIEngage {get {return _isAIEngage;} set{ _isAIEngage = value;} }
@@ -51,23 +57,29 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
         base.Awake();
         _getFOVState = _fovMachine as IFOVMachineState;
         _getFOVAdvancedData = _fovMachine as IHuntPlayable;
-
+        
         _states = new EnemyAIStateFactory(this);
     }
     private void Start() 
     {
+        _enemyAIManager = EnemyAIManager.Instance;
+        _enemyAIManager.OnCaptainsStartHunting += EnemyAIManager_OnCaptainsStartHunting;
+        _enemyAIManager.OnCaptainsStartEngaging += EnemyAIManager_OnCaptainsStartEngaging;
+        _enemyAIManager.OnGoToClosestPOI += EnemyAIManager_OnGoToClosestPOI;
+
         if(_moveStateMachine == null) _moveStateMachine = _charaIdentity.MovementStateMachine;
         if(_useWeaponStateMachine == null) _useWeaponStateMachine = _charaIdentity.UseWeaponStateMachine;
         _moveStateMachine.OnIsTheSamePosition += MoveStateMachine_OnIsTheSamePosition;
         SwitchState(_states.AI_IdleState());
     }
+
+
+
     private void Update() 
     {
-        
         _fovMachine.FOVJob();
         CalculateAlertValue();
         _currState?.UpdateState();
-
     }
     public void CalculateAlertValue()
     {
@@ -78,11 +90,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
         }
         else
         {
-            //kalau 2-2nya null meaning 
-            // if(_alertValue >= 0 && _fovMachine.VisibleTargets.Count == 0 && _getFOVAdvancedData.OtherVisibleTargets.Count == 0 && (IsAIIdle || (!IsAIIdle && !_fovMachine.HasToCheckEnemyLastSeenPosition)))
-            // {
-            //     _alertValue -= Time.deltaTime * _alertValueCountMultiplier;
-            // }
+
             if(_alertValue >= 0 && _fovMachine.VisibleTargets.Count == 0 && _getFOVAdvancedData.OtherVisibleTargets.Count == 0 && (IsAIIdle || (!IsAIIdle && GetMoveStateMachine.IsIdle)))
             {
                 _alertValue -= Time.deltaTime * _alertValueCountMultiplier;
@@ -98,8 +106,6 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
         _currState = newState as EnemyAIState;
         _currState?.EnterState();
     }
-
-    
 
     public void RunningTowardsEnemy()
     {
@@ -130,13 +136,19 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
 
                 GetFOVAdvancedData.IsCheckingEnemyLastPosition();
             }
-            
+            else
+            {
+                if(CurrPOI != null)
+                {
+                    GetMoveStateMachine.SetAIDirection(CurrPOI.position);
+                }
+            }
         }
     }
 
     private void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos)
     {
-        if(IsAIIdle && GetFOVState.CurrState == FOVDistState.none && agentPos == _patrolPath[_currPath].position)
+        if(IsAIIdle && GetFOVState.CurrState == FOVDistState.none && _patrolPath.Length > 0 && agentPos == _patrolPath[_currPath].position)
         {
             // _isIdlePatroling = false;
 
@@ -159,6 +171,90 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
             }
             
         }
+        if(!IsAIIdle)
+        {
+            if(IsAIHunted && agentPos == GetFOVAdvancedData.EnemyCharalastSeenPosition) 
+            {
+                if(EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
+                {
+                    Debug.Log("TEsstt??");
+                    EnemyAIManager.OnFoundLastCharaSeenPos?.Invoke(this);
+                }
+            }
+            else if(CurrPOI != null && CurrPOI.position == agentPos)
+            {
+                if(EnemyAIManager.POIPosNearLastSeenPosList.Count > 0)
+                {
+                    _currPOI = EnemyAIManager.GetClosestPOI(this);
+                    _getFOVAdvancedData.IsCheckingEnemyLastPosition();
+                    _alertValue = MaxAlertValue/2 + 10f;
+                }
+                else
+                {
+                    EnemyAIManager.POIPosNearLastSeenPosListSave.Clear();
+                    EnemyAIManager.EditEnemyHearAnnouncementList(this, false);
+                    _currPOI = null;
+                }
+            }
+        }
+        
+    }
+
+    private void EnemyAIManager_OnCaptainsStartHunting(EnemyAIBehaviourStateMachine enemy)
+    {
+        if(_charaIdentity.IsDead)return;
+        if(enemy == this)
+        {
+            EnemyAIManager.EditEnemyCaptainList(this, true);
+            EnemyAIManager.EditEnemyHearAnnouncementList(this, true);
+            return;
+        }
+        //we can actually use the sound D:
+        if(Vector3.Distance(enemy.transform.position, transform.position) <= EnemyAIManager.EnemyAnnouncementMaxRange || EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
+        {
+            _alertValue = MaxAlertValue/2 + 10f;
+            Vector3 closestLastSeenPos = Vector3.zero;
+            if(EnemyAIManager.EnemyCaptainList.Count == 0)closestLastSeenPos = enemy.GetFOVAdvancedData.EnemyCharalastSeenPosition;
+            else closestLastSeenPos = EnemyAIManager.GetClosestLastSeenPosInfoFromCaptain(transform);
+            GetFOVAdvancedData.GoToEnemyLastSeenPosition(closestLastSeenPos);
+
+            EnemyAIManager.EditEnemyHearAnnouncementList(this, true);
+        }
+    }
+
+
+    private void EnemyAIManager_OnCaptainsStartEngaging(EnemyAIBehaviourStateMachine enemy)
+    {
+        EnemyAIManager.ResetPOIPosNearLastSeenPos();
+        
+        if(_charaIdentity.IsDead)return;
+        if(enemy == this)
+        {
+            EnemyAIManager.EditEnemyCaptainList(this, true);
+            EnemyAIManager.EditEnemyHearAnnouncementList(this, true);
+            return;
+        }
+
+        //we can actually use the sound D:
+        if(Vector3.Distance(enemy.transform.position, transform.position) <= EnemyAIManager.EnemyAnnouncementMaxRange || EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
+        {
+            _alertValue = MaxAlertValue + 10f;
+
+            Vector3 closestLastSeenPos = Vector3.zero;
+            if(EnemyAIManager.EnemyCaptainList.Count == 0)closestLastSeenPos = enemy.GetFOVAdvancedData.EnemyCharalastSeenPosition;
+            else closestLastSeenPos = EnemyAIManager.GetClosestLastSeenPosInfoFromCaptain(transform);
+            GetFOVAdvancedData.GoToEnemyLastSeenPosition(closestLastSeenPos);
+
+            EnemyAIManager.EditEnemyHearAnnouncementList(this, true);
+        }
+    }
+
+    private void EnemyAIManager_OnGoToClosestPOI()
+    {
+        Debug.Log("Test");
+        if(_currPOI == null)_currPOI = EnemyAIManager.GetClosestPOI(this);
+        _getFOVAdvancedData.IsCheckingEnemyLastPosition(); // make this false so it wont go to lastseenpos                      
+        _alertValue = MaxAlertValue/2 + 10f;
     }
 
 }

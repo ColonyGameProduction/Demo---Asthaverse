@@ -13,6 +13,7 @@ public class EnemyAI_EngageState : EnemyAIState
     public override void EnterState()
     {
         _sm.IsAIEngage = true;
+        
         if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
     }
 
@@ -45,7 +46,7 @@ public class EnemyAI_EngageState : EnemyAIState
                 _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position);
                 if(!_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = true;
                 //kalo masuk sini pasti ada enemy, kalo ga pasti jd none || aturan d bwh jaga jaga biar ga error
-                if(_sm.GetFOVMachine.ClosestEnemy != null)StartShooting();
+                // if(_sm.GetFOVMachine.ClosestEnemy != null)StartShooting();
                 Debug.Log("pew pew pew");
 
             }
@@ -54,6 +55,15 @@ public class EnemyAI_EngageState : EnemyAIState
         {
             if(_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = false;
             WhenEnemyMissingInEngage();
+        }
+
+        if(_sm.GetFOVAdvancedData.HasToCheckEnemyLastSeenPosition) //meaning visible targets or other visible ada
+        {
+            _sm.EnemyAIManager.OnCaptainsStartEngaging?.Invoke(_sm);
+        }
+        else
+        {
+            _sm.EnemyAIManager.EditEnemyCaptainList(_sm, false);
         }
         
     }
@@ -70,16 +80,16 @@ public class EnemyAI_EngageState : EnemyAIState
         StopShooting();
         _sm.RunningToEnemyLastPosition();
     }
-    private void StopShooting()
-    {
-        if(_sm.GetUseWeaponStateMachine.ChosenTarget != null)_sm.GetUseWeaponStateMachine.GiveChosenTarget(null);
-        if(_sm.GetUseWeaponStateMachine.IsUsingWeapon)_sm.GetUseWeaponStateMachine.IsUsingWeapon = false;
-    }
     private void StartShooting()
     {
         // Debug.Log("shoot di 2" + _sm.GetFOVMachine.ClosestEnemy.position);
         _sm.GetUseWeaponStateMachine.GiveChosenTarget(_sm.GetFOVMachine.ClosestEnemy);
         if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
         if(!_sm.GetUseWeaponStateMachine.IsUsingWeapon)_sm.GetUseWeaponStateMachine.IsUsingWeapon = true;
+    }
+    private void StopShooting()
+    {
+        if(_sm.GetUseWeaponStateMachine.ChosenTarget != null)_sm.GetUseWeaponStateMachine.GiveChosenTarget(null);
+        if(_sm.GetUseWeaponStateMachine.IsUsingWeapon)_sm.GetUseWeaponStateMachine.IsUsingWeapon = false;
     }
 }

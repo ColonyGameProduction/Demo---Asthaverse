@@ -26,25 +26,18 @@ public class EnemyAI_IdleState : EnemyAIState
         _sm.GetFOVState.FOVStateHandler();
         if(_sm.GetFOVState.CurrState != FOVDistState.none)
         {
-            // if(_stateMachine.GetFOVMachine.VisibleTargets.Count > 0)
-            // {
-                //do we need to check closest enemy again?
-                if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
-                _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position);
-                if(!_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = true;
+            if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
+            _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position);
+            if(!_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = true;
             
-            // }
             if(_sm.GetFOVState.CurrState == FOVDistState.middle)
             {
-                // _sm.MaxAlertValue *= 0.5f;
                 _sm.AlertValue = _sm.MaxAlertValue*0.5f + 10;
             }
             else if(_sm.GetFOVState.CurrState == FOVDistState.close)
             {
-                // _sm.MaxAlertValue = 0f;
                 _sm.AlertValue = _sm.MaxAlertValue + 10;
             }
-            // Debug.Log("HALOOO");
         }
 
         if(_sm.AlertValue >= _sm.MaxAlertValue / 2 && _sm.AlertValue < _sm.MaxAlertValue)
@@ -65,6 +58,7 @@ public class EnemyAI_IdleState : EnemyAIState
     public override void ExitState()
     {
         if(_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = false;
+        // else 
 
         _sm.IsAIIdle = false;
     }
@@ -75,7 +69,6 @@ public class EnemyAI_IdleState : EnemyAIState
         if (_sm.PatrolPath.Length > 1)
         {
             _sm.GetMoveStateMachine.SetAIDirection(_sm.PatrolPath[_sm.CurrPath].position);
-            
         }
         else
         {
