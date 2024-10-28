@@ -241,28 +241,16 @@ public class EnemyAI : ExecuteLogic
                 friendAI[i].gotDetected = true;
                 friendAI[i].detectedTimer = .3f;
 
-                Debug.Log(friendAI[i].gameObject.name + " " + i);
-                Debug.Log(friendAI[i].gotDetected + " " + i);
-
-                friendAI[i].detectedByEnemy = this;
-                
-
+                if(!friendAI[i].detectedByEnemy.Contains(this))
+                {
+                    friendAI[i].detectedByEnemy.Add(this);
+                }
 
                 Vector3 friendDir = transform.position - friendAI[i].transform.position;
                 friendAI[i].transform.forward = Vector3.Slerp(friendAI[i].transform.forward, friendDir, friendAI[i].GetNavMesh().angularSpeed).normalized;
 
-                friendAI[i].ResetDestination();
             }
-            //if (friendAI[i].detectedByEnemy == null)
-            //{
-            //    friendAI[i].gotDetected = false;
-            //}
-
-            
-
         }
-
-
     }
 
     private void ClosestPOI()
@@ -520,7 +508,16 @@ public class EnemyAI : ExecuteLogic
 
     private void Shooting()
     {
-        Vector3 dis = visibleTargets[0].transform.position - transform.position;
+        Vector3 dis = new Vector3();
+        foreach (Transform enemy in visibleTargets)
+        {
+            tempDistance = 0;
+            if (tempDistance > Vector3.Distance(transform.position, enemy.position) || tempDistance == 0)
+            {
+                dis = visibleTargets[0].transform.position - transform.position;
+                tempDistance = Vector3.Distance(transform.position, enemy.position);
+            }
+        }
         // Debug.Log("Shoot direction " + dis + " " + FOVPoint.position + " " + visibleTargets[0].transform.position);
         if(visibleTargets.Count > 0)Shoot(FOVPoint.position, dis, enemyStat , weapon, isItEnemy);
     }

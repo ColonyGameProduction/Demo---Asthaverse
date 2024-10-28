@@ -45,7 +45,8 @@ public class FriendsAI : ExecuteLogic
 
     public alertState friendsState;
     public bool gotDetected = false;
-    public EnemyAI detectedByEnemy;
+    public List<EnemyAI> detectedByEnemy;
+    public List<EnemyAI> tempDetectedByEnemy;
 
     [Header("Untuk Stat")]
     [SerializeField]
@@ -59,8 +60,10 @@ public class FriendsAI : ExecuteLogic
     public LayerMask isItFriend;
     public float engageTimer;
     public float detectedTimer;
+    public float tempDistance;
 
     private bool isIdle;
+    private bool isTakingCover;
 
     private void Start()
     {
@@ -104,15 +107,12 @@ public class FriendsAI : ExecuteLogic
                 {
                     if (friendsID == 1 && !commandActive)
                     {
-                        MoveDestinationAwayFromEnemy(ref destination[2], detectedByEnemy.transform.position);
+                        MoveDestinationAwayFromEnemy(ref destination[2]);
                     }
                     if (friendsID == 2 && !commandActive)
                     {
-                        MoveDestinationAwayFromEnemy(ref destination[3], detectedByEnemy.transform.position);
+                        MoveDestinationAwayFromEnemy(ref destination[3]);
                     }
-                }
-                else
-                {
                 }
                 break;
 
@@ -122,14 +122,13 @@ public class FriendsAI : ExecuteLogic
                 {
                     if (friendsID == 1 && !commandActive)
                     {
-                        MoveDestinationAwayFromEnemy(ref destination[2], detectedByEnemy.transform.position);
+                        MoveDestinationAwayFromEnemy(ref destination[2]);
                     }
                     if (friendsID == 2 && !commandActive)
                     {
-                        MoveDestinationAwayFromEnemy(ref destination[3], detectedByEnemy.transform.position);
+                        MoveDestinationAwayFromEnemy(ref destination[3]);
                     }
                 }
-
                 break;
 
             case alertState.Engage:
@@ -141,6 +140,12 @@ public class FriendsAI : ExecuteLogic
                 else
                 {
                     friendsState = alertState.Idle;
+                }
+
+                if(gotDetected)
+                {
+                    //TakingCover(GetNavMesh(), visibleTargets[0]);
+                    //isTakingCover = true;
                 }
 
                 isIdle = false;
@@ -179,20 +184,24 @@ public class FriendsAI : ExecuteLogic
 
     private void HandleState()
     {
-
         engageTimer = 0.3f;
-
         friendsState = alertState.Engage;
-        gotDetected = false;
-
     }
 
     private void Shooting()
     {
-        Vector3 dis = visibleTargets[0].transform.position - transform.position;
+        Vector3 dis = new Vector3();
+        foreach (Transform enemy in visibleTargets)
+        {
+            tempDistance = 0;
+            if (tempDistance > Vector3.Distance(transform.position, enemy.position) || tempDistance == 0)
+            {
+                dis = visibleTargets[0].transform.position - transform.position;
+                tempDistance = Vector3.Distance(transform.position, enemy.position);
+            }
+        }
+        // Debug.Log("Shoot direction " + dis + " " + FOVPoint.position + " " + visibleTargets[0].transform.position);
         if (visibleTargets.Count > 0) Shoot(FOVPoint.position, dis, friendsStat, currentWeapon, isItFriend);
-
-        Debug.Log("Shoot");
     }
 
     private void Shoot()
@@ -211,33 +220,31 @@ public class FriendsAI : ExecuteLogic
         }
     }
 
-    public void ResetDestination()
+    private void MoveDestinationAwayFromEnemy(ref GameObject destination)
     {
-        if(this.enabled)
-        {
-            if (friendsID == 1 && !commandActive)
-            {
-                destination[2].transform.position = transform.position;
-            }
-            if (friendsID == 2 && !commandActive)
-            {
-                destination[3].transform.position = transform.position;
-            }
-        }
-    }
-
-    private void MoveDestinationAwayFromEnemy(ref GameObject destination, Vector3 enemyPosition)
-    {
-        Vector3 directionAwayFromEnemy = (transform.position - enemyPosition).normalized;
-
-        float distance = Vector3.Distance(transform.position, enemyPosition);
-
-        if (distance < detectedByEnemy.GetEnemyStat().FOVRadius)
-        {
-            destination.transform.position += directionAwayFromEnemy;
-        }
+        tempDetectedByEnemy = detectedByEnemy;        
+        Vector3 directionTotal = Vector3.zero;
+        destination.transform.position = transform.position;
         
+        foreach (EnemyAI enemy in tempDetectedByEnemy)
+        {
+            Vector3 directionAwayFromEnemy = (transform.position - enemy.transform.position).normalized;
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
 
+            if (distance < enemy.GetEnemyStat().FOVRadius + 5f)
+            {
+                directionTotal += directionAwayFromEnemy;
+                directionTotal = directionTotal.normalized;
+            }
+            else
+            {
+                detectedByEnemy.Remove(enemy);
+            }
+        }
+
+        Debug.Log(directionTotal);
+
+        destination.transform.position += directionTotal;
         MoveToDestination(GetNavMesh(), destination.transform.position);
 
     }
@@ -271,7 +278,7 @@ public class FriendsAI : ExecuteLogic
 
                 if (gotDetected && isIdle)
                 {
-                    destination[2].transform.position = destination[0].transform.position;
+                    MoveDestinationAwayFromEnemy(ref destination[2]);
                 }
             }
             else if (friendsID == 2)
@@ -281,7 +288,7 @@ public class FriendsAI : ExecuteLogic
 
                 if (gotDetected && isIdle)
                 {
-                    destination[3].transform.position = destination[1].transform.position;
+                    MoveDestinationAwayFromEnemy(ref destination[3]);
                 }
             }
         }

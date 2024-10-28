@@ -6,6 +6,8 @@ using Cinemachine;
 using UnityEngine.AI;
 using System;
 using System.Security.Cryptography;
+using System.Linq;
+using UnityEngine.Rendering;
 
 /* PERHATIAN!!!
  * Kalo mau akses logic di skrip ini
@@ -215,6 +217,44 @@ public class ExecuteLogic : AILogic
         }
     }
 
+    //untuk taking cover
+    public void TakingCover(NavMeshAgent agent, Transform target)
+    {
+        Collider[] walls = Physics.OverlapSphere(agent.transform.position, 100f);
+
+        for (int i = 0; i < walls.Length; i++)
+        {
+            if (NavMesh.SamplePosition(walls[i].transform.position, out NavMeshHit hit, 2f, agent.areaMask))
+            {
+                if (!NavMesh.FindClosestEdge(hit.position, out hit, agent.areaMask))
+                {
+                    Debug.Log("Unable to find edge close");
+                }
+
+                if (Vector3.Dot(hit.normal, (target.position - hit.position).normalized) < 0)
+                {
+                    agent.SetDestination(hit.position);
+                    break;
+                }
+                else
+                {
+                    if (NavMesh.SamplePosition(walls[i].transform.position - (target.position - hit.position).normalized * 2, out NavMeshHit hit2, 2f, agent.areaMask))
+                    {
+                        if (!NavMesh.FindClosestEdge(hit.position, out hit2, agent.areaMask))
+                        {
+                            Debug.Log("Unable to find edge close");
+                        }
+
+                        if (Vector3.Dot(hit2.normal, (target.position - hit2.position).normalized) < 0)
+                        {
+                            agent.SetDestination(hit2.position);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     //Logic 'Switch Character'
     public void SwitchCharacter()

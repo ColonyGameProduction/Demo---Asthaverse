@@ -300,10 +300,23 @@ public class PlayerAction : ExecuteLogic
 
             Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.red, 2f);
 
-            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground", "Wall")))
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground")))
             {
-                // Set the destination for the selected friend based on the mouse click
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
+            }
+            else if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hithit, 100f, LayerMask.GetMask("Wall")))
+            {
+                Debug.Log(hithit.point);
+                Vector3 movePos = hithit.point;
+                Vector3 movePosWithoutY = new Vector3();
+
+                if (Physics.Raycast(hithit.point, Vector3.down, out RaycastHit hit2, 100f, LayerMask.GetMask("Ground")))
+                {
+                    movePosWithoutY = new Vector3(movePos.x, hit2.point.y, movePos.z);
+                }
+
+                // Set the destination for the selected friend based on the mouse click
+                GoToTargetPosition[selectedFriendID - 1].transform.position = movePosWithoutY;
             }
         }
         // Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
