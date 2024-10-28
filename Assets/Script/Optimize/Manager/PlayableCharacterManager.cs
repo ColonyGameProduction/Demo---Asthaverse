@@ -5,7 +5,7 @@ using System.Linq;
 using Cinemachine;
 using UnityEngine;
 
-public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
+public class PlayableCharacterManager : MonoBehaviour
 {
     #region Normal Variable
     [Header("Test")]
@@ -31,10 +31,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
     [Space(1)]
     [Header("Camera Effect")]
-    [SerializeField] private float _normalFOV = 40, _scopeFOV = 60;
-    [SerializeField]
-    private bool _isScope;
-    private bool _isNightVision;
+    [SerializeField] private PlayableCharacterCameraManager _playableCharacterCameraManager;
 
     [Space(1)]
     [Header("Switch Player Variable")]
@@ -65,10 +62,12 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     public static bool IsHoldInPlaceFriend { get { return _isHoldInPlaceFriend;}}
 
     public PlayableCharacterIdentity CurrPlayableChara { get { return _charaIdentities[_currCharaidx];}}
-    public bool IsScope {get { return _isScope;}}
-    public bool IsNightVision {get { return _isNightVision;}}
 
     #endregion
+    private void Awake() 
+    {
+        if(_playableCharacterCameraManager == null) _playableCharacterCameraManager = GetComponent<PlayableCharacterCameraManager>();
+    }
     void Start()
     {
         _gm = GameManager.instance;
@@ -143,9 +142,9 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         CurrPlayableChara.IsPlayerInput = false;
         
         //Kategori kamera
-        ResetCameraHeight(_currCharaidx);
-        ResetScope(_currCharaidx);
-        ResetNightVision(_currCharaidx);
+        _playableCharacterCameraManager.ResetCameraHeight();
+        _playableCharacterCameraManager.ResetScope();
+        _playableCharacterCameraManager.ResetNightVision();
         _currPlayableCamera.GetFollowCamera.Priority = 1;//Prioritas kamera yg diikuti diturunkan
         StartCoroutine(CameraDelay());
 
@@ -229,6 +228,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         _currPlayableUseWeaponStateMachine = CurrPlayableChara.GetPlayableUseWeaponData;
 
         _currPlayableCamera = CurrPlayableChara.GetPlayableCamera;
+        _playableCharacterCameraManager.SetCurrPlayableCamera(_currPlayableCamera);
 
     }
     #endregion
@@ -309,39 +309,10 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     }
     #endregion
 
-    #region Camera Effect
-    public void ScopeCamera(int charaIdx)
-    {
-        _isScope = true;
-        _charaIdentities[charaIdx].GetPlayableCamera?.ChangeCameraFOV(_normalFOV);
-    }
-
-    public void ResetScope(int charaIdx)
-    {
-        _isScope = false;
-        _charaIdentities[charaIdx].GetPlayableCamera?.ChangeCameraFOV(_scopeFOV);
-    }
-
-    public void NightVision(int charaIdx)
-    {
-        _isNightVision = true;
-        //do smth with camera
-    }
-
-    public void ResetNightVision(int charaIdx)
-    {
-        _isNightVision = false;
-        //do smth with camera
-    }
-    public void ResetCameraHeight(int charaIdx) => _charaIdentities[charaIdx].GetPlayableCamera?.SetCameraHeight(true);
-    public void SetCameraHeightCrouch(int charaIdx) => _charaIdentities[charaIdx].GetPlayableCamera?.SetCameraHeight(false);
-
-
-    #endregion
     #region  Weapon Data
     private void UseWeaponData_OnTurningOffScope()
     {
-        if(IsScope)ResetScope(_currCharaidx);
+        if(_playableCharacterCameraManager.IsScope)_playableCharacterCameraManager.ResetScope();
     }
     #endregion
 
@@ -397,7 +368,21 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         _gameInputManager.OnShootingCanceled += GameInput_OnShootingCanceled;
         _gameInputManager.OnScopePerformed += GameInput_OnScopePerformed;
         _gameInputManager.OnReloadPerformed += GameInput_OnReloadPerformed;
+
+        _gameInputManager.OnInteractPerformed += GameInput_OnInteractPerformed;
+        _gameInputManager.OnNightVisionPerformed += GameInput_OnNightVisionPerformed;
     }
+
+    private void GameInput_OnNightVisionPerformed()
+    {
+        _playableCharacterCameraManager.NightVision();
+    }
+
+    private void GameInput_OnInteractPerformed()
+    {
+        throw new NotImplementedException();
+    }
+
     private void GameInput_Movement()
     {
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead)_currPlayableMoveStateMachine.InputMovement = _gameInputManager.Movement();
@@ -414,11 +399,11 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
             // _currUseWeaponFunction.ForceStopUseWeapon();
             if(_currPlayableMoveStateMachine.IsMustLookForward)_currPlayableMoveStateMachine.IsMustLookForward = false;
 
-            if(IsScope)ResetScope(_currCharaidx);
+            if(_playableCharacterCameraManager.IsScope)_playableCharacterCameraManager.ResetScope();
             if(_currPlayableMoveStateMachine.IsCrouching)
             {
                 _currPlayableMoveStateMachine.IsCrouching = false;
-                ResetCameraHeight(_currCharaidx);
+                _playableCharacterCameraManager.ResetCameraHeight();
             }
             _currPlayableMoveStateMachine.IsRunning = true;
 
@@ -448,7 +433,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         {
             if(_currPlayableMoveStateMachine.IsRunning)_currPlayableMoveStateMachine.IsRunning = false;
             _currPlayableMoveStateMachine.IsCrouching = true;
-            SetCameraHeightCrouch(_currCharaidx);
+            _playableCharacterCameraManager.SetCameraCrouchHeight();
 
             foreach(PlayableCharacterIdentity chara in _charaIdentities)
             {
@@ -462,7 +447,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
     private void GameInput_OnCrouchCanceled()
     {
         _currPlayableMoveStateMachine.IsCrouching = false;
-        ResetCameraHeight(_currCharaidx);
+        _playableCharacterCameraManager.ResetCameraHeight();
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
             if(chara == CurrPlayableChara)continue;
@@ -486,7 +471,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
 
     private void GameInput_OnCommandPerformed()
     {
-        if(!CanDoThisFunction() || IsScope || CurrPlayableChara.IsDead)return;
+        if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead)return;
         _currPlayableMoveStateMachine.ForceStopMoving();
         _currPlayableUseWeaponStateMachine.ForceStopUseWeapon();
 
@@ -548,7 +533,7 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
         if(CanDoThisFunction())
         {
             _currPlayableUseWeaponStateMachine.IsUsingWeapon = false;
-            if(!IsScope)
+            if(!_playableCharacterCameraManager.IsScope)
             {
                 _currPlayableMoveStateMachine.IsMustLookForward = false;
                 _currPlayableUseWeaponStateMachine.IsAiming = false;
@@ -563,17 +548,17 @@ public class PlayableCharacterManager : MonoBehaviour, IPlayableCameraEffect
             //KALO LAGI mo ngescope, tp blm aim, lsg aim nya nyalain jg
 
             //tp kalo unscope, dan
-            if(!IsScope)
+            if(!_playableCharacterCameraManager.IsScope)
             {
                 _currPlayableUseWeaponStateMachine.IsAiming = true;
                 _currPlayableMoveStateMachine.IsMustLookForward = true;
-                ScopeCamera(_currCharaidx);
+                _playableCharacterCameraManager.ScopeCamera();
             }
             else
             {
                 _currPlayableUseWeaponStateMachine.IsAiming = false;
                 _currPlayableMoveStateMachine.IsMustLookForward = false;
-                ResetScope(_currCharaidx);
+                _playableCharacterCameraManager.ResetScope();
             }
 
         }

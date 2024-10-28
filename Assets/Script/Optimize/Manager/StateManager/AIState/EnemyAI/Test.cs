@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Test : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class Test : MonoBehaviour
     public bool yes;
     public Transform test;
     public Transform lookat;
+
+    public bool ssaaaa;
+    public NavMeshAgent navMeshAgent;
+    public Transform cek;
     void Start()
     {
         // StartCoroutine(testEnum());
@@ -52,8 +57,12 @@ public class Test : MonoBehaviour
         // if(focus != null)Debug.DrawRay(transform.position, focus.position, Color.black);
         if(yes)
         {
-
             test.LookAt(new Vector3(lookat.position.x, lookat.position.y + 1.5f, lookat.position.z));
+        }
+        if(ssaaaa)
+        {
+            ssaaaa = false;
+            navMeshAgent.SetDestination(cek.position);
         }
     }
 }

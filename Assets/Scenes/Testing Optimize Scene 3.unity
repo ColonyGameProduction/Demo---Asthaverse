@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: e8e9ff108c1e078489ef195d360ae43c, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 2e51c95bb713aab428cd9973c13a0783, type: 2}
 --- !u!1 &2227550
 GameObject:
   m_ObjectHideFlags: 0
@@ -2077,7 +2077,7 @@ MonoBehaviour:
     m_Bits: 128
   _groundMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 2112
   _viewMeshFilter: {fileID: 326683557}
   _findTargetDelay: 0.2
   _currstate: 0
@@ -2110,7 +2110,7 @@ MonoBehaviour:
   _originShootPoint_AIContainer: {fileID: 326683555}
   _charaEnemyMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 2240
 --- !u!114 &106554977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2131,6 +2131,7 @@ MonoBehaviour:
   - 2
   - 6
   - 10
+  _idleAnimCycleSpeed: 2
   _runMultiplier: 0
 --- !u!114 &106554978
 MonoBehaviour:
@@ -5024,7 +5025,7 @@ MonoBehaviour:
     m_Bits: 128
   _groundMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 2112
   _viewMeshFilter: {fileID: 13298696}
   _findTargetDelay: 0.2
   _currstate: 0
@@ -5057,7 +5058,7 @@ MonoBehaviour:
   _originShootPoint_AIContainer: {fileID: 13298694}
   _charaEnemyMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 2240
 --- !u!114 &317604558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5078,6 +5079,7 @@ MonoBehaviour:
   - 2
   - 6
   - 10
+  _idleAnimCycleSpeed: 2
   _runMultiplier: 0
 --- !u!114 &317604559
 MonoBehaviour:
@@ -6031,7 +6033,7 @@ GameObject:
   m_Name: slope (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 2
+  m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &353427911
@@ -9052,7 +9054,7 @@ GameObject:
   m_Name: slope (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 2
+  m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &592481685
@@ -12318,9 +12320,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _followCamera: {fileID: 1728406385}
   _followTarget: {fileID: 1611590578}
-  _normalHeight: -0.018
-  _crouchHeight: -0.4
   _cameraRotationSpeed: 200
+  _changeCameraHeightSpeed: 2
 --- !u!114 &743586308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12341,6 +12342,7 @@ MonoBehaviour:
   - 2
   - 6
   - 10
+  _idleAnimCycleSpeed: 2
   _runMultiplier: 2
   _isCrouch: 0
   _isCrawl: 0
@@ -12408,7 +12410,7 @@ MonoBehaviour:
   _originShootPoint_AIContainer: {fileID: 2095406101}
   _charaEnemyMask:
     serializedVersion: 2
-    m_Bits: 320
+    m_Bits: 2368
   _isSwitchingWeapon: 0
   _switchWeaponDuration: 0.2
   _isSilentKill: 0
@@ -12461,7 +12463,7 @@ MonoBehaviour:
     m_Bits: 256
   _groundMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 2112
   _viewMeshFilter: {fileID: 2095406103}
   _findTargetDelay: 0.2
 --- !u!4 &744350004 stripped
@@ -14581,6 +14583,7 @@ GameObject:
   - component: {fileID: 849947678}
   - component: {fileID: 849947679}
   - component: {fileID: 849947680}
+  - component: {fileID: 849947682}
   - component: {fileID: 849947681}
   m_Layer: 0
   m_Name: PlayerManager
@@ -14624,9 +14627,7 @@ MonoBehaviour:
   _friendsCommandPosition:
   - {fileID: 1853001344}
   - {fileID: 636682799}
-  _normalFOV: 40
-  _scopeFOV: 60
-  _isScope: 0
+  _playableCharacterCameraManager: {fileID: 0}
   _cameraDelayDuration: 0.1
   _switchDelayDuration: 0.2
 --- !u!114 &849947680
@@ -14644,7 +14645,7 @@ MonoBehaviour:
   _playableCharaManager: {fileID: 849947679}
   _groundMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 2112
   _maxCommandDistance: 100
   _commandUIContainer: {fileID: 1192563506}
 --- !u!114 &849947681
@@ -14665,6 +14666,27 @@ MonoBehaviour:
   _breadCrumbsSpawnDelay: 0.3
   _breadCrumbsGoneMaxTimer: 4
   _totalBreadCrumbs: 50
+--- !u!114 &849947682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849947677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b491cc463c5be4c4186ae468e4ef831e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _normalFOV: 40
+  _scopeFOV: 60
+  _isScope: 0
+  _nightVisionPostProcessVolume: {fileID: 963194231}
+  _fullWeight: 0.879
+  _isNightVision: 0
+  _changeNightVisionSpeed: 5
+  _normalHeight: -0.018
+  _crouchHeight: -0.4
 --- !u!1 &852765060
 GameObject:
   m_ObjectHideFlags: 0
@@ -15202,11 +15224,11 @@ GameObject:
   - component: {fileID: 943216446}
   - component: {fileID: 943216445}
   - component: {fileID: 943216444}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 2
+  m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &943216443
@@ -15647,6 +15669,7 @@ GameObject:
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
   - component: {fileID: 963194230}
+  - component: {fileID: 963194231}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -15786,7 +15809,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -15807,6 +15830,23 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &963194231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 0
+  sharedProfile: {fileID: 11400000, guid: 7a637ca39a1189645bd28d7640d590cb, type: 2}
 --- !u!1 &964284296
 GameObject:
   m_ObjectHideFlags: 0
@@ -16124,7 +16164,7 @@ GameObject:
   m_Name: slope (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 2
+  m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &990395144
@@ -19142,11 +19182,11 @@ GameObject:
   - component: {fileID: 1108515967}
   - component: {fileID: 1108515966}
   - component: {fileID: 1108515969}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 2
+  m_NavMeshLayer: 0
   m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &1108515965
@@ -19862,6 +19902,7 @@ MonoBehaviour:
   - 2
   - 6
   - 10
+  _idleAnimCycleSpeed: 2
   _runMultiplier: 2
   _isCrouch: 0
   _isCrawl: 0
@@ -19884,9 +19925,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _followCamera: {fileID: 1303093421}
   _followTarget: {fileID: 2085741375}
-  _normalHeight: -0.018
-  _crouchHeight: -0.4
   _cameraRotationSpeed: 200
+  _changeCameraHeightSpeed: 2
 --- !u!114 &1156905603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19946,7 +19986,7 @@ MonoBehaviour:
   _originShootPoint_AIContainer: {fileID: 946796280}
   _charaEnemyMask:
     serializedVersion: 2
-    m_Bits: 320
+    m_Bits: 2368
   _isSwitchingWeapon: 0
   _switchWeaponDuration: 0.2
   _isSilentKill: 0
@@ -19999,7 +20039,7 @@ MonoBehaviour:
     m_Bits: 256
   _groundMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 2112
   _viewMeshFilter: {fileID: 946796282}
   _findTargetDelay: 0.2
 --- !u!1 &1160477412
@@ -21464,7 +21504,7 @@ MonoBehaviour:
     m_Bits: 128
   _groundMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 2112
   _viewMeshFilter: {fileID: 738218561}
   _findTargetDelay: 0.2
   _currstate: 0
@@ -21497,7 +21537,7 @@ MonoBehaviour:
   _originShootPoint_AIContainer: {fileID: 738218559}
   _charaEnemyMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 2240
 --- !u!114 &1303898447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21518,6 +21558,7 @@ MonoBehaviour:
   - 2
   - 6
   - 10
+  _idleAnimCycleSpeed: 2
   _runMultiplier: 0
 --- !u!114 &1303898448
 MonoBehaviour:
@@ -21826,7 +21867,7 @@ MonoBehaviour:
     m_Bits: 128
   _groundMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 2112
   _viewMeshFilter: {fileID: 1963117211}
   _findTargetDelay: 0.2
   _currstate: 0
@@ -21859,7 +21900,7 @@ MonoBehaviour:
   _originShootPoint_AIContainer: {fileID: 1963117209}
   _charaEnemyMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 2240
 --- !u!114 &1317417673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21880,6 +21921,7 @@ MonoBehaviour:
   - 2
   - 6
   - 10
+  _idleAnimCycleSpeed: 2
   _runMultiplier: 0
 --- !u!114 &1317417674
 MonoBehaviour:
@@ -26947,6 +26989,9 @@ MonoBehaviour:
   yes: 0
   test: {fileID: 0}
   lookat: {fileID: 0}
+  ssaaaa: 0
+  navMeshAgent: {fileID: 0}
+  cek: {fileID: 0}
 --- !u!4 &1788746515 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7551635592574194035, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
@@ -29315,6 +29360,7 @@ MonoBehaviour:
   - 2
   - 6
   - 10
+  _idleAnimCycleSpeed: 2
   _runMultiplier: 0
 --- !u!4 &2017098525
 Transform:
@@ -29385,7 +29431,7 @@ MonoBehaviour:
   _originShootPoint_AIContainer: {fileID: 301498854}
   _charaEnemyMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 2240
 --- !u!114 &2017098528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29440,7 +29486,7 @@ MonoBehaviour:
     m_Bits: 128
   _groundMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 2112
   _viewMeshFilter: {fileID: 301498856}
   _findTargetDelay: 0.2
   _currstate: 0
@@ -29953,6 +29999,7 @@ MonoBehaviour:
   - 2
   - 6
   - 10
+  _idleAnimCycleSpeed: 2
   _runMultiplier: 2
   _isCrouch: 0
   _isCrawl: 0
@@ -29975,9 +30022,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _followCamera: {fileID: 277967139}
   _followTarget: {fileID: 1586786643}
-  _normalHeight: -0.018
-  _crouchHeight: -0.4
   _cameraRotationSpeed: 200
+  _changeCameraHeightSpeed: 2
 --- !u!114 &2066745668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30037,7 +30083,7 @@ MonoBehaviour:
   _originShootPoint_AIContainer: {fileID: 961320780}
   _charaEnemyMask:
     serializedVersion: 2
-    m_Bits: 320
+    m_Bits: 2368
   _isSwitchingWeapon: 0
   _switchWeaponDuration: 0.2
   _isSilentKill: 0
@@ -30090,7 +30136,7 @@ MonoBehaviour:
     m_Bits: 256
   _groundMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 2112
   _viewMeshFilter: {fileID: 961320782}
   _findTargetDelay: 0.2
 --- !u!135 &2066745673

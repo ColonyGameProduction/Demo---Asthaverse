@@ -22,6 +22,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [Space(1)]
     [Header("Move Animator Component")]
     [SerializeField] protected float[] _idleAnimCycleTimeTarget;
+    [SerializeField] private float _idleAnimCycleSpeed = 2f;
     protected float _idleAnimCycleIdx;
     protected bool _wasCharacterAiming;
 
@@ -62,6 +63,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     public float IdleAnimCycleIdx {get {return _idleAnimCycleIdx;}}
     public float[] IdleAnimCycleTimeTarget {get {return _idleAnimCycleTimeTarget;}}
+    public float IdleAnimCycleSpeed {get {return _idleAnimCycleSpeed;}}
     public bool WasCharacterAiming {get {return _wasCharacterAiming;}set{_wasCharacterAiming = value;}}
 
     public float WalkSpeed { get {return _walkSpeed;}}

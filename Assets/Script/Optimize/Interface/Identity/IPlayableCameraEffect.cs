@@ -6,9 +6,12 @@ public interface IPlayableCameraEffect
 {
     public bool IsScope{ get;}
     public bool IsNightVision { get;}
-    void ScopeCamera(int charaIdx);
-    void ResetScope(int charaIdx);
-    void NightVision(int charaIdx);
-    void ResetNightVision(int charaIdx);
+    public bool IsNormalHeight {get;}
+    void ScopeCamera();
+    void ResetScope();
+    void NightVision();
+    void ResetNightVision();
+    void ResetCameraHeight();
+    void SetCameraCrouchHeight();
 
 }

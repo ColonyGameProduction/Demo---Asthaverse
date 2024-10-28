@@ -13,7 +13,8 @@ public class GameInputManager : MonoBehaviour
     public Action OnRunPerformed, OnRunCanceled, OnCrouchPerformed, OnCrouchCanceled,
                   OnChangePlayerPerformed, OnChangeWeaponPerformed, 
                   OnCommandPerformed, OnUnCommandPerformed, OnHoldPosPerformed, OnUnHoldPosPerformed,
-                  OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnReloadPerformed;
+                  OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnReloadPerformed,
+                  OnInteractPerformed, OnNightVisionPerformed;
     private void Awake() 
     {
         Instance = this;
@@ -39,9 +40,13 @@ public class GameInputManager : MonoBehaviour
         _inputActions.InputPlayerAction.Shooting.canceled += Shooting_canceled;
         _inputActions.InputPlayerAction.Scope.performed += Scope_performed;
         _inputActions.InputPlayerAction.Reload.performed += Reload_performed;
+
+        _inputActions.InputPlayerAction.Interact.performed += Interact_performed;
+        _inputActions.InputPlayerAction.NightVision.performed += NightVision_performed;
         
         _inputActions.Enable();
     }
+
     private void Start() 
     {
 
@@ -68,6 +73,9 @@ public class GameInputManager : MonoBehaviour
     private void Shooting_canceled(InputAction.CallbackContext context)=> OnShootingCanceled?.Invoke();    
     private void Scope_performed(InputAction.CallbackContext context)=> OnScopePerformed?.Invoke();
     private void Reload_performed(InputAction.CallbackContext context)=> OnReloadPerformed?.Invoke();
+    private void Interact_performed(InputAction.CallbackContext context) => OnInteractPerformed?.Invoke();
+    private void NightVision_performed(InputAction.CallbackContext context) => OnNightVisionPerformed?.Invoke();
+
     public Vector2 Movement()
     {
         Vector2 direction = Vector2.zero;

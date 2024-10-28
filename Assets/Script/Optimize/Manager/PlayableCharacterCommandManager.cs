@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Playables;
 
 public class PlayableCharacterCommandManager : MonoBehaviour
 {
@@ -54,6 +53,7 @@ public class PlayableCharacterCommandManager : MonoBehaviour
     private void PlayableCharaManager_OnCommandingBoolChange(bool obj)
     {
         _commandUIContainer?.SetActive(obj);
+        if(obj == false)_selectedFriendID = -1;
     }
     
     private void PlayableCharaManager_OnCommandHoldInput()

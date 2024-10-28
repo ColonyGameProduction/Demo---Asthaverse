@@ -10,28 +10,26 @@ public class PlayableCamera : MonoBehaviour
     [Header("Reference to Follow Target")]
     [SerializeField] private Transform _followTarget;
 
-    [Header("Camera Height")]
-    [SerializeField] private float _normalHeight;
-    [SerializeField] private float _crouchHeight;
-    private bool _isNormalHeight = true;
-
     [Header("Adjust Camera Rotation Speed")]
     [SerializeField] private float _cameraRotationSpeed = 200f;
-    //getter setter
+    
+
+    [Header("Camera Height Variable")]
+    [SerializeField] private float _changeCameraHeightSpeed = 2f;
+    private bool _isChangingCameraHeight;
+    private float _currTargetHeight;
+    const float EPSILON = 0.0001f;
+    #region GETTER SETTER VARIABLE
+
     public CinemachineVirtualCamera GetFollowCamera {get { return _followCamera;}}
     public Transform GetFollowTarget {get{ return _followTarget;}}
+    #endregion
 
-    private void Start()
-    {
-        // hide mouse cursor when game start
-
-        //Urus cursor nanti
-        
-    }
 
     private void Update()
     {
         HandleCameraMovement();
+        ChangingHeight();
     }
 
     private void HandleCameraMovement()
@@ -70,12 +68,29 @@ public class PlayableCamera : MonoBehaviour
     {
         _followCamera.m_Lens.FieldOfView = newFOV;
     }
-    public void SetCameraHeight(bool isNormalHeight)
+    public void SetCameraHeight(float chosenHeight)
     {
-        if(_isNormalHeight == isNormalHeight)return;
-        _isNormalHeight = isNormalHeight;
+        _isChangingCameraHeight = true;
+        _currTargetHeight = chosenHeight;
+        // _followTarget.localPosition = new Vector3(_followTarget.localPosition.x, chosenHeight, _followTarget.localPosition.z);
         
-        float chosenHeight = isNormalHeight? _normalHeight : _crouchHeight;
-        _followTarget.localPosition = new Vector3(_followTarget.localPosition.x, chosenHeight, _followTarget.localPosition.z);
     }
+
+    private void ChangingHeight()
+    {
+        if(_isChangingCameraHeight)
+        {
+            if(_currTargetHeight > _followTarget.localPosition.y || _currTargetHeight < _followTarget.localPosition.y)
+            {
+                float newHeight = Mathf.MoveTowards(_followTarget.localPosition.y, _currTargetHeight, Time.deltaTime * _changeCameraHeightSpeed);
+                if( Mathf.Abs(_currTargetHeight - newHeight) < EPSILON)
+                {
+                    newHeight = _currTargetHeight;
+                    _isChangingCameraHeight = false;
+                }
+                _followTarget.localPosition = new Vector3(_followTarget.localPosition.x, newHeight, _followTarget.localPosition.z);
+            }
+        }
+    }
+
 }

@@ -12,8 +12,9 @@ public class IdleState : MovementState
 {
     float _timeCounter, _currTargetTime, _nextIdleAnimIdxTarget;
     bool _isIdleAnimChanging;
-    const float epsilon = 0.0001f;
+    const float EPSILON = 0.0001f;
     const string ANIMATION_MOVE_PARAMETER_CROUCH = "Crouch";
+    const float STAND_IDLE_ANIM_CYCLE_TOTAL = 3;
 
     public IdleState(MovementStateMachine currStateMachine, MovementStateFactory factory) : base(currStateMachine, factory){}
     
@@ -102,11 +103,11 @@ public class IdleState : MovementState
             {
                 if(_sm.IdleAnimCycleIdx == 0 || _groundData == null || (_groundData != null && !_groundData.IsCrouching))
                 {
-                    if(_sm.IdleAnimCycleIdx < 3)
+                    if(_sm.IdleAnimCycleIdx < STAND_IDLE_ANIM_CYCLE_TOTAL)
                     {
-                        float x = _sm.IdleAnimCycleIdx + 1;
-                        if(x < 3)_currTargetTime = _sm.IdleAnimCycleTimeTarget[(int)x];
-                        _nextIdleAnimIdxTarget = x;
+                        float nextIdleAnimIdx = _sm.IdleAnimCycleIdx + 1;
+                        if(nextIdleAnimIdx < STAND_IDLE_ANIM_CYCLE_TOTAL)_currTargetTime = _sm.IdleAnimCycleTimeTarget[(int)nextIdleAnimIdx];
+                        _nextIdleAnimIdxTarget = nextIdleAnimIdx;
                         _isIdleAnimChanging = true;
                         // _stateMachine.ChangeIdleCounter(x);
                     }
@@ -118,8 +119,8 @@ public class IdleState : MovementState
     }
     private void ChangingIdleAnimation()
     {   
-        float tempCounter = Mathf.Lerp(_sm.IdleAnimCycleIdx, _nextIdleAnimIdxTarget, Time.deltaTime * 2);
-        if(_nextIdleAnimIdxTarget - tempCounter < epsilon)tempCounter = _nextIdleAnimIdxTarget;
+        float tempCounter = Mathf.Lerp(_sm.IdleAnimCycleIdx, _nextIdleAnimIdxTarget, Time.deltaTime * _sm.IdleAnimCycleSpeed);
+        if(_nextIdleAnimIdxTarget - tempCounter < EPSILON)tempCounter = _nextIdleAnimIdxTarget;
         _sm.SetIdleAnimCycleIdx(tempCounter);
         if(_sm.IdleAnimCycleIdx == _nextIdleAnimIdxTarget)
         {
