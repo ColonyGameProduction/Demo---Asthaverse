@@ -144,8 +144,8 @@ public class FriendsAI : ExecuteLogic
 
                 if(gotDetected)
                 {
-                    //TakingCover(GetNavMesh(), visibleTargets[0]);
-                    //isTakingCover = true;
+                    TakingCover(GetNavMesh(), visibleTargets[0]);
+                    isTakingCover = true;
                 }
 
                 isIdle = false;
@@ -294,7 +294,7 @@ public class FriendsAI : ExecuteLogic
         }
         else
         {
-            if(!gotDetected)
+            if(!gotDetected && !isTakingCover)
             {
                 if (friendsID == 1)
                 {

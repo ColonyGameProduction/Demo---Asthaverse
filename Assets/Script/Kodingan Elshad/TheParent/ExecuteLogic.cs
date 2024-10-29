@@ -220,35 +220,51 @@ public class ExecuteLogic : AILogic
     //untuk taking cover
     public void TakingCover(NavMeshAgent agent, Transform target)
     {
-        Collider[] walls = Physics.OverlapSphere(agent.transform.position, 100f);
+        Collider[] walls = Physics.OverlapSphere(agent.transform.position, 100f, LayerMask.GetMask("Wall"));
 
         for (int i = 0; i < walls.Length; i++)
         {
             if (NavMesh.SamplePosition(walls[i].transform.position, out NavMeshHit hit, 2f, agent.areaMask))
             {
+                Debug.Log(hit.normal + "Sample Position 1" + hit.position);
                 if (!NavMesh.FindClosestEdge(hit.position, out hit, agent.areaMask))
                 {
                     Debug.Log("Unable to find edge close");
+                    continue;
                 }
 
-                if (Vector3.Dot(hit.normal, (target.position - hit.position).normalized) < 0)
+                Vector3 directionToTarget = (target.position - hit.position).normalized;
+                if (Vector3.Dot(hit.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
                 {
                     agent.SetDestination(hit.position);
+                    Debug.Log(hit.normal + "Find edge 1" + hit.position);
                     break;
                 }
                 else
                 {
-                    if (NavMesh.SamplePosition(walls[i].transform.position - (target.position - hit.position).normalized * 2, out NavMeshHit hit2, 2f, agent.areaMask))
+                    Vector3 coverPosition = walls[i].transform.position - directionToTarget * 2;
+                    if (NavMesh.SamplePosition(coverPosition, out NavMeshHit hit2, 2f, agent.areaMask))
                     {
-                        if (!NavMesh.FindClosestEdge(hit.position, out hit2, agent.areaMask))
+
+                        Debug.Log(hit2.normal + "Sample Position 2" + hit2.position);
+                        //if (Vector3.Dot(hit2.normal, directionToTarget) < 0)
+                        //{
+                        //    agent.SetDestination(hit2.position);
+                        //    break;
+                        //}
+
+                        if (!NavMesh.FindClosestEdge(hit2.position, out hit2, agent.areaMask))
                         {
                             Debug.Log("Unable to find edge close");
+                            continue;
                         }
 
-                        if (Vector3.Dot(hit2.normal, (target.position - hit2.position).normalized) < 0)
+                        directionToTarget = (target.position - hit2.position).normalized;
+                        if (Vector3.Dot(hit2.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
                         {
                             agent.SetDestination(hit2.position);
-                            break;
+
+                            Debug.Log(hit2.normal + "Find edge 2" + hit2.position);
                         }
                     }
                 }
