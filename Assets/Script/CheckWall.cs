@@ -18,11 +18,11 @@ public class CheckWall : MonoBehaviour
     
     private void Update() 
     {
+        Vector3 newPos = NewCheckPositionBasedOnWall(target.transform.position, wall.GetComponent<Collider>());
         if(GoToEdge)
         {
             GoToEdge = false;
             // if(navmesh != null)navmesh.SetDestination(newPos);
-            Vector3 newPos = CheckPositionBasedOnWall(target.transform.position, wall.GetComponent<Collider>());
             if(navmesh!= null)navmesh.transform.position = newPos;
         }
     }
@@ -99,6 +99,76 @@ public class CheckWall : MonoBehaviour
                 }
             }
         }
+        return newPos;
+    }
+    public Vector3 NewCheckPositionBasedOnWall(Vector3 targetPos, Collider wallColl)
+    {
+        Vector3 wallCenter = wallColl.bounds.center;
+        float wallSize = 0f;
+        Vector3 newPos = Vector3.zero;
+
+        float wallSizeX = wallColl.transform.localScale.x * 0.5f;
+        float wallSizeZ = wallColl.transform.localScale.z * 0.5f;
+        if(targetPos.z > wallCenter.z + wallSizeZ)
+        {
+            isX = true;
+            wallSize = wallSizeX + buffer;
+            if(targetPos.x >= wallCenter.x)
+            {
+                isLeft = false;
+            }
+            else
+            {
+                isLeft = true;
+                
+            }
+            newPos = new Vector3(wallCenter.x + (isLeft? - wallSize : wallSize), targetPos.y, targetPos.z);
+        }
+        else if(targetPos.z < wallCenter.z - wallSizeZ)
+        {
+            isX = true;
+            wallSize = wallSizeX + buffer;
+            if(targetPos.x >= wallCenter.x)
+            {
+                isLeft = true;
+            }
+            else
+            {
+                isLeft = false;
+            }
+            newPos = new Vector3(wallCenter.x + (isLeft? wallSize : -wallSize), targetPos.y, targetPos.z);
+        }
+        else if((targetPos.z <= wallCenter.z + wallSizeZ) && (targetPos.z >= wallCenter.z - wallSizeZ))
+        {
+            isX = false;
+            wallSize = wallSizeZ + buffer;
+            if(targetPos.x > wallCenter.x + wallSizeX)
+            {
+                if(targetPos.z >= wallCenter.z)
+                {
+                    isLeft = true;
+                }
+                else
+                {
+                    isLeft = false;
+                }
+                newPos = new Vector3(targetPos.x, targetPos.y, wallCenter.z + (isLeft? wallSize : -wallSize));
+            }
+            else
+            {
+                if(targetPos.z >= wallCenter.z)
+                {
+                    isLeft = false;
+                }
+                else
+                {
+                    isLeft = true;
+                    
+                }
+                newPos = new Vector3(targetPos.x, targetPos.y, wallCenter.z + (isLeft? - wallSize : wallSize));
+            }
+        }
+
         return newPos;
     }
     
