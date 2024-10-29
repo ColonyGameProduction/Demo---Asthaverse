@@ -20,6 +20,7 @@ public class ExecuteLogic : AILogic
 {
 
     public Collider[] walls;
+    public float buffer = -1.5f;
 
     //setelah di extend, klean bisa make function ini tanpa perlu refrence
 
@@ -268,12 +269,12 @@ public class ExecuteLogic : AILogic
                         Debug.Log("Masuk Continue");
                         continue;
                     }
+                    Debug.Log(hit.normal + "Sample normal 11" + hit.position);
 
-                    //hit.position = NewCheckPositionBasedOnWall(hit.position, walls[i]);
-
-                    Debug.Log(hit.normal + "Sample normal 1" + hit.position);
-                    Debug.Log(hit.position);
+                    // Debug.Log(hit.position);
+                    hit.position = CheckPositionBasedOnWall(hit.position, walls[i]);
                     agent.SetDestination(hit.position);
+                    Debug.Log(hit.normal + "Sample normal 12" + hit.position);
                     break;
                 }
                 else
@@ -304,12 +305,12 @@ public class ExecuteLogic : AILogic
                                 Debug.Log("Masuk Continue");
                                 continue;
                             }
+                            Debug.Log(hit2.normal + "Sample normal 21" + hit2.position);
 
-                            //hit2.position = NewCheckPositionBasedOnWall(hit2.position, walls[i]);
-                            Debug.Log(hit2.normal + "Sample normal 2" + hit2.position);
-
-                            Debug.Log(hit2.position);
+                            // Debug.Log(hit2.position);
+                            hit2.position = CheckPositionBasedOnWall(hit2.position, walls[i]);
                             agent.SetDestination(hit2.position);
+                            Debug.Log(hit2.normal + "Sample normal 22" + hit2.position);
                             break;
                         }
                     }
@@ -336,73 +337,68 @@ public class ExecuteLogic : AILogic
         return totalDir;
     }
 
-    public Vector3 NewCheckPositionBasedOnWall(Vector3 targetPos, Collider wallColl)
+    public Vector3 CheckPositionBasedOnWall(Vector3 targetPos, Collider wallColl)
     {
-        bool isLeft;
+        bool isLeft = false;
+        float ySafe = targetPos.y;
 
+        // targetPos = new Vector3(targetPos.x, 0, targetPos.z);
         Vector3 wallCenter = wallColl.bounds.center;
-        float wallSize = 0f;
-        Vector3 newPos = Vector3.zero;
+        Vector3 wallFwd = wallColl.transform.forward;
+        Vector3 wallRight = wallColl.transform.right;
 
-        float wallSizeX = wallColl.transform.localScale.x * 0.5f;
-        float wallSizeZ = wallColl.transform.localScale.z * 0.5f;
-        if (targetPos.z > wallCenter.z + wallSizeZ)
+        float halfWallLength = wallColl.transform.localScale.z * 0.5f;
+        float halfWallWidth = wallColl.transform.localScale.x * 0.5f;
+        
+        Vector3 wallToTarget = targetPos - wallCenter;
+
+        float forwardDistance = Vector3.Dot(wallToTarget, wallFwd);
+        float rightDistance = Vector3.Dot(wallToTarget, wallRight);
+        
+        Vector3 newPos = wallCenter;
+   
+        
+        float newHalfWallWidth = 0;
+        float newHalfWallLength = 0;
+
+        if(Mathf.Abs(forwardDistance) > halfWallLength)
         {
-            wallSize = wallSizeX + -.5f;
-            if (targetPos.x >= wallCenter.x)
+            newHalfWallWidth = halfWallWidth + buffer;
+            newHalfWallLength = halfWallLength - buffer;
+            // isX = true;
+            newPos += wallRight * (rightDistance >= 0 ? newHalfWallWidth : -newHalfWallWidth);
+            newPos += wallFwd * Mathf.Clamp(forwardDistance, -newHalfWallLength, newHalfWallLength);
+            if(rightDistance >= 0)
             {
-                isLeft = false;
+                if(forwardDistance >= 0) isLeft = false;
+                else isLeft = true;
             }
             else
             {
-                isLeft = true;
-
+                if(forwardDistance > 0) isLeft = true;
+                else isLeft = false;
             }
-            newPos = new Vector3(wallCenter.x + (isLeft ? -wallSize : wallSize), targetPos.y, targetPos.z);
+            
         }
-        else if (targetPos.z < wallCenter.z - wallSizeZ)
+        else
         {
-            wallSize = wallSizeX + -.5f;
-            if (targetPos.x >= wallCenter.x)
+            newHalfWallLength = halfWallLength + buffer;
+            newHalfWallWidth = halfWallWidth - buffer;
+            // isX = false;
+            newPos += wallFwd * (forwardDistance >= 0 ? newHalfWallLength : -newHalfWallLength);
+            newPos += wallRight * Mathf.Clamp(rightDistance, -newHalfWallWidth, newHalfWallWidth);
+            if(forwardDistance >= 0)
             {
-                isLeft = true;
+                if(rightDistance > 0) isLeft = true;
+                else isLeft = false;
             }
             else
             {
-                isLeft = false;
+                if(rightDistance >= 0) isLeft = false;
+                else isLeft = true;
             }
-            newPos = new Vector3(wallCenter.x + (isLeft ? wallSize : -wallSize), targetPos.y, targetPos.z);
-        }
-        else if ((targetPos.z <= wallCenter.z + wallSizeZ) && (targetPos.z >= wallCenter.z - wallSizeZ))
-        {
-            wallSize = wallSizeZ + -.5f;
-            if (targetPos.x > wallCenter.x + wallSizeX)
-            {
-                if (targetPos.z >= wallCenter.z)
-                {
-                    isLeft = true;
-                }
-                else
-                {
-                    isLeft = false;
-                }
-                newPos = new Vector3(targetPos.x, targetPos.y, wallCenter.z + (isLeft ? wallSize : -wallSize));
-            }
-            else
-            {
-                if (targetPos.z >= wallCenter.z)
-                {
-                    isLeft = false;
-                }
-                else
-                {
-                    isLeft = true;
-
-                }
-                newPos = new Vector3(targetPos.x, targetPos.y, wallCenter.z + (isLeft ? -wallSize : wallSize));
-            }
-        }
-
+        }   
+        newPos = new Vector3(newPos.x, ySafe, newPos.z);
         return newPos;
     }
 
