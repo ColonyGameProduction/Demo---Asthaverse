@@ -223,19 +223,24 @@ public class ExecuteLogic : AILogic
         walls = Physics.OverlapSphere(agent.transform.position, 20f, LayerMask.GetMask("Wall"));
         int wallsLength = walls.Length;
 
-        /*for(int i = 0; i < walls.Length; i++)
+        for(int i = 0; i < walls.Length; i++)
         {
-            if (Vector3.Distance(walls[i].transform.position, targetDir) < 5f)
+            foreach(Transform targetPos in target)
             {
-                wallsLength--;
-                walls[i] = null;
+                if (Vector3.Distance(walls[i].transform.position, targetPos.position) < 5f)
+                {
+                    wallsLength--;
+                    walls[i] = null;
+                    break;
+                }
             }
+            
         }
 
         if(wallsLength <= 0)
         {
             return;
-        }*/
+        }
 
         Debug.Log(wallsLength);
 
