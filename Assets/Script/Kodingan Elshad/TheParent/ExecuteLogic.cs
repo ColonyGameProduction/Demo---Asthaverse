@@ -246,7 +246,7 @@ public class ExecuteLogic : AILogic
             Debug.Log("Masuk Loop");
             Debug.Log(walls[i]);
 
-            if (NavMesh.SamplePosition(walls[i].transform.position, out NavMeshHit hit, 2f, agent.areaMask))
+            if (NavMesh.SamplePosition(walls[i].transform.position, out NavMeshHit hit, 5f, agent.areaMask))
             {
                 Debug.Log(hit.normal + "Sample Position 1" + hit.position);
                 if (!NavMesh.FindClosestEdge(hit.position, out hit, agent.areaMask))
