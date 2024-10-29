@@ -222,11 +222,17 @@ public class ExecuteLogic : AILogic
     {
         Collider[] walls = Physics.OverlapSphere(agent.transform.position, 100f, LayerMask.GetMask("Wall"));
 
+        System.Array.Sort(walls, ColliderSortArrayComparer);
+
         for (int i = 0; i < walls.Length; i++)
         {
+            if (Vector3.Distance(walls[i].transform.position, target.transform.position) < 5f)
+            {
+                continue;
+            }
+
             if (NavMesh.SamplePosition(walls[i].transform.position, out NavMeshHit hit, 2f, agent.areaMask))
             {
-                Debug.Log(hit.normal + "Sample Position 1" + hit.position);
                 if (!NavMesh.FindClosestEdge(hit.position, out hit, agent.areaMask))
                 {
                     Debug.Log("Unable to find edge close");
@@ -236,8 +242,11 @@ public class ExecuteLogic : AILogic
                 Vector3 directionToTarget = (target.position - hit.position).normalized;
                 if (Vector3.Dot(hit.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
                 {
+                    if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 20f)
+                    {
+                        continue;
+                    }
                     agent.SetDestination(hit.position);
-                    Debug.Log(hit.normal + "Find edge 1" + hit.position);
                     break;
                 }
                 else
@@ -246,7 +255,6 @@ public class ExecuteLogic : AILogic
                     if (NavMesh.SamplePosition(coverPosition, out NavMeshHit hit2, 2f, agent.areaMask))
                     {
 
-                        Debug.Log(hit2.normal + "Sample Position 2" + hit2.position);
                         //if (Vector3.Dot(hit2.normal, directionToTarget) < 0)
                         //{
                         //    agent.SetDestination(hit2.position);
@@ -262,14 +270,39 @@ public class ExecuteLogic : AILogic
                         directionToTarget = (target.position - hit2.position).normalized;
                         if (Vector3.Dot(hit2.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
                         {
+                            if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 20f)
+                            {
+                                continue;
+                            }
                             agent.SetDestination(hit2.position);
-
-                            Debug.Log(hit2.normal + "Find edge 2" + hit2.position);
                         }
                     }
                 }
             }
         }
+    }
+
+    public int ColliderSortArrayComparer(Collider A, Collider B)
+    {
+        if (A == null && B != null) return 1;
+        else if (A != null && B == null) return -1;
+        else if (A == null && B == null) return 0;
+        return Vector3.Distance(transform.position, A.transform.position).CompareTo(Vector3.Distance(transform.position, B.transform.position));
+    }
+
+    public float CountNavMeshPathDistance(Transform origin, Vector3 target, NavMeshAgent agent)
+    {
+        NavMeshPath path = new NavMeshPath();
+        if (NavMesh.CalculatePath(origin.position, target, agent.areaMask, path))
+        {
+            float distance = Vector3.Distance(origin.position, path.corners[0]);
+            for (int j = 1; j < path.corners.Length; j++)
+            {
+                distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
+            }
+            return distance;
+        }
+        return 0;
     }
 
     //Logic 'Switch Character'

@@ -95,6 +95,7 @@ public class FriendsAI : ExecuteLogic
         }
         else
         {
+            detectedByEnemy.Clear();
             gotDetected = false;
         }
 
@@ -140,11 +141,15 @@ public class FriendsAI : ExecuteLogic
                 else
                 {
                     friendsState = alertState.Idle;
+                    isTakingCover = false;
                 }
 
-                if(gotDetected)
+                if (gotDetected)
                 {
-                    TakingCover(GetNavMesh(), visibleTargets[0]);
+                    if(visibleTargets.Count > 0)
+                    {
+                        TakingCover(GetNavMesh(), visibleTargets[0]);
+                    }
                     isTakingCover = true;
                 }
 
@@ -241,8 +246,6 @@ public class FriendsAI : ExecuteLogic
                 detectedByEnemy.Remove(enemy);
             }
         }
-
-        Debug.Log(directionTotal);
 
         destination.transform.position += directionTotal;
         MoveToDestination(GetNavMesh(), destination.transform.position);
