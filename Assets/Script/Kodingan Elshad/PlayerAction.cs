@@ -99,7 +99,7 @@ public class PlayerAction : ExecuteLogic
 
         inputActions.InputPlayerAction.Command.performed += Command_performed;
         inputActions.InputPlayerAction.UnCommand.performed += UnCommand_performed;
-        inputActions.InputPlayerAction.HoldPosition.performed += HoldPosition_performed;
+        inputActions.InputPlayerAction.RegroupFriend.performed += HoldPosition_performed;
         inputActions.InputPlayerAction.UnHoldPosition.performed += UnHoldPosition_performed;
 
         CC = GetComponent<CharacterController>();

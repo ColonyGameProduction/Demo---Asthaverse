@@ -127,7 +127,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""HoldPosition"",
+                    ""name"": ""RegroupFriend"",
                     ""type"": ""Button"",
                     ""id"": ""a9cb49e1-b57b-4b41-a8d4-62092f74a2d2"",
                     ""expectedControlType"": ""Button"",
@@ -345,7 +345,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""HoldPosition"",
+                    ""action"": ""RegroupFriend"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -411,7 +411,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_Reload = m_InputPlayerAction.FindAction("Reload", throwIfNotFound: true);
         m_InputPlayerAction_Command = m_InputPlayerAction.FindAction("Command", throwIfNotFound: true);
         m_InputPlayerAction_UnCommand = m_InputPlayerAction.FindAction("UnCommand", throwIfNotFound: true);
-        m_InputPlayerAction_HoldPosition = m_InputPlayerAction.FindAction("HoldPosition", throwIfNotFound: true);
+        m_InputPlayerAction_RegroupFriend = m_InputPlayerAction.FindAction("RegroupFriend", throwIfNotFound: true);
         m_InputPlayerAction_UnHoldPosition = m_InputPlayerAction.FindAction("UnHoldPosition", throwIfNotFound: true);
         m_InputPlayerAction_Interact = m_InputPlayerAction.FindAction("Interact", throwIfNotFound: true);
         m_InputPlayerAction_SkillButton = m_InputPlayerAction.FindAction("SkillButton", throwIfNotFound: true);
@@ -488,7 +488,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_Reload;
     private readonly InputAction m_InputPlayerAction_Command;
     private readonly InputAction m_InputPlayerAction_UnCommand;
-    private readonly InputAction m_InputPlayerAction_HoldPosition;
+    private readonly InputAction m_InputPlayerAction_RegroupFriend;
     private readonly InputAction m_InputPlayerAction_UnHoldPosition;
     private readonly InputAction m_InputPlayerAction_Interact;
     private readonly InputAction m_InputPlayerAction_SkillButton;
@@ -508,7 +508,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @Reload => m_Wrapper.m_InputPlayerAction_Reload;
         public InputAction @Command => m_Wrapper.m_InputPlayerAction_Command;
         public InputAction @UnCommand => m_Wrapper.m_InputPlayerAction_UnCommand;
-        public InputAction @HoldPosition => m_Wrapper.m_InputPlayerAction_HoldPosition;
+        public InputAction @RegroupFriend => m_Wrapper.m_InputPlayerAction_RegroupFriend;
         public InputAction @UnHoldPosition => m_Wrapper.m_InputPlayerAction_UnHoldPosition;
         public InputAction @Interact => m_Wrapper.m_InputPlayerAction_Interact;
         public InputAction @SkillButton => m_Wrapper.m_InputPlayerAction_SkillButton;
@@ -555,9 +555,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @UnCommand.started += instance.OnUnCommand;
             @UnCommand.performed += instance.OnUnCommand;
             @UnCommand.canceled += instance.OnUnCommand;
-            @HoldPosition.started += instance.OnHoldPosition;
-            @HoldPosition.performed += instance.OnHoldPosition;
-            @HoldPosition.canceled += instance.OnHoldPosition;
+            @RegroupFriend.started += instance.OnRegroupFriend;
+            @RegroupFriend.performed += instance.OnRegroupFriend;
+            @RegroupFriend.canceled += instance.OnRegroupFriend;
             @UnHoldPosition.started += instance.OnUnHoldPosition;
             @UnHoldPosition.performed += instance.OnUnHoldPosition;
             @UnHoldPosition.canceled += instance.OnUnHoldPosition;
@@ -607,9 +607,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @UnCommand.started -= instance.OnUnCommand;
             @UnCommand.performed -= instance.OnUnCommand;
             @UnCommand.canceled -= instance.OnUnCommand;
-            @HoldPosition.started -= instance.OnHoldPosition;
-            @HoldPosition.performed -= instance.OnHoldPosition;
-            @HoldPosition.canceled -= instance.OnHoldPosition;
+            @RegroupFriend.started -= instance.OnRegroupFriend;
+            @RegroupFriend.performed -= instance.OnRegroupFriend;
+            @RegroupFriend.canceled -= instance.OnRegroupFriend;
             @UnHoldPosition.started -= instance.OnUnHoldPosition;
             @UnHoldPosition.performed -= instance.OnUnHoldPosition;
             @UnHoldPosition.canceled -= instance.OnUnHoldPosition;
@@ -652,7 +652,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnReload(InputAction.CallbackContext context);
         void OnCommand(InputAction.CallbackContext context);
         void OnUnCommand(InputAction.CallbackContext context);
-        void OnHoldPosition(InputAction.CallbackContext context);
+        void OnRegroupFriend(InputAction.CallbackContext context);
         void OnUnHoldPosition(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnSkillButton(InputAction.CallbackContext context);

@@ -18,7 +18,7 @@ public class PlayableCharacterCommandManager : MonoBehaviour
         if(_playableCharaManager == null)_playableCharaManager = GetComponent<PlayableCharacterManager>();
 
         _playableCharaManager.OnCommandingBoolChange += PlayableCharaManager_OnCommandingBoolChange;
-        _playableCharaManager.OnCommandHoldInput += PlayableCharaManager_OnCommandHoldInput;
+        _playableCharaManager.OnRegroupFriendInput += PlayableCharaManager_OnRegroupFriendInput;
         _playableCharaManager.OnCommandUnHoldInput += PlayableCharaManager_OnCommandUnHoldInput;
     }
 
@@ -56,9 +56,10 @@ public class PlayableCharacterCommandManager : MonoBehaviour
         if(obj == false)_selectedFriendID = -1;
     }
     
-    private void PlayableCharaManager_OnCommandHoldInput()
+    private void PlayableCharaManager_OnRegroupFriendInput()
     {
-        _playableCharaManager.ChangeHoldInput(true, _selectedFriendID);
+        _playableCharaManager.ChangeHoldInput(false, 1);
+        _playableCharaManager.ChangeHoldInput(false, 2);
     }
     private void PlayableCharaManager_OnCommandUnHoldInput()
     {

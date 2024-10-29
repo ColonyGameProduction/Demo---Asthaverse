@@ -50,7 +50,7 @@ public class PlayableCharacterManager : MonoBehaviour
 
     [Header("Events")]
     public Action<bool> OnCommandingBoolChange;
-    public Action OnCommandHoldInput, OnCommandUnHoldInput;
+    public Action OnRegroupFriendInput, OnCommandUnHoldInput;
     public Action<Transform> OnPlayerSwitch;
     #endregion
 
@@ -321,6 +321,7 @@ public class PlayableCharacterManager : MonoBehaviour
     {
         // if(friendID >= _charaIdentities.Count) return; // krn karakter nya mungkin cuma 2, tp kok friend id ada 2
         _friendsCommandPosition[friendID - 1].transform.position = newPos;
+        ChangeHoldInput(true, friendID);
     }
     public void ChangeHoldInput(bool change, int friendID)
     {
@@ -330,9 +331,16 @@ public class PlayableCharacterManager : MonoBehaviour
             // Debug.Log(chara.FriendID + " " + friendID);
             if(chara.FriendID == friendID)
             {
-                chara.FriendAIStateMachine.IsToldHold = change;
+                if(chara.FriendAIStateMachine.IsToldHold != change)chara.FriendAIStateMachine.IsToldHold = change;
                 break;
             }
+        }
+    }
+    public void RegroupFriendFromCommand()
+    {
+        for(int i=0; i< _charaIdentities.Count-1;i++)
+        {
+            ChangeHoldInput(false, i);
         }
     }
     #endregion
@@ -360,7 +368,7 @@ public class PlayableCharacterManager : MonoBehaviour
 
         _gameInputManager.OnCommandPerformed += GameInput_OnCommandPerformed;
         _gameInputManager.OnUnCommandPerformed += GameInput_OnUnCommandPerformed;
-        _gameInputManager.OnHoldPosPerformed += GameInput_OnHoldPosPerformed;
+        _gameInputManager.OnRegroupFriendPerformed += GameInput_OnRegroupFriendPerformed;
         _gameInputManager.OnUnHoldPosPerformed += GameInput_OnUnHoldPosPerformed;
 
         _gameInputManager.OnSilentKillPerformed += GameInput_OnSilentKillPerformed;
@@ -497,11 +505,11 @@ public class PlayableCharacterManager : MonoBehaviour
             OnCommandingBoolChange?.Invoke(false);
         }
     }
-    private void GameInput_OnHoldPosPerformed()
+    private void GameInput_OnRegroupFriendPerformed()
     {
         if(_isCommandingFriend)
         {
-            OnCommandHoldInput?.Invoke();
+            OnRegroupFriendInput?.Invoke();
         }
     }
     private void GameInput_OnUnHoldPosPerformed()

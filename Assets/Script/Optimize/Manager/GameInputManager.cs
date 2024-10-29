@@ -12,7 +12,7 @@ public class GameInputManager : MonoBehaviour
 
     public Action OnRunPerformed, OnRunCanceled, OnCrouchPerformed, OnCrouchCanceled,
                   OnChangePlayerPerformed, OnChangeWeaponPerformed, 
-                  OnCommandPerformed, OnUnCommandPerformed, OnHoldPosPerformed, OnUnHoldPosPerformed,
+                  OnCommandPerformed, OnUnCommandPerformed, OnRegroupFriendPerformed, OnUnHoldPosPerformed,
                   OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnReloadPerformed,
                   OnInteractPerformed, OnNightVisionPerformed;
     private void Awake() 
@@ -31,7 +31,7 @@ public class GameInputManager : MonoBehaviour
 
         _inputActions.InputPlayerAction.Command.performed += Command_performed;
         _inputActions.InputPlayerAction.UnCommand.performed += UnCommand_performed;
-        _inputActions.InputPlayerAction.HoldPosition.performed += HoldPosition_performed;
+        _inputActions.InputPlayerAction.RegroupFriend.performed += RegroupFriend_performed;
         _inputActions.InputPlayerAction.UnHoldPosition.performed += UnHoldPosition_performed;
 
         _inputActions.InputPlayerAction.SilentKill.performed += SilentKill_performed;
@@ -64,7 +64,7 @@ public class GameInputManager : MonoBehaviour
 
     private void Command_performed(InputAction.CallbackContext context)=> OnCommandPerformed?.Invoke();
     private void UnCommand_performed(InputAction.CallbackContext context)=> OnUnCommandPerformed?.Invoke();
-    private void HoldPosition_performed(InputAction.CallbackContext context)=> OnHoldPosPerformed?.Invoke();
+    private void RegroupFriend_performed(InputAction.CallbackContext context)=> OnRegroupFriendPerformed?.Invoke();
     private void UnHoldPosition_performed(InputAction.CallbackContext context)=> OnUnHoldPosPerformed?.Invoke();
 
     private void SilentKill_performed(InputAction.CallbackContext context)=> OnSilentKillPerformed?.Invoke();
