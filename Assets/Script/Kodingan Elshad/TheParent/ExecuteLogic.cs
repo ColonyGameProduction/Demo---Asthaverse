@@ -8,6 +8,7 @@ using System;
 using System.Security.Cryptography;
 using System.Linq;
 using UnityEngine.Rendering;
+using UnityEngine.InputSystem.Android;
 
 /* PERHATIAN!!!
  * Kalo mau akses logic di skrip ini
@@ -18,7 +19,7 @@ using UnityEngine.Rendering;
 public class ExecuteLogic : AILogic
 {
 
-    
+    public Collider[] walls;
 
     //setelah di extend, klean bisa make function ini tanpa perlu refrence
 
@@ -67,7 +68,6 @@ public class ExecuteLogic : AILogic
             weaponStatSO.totalBullet = 0;
         }        
 
-        Debug.Log("Reload");
     }
 
     //untuk ganti weapon
@@ -218,34 +218,56 @@ public class ExecuteLogic : AILogic
     }
 
     //untuk taking cover
-    public void TakingCover(NavMeshAgent agent, Transform target)
+    public void TakingCover(NavMeshAgent agent, List<Transform> target)
     {
-        Collider[] walls = Physics.OverlapSphere(agent.transform.position, 100f, LayerMask.GetMask("Wall"));
+        walls = Physics.OverlapSphere(agent.transform.position, 20f, LayerMask.GetMask("Wall"));
+        int wallsLength = walls.Length;
+
+        /*for(int i = 0; i < walls.Length; i++)
+        {
+            if (Vector3.Distance(walls[i].transform.position, targetDir) < 5f)
+            {
+                wallsLength--;
+                walls[i] = null;
+            }
+        }
+
+        if(wallsLength <= 0)
+        {
+            return;
+        }*/
+
+        Debug.Log(wallsLength);
 
         System.Array.Sort(walls, ColliderSortArrayComparer);
 
-        for (int i = 0; i < walls.Length; i++)
+        for (int i = 0; i <= walls.Length - 1; i++)
         {
-            if (Vector3.Distance(walls[i].transform.position, target.transform.position) < 5f)
-            {
-                continue;
-            }
+            Debug.Log("Masuk Loop");
+            Debug.Log(walls[i]);
 
             if (NavMesh.SamplePosition(walls[i].transform.position, out NavMeshHit hit, 2f, agent.areaMask))
             {
+                Debug.Log(hit.normal + "Sample Position 1" + hit.position);
                 if (!NavMesh.FindClosestEdge(hit.position, out hit, agent.areaMask))
                 {
                     Debug.Log("Unable to find edge close");
                     continue;
                 }
 
-                Vector3 directionToTarget = (target.position - hit.position).normalized;
+                Vector3 directionToTarget = HitDirection(target, hit.position);
                 if (Vector3.Dot(hit.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
                 {
-                    if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 20f)
+                    if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 100f)
                     {
+                        Debug.Log("Masuk Continue");
                         continue;
                     }
+
+                    //hit.position = NewCheckPositionBasedOnWall(hit.position, walls[i]);
+
+                    Debug.Log(hit.normal + "Sample normal 1" + hit.position);
+                    Debug.Log(hit.position);
                     agent.SetDestination(hit.position);
                     break;
                 }
@@ -261,25 +283,122 @@ public class ExecuteLogic : AILogic
                         //    break;
                         //}
 
+                        Debug.Log(hit2.normal + "Sample Position 2" + hit2.position);
+
                         if (!NavMesh.FindClosestEdge(hit2.position, out hit2, agent.areaMask))
                         {
                             Debug.Log("Unable to find edge close");
                             continue;
                         }
 
-                        directionToTarget = (target.position - hit2.position).normalized;
+                        directionToTarget = HitDirection(target, hit.position);
                         if (Vector3.Dot(hit2.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
                         {
-                            if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 20f)
+                            if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 100f)
                             {
+                                Debug.Log("Masuk Continue");
                                 continue;
                             }
+
+                            //hit2.position = NewCheckPositionBasedOnWall(hit2.position, walls[i]);
+                            Debug.Log(hit2.normal + "Sample normal 2" + hit2.position);
+
+                            Debug.Log(hit2.position);
                             agent.SetDestination(hit2.position);
+                            break;
                         }
                     }
                 }
             }
         }
+    }
+
+    public Vector3 HitDirection(List<Transform> target, Vector3 position)
+    {
+        Vector3 direction = Vector3.zero;
+        Vector3 totalDir = Vector3.zero;
+
+        if (target.Count > 0)
+        {
+            direction = (target[0].position - position).normalized;
+
+            for (int i = 0; i < target.Count; i++)
+            {
+                totalDir += direction;
+            }
+        }
+
+        return totalDir;
+    }
+
+    public Vector3 NewCheckPositionBasedOnWall(Vector3 targetPos, Collider wallColl)
+    {
+        bool isLeft;
+
+        Vector3 wallCenter = wallColl.bounds.center;
+        float wallSize = 0f;
+        Vector3 newPos = Vector3.zero;
+
+        float wallSizeX = wallColl.transform.localScale.x * 0.5f;
+        float wallSizeZ = wallColl.transform.localScale.z * 0.5f;
+        if (targetPos.z > wallCenter.z + wallSizeZ)
+        {
+            wallSize = wallSizeX + -.5f;
+            if (targetPos.x >= wallCenter.x)
+            {
+                isLeft = false;
+            }
+            else
+            {
+                isLeft = true;
+
+            }
+            newPos = new Vector3(wallCenter.x + (isLeft ? -wallSize : wallSize), targetPos.y, targetPos.z);
+        }
+        else if (targetPos.z < wallCenter.z - wallSizeZ)
+        {
+            wallSize = wallSizeX + -.5f;
+            if (targetPos.x >= wallCenter.x)
+            {
+                isLeft = true;
+            }
+            else
+            {
+                isLeft = false;
+            }
+            newPos = new Vector3(wallCenter.x + (isLeft ? wallSize : -wallSize), targetPos.y, targetPos.z);
+        }
+        else if ((targetPos.z <= wallCenter.z + wallSizeZ) && (targetPos.z >= wallCenter.z - wallSizeZ))
+        {
+            wallSize = wallSizeZ + -.5f;
+            if (targetPos.x > wallCenter.x + wallSizeX)
+            {
+                if (targetPos.z >= wallCenter.z)
+                {
+                    isLeft = true;
+                }
+                else
+                {
+                    isLeft = false;
+                }
+                newPos = new Vector3(targetPos.x, targetPos.y, wallCenter.z + (isLeft ? wallSize : -wallSize));
+            }
+            else
+            {
+                if (targetPos.z >= wallCenter.z)
+                {
+                    isLeft = false;
+                }
+                else
+                {
+                    isLeft = true;
+
+                }
+                newPos = new Vector3(targetPos.x, targetPos.y, wallCenter.z + (isLeft ? -wallSize : wallSize));
+            }
+        }
+
+        return newPos;
     }
 
     public int ColliderSortArrayComparer(Collider A, Collider B)

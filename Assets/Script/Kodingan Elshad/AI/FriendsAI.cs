@@ -65,6 +65,8 @@ public class FriendsAI : ExecuteLogic
     private bool isIdle;
     private bool isTakingCover;
 
+    private Vector3 tempDirTotal;
+
     private void Start()
     {
         viewMesh = new Mesh();
@@ -96,6 +98,7 @@ public class FriendsAI : ExecuteLogic
         else
         {
             detectedByEnemy.Clear();
+            tempDirTotal = Vector3.zero;
             gotDetected = false;
         }
 
@@ -148,7 +151,7 @@ public class FriendsAI : ExecuteLogic
                 {
                     if(visibleTargets.Count > 0)
                     {
-                        TakingCover(GetNavMesh(), visibleTargets[0]);
+                        TakingCover(GetNavMesh(), visibleTargets);
                     }
                     isTakingCover = true;
                 }
@@ -248,6 +251,7 @@ public class FriendsAI : ExecuteLogic
         }
 
         destination.transform.position += directionTotal;
+        tempDirTotal += directionTotal;
         MoveToDestination(GetNavMesh(), destination.transform.position);
 
     }
