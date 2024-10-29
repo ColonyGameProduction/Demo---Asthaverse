@@ -12,9 +12,10 @@ public class GameInputManager : MonoBehaviour
 
     public Action OnRunPerformed, OnRunCanceled, OnCrouchPerformed, OnCrouchCanceled,
                   OnChangePlayerPerformed, OnChangeWeaponPerformed, 
-                  OnCommandPerformed, OnUnCommandPerformed, OnRegroupFriendPerformed, OnUnHoldPosPerformed,
+                  OnExitCommandPerformed, OnRegroupFriendPerformed,
                   OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnReloadPerformed,
                   OnInteractPerformed, OnNightVisionPerformed;
+    public Action<int> OnCommandFriendPerformed;
     private void Awake() 
     {
         Instance = this;
@@ -29,10 +30,10 @@ public class GameInputManager : MonoBehaviour
         _inputActions.InputPlayerAction.ChangePlayer.performed += ChangePlayer_performed;
         _inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
 
-        _inputActions.InputPlayerAction.Command.performed += Command_performed;
-        _inputActions.InputPlayerAction.UnCommand.performed += UnCommand_performed;
+        _inputActions.InputPlayerAction.CommandFriend1.performed += Command1_performed;
+        _inputActions.InputPlayerAction.CommandFriend2.performed += Command2_performed;
+        _inputActions.InputPlayerAction.ExitCommand.performed += ExitCommand_performed;
         _inputActions.InputPlayerAction.RegroupFriend.performed += RegroupFriend_performed;
-        _inputActions.InputPlayerAction.UnHoldPosition.performed += UnHoldPosition_performed;
 
         _inputActions.InputPlayerAction.SilentKill.performed += SilentKill_performed;
 
@@ -62,10 +63,10 @@ public class GameInputManager : MonoBehaviour
     private void ChangePlayer_performed(InputAction.CallbackContext context) => OnChangePlayerPerformed?.Invoke();
     private void ChangingWeapon_performed(InputAction.CallbackContext context)=> OnChangeWeaponPerformed?.Invoke();
 
-    private void Command_performed(InputAction.CallbackContext context)=> OnCommandPerformed?.Invoke();
-    private void UnCommand_performed(InputAction.CallbackContext context)=> OnUnCommandPerformed?.Invoke();
+    private void Command1_performed(InputAction.CallbackContext context)=> OnCommandFriendPerformed?.Invoke(1);
+    private void Command2_performed(InputAction.CallbackContext context)=> OnCommandFriendPerformed?.Invoke(2);
+    private void ExitCommand_performed(InputAction.CallbackContext context)=> OnExitCommandPerformed?.Invoke();
     private void RegroupFriend_performed(InputAction.CallbackContext context)=> OnRegroupFriendPerformed?.Invoke();
-    private void UnHoldPosition_performed(InputAction.CallbackContext context)=> OnUnHoldPosPerformed?.Invoke();
 
     private void SilentKill_performed(InputAction.CallbackContext context)=> OnSilentKillPerformed?.Invoke();
 

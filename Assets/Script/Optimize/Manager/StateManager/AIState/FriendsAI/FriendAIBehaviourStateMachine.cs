@@ -84,7 +84,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
                 else _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
             }
         }
-        else
+        else if(PlayableCharacterManager.IsCommandingFriend && GetPlayableCharaIdentity.FriendID == PlayableCharacterCommandManager.SelectedFriendID)
         {
             if(_charaIdentity.IsDead)
             {

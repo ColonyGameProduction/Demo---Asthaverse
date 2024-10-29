@@ -49,8 +49,8 @@ public class PlayableCharacterManager : MonoBehaviour
 
 
     [Header("Events")]
-    public Action<bool> OnCommandingBoolChange;
-    public Action OnRegroupFriendInput, OnCommandUnHoldInput;
+    public Action<bool, int> OnCommandingBoolChange;
+    public Action OnRegroupOneFriendInput, OnCommandUnHoldInput;
     public Action<Transform> OnPlayerSwitch;
     #endregion
 
@@ -304,7 +304,7 @@ public class PlayableCharacterManager : MonoBehaviour
 
     private void PlayableChara_OnPlayableDeath()
     {
-        if(IsCommandingFriend)GameInput_OnUnCommandPerformed();
+        if(IsCommandingFriend)GameInput_OnExitCommandPerformed();
         if(!IsSwitchingCharacter)SwitchCharacter(_currCharaidx + 1);
     }
     #endregion
@@ -321,9 +321,9 @@ public class PlayableCharacterManager : MonoBehaviour
     {
         // if(friendID >= _charaIdentities.Count) return; // krn karakter nya mungkin cuma 2, tp kok friend id ada 2
         _friendsCommandPosition[friendID - 1].transform.position = newPos;
-        ChangeHoldInput(true, friendID);
+        ChangeHoldCommandFriend(true, friendID);
     }
-    public void ChangeHoldInput(bool change, int friendID)
+    public void ChangeHoldCommandFriend(bool change, int friendID)
     {
         // if(friendID < 1 || friendID >= _charaIdentities.Count) return;
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
@@ -332,15 +332,19 @@ public class PlayableCharacterManager : MonoBehaviour
             if(chara.FriendID == friendID)
             {
                 if(chara.FriendAIStateMachine.IsToldHold != change)chara.FriendAIStateMachine.IsToldHold = change;
+                if(change == false)
+                {
+                    _friendsCommandPosition[friendID - 1].transform.position = CurrPlayableChara.GetFriendsNormalPosition[friendID - 1].transform.position;
+                }
                 break;
             }
         }
     }
-    public void RegroupFriendFromCommand()
+    public void RegroupAllFriendFromCommandHold()
     {
-        for(int i=0; i< _charaIdentities.Count-1;i++)
+        for(int i=1; i<= _charaIdentities.Count-1;i++)
         {
-            ChangeHoldInput(false, i);
+            ChangeHoldCommandFriend(false, i);
         }
     }
     #endregion
@@ -366,10 +370,10 @@ public class PlayableCharacterManager : MonoBehaviour
         _gameInputManager.OnChangePlayerPerformed += GameInput_OnChangePlayerPerformed;
         _gameInputManager.OnChangeWeaponPerformed += GameInput_OnChangeWeaponPerformed;
 
-        _gameInputManager.OnCommandPerformed += GameInput_OnCommandPerformed;
-        _gameInputManager.OnUnCommandPerformed += GameInput_OnUnCommandPerformed;
+        // _gameInputManager.OnCommandPerformed += GameInput_OnCommandPerformed;
+        _gameInputManager.OnCommandFriendPerformed += GameInput_OnCommandPerformed;
+        _gameInputManager.OnExitCommandPerformed += GameInput_OnExitCommandPerformed;
         _gameInputManager.OnRegroupFriendPerformed += GameInput_OnRegroupFriendPerformed;
-        _gameInputManager.OnUnHoldPosPerformed += GameInput_OnUnHoldPosPerformed;
 
         _gameInputManager.OnSilentKillPerformed += GameInput_OnSilentKillPerformed;
         _gameInputManager.OnShootingPerformed += GameInput_OnShootingPerformed;
@@ -477,46 +481,51 @@ public class PlayableCharacterManager : MonoBehaviour
         }
     }
 
-    private void GameInput_OnCommandPerformed()
+    private void GameInput_OnCommandPerformed(int friendID)
     {
+        if(IsCommandingFriend)OnCommandingBoolChange?.Invoke(true, friendID);
+
         if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead)return;
         _currPlayableMoveStateMachine.ForceStopMoving();
         _currPlayableUseWeaponStateMachine.ForceStopUseWeapon();
+        Time.timeScale = 0.5f;
 
         for(int i=0;i < _charaIdentities.Count;i++)
         {
             if(_charaIdentities[i] == CurrPlayableChara)continue;
-            if(!_charaIdentities[i].FriendAIStateMachine.IsToldHold)
+            if(_charaIdentities[i].FriendID == friendID)
             {
-                int friendID = _charaIdentities[i].FriendID - 1;
-                _friendsCommandPosition[friendID].transform.position = CurrPlayableChara.GetFriendsNormalPosition[friendID].transform.position;
+                if(!_charaIdentities[i].FriendAIStateMachine.IsToldHold)
+                {
+                    _friendsCommandPosition[friendID - 1].transform.position = CurrPlayableChara.GetFriendsNormalPosition[friendID - 1].transform.position;
+                }
+                break;
             }
+            
             // _friendsCommandPosition[i].transform.position = CurrPlayableChara.GetFriendsNormalPosition[i].transform.position;
         }
 
         _isCommandingFriend = true;
-        OnCommandingBoolChange?.Invoke(true);
+        OnCommandingBoolChange?.Invoke(true, friendID);
     }
-    private void GameInput_OnUnCommandPerformed()
+    private void GameInput_OnExitCommandPerformed()
     {
         if(_isCommandingFriend)
-        {
+        {   
+            Time.timeScale = 1f;
             _isCommandingFriend = false;
-            OnCommandingBoolChange?.Invoke(false);
+            OnCommandingBoolChange?.Invoke(false, -1);
         }
     }
     private void GameInput_OnRegroupFriendPerformed()
     {
         if(_isCommandingFriend)
         {
-            OnRegroupFriendInput?.Invoke();
+            OnRegroupOneFriendInput?.Invoke();
         }
-    }
-    private void GameInput_OnUnHoldPosPerformed()
-    {
-        if(_isCommandingFriend)
+        else
         {
-            OnCommandUnHoldInput?.Invoke();
+            if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead)return;RegroupAllFriendFromCommandHold();
         }
     }
 
