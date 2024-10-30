@@ -212,4 +212,6 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         _animator.SetFloat(ANIMATION_MOVE_PARAMETER_IDLECOUNTER, IdleAnimCycleIdx);
     }
     #endregion
+
+
 }
