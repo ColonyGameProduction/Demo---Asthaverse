@@ -9,7 +9,6 @@ using UnityEngine.AI;
 public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMovementData
 {
     #region Normal Variable
-
     [Space(1)]
     [Header("Move States - Stand")]
     [SerializeField] protected bool _isIdle = true;
@@ -128,10 +127,13 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
         Vector3 facedir = (AgentNavMesh.steeringTarget - transform.position).normalized;
         Vector3 animatedFaceDir = transform.InverseTransformDirection(facedir);
-        bool isFacingMoveDirection = Vector3.Dot(facedir, transform.forward) > .5f;
+        // Debug.Log("Dot Move" + Vector3.Dot(facedir, transform.forward));
+        // bool isFacingMoveDirection = Vector3.Dot(facedir, transform.forward) > .5f;
 
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL,isFacingMoveDirection ? animatedFaceDir.x : 0, 0.5f, Time.deltaTime);
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, isFacingMoveDirection ? animatedFaceDir.z : 0, 0.5f, Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
+
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, animatedFaceDir.x, 0.5f, Time.deltaTime);
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, animatedFaceDir.z, 0.5f, Time.deltaTime);
 
     }
     public bool IsAIAtDirPos()

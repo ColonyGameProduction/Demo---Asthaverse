@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WeaponLogicManager : MonoBehaviour
 {
+    public bool Debugs;
     public static WeaponLogicManager Instance {get; private set;}
     private void Awake() 
     {
@@ -49,7 +50,7 @@ public class WeaponLogicManager : MonoBehaviour
 
             GameObject entityGameObject = hit.collider.gameObject;
 
-            CalculateDamage(weaponStat, entityGameObject);
+            if(!Debugs)CalculateDamage(weaponStat, entityGameObject);
             // Debug.Log(hit.point);
 
         }

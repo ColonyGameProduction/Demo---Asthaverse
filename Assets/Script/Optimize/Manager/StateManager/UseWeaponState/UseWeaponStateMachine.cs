@@ -45,6 +45,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     [SerializeField] protected Transform _originShootPoint_AIContainer; 
     protected Transform _currOriginShootPoint, _currDirectionShootPoint;
     protected Vector3 _originShootPosition, _directionShootPosition;
+    protected Transform _FOVPoint;
 
     [Space(1)]
     [Header("Enemy Character Layermask")]
@@ -115,7 +116,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
             _currOriginShootPoint = _originShootPoint_AIContainer;
             _currDirectionShootPoint = _currChosenTarget;
         }
-
+        _FOVPoint = GetComponent<FOVMachine>().GetFOVPoint;
         _states = new UseWeaponStateFactory(this);
     }
     private void Start() 
@@ -178,7 +179,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     {
         _originShootPosition = CurrOriginShootPoint.position;
         _directionShootPosition = CurrDirectionShootPoint.position - transform.position;
-        // Debug.Log()
+
         Debug.Log("Shoot direction " + _directionShootPosition);
     }
 

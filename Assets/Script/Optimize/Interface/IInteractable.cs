@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    public bool CanInteract();
+    public Transform InteractableTransform{get;}
+    public bool CanInteract{get;}
     void Interact();
 }

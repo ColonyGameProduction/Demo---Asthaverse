@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper, IReceiveInputFromPlayer, ICanSwitchWeapon
+public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper, IReceiveInputFromPlayer, ICanSwitchWeapon, IInteractable
 {
     
     [Space(1)]
@@ -38,6 +38,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected PlayableMovementStateMachine _getPlayableMovementStateData;
     protected PlayableUseWeaponStateMachine _getPlayableUseWeaponStateData;
     protected PlayableCamera _getPlayableCamera;
+    protected PlayableInteraction _getPlayableInteraction;
 
     protected FriendAIBehaviourStateMachine _friendAIStateMachine;
     
@@ -96,12 +97,16 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public PlayableMovementStateMachine GetPlayableMovementData {get { return _getPlayableMovementStateData;}}
     public PlayableUseWeaponStateMachine GetPlayableUseWeaponData {get { return _getPlayableUseWeaponStateData;}}
     public PlayableCamera GetPlayableCamera {get {return _getPlayableCamera;}}
+    public PlayableInteraction GetPlayableInteraction {get {return _getPlayableInteraction;}}
 
     public FriendAIBehaviourStateMachine FriendAIStateMachine {get { return _friendAIStateMachine;}}
     public FOVMachine FOVMachine{get { return _fovMachine;}}
 
     public bool IsAnimatingOtherAnimation {get {return _isAnimatingOtherAnimation;}}
-    
+
+    public Transform InteractableTransform {get{return transform;}}
+    public bool CanInteract {get{return IsDead;}}
+
     #endregion
     protected override void Awake()
     {
@@ -109,6 +114,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _getPlayableMovementStateData = MovementStateMachine as PlayableMovementStateMachine;
         _getPlayableUseWeaponStateData = UseWeaponStateMachine as PlayableUseWeaponStateMachine;
         _getPlayableCamera = GetComponent<PlayableCamera>();
+        _getPlayableInteraction = GetComponentInChildren<PlayableInteraction>();
         InitializeFriend();
 
 
@@ -229,4 +235,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     }
 
 
+    public void Interact()
+    {
+        Revive();
+    }
 }

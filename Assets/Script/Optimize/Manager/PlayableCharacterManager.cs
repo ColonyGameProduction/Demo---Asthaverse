@@ -46,6 +46,7 @@ public class PlayableCharacterManager : MonoBehaviour
     private PlayableUseWeaponStateMachine _currPlayableUseWeaponStateMachine;
     //Get Standmovement bool -> isIdle, isWalking, isRunning
     private PlayableCamera _currPlayableCamera;
+    private PlayableInteraction _currPlayableInteraction;
 
 
     [Header("Events")]
@@ -226,7 +227,7 @@ public class PlayableCharacterManager : MonoBehaviour
         //Dapetin semua class data dr CurrPlayableChara jdnya ga ngebebanin pas getter setter terus
         _currPlayableMoveStateMachine = CurrPlayableChara.GetPlayableMovementData;
         _currPlayableUseWeaponStateMachine = CurrPlayableChara.GetPlayableUseWeaponData;
-
+        _currPlayableInteraction = CurrPlayableChara.GetPlayableInteraction;
         _currPlayableCamera = CurrPlayableChara.GetPlayableCamera;
         _playableCharacterCameraManager.SetCurrPlayableCamera(_currPlayableCamera);
 
@@ -392,7 +393,8 @@ public class PlayableCharacterManager : MonoBehaviour
 
     private void GameInput_OnInteractPerformed()
     {
-        throw new NotImplementedException();
+        //Ntr kasi syarat lain
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead)_currPlayableInteraction.Interact();
     }
 
     private void GameInput_Movement()
