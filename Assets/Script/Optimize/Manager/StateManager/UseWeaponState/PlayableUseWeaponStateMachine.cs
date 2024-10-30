@@ -17,6 +17,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     [SerializeField] protected bool _isSilentKill;
     protected bool _canSilentKill = true;
     [SerializeField] protected float _silentKillDuration; // ini sementara ampe ada animasi
+    private EnemyIdentity _silentKilledEnemy;
 
     [Space(1)]
     [Header("Additional Animation Component")]
@@ -31,6 +32,8 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     [Space(1)]
     [Header("More Weapon Logic Data")]
     protected float _charaFriendAimAccuracy;
+
+    protected PlayableCharacterIdentity _getPlayableCharacterIdentity;
 
     #endregion
     #region GETTERSETTER Variable
@@ -67,6 +70,8 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     }
     public bool CanSilentKill { get {return _canSilentKill;} set {_canSilentKill = value;}}
     public float SilentKillDuration { get {return _silentKillDuration;}}
+    public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get {return _getPlayableCharacterIdentity;}}
+    
 
     #endregion
     public event Action OnTurningOffScope;// ini dipanggil kalo misal lg input player dan reload - yg subs adalah playablecharamanager
@@ -75,7 +80,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         base.Awake();
 
         _getCanSwitchWeapon = GetComponent<ICanSwitchWeapon>();
-
+        _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
         _getCanInputPlayer = GetComponent<IReceiveInputFromPlayer>();
         _isAIInput = !_getCanInputPlayer.IsPlayerInput;
         _getCanInputPlayer.OnIsPlayerInputChange += CharaIdentity_OnIsPlayerInputChange; // Ditaro di sini biar ga ketinggalan sebelah, krn sebelah diubah di start
@@ -90,7 +95,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     {
         //DoAnimation
         yield return new WaitForSeconds(reloadTime);
-
+        _silentKilledEnemy.GotSilentKilled();
         CanSilentKill = false;
         IsSilentKill = false;
         
@@ -208,5 +213,10 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     public void SetCharaFriendAccuracy(float newAccuracy)
     {
         _charaFriendAimAccuracy = newAccuracy;
+    }
+
+    public void SetSilentKilledEnemy(EnemyIdentity enemy)
+    {
+        _silentKilledEnemy = enemy;
     }
 }

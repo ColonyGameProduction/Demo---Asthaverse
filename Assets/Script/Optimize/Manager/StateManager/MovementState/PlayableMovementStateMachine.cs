@@ -31,6 +31,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     private CharacterController _cc;
     protected IReceiveInputFromPlayer _canReceivePlayerInput;
     protected Vector3 _inputMovement;
+    protected PlayableCharacterIdentity _getPlayableCharacterIdentity;
     #endregion
     
     #region GETTERSETTER Variable
@@ -44,6 +45,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     public CharacterController CC {get { return _cc;} }
     public Vector3 InputMovement { get{ return _inputMovement;} set{_inputMovement = value;}} // Getting Input Movement from playercontroller
+    public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get {return _getPlayableCharacterIdentity;}}
 
 
     #endregion
@@ -52,6 +54,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         base.Awake();
 
         _canReceivePlayerInput = GetComponent<IReceiveInputFromPlayer>();
+        _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
         _isAIInput = !_canReceivePlayerInput.IsPlayerInput;
         _canReceivePlayerInput.OnIsPlayerInputChange += CharaIdentity_OnIsPlayerInputChange; //When IsInputPlayerChange
 

@@ -180,7 +180,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         _originShootPosition = CurrOriginShootPoint.position;
         _directionShootPosition = CurrDirectionShootPoint.position - transform.position;
 
-        Debug.Log("Shoot direction " + _directionShootPosition);
+        // Debug.Log("Shoot direction " + _directionShootPosition);
     }
 
     protected IEnumerator FireRate(float fireRateTime)

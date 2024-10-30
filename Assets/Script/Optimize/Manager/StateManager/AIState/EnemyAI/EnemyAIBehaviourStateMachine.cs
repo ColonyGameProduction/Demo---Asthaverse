@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
+public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscribeEvent
 {
     [Header("Manager")]
     private EnemyAIManager _enemyAIManager;
     [Header("State Machine")]
     [SerializeField] private MovementStateMachine _moveStateMachine;
     [SerializeField] private UseWeaponStateMachine _useWeaponStateMachine;
+    private EnemyIdentity _enemyIdentity;
     
 
     [Header("Enemy Alert Value")]
@@ -50,6 +51,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
 
     public Transform[] PatrolPath {get {return _patrolPath;} }
     public int CurrPath {get {return _currPath;} }
+    public EnemyIdentity EnemyIdentity {get {return _enemyIdentity;}}
     #endregion
 
     protected override void Awake() 
@@ -57,7 +59,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
         base.Awake();
         _getFOVState = _fovMachine as IFOVMachineState;
         _getFOVAdvancedData = _fovMachine as IHuntPlayable;
-        
+        _enemyIdentity = _charaIdentity as EnemyIdentity;
         _states = new EnemyAIStateFactory(this);
     }
     private void Start() 
@@ -74,7 +76,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     }
 
 
-
+    
     private void Update() 
     {
         _fovMachine.FOVJob();
@@ -83,6 +85,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
     }
     public void CalculateAlertValue()
     {
+        // if(_charaIdentity.IsDead || _enemyIdentity.IsSilentKilled) return;
         if(_fovMachine.VisibleTargets.Count > 0)
         {
             _maxAlertValue = _getFOVAdvancedData.GetMinimalPlayableStealth();
@@ -177,7 +180,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
             {
                 if(EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
                 {
-                    Debug.Log("TEsstt??");
+                    // Debug.Log("TEsstt??");
                     EnemyAIManager.OnFoundLastCharaSeenPos?.Invoke(this);
                 }
             }
@@ -251,10 +254,21 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine
 
     private void EnemyAIManager_OnGoToClosestPOI()
     {
-        Debug.Log("Test");
+        // Debug.Log("Test");
         if(_currPOI == null)_currPOI = EnemyAIManager.GetClosestPOI(this);
         _getFOVAdvancedData.IsCheckingEnemyLastPosition(); // make this false so it wont go to lastseenpos                      
         _alertValue = MaxAlertValue/2 + 10f;
     }
 
+    public void UnsubscribeEvent()
+    {
+        _enemyAIManager.OnCaptainsStartHunting -= EnemyAIManager_OnCaptainsStartHunting;
+        _enemyAIManager.OnCaptainsStartEngaging -= EnemyAIManager_OnCaptainsStartEngaging;
+        _enemyAIManager.OnGoToClosestPOI -= EnemyAIManager_OnGoToClosestPOI;
+        _moveStateMachine.OnIsTheSamePosition -= MoveStateMachine_OnIsTheSamePosition;
+    }
+    // public void ForceStopMachine()
+    // {
+    //     _alertValue = 0;
+    // }
 }

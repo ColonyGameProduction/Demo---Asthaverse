@@ -126,6 +126,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         if(_fovMachine.enabled)_fovMachine.StopFOVMachine();
         _fovMachine.enabled = false;
     }
+    public virtual void AfterFinishDeathAnimation(){}
     
 
     public virtual void InitializeCharacter()

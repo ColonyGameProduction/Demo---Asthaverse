@@ -5,6 +5,7 @@ using UnityEngine;
 public class AnimatorCharacterHelp : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
+    [SerializeField] private CharacterIdentity _characterIdentity;
     [SerializeField] private UseWeaponStateMachine _useWeaponStateMachine;
     [Header("Foot")]
     [SerializeField][Range(0, 1f)] private float _distanceToGround;
@@ -13,11 +14,16 @@ public class AnimatorCharacterHelp : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _useWeaponStateMachine = GetComponentInParent<UseWeaponStateMachine>();
+        _characterIdentity = GetComponentInParent<CharacterIdentity>();
     }
 
     public void ReloadWeaponFinish()
     {
         _useWeaponStateMachine.ReloadAnimationFinished();
+    }
+    public void AfterDeathAnim()
+    {
+        _characterIdentity.AfterFinishDeathAnimation();
     }
     public void OnAnimatorIK(int layerIndex) 
     {

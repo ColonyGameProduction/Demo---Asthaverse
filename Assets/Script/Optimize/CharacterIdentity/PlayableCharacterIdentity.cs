@@ -21,6 +21,9 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [Header("   Health")]
     [SerializeField] protected float _totalHealthFriend;
     protected float _currHealthFriend;
+    private bool _isReviving;
+
+    [SerializeField] protected GameObject _deadColl;
 
     [Space(1)]
     [Header("   Armour")]
@@ -106,11 +109,14 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     public Transform InteractableTransform {get{return transform;}}
     public bool CanInteract {get{return IsDead;}}
+    public bool IsReviving {get {return _isReviving;} set { _isReviving = value;}}
+    public bool IsSilentKilling {get {return _getPlayableUseWeaponStateData.IsSilentKill;} set { _getPlayableUseWeaponStateData.IsSilentKill = value;}}
 
     #endregion
     protected override void Awake()
     {
         base.Awake();
+        if(_deadColl.activeSelf)_deadColl.gameObject.SetActive(false);
         _getPlayableMovementStateData = MovementStateMachine as PlayableMovementStateMachine;
         _getPlayableUseWeaponStateData = UseWeaponStateMachine as PlayableUseWeaponStateMachine;
         _getPlayableCamera = GetComponent<PlayableCamera>();
@@ -124,11 +130,11 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected override void Update() 
     {
         base.Update();
-        if(reviv)
-        {
-            reviv = false;
-            Revive();
-        }
+        // if(reviv)
+        // {
+        //     reviv = false;
+        //     Revive();
+        // }
     }
 
     public void InitializeFriend()
@@ -177,32 +183,31 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         base.Death();
         _isAnimatingOtherAnimation = true;
-        StartCoroutine(DeathANim());
     }
-    public IEnumerator DeathANim()
+
+    public override void AfterFinishDeathAnimation()
     {
-        yield return new WaitForSeconds(2f); // ded anim
         if(IsPlayerInput)OnPlayableDeath?.Invoke();
         _getPlayableMovementStateData.SetCharaGameObjRotationToNormal();
         _isAnimatingOtherAnimation = false;
+        _deadColl.SetActive(true);
         if(!_getPlayableMovementStateData.IsCrawling)
         {
             _getPlayableMovementStateData.IsCrawling = true;
         }
-        //state rangkak on
-        
     }
 
-    public void Revive()
+    public void Revive(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
-        _useWeaponStateMachine.ForceStopUseWeapon();
-        _moveStateMachine.ForceStopMoving();
+        ForceStopAllStateMachine();
+        _deadColl.SetActive(false);
         _isAnimatingOtherAnimation = true;
-        StartCoroutine(Reviving());
+        StartCoroutine(Reviving(characterIdentityWhoReviving));
     }
-    private IEnumerator Reviving()
+    private IEnumerator Reviving(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
         Debug.Log("reviving");
+        
         yield return new WaitForSeconds(2f);
         _animator.SetTrigger("ReviveTrigger");
         _fovMachine.enabled = true;
@@ -211,6 +216,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         ResetHealth();
 
         _isDead = false;
+        characterIdentityWhoReviving.IsReviving = false;
         _isAnimatingOtherAnimation = false;
         Debug.Log("reviving Done");
     }
@@ -235,8 +241,15 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     }
 
 
-    public void Interact()
+    public void Interact(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
-        Revive();
+        characterIdentityWhoReviving.IsReviving = true;
+        characterIdentityWhoReviving.ForceStopAllStateMachine();
+        Revive(characterIdentityWhoReviving);
+    }
+    public void ForceStopAllStateMachine()
+    {
+        _useWeaponStateMachine.ForceStopUseWeapon();
+        _moveStateMachine.ForceStopMoving();
     }
 }

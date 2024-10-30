@@ -7,5 +7,6 @@ public interface IPlayableMovementDataNeeded
     public Vector3 InputMovement { get; set;}
     bool IsMustLookForward{get; set;}
     void RotateToAim_Idle();
+    public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get ;}
     
 }

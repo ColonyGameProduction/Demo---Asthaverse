@@ -6,5 +6,5 @@ public interface IInteractable
 {
     public Transform InteractableTransform{get;}
     public bool CanInteract{get;}
-    void Interact();
+    void Interact(PlayableCharacterIdentity characterIdentity);
 }

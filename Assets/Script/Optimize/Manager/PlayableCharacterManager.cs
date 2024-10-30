@@ -394,16 +394,16 @@ public class PlayableCharacterManager : MonoBehaviour
     private void GameInput_OnInteractPerformed()
     {
         //Ntr kasi syarat lain
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead)_currPlayableInteraction.Interact();
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)_currPlayableInteraction.Interact();
     }
 
     private void GameInput_Movement()
     {
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead)_currPlayableMoveStateMachine.InputMovement = _gameInputManager.Movement();
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)_currPlayableMoveStateMachine.InputMovement = _gameInputManager.Movement();
     }
     private void GameInput_OnRunPerformed()
     {
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead)
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
         {
             foreach(PlayableCharacterIdentity chara in _charaIdentities)
             {
@@ -443,7 +443,7 @@ public class PlayableCharacterManager : MonoBehaviour
 
     private void GameInput_OnCrouchPerformed()
     {
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead)
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
         {
             if(_currPlayableMoveStateMachine.IsRunning)_currPlayableMoveStateMachine.IsRunning = false;
             _currPlayableMoveStateMachine.IsCrouching = true;
@@ -477,7 +477,7 @@ public class PlayableCharacterManager : MonoBehaviour
     private void GameInput_OnChangeWeaponPerformed()
     {
 
-        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !CurrPlayableChara.IsDead)
+        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
         {
             _currPlayableUseWeaponStateMachine.IsSwitchingWeapon = true;
         }
@@ -487,7 +487,7 @@ public class PlayableCharacterManager : MonoBehaviour
     {
         if(IsCommandingFriend)OnCommandingBoolChange?.Invoke(true, friendID);
 
-        if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead)return;
+        if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead || CurrPlayableChara.IsReviving || _currPlayableUseWeaponStateMachine.IsSilentKill)return;
         _currPlayableMoveStateMachine.ForceStopMoving();
         _currPlayableUseWeaponStateMachine.ForceStopUseWeapon();
         Time.timeScale = 0.2f;
@@ -533,14 +533,14 @@ public class PlayableCharacterManager : MonoBehaviour
 
     private void GameInput_OnSilentKillPerformed()
     {
-        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsDead)
+        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving)
         {
-            _currPlayableUseWeaponStateMachine.IsSilentKill = true;
+            _currPlayableInteraction.SilentKill();
         }
     }
     private void GameInput_OnShootingPerformed()
     {
-        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !CurrPlayableChara.IsDead)
+        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving)
         {   
             if(!_currPlayableUseWeaponStateMachine.IsAiming)_currPlayableUseWeaponStateMachine.IsAiming = true;
             _currPlayableUseWeaponStateMachine.IsUsingWeapon = true;
@@ -562,7 +562,7 @@ public class PlayableCharacterManager : MonoBehaviour
     }
     private void GameInput_OnScopePerformed()
     {
-        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead)
+        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving)
         {
             //KALO LAGI mo ngescope, tp blm aim, lsg aim nya nyalain jg
 
@@ -584,7 +584,7 @@ public class PlayableCharacterManager : MonoBehaviour
     }
     private void GameInput_OnReloadPerformed()
     {
-        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead)
+        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving)
         {
             _currPlayableUseWeaponStateMachine.IsReloading = true;
         }

@@ -19,7 +19,7 @@ public class EnemyAI_EngageState : EnemyAIState
 
     public override void UpdateState()
     {
-        if(_sm.AlertValue < _sm.MaxAlertValue / 2 || _sm.IsCharacterDead)
+        if(_sm.AlertValue < _sm.MaxAlertValue / 2 || _sm.IsCharacterDead || _sm.EnemyIdentity.IsSilentKilled)
         {
             _sm.SwitchState(_factory.AI_IdleState());
         }
@@ -47,7 +47,7 @@ public class EnemyAI_EngageState : EnemyAIState
                 if(!_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = true;
                 //kalo masuk sini pasti ada enemy, kalo ga pasti jd none || aturan d bwh jaga jaga biar ga error
                 if(_sm.GetFOVMachine.ClosestEnemy != null)StartShooting();
-                Debug.Log("pew pew pew");
+                // Debug.Log("pew pew pew");
 
             }
         }

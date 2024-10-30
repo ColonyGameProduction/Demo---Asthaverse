@@ -17,7 +17,7 @@ public class EnemyAI_IdleState : EnemyAIState
 
     public override void UpdateState()
     {
-        if(_sm.IsCharacterDead)
+        if(_sm.IsCharacterDead || _sm.EnemyIdentity.IsSilentKilled)
         {
             if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
             return;
