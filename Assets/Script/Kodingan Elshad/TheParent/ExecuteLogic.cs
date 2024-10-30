@@ -246,15 +246,18 @@ public class ExecuteLogic : AILogic
 
         System.Array.Sort(walls, ColliderSortArrayComparer);
 
+        if(wallsLength > 7)
+        {
+            wallsLength = 7;
+        }
+
         for (int i = 0; i <= wallsLength - 1; i++)
         {
 
             if (NavMesh.SamplePosition(walls[i].transform.position, out NavMeshHit hit, 5f, agent.areaMask))
             {
-                Debug.Log("hit position before find edge = " + hit.position);
                 if (NavMesh.FindClosestEdge(hit.position, out hit, agent.areaMask))
                 {
-                    Debug.Log("hit position after find edge = " + hit.position);
                     Vector3 directionToTarget = HitDirection(target, hit.position);
                     if (Vector3.Dot(hit.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
                     {

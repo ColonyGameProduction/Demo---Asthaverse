@@ -204,7 +204,7 @@ public class FriendsAI : ExecuteLogic
             tempDistance = 0;
             if (tempDistance > Vector3.Distance(transform.position, enemy.position) || tempDistance == 0)
             {
-                dis = visibleTargets[0].transform.position - transform.position;
+                dis = visibleTargets[0].transform.position - FOVPoint.transform.position;
                 tempDistance = Vector3.Distance(transform.position, enemy.position);
             }
         }
