@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Linq;
 using UnityEngine.Rendering;
 using UnityEngine.InputSystem.Android;
+using Unity.VisualScripting;
 
 /* PERHATIAN!!!
  * Kalo mau akses logic di skrip ini
@@ -235,7 +236,6 @@ public class ExecuteLogic : AILogic
                     break;
                 }
             }
-            
         }
 
         if(wallsLength <= 0)
@@ -243,75 +243,69 @@ public class ExecuteLogic : AILogic
             return;
         }
 
-        Debug.Log(wallsLength);
 
         System.Array.Sort(walls, ColliderSortArrayComparer);
 
-        for (int i = 0; i <= walls.Length - 1; i++)
+        for (int i = 0; i <= wallsLength - 1; i++)
         {
-            Debug.Log("Masuk Loop");
-            Debug.Log(walls[i]);
 
             if (NavMesh.SamplePosition(walls[i].transform.position, out NavMeshHit hit, 5f, agent.areaMask))
             {
-                Debug.Log(hit.normal + "Sample Position 1" + hit.position);
-                if (!NavMesh.FindClosestEdge(hit.position, out hit, agent.areaMask))
+                Debug.Log("hit position before find edge = " + hit.position);
+                if (NavMesh.FindClosestEdge(hit.position, out hit, agent.areaMask))
                 {
-                    Debug.Log("Unable to find edge close");
-                    continue;
-                }
-
-                Vector3 directionToTarget = HitDirection(target, hit.position);
-                if (Vector3.Dot(hit.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
-                {
-                    if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 100f)
+                    Debug.Log("hit position after find edge = " + hit.position);
+                    Vector3 directionToTarget = HitDirection(target, hit.position);
+                    if (Vector3.Dot(hit.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
                     {
-                        Debug.Log("Masuk Continue");
-                        continue;
-                    }
-                    Debug.Log(hit.normal + "Sample normal 11" + hit.position);
-
-                    // Debug.Log(hit.position);
-                    hit.position = CheckPositionBasedOnWall(hit.position, walls[i]);
-                    agent.SetDestination(hit.position);
-                    Debug.Log(hit.normal + "Sample normal 12" + hit.position);
-                    break;
-                }
-                else
-                {
-                    Vector3 coverPosition = walls[i].transform.position - directionToTarget * 2;
-                    if (NavMesh.SamplePosition(coverPosition, out NavMeshHit hit2, 2f, agent.areaMask))
-                    {
-
-                        //if (Vector3.Dot(hit2.normal, directionToTarget) < 0)
-                        //{
-                        //    agent.SetDestination(hit2.position);
-                        //    break;
-                        //}
-
-                        Debug.Log(hit2.normal + "Sample Position 2" + hit2.position);
-
-                        if (!NavMesh.FindClosestEdge(hit2.position, out hit2, agent.areaMask))
+                        if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 100f)
                         {
-                            Debug.Log("Unable to find edge close");
+                            Debug.Log("Masuk Continue");
                             continue;
                         }
-
-                        directionToTarget = HitDirection(target, hit.position);
-                        if (Vector3.Dot(hit2.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
+                        Vector3 edgePos = CheckPositionBasedOnWall(hit.position, walls[i]);
+                        if (walls[i].transform.localScale.y > agent.height)
                         {
-                            if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 100f)
-                            {
-                                Debug.Log("Masuk Continue");
-                                continue;
-                            }
-                            Debug.Log(hit2.normal + "Sample normal 21" + hit2.position);
+                            hit.position = edgePos;
+                        }
 
-                            // Debug.Log(hit2.position);
-                            hit2.position = CheckPositionBasedOnWall(hit2.position, walls[i]);
-                            agent.SetDestination(hit2.position);
-                            Debug.Log(hit2.normal + "Sample normal 22" + hit2.position);
-                            break;
+                        agent.SetDestination(hit.position);
+                        break;
+                    }
+                    else
+                    {
+                        Vector3 coverPosition = walls[i].transform.position - directionToTarget * 2;
+                        if (NavMesh.SamplePosition(coverPosition, out NavMeshHit hit2, 5f, agent.areaMask))
+                        {
+
+                            //if (Vector3.Dot(hit2.normal, directionToTarget) < 0)
+                            //{
+                            //    agent.SetDestination(hit2.position);
+                            //    break;
+                            //}
+
+                            Debug.Log("hit position before find edge 2 = " + hit.position);
+                            if (NavMesh.FindClosestEdge(hit.position, out hit2, agent.areaMask))
+                            {
+                                Debug.Log("hit position after find edge 2 = " + hit.position);
+                                directionToTarget = HitDirection(target, hit.position);
+                                if (Vector3.Dot(hit2.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
+                                {
+                                    if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 100f)
+                                    {
+                                        Debug.Log("Masuk Continue");
+                                        continue;
+                                    }
+
+                                    if (walls[i].transform.localScale.y > agent.height)
+                                    {
+                                        hit2.position = CheckPositionBasedOnWall(hit2.position, walls[i]);
+                                    }
+
+                                    agent.SetDestination(hit2.position);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
