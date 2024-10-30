@@ -128,9 +128,10 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
         Vector3 facedir = (AgentNavMesh.steeringTarget - transform.position).normalized;
         Vector3 animatedFaceDir = transform.InverseTransformDirection(facedir);
+        bool isFacingMoveDirection = Vector3.Dot(facedir, transform.forward) > .5f;
 
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, animatedFaceDir.x);
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, animatedFaceDir.z);
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL,isFacingMoveDirection ? animatedFaceDir.x : 0, 0.5f, Time.deltaTime);
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, isFacingMoveDirection ? animatedFaceDir.z : 0, 0.5f, Time.deltaTime);
 
     }
     public bool IsAIAtDirPos()

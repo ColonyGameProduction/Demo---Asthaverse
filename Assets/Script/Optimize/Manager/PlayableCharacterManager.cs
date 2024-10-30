@@ -488,7 +488,7 @@ public class PlayableCharacterManager : MonoBehaviour
         if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead)return;
         _currPlayableMoveStateMachine.ForceStopMoving();
         _currPlayableUseWeaponStateMachine.ForceStopUseWeapon();
-        Time.timeScale = 0.5f;
+        Time.timeScale = 0.2f;
 
         for(int i=0;i < _charaIdentities.Count;i++)
         {
