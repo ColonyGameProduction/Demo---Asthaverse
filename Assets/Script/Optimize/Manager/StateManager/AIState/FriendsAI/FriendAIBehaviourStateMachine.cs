@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     [Header("Friend AI States")]
     [SerializeField] protected bool _isAIIdle;
+    
     protected FriendAIState _currState;
     protected FriendAIStateFactory _states;
     protected bool _isAIInput;
@@ -53,11 +55,18 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     {
         _playableMoveStateMachine = _playableCharaIdentity.GetPlayableMovementData;
         _playableUseWeaponStateMachine = _playableCharaIdentity.GetPlayableUseWeaponData;
+        _playableMoveStateMachine.OnIsTheSamePosition += MoveStateMachine_OnIsTheSamePosition;
 
         // SwitchState(_states.AI_IdleState());
     }
 
-    
+
+
+    private void OnDrawGizmos() 
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, _wallScannerDistance);
+    }
     void Update()
     {
         if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || !IsAIInput || _playableCharaIdentity.IsAnimatingOtherAnimation || _playableCharaIdentity.IsReviving || _playableCharaIdentity.IsSilentKilling) 
@@ -67,34 +76,86 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
             // if(_charaIdentity.MovementStateMachine.CurrAIDirection != null)_charaIdentity.MovementStateMachine.ForceStopMoving();
             // return;
         }
-
-        if(!PlayableCharacterManager.IsCommandingFriend)
+        
+        _fovMachine.FOVJob();
+        if(!_isTakingCover)
         {
-            if(!IsToldHold)
+            if(!PlayableCharacterManager.IsCommandingFriend)
             {
-                if(_playableMoveStateMachine.IsIdle && !IsFriendTooFarFromPlayer()) _playableMoveStateMachine.SetAIDirection(transform.position);
-                else _playableMoveStateMachine.SetAIDirection(_friendsDefaultDirection.position);
+                if(!IsToldHold)
+                {
+                    if(!_canTakeCoverInThePosition)
+                    {
+                        if(_playableMoveStateMachine.IsIdle && !IsFriendTooFarFromPlayer()) _playableMoveStateMachine.SetAIDirection(transform.position);
+                        else _playableMoveStateMachine.SetAIDirection(_friendsDefaultDirection.position);
+                    }
+                    else
+                    {
+                        if(_canTakeCoverInThePosition)
+                        {
+                            _friendsCommandDirection.position = _takeCoverPosition;
+                            _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
+                        }
+                    }
+                                            
+                }
+                else
+                {
+                    if(_charaIdentity.IsDead)
+                    {
+                        isToldHold = false;
+                    }
+                    else
+                    {
+                        _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
+                    }
+                }
             }
-            else
+            else if(PlayableCharacterManager.IsCommandingFriend && GetPlayableCharaIdentity.FriendID == PlayableCharacterCommandManager.SelectedFriendID)
             {
                 if(_charaIdentity.IsDead)
                 {
-                    isToldHold = false;
+                    _playableMoveStateMachine.SetAIDirection(_friendsDefaultDirection.position);
                 }
-                else _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
+                else
+                {
+                    _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
+                }
+            }
+            if(_fovMachine.VisibleTargets.Count > 0)
+            {   
+                _leaveDirection = GetTotalDirectionTargetPosAndEnemy(transform, false);
+                TakingCover();
+                isToldHold = false;
             }
         }
-        else if(PlayableCharacterManager.IsCommandingFriend && GetPlayableCharaIdentity.FriendID == PlayableCharacterCommandManager.SelectedFriendID)
+        else
         {
-            if(_charaIdentity.IsDead)
+            // _isTakingCover = false;
+
+            IsToldHold = false;
+            if(_fovMachine.VisibleTargets.Count > 0)
             {
-                _playableMoveStateMachine.SetAIDirection(_friendsDefaultDirection.position);
+                TakingCover();
             }
             else
             {
-                _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
+                _canTakeCoverInThePosition = false;
             }
+            if(_canTakeCoverInThePosition)
+            {
+                _friendsCommandDirection.position = _takeCoverPosition;
+            }
+            else
+            {
+                _friendsCommandDirection.position = _friendsDefaultDirection.position;
+            }
+            _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
+            
+            
+            // Debug.LogError("Stop");
         }
+        
     }
     public override void SwitchState(BaseState newState)
     {
@@ -122,4 +183,13 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         if(Vector3.Distance(transform.position, _currPlayable.position) <= _mainPlayableMaxDistance) return false;
         return true;
     }
+
+    private void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos)
+    {
+        if(_canTakeCoverInThePosition && agentPos == _takeCoverPosition)
+        {
+            _canTakeCoverInThePosition = false;
+        }
+    }
+    
 }

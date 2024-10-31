@@ -188,13 +188,9 @@ public class CheckWall : MonoBehaviour
         Vector3 wallCenter = wallColl.bounds.center;
         Vector3 wallFwd = wallColl.transform.forward;
         Vector3 wallRight = wallColl.transform.right;
-        float wallLength = wallColl.transform.localScale.z;
-        float wallWidth = wallColl.transform.localScale.x;
 
         float halfWallLength = wallColl.transform.localScale.z * 0.5f;
         float halfWallWidth = wallColl.transform.localScale.x * 0.5f;
-
-
 
         
         Vector3 wallToTarget = targetPos - wallCenter;

@@ -31,7 +31,7 @@ public class PlayableInteraction : MonoBehaviour
         }
 
         _currSilentKillAble = GetClosestSilentkillable();
-        Debug.Log(_currSilentKillAble + " " + _silentKillAbleList.Count);
+        // Debug.Log(_currSilentKillAble + " " + _silentKillAbleList.Count);
         if(_currSilentKillAble != null)
         {
 
@@ -50,10 +50,10 @@ public class PlayableInteraction : MonoBehaviour
     }
     public void SilentKill()
     {
-        Debug.Log("Duarr");
+        // Debug.Log("Duarr");
         if(_currSilentKillAble != null)
         {
-            Debug.Log("Duarrss");
+            // Debug.Log("Duarrss");
             if(_silentKillAbleList.Contains(_currSilentKillAble))
             {
                 _silentKillAbleList.Remove(_currSilentKillAble);
@@ -120,11 +120,11 @@ public class PlayableInteraction : MonoBehaviour
         {
             Debug.Log("Hellooo");
             ISilentKillAble silentKillAble = other.gameObject.GetComponent<ISilentKillAble>() ?? other.gameObject.GetComponentInParent<ISilentKillAble>();
-            if(silentKillAble != null)Debug.Log(silentKillAble.SilentKillAbleTransform.name + " in1");
+            // if(silentKillAble != null)Debug.Log(silentKillAble.SilentKillAbleTransform.name + " in1");
             if(silentKillAble != null && !_silentKillAbleList.Contains(silentKillAble) && silentKillAble.CanBeKill)
             {
                 _silentKillAbleList.Add(silentKillAble);
-                Debug.Log(silentKillAble.SilentKillAbleTransform.name + " in2");
+                // Debug.Log(silentKillAble.SilentKillAbleTransform.name + " in2");
             }
         }
         
@@ -168,11 +168,11 @@ public class PlayableInteraction : MonoBehaviour
         if(other.gameObject.CompareTag("Enemy"))
         {
             ISilentKillAble silentKillAble = other.gameObject.GetComponent<ISilentKillAble>() ?? other.gameObject.GetComponentInParent<ISilentKillAble>();
-            if(silentKillAble != null)Debug.Log(silentKillAble.SilentKillAbleTransform.name + " out1");
+            // if(silentKillAble != null)Debug.Log(silentKillAble.SilentKillAbleTransform.name + " out1");
             if(silentKillAble != null && _silentKillAbleList.Contains(silentKillAble))
             {
                 _silentKillAbleList.Remove(silentKillAble);
-                Debug.Log(silentKillAble.SilentKillAbleTransform.name + " out2");
+                // Debug.Log(silentKillAble.SilentKillAbleTransform.name + " out2");
             }
         }
     }

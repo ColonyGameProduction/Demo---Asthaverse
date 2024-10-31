@@ -1,7 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[Serializable]
+public struct CharaControllerData
+{
+    public Vector3 center;
+    public float radius;
+    public float height;
+}
 public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovementData, IPlayableMovementDataNeeded
 {
     #region Normal Variable
@@ -15,6 +24,12 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     [SerializeField] protected float _crawlMultiplier;
     private float _crouchSpeed;
     private float _crawlSpeed;
+
+    [Space(1)]
+    [Header("CharaCon Data")]
+    private CharaControllerData _normalHeightCharaCon;
+    [SerializeField] private CharaControllerData _crouchHeightCharaCon;
+
 
     [Space(1)]
     [Header("For Rotation")]
@@ -59,6 +74,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         _canReceivePlayerInput.OnIsPlayerInputChange += CharaIdentity_OnIsPlayerInputChange; //When IsInputPlayerChange
 
         if(_cc == null)_cc = GetComponent<CharacterController>();
+        _normalHeightCharaCon.center = _cc.center;
+        _normalHeightCharaCon.radius = _cc.radius;
+        _normalHeightCharaCon.height = _cc.height;
+
+
         if(_playableLookTarget == null) _playableLookTarget = GetComponent<PlayableCamera>().GetFollowTarget;
     }
 
@@ -131,4 +151,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     }
     #endregion
     private void CharaIdentity_OnIsPlayerInputChange(bool isPlayerInput) => _isAIInput = !isPlayerInput;
+
+    private void SetCharaConHeight(CharaControllerData data)
+    {
+        _cc.center = data.center;
+        _cc.radius = data.radius;
+        _cc.height = data.height;
+    }
 }
