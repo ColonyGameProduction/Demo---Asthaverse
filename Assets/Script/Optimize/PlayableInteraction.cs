@@ -22,6 +22,7 @@ public class PlayableInteraction : MonoBehaviour
 
     private void Update() 
     {
+        if(!_playableCharacterIdentity.IsPlayerInput)return;
         _currInteractable = GetClosestInteractables();
         if(_currInteractable != null)
         {

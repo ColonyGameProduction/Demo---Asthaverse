@@ -10,8 +10,7 @@ using UnityEngine;
 public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 {
     [Header("test")]
-    public bool ded;
-    public bool reviv;
+    public bool immortalized;
 
     #region Normal Variable
     [Header("CHARACTER SCRIPTABLE OBJECT STAT")]
@@ -51,7 +50,10 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     [Header("   Stealth")]
     protected float _stealthStats;
     #endregion
-
+    [Header("Regen Stats")]
+    [SerializeField] protected float _regenScale = 0.7f;
+    protected float _regenCDTimer;
+    [SerializeField]protected float _regenTimerMax = 0.5f;
     #endregion
 
     #region GETTERSETTER Variable
@@ -60,6 +62,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     public virtual float StealthStat { get{ return _stealthStats; }}
     public virtual float TotalHealth {get { return _totalHealth; } }
     public virtual float CurrHealth {get {return _currHealth; } set { _currHealth = value; } }
+    public virtual bool IsHalfHealthOrLower {get {return _currHealth <= _totalHealth/2; }} 
     public bool IsDead {get { return _isDead;}}
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
@@ -86,11 +89,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 
     protected virtual void Update()
     {
-        if(ded)
-        {
-            ded = false;
-            Hurt (CurrHealth);
-        }
+        RegenerationTimer();
     }
     private void UseWeapon_OnWasUsinghGun()
     {
@@ -100,12 +99,13 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     public virtual void Hurt(float Damage)
     {
         if(CurrHealth <= 0)return;
-
+        
+        _regenCDTimer = _regenTimerMax;
         CurrHealth -= Damage;
         if(CurrHealth <= 0)
         {
             CurrHealth = 0;
-            Death();
+            if(!immortalized)Death();
         }
     }
     public virtual void Heal(float Healing)
@@ -115,9 +115,26 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         CurrHealth += Healing;
         if(CurrHealth >= TotalHealth) CurrHealth = TotalHealth;
     }
+    protected virtual void Regeneration()
+    {
+        Heal(TotalHealth * _regenScale * Time.deltaTime);
+    }
+    protected void RegenerationTimer()
+    {
+        if(CurrHealth <= TotalHealth && !IsDead)
+        {
+            if(_regenCDTimer > 0)_regenCDTimer -= Time.deltaTime;
+            else
+            {
+                _regenCDTimer = 0;
+                Regeneration();
+            }
+        }
+    }
 
     public virtual void Death()
     {
+        _regenCDTimer = 0f;
         _animator.SetBool("Death", true);
         _animator.SetTrigger("DeathTrigger");
         _isDead = true;

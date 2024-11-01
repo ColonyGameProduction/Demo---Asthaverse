@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBehaviourStateData
+public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBehaviourStateData, IUnsubscribeEvent
 {
     #region  Normal Variable
     [Space(2)]
     [Header("Other Component Variable")]
+    [SerializeField] private EnemyAIManager _enemyAIManager;
     protected IReceiveInputFromPlayer _getCanInputPlayer;
     private bool isToldHold;
     private Transform _friendsDefaultDirection;
@@ -21,10 +22,15 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     [Header("Friend AI States")]
     [SerializeField] protected bool _isAIIdle;
+    [SerializeField] protected bool _isAIEngage;
+    [SerializeField] protected float _isEngageTimer;
+    [SerializeField] protected float _isEngageTimerMax = 0.3f;
     
     protected FriendAIState _currState;
     protected FriendAIStateFactory _states;
     protected bool _isAIInput;
+
+
 
     #endregion
 
@@ -32,8 +38,11 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     public bool IsToldHold {get {return isToldHold;} set {isToldHold = value;} }
 
     public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
-
+    public bool IsAIEngage {get {return _isAIEngage;} set {_isAIEngage = value;}}
     public bool IsAIInput {get {return _isAIInput;}}
+    public Transform FriendsDefaultDirection {get {return _friendsDefaultDirection;}}   
+    public Transform FriendsCommandDirection {get {return _friendsCommandDirection;}}    
+
 
     public PlayableCharacterIdentity GetPlayableCharaIdentity { get { return _playableCharaIdentity; } }    
     public PlayableMovementStateMachine GetMoveStateMachine { get { return _playableMoveStateMachine; } }
@@ -43,7 +52,6 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     {
         base.Awake();
         _playableCharaIdentity = _charaIdentity as PlayableCharacterIdentity;
-        
 
         _getCanInputPlayer = GetComponent<IReceiveInputFromPlayer>();
         _isAIInput = !_getCanInputPlayer.IsPlayerInput;
@@ -53,11 +61,16 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     }
     void Start()
     {
+        _enemyAIManager = EnemyAIManager.Instance;
+        _enemyAIManager.OnEnemyisEngaging += OnEnemyStartedEngaging;
+        _enemyAIManager.OnEnemyStopEngaging += OnEnemyStopEngaging;
+
+        
         _playableMoveStateMachine = _playableCharaIdentity.GetPlayableMovementData;
         _playableUseWeaponStateMachine = _playableCharaIdentity.GetPlayableUseWeaponData;
         _playableMoveStateMachine.OnIsTheSamePosition += MoveStateMachine_OnIsTheSamePosition;
 
-        // SwitchState(_states.AI_IdleState());
+        SwitchState(_states.AI_IdleState());
     }
 
 
@@ -69,93 +82,15 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     }
     void Update()
     {
-        if(PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || !IsAIInput || _playableCharaIdentity.IsAnimatingOtherAnimation || _playableCharaIdentity.IsReviving || _playableCharaIdentity.IsSilentKilling) 
-        {
-            if(_playableMoveStateMachine.CurrAIDirPos != transform.position)_playableMoveStateMachine.ForceStopMoving();
-            return;
-            // if(_charaIdentity.MovementStateMachine.CurrAIDirection != null)_charaIdentity.MovementStateMachine.ForceStopMoving();
-            // return;
-        }
-        
         _fovMachine.FOVJob();
-        if(!_isTakingCover)
-        {
-            if(!PlayableCharacterManager.IsCommandingFriend)
-            {
-                if(!IsToldHold)
-                {
-                    if(!_canTakeCoverInThePosition)
-                    {
-                        if(_playableMoveStateMachine.IsIdle && !IsFriendTooFarFromPlayer()) _playableMoveStateMachine.SetAIDirection(transform.position);
-                        else _playableMoveStateMachine.SetAIDirection(_friendsDefaultDirection.position);
-                    }
-                    else
-                    {
-                        if(_canTakeCoverInThePosition)
-                        {
-                            _friendsCommandDirection.position = _takeCoverPosition;
-                            _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
-                        }
-                    }
-                                            
-                }
-                else
-                {
-                    if(_charaIdentity.IsDead)
-                    {
-                        isToldHold = false;
-                    }
-                    else
-                    {
-                        _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
-                    }
-                }
-            }
-            else if(PlayableCharacterManager.IsCommandingFriend && GetPlayableCharaIdentity.FriendID == PlayableCharacterCommandManager.SelectedFriendID)
-            {
-                if(_charaIdentity.IsDead)
-                {
-                    _playableMoveStateMachine.SetAIDirection(_friendsDefaultDirection.position);
-                }
-                else
-                {
-                    _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
-                }
-            }
-            if(_fovMachine.VisibleTargets.Count > 0)
-            {   
-                _leaveDirection = GetTotalDirectionTargetPosAndEnemy(transform, false);
-                TakingCover();
-                isToldHold = false;
-            }
+        DetectEnemy();
+        GotDetectedTimerCounter();
+        if(_gotDetectedByEnemy)
+        {   
+            _leaveDirection = GetTotalDirectionTargetPosAndEnemy(transform, false);
         }
-        else
-        {
-            // _isTakingCover = false;
+        _currState?.UpdateState();
 
-            IsToldHold = false;
-            if(_fovMachine.VisibleTargets.Count > 0)
-            {
-                TakingCover();
-            }
-            else
-            {
-                _canTakeCoverInThePosition = false;
-            }
-            if(_canTakeCoverInThePosition)
-            {
-                _friendsCommandDirection.position = _takeCoverPosition;
-            }
-            else
-            {
-                _friendsCommandDirection.position = _friendsDefaultDirection.position;
-            }
-            _playableMoveStateMachine.SetAIDirection(_friendsCommandDirection.position);
-            
-            
-            // Debug.LogError("Stop");
-        }
-        
     }
     public override void SwitchState(BaseState newState)
     {
@@ -177,7 +112,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         _friendsCommandDirection = commandPos;
     }
 
-    private bool IsFriendTooFarFromPlayer()
+    public bool IsFriendTooFarFromPlayer()
     {
         // Debug.Log(transform.position + " " + _currPlayable.position + " " + Vector3.Distance(transform.position, _currPlayable.position));
         if(Vector3.Distance(transform.position, _currPlayable.position) <= _mainPlayableMaxDistance) return false;
@@ -186,10 +121,32 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     private void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos)
     {
-        if(_canTakeCoverInThePosition && agentPos == _takeCoverPosition)
+        if(IsAIIdle && GotDetectedbyEnemy && LeaveDirection != Vector3.zero && agentPos == _runAwayPos)
         {
-            _canTakeCoverInThePosition = false;
+            GetMoveStateMachine.IsRunning = false;
         }
     }
-    
+
+
+    private void OnEnemyStartedEngaging()
+    {
+        IsAIEngage = true;
+    }
+    private void OnEnemyStopEngaging()
+    {
+        IsAIEngage = false;
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _getCanInputPlayer.OnIsPlayerInputChange -= CharaIdentity_OnIsPlayerInputChange;
+        _enemyAIManager.OnEnemyisEngaging -= OnEnemyStartedEngaging;
+        _enemyAIManager.OnEnemyStopEngaging -= OnEnemyStopEngaging;
+        _playableMoveStateMachine.OnIsTheSamePosition -= MoveStateMachine_OnIsTheSamePosition;
+    }
+    protected override bool IsPassedWallHeightChecker(float wallHeight, float charaHeight)
+    {
+        if(wallHeight <= charaHeight * (5/8)) return false;
+        return true;
+    }
 }

@@ -6,6 +6,7 @@ public class FriendAIState : BaseState
 {
     protected FriendAIStateFactory _factory;
     protected FriendAIBehaviourStateMachine _sm;
+
     public FriendAIState(FriendAIBehaviourStateMachine currStateMachine, FriendAIStateFactory factory)
     {
         _factory = factory;

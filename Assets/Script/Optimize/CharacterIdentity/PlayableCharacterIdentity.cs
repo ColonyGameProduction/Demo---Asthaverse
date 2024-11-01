@@ -77,6 +77,14 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             else _currHealthFriend = value; 
         }
     }
+    public override bool IsHalfHealthOrLower 
+    {
+        get
+        {
+            if(IsPlayerInput)return _currHealth <= _totalHealth/2;
+            else return _currHealthFriend <= _totalHealthFriend/2;
+        }
+    }
 
     [Header("Event")]
     public Action OnPlayableDeath;
@@ -224,6 +232,14 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public void TurnOnOffFriendAI(bool isTurnOn)
     {
         FriendAIStateMachine.enabled = isTurnOn;
+        if(!isTurnOn)
+        {
+            if(FriendAIStateMachine.IsAIEngage)
+            {
+                FriendAIStateMachine.IsAIEngage = false;
+                FriendAIStateMachine.IsAIIdle = true;
+            }
+        }
         if(isTurnOn)
         {
             if(!IsDead)FOVMachine.enabled = isTurnOn;

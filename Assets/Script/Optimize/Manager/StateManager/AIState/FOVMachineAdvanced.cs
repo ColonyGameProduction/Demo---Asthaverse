@@ -13,8 +13,7 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
     [SerializeField] protected string _enemyCharaTag;
     protected Transform _closestBreadCrumbs;
 
-    [SerializeField]protected bool _hasToCheckEnemyLastSeenPosition;
-    [SerializeField]protected Vector3 _enemyCharalastSeenPosition;
+    
 
     #endregion
     #region GETTER SETTER VARIABLE
@@ -22,8 +21,7 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
     public FOVDistState CurrState { get{return _currstate;} } // enemy ada d mana
     public List<Transform> OtherVisibleTargets {get {return _otherVisibleTargets;} }
     public Transform ClosestBreadCrumbs {get {return _closestBreadCrumbs;}}
-    public Vector3 EnemyCharalastSeenPosition {get {return _enemyCharalastSeenPosition;} set { _enemyCharalastSeenPosition = value;}}
-    public bool HasToCheckEnemyLastSeenPosition {get {return _hasToCheckEnemyLastSeenPosition;}}
+    
     #endregion
     
 
@@ -121,16 +119,6 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
         }
         
     }
-    public override void GetClosestEnemy()
-    {
-        base.GetClosestEnemy();
-        if(_closestEnemy != null)
-        {
-            _hasToCheckEnemyLastSeenPosition = true;
-            _enemyCharalastSeenPosition = _closestEnemy.position;
-        }
-        
-    }
 
     public float GetMinimalPlayableStealth()
     {
@@ -143,15 +131,7 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
         }
         return minStealth;
     }
-    public void IsCheckingEnemyLastPosition()
-    {
-        _hasToCheckEnemyLastSeenPosition = false;
-    }
-    public void GoToEnemyLastSeenPosition(Vector3 enemyCharaLastSeenPosition)
-    {
-        _hasToCheckEnemyLastSeenPosition = true;
-        _enemyCharalastSeenPosition = enemyCharaLastSeenPosition;
-    }
+    
 
 }
 

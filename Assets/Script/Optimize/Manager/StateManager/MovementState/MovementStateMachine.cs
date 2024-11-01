@@ -41,6 +41,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [Space(1)]
     [Header("AI Rotation")]
     protected Vector3 _idleAILookTarget; //position for AI To look at
+    protected bool _isReceivePosADirection;
     protected bool _allowLookTargetWhileIdle;
 
     public Action<Vector3> OnIsTheSamePosition;
@@ -177,13 +178,16 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     {
         _currAIDirPos = newPos;
     }
-    public void SetAITargetToLook(Vector3 posToLook)
+    public void SetAITargetToLook(Vector3 posToLook, bool isReceivePosADirection)
     {
         _idleAILookTarget = posToLook;
+        _isReceivePosADirection = isReceivePosADirection;
     }
     public void RotateAIToTarget_Idle()
     {
-        Vector3 facedir = (_idleAILookTarget - transform.position).normalized;
+        Vector3 facedir = Vector3.zero;
+        if(!_isReceivePosADirection)facedir = (_idleAILookTarget - transform.position).normalized;
+        else facedir = _idleAILookTarget;
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
     }
     #endregion

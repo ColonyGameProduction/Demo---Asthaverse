@@ -21,6 +21,14 @@ public class EnemyAIManager : MonoBehaviour
     public Action<EnemyAIBehaviourStateMachine> OnCaptainsStartEngaging;
     public Action<EnemyAIBehaviourStateMachine> OnFoundLastCharaSeenPos;
     public Action OnGoToClosestPOI;
+    public Action OnEnemyisEngaging;
+    public Action OnEnemyStopEngaging;
+
+    [Header("Engage timer for telling")]
+    [SerializeField] protected float _isEngageTimer;
+    [SerializeField] protected float _isEngageTimerMax = 0.3f;
+    private bool hasToShoutStopEngage;
+    private bool _isEnemyEngaging;
     #endregion
     
     #region GETTER SETTER VARIABLE
@@ -30,6 +38,7 @@ public class EnemyAIManager : MonoBehaviour
     public List<EnemyAIBehaviourStateMachine> EnemyCaptainList {get {return _enemyCaptainList;}}
     public List<EnemyAIBehaviourStateMachine> EnemyHearAnnouncementList {get {return _enemyHearAnnouncementList;}}
     public float EnemyAnnouncementMaxRange {get {return _enemyAnnouncementMaxRange;}}
+    public bool IsEnemyEngaging { get {return _isEnemyEngaging;} }
 
     #endregion
     private void Awake() 
@@ -39,6 +48,11 @@ public class EnemyAIManager : MonoBehaviour
     private void Start()
     {
         OnFoundLastCharaSeenPos += FindAllPOINearLastSeenPos;
+        OnEnemyisEngaging += EnemyisEngaging;
+    }
+    private void Update() 
+    {
+        EngageTimerCounter();
     }
 
     private void FindAllPOINearLastSeenPos(EnemyAIBehaviourStateMachine enemy)
@@ -140,6 +154,30 @@ public class EnemyAIManager : MonoBehaviour
         }
         
         return closestPOI;
+    }
+    private void EnemyisEngaging()
+    {
+        _isEngageTimer = _isEngageTimerMax;
+        _isEnemyEngaging = true;
+        if(!hasToShoutStopEngage)hasToShoutStopEngage = true;
+    }
+    public void EngageTimerCounter()
+    {
+        if(_isEngageTimer > 0)
+        {
+            _isEngageTimer -= Time.deltaTime;   
+        }
+        else
+        {
+            if(hasToShoutStopEngage)
+            {
+                _isEngageTimer = 0f;
+                OnEnemyStopEngaging?.Invoke();
+                _isEnemyEngaging = false;
+                hasToShoutStopEngage = false;
+            }
+            
+        }
     }
 
 }

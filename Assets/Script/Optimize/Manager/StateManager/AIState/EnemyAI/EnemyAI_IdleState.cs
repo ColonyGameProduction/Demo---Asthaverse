@@ -27,7 +27,7 @@ public class EnemyAI_IdleState : EnemyAIState
         if(_sm.GetFOVState.CurrState != FOVDistState.none)
         {
             if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
-            _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position);
+            _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position, false);
             if(!_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = true;
             
             if(_sm.GetFOVState.CurrState == FOVDistState.middle)

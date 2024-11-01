@@ -43,6 +43,9 @@ public class FOVMachine : MonoBehaviour
     
 
     private IEnumerator _findTarget;
+
+    [SerializeField]protected bool _hasToCheckEnemyLastSeenPosition;
+    [SerializeField]protected Vector3 _enemyCharalastSeenPosition;
     #endregion
     
     
@@ -53,6 +56,10 @@ public class FOVMachine : MonoBehaviour
     public List<Transform> VisibleTargets {get {return _visibleTargets;} }
     
     public Transform ClosestEnemy {get {return _closestEnemy;}}
+    public Vector3 EnemyCharalastSeenPosition {get {return _enemyCharalastSeenPosition;} set { _enemyCharalastSeenPosition = value;}}
+    public bool HasToCheckEnemyLastSeenPosition {get {return _hasToCheckEnemyLastSeenPosition;}}
+    public LayerMask GroundMask {get {return _groundMask;}}
+
     
 
     #endregion
@@ -409,8 +416,20 @@ public class FOVMachine : MonoBehaviour
             }
         }
         _closestDistance = _tempDistanceEnemy;
-        
+        if(_closestEnemy != null)
+        {
+            _hasToCheckEnemyLastSeenPosition = true;
+            _enemyCharalastSeenPosition = _closestEnemy.position;
+        }
     }
     
-    
+    public void IsCheckingEnemyLastPosition()
+    {
+        _hasToCheckEnemyLastSeenPosition = false;
+    }
+    public void GoToEnemyLastSeenPosition(Vector3 enemyCharaLastSeenPosition)
+    {
+        _hasToCheckEnemyLastSeenPosition = true;
+        _enemyCharalastSeenPosition = enemyCharaLastSeenPosition;
+    }
 }
