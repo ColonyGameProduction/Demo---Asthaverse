@@ -3,17 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper, ICanInputPlayer, ICanSwitchWeapon
+public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper, IReceiveInputFromPlayer, ICanSwitchWeapon, IInteractable
 {
     
     [Space(1)]
     [Header("Input Control Now")]
-    [SerializeField]protected bool _isInputPlayer;
-    public event Action<bool> OnInputPlayerChange;
+    [SerializeField]protected bool _isPlayerInput;
+    public event Action<bool> OnIsPlayerInputChange;
 
     [Header("Friend Data Helper")]
     [SerializeField] protected GameObject[] _friendsNormalPosition;
     protected int _friendID;
+    [SerializeField] private EntityStatSO _friendStatSO;
+        #region Friend STATS
+
+    [Space(1)]
+    [Header("   Health")]
+    [SerializeField] protected float _totalHealthFriend;
+    protected float _currHealthFriend;
+    private bool _isReviving;
+
+    [SerializeField] protected GameObject _deadColl;
+
+    [Space(1)]
+    [Header("   Armour")]
+    protected armourType _armourTypeFriend;
+    protected float _armourFriend;
+
+    [Space(1)]
+    [Header("   Stealth")]
+    protected float _stealthStatsFriend;
+        #endregion
     
     [Space(5)]
     [Header("No Inspector Variable")]
@@ -21,6 +41,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected PlayableMovementStateMachine _getPlayableMovementStateData;
     protected PlayableUseWeaponStateMachine _getPlayableUseWeaponStateData;
     protected PlayableCamera _getPlayableCamera;
+    protected PlayableInteraction _getPlayableInteraction;
 
     protected FriendAIBehaviourStateMachine _friendAIStateMachine;
     
@@ -29,19 +50,55 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     private bool _isAnimatingOtherAnimation;
     #region GETTERSETTER Variable
 
+    public override float StealthStat 
+    { 
+        get{ 
+            if(IsPlayerInput)return _stealthStats; 
+            else return _stealthStatsFriend; 
+        }
+    }
+    public override float TotalHealth
+    { 
+        get{ 
+            if(IsPlayerInput)return _totalHealth; 
+            else return _totalHealthFriend; 
+        }
+    }
+    public override float CurrHealth
+    { 
+        get
+        { 
+            if(IsPlayerInput)return _currHealth; 
+            else return _currHealthFriend; 
+        }
+        set
+        {
+            if(IsPlayerInput) _currHealth = value; 
+            else _currHealthFriend = value; 
+        }
+    }
+    public override bool IsHalfHealthOrLower 
+    {
+        get
+        {
+            if(IsPlayerInput)return _currHealth <= _totalHealth/2;
+            else return _currHealthFriend <= _totalHealthFriend/2;
+        }
+    }
+
     [Header("Event")]
     public Action OnPlayableDeath;
     [HideInInspector]
     //Getter Setter
-    public bool IsInputPlayer 
+    public bool IsPlayerInput 
     { 
-        get { return _isInputPlayer; } 
+        get { return _isPlayerInput; } 
         set
         { 
-            if(IsInputPlayer != value)
+            if(_isPlayerInput != value)
             {
-                _isInputPlayer = value;
-                OnInputPlayerChange?.Invoke(_isInputPlayer);
+                _isPlayerInput = value;
+                OnIsPlayerInputChange?.Invoke(_isPlayerInput);
             }
         } 
     }
@@ -51,19 +108,28 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public PlayableMovementStateMachine GetPlayableMovementData {get { return _getPlayableMovementStateData;}}
     public PlayableUseWeaponStateMachine GetPlayableUseWeaponData {get { return _getPlayableUseWeaponStateData;}}
     public PlayableCamera GetPlayableCamera {get {return _getPlayableCamera;}}
+    public PlayableInteraction GetPlayableInteraction {get {return _getPlayableInteraction;}}
 
     public FriendAIBehaviourStateMachine FriendAIStateMachine {get { return _friendAIStateMachine;}}
     public FOVMachine FOVMachine{get { return _fovMachine;}}
 
     public bool IsAnimatingOtherAnimation {get {return _isAnimatingOtherAnimation;}}
-    
+
+    public Transform InteractableTransform {get{return transform;}}
+    public bool CanInteract {get{return IsDead;}}
+    public bool IsReviving {get {return _isReviving;} set { _isReviving = value;}}
+    public bool IsSilentKilling {get {return _getPlayableUseWeaponStateData.IsSilentKill;} set { _getPlayableUseWeaponStateData.IsSilentKill = value;}}
+
     #endregion
     protected override void Awake()
     {
         base.Awake();
+        if(_deadColl.activeSelf)_deadColl.gameObject.SetActive(false);
         _getPlayableMovementStateData = MovementStateMachine as PlayableMovementStateMachine;
         _getPlayableUseWeaponStateData = UseWeaponStateMachine as PlayableUseWeaponStateMachine;
         _getPlayableCamera = GetComponent<PlayableCamera>();
+        _getPlayableInteraction = GetComponentInChildren<PlayableInteraction>();
+        InitializeFriend();
 
 
         _friendAIStateMachine = GetComponent<FriendAIBehaviourStateMachine>();
@@ -72,13 +138,32 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected override void Update() 
     {
         base.Update();
-        if(reviv)
-        {
-            reviv = false;
-            Revive();
-        }
+        // if(reviv)
+        // {
+        //     reviv = false;
+        //     Revive();
+        // }
     }
-    
+
+    public void InitializeFriend()
+    {
+        if(_friendStatSO == null) 
+        {
+            _currHealthFriend = _totalHealthFriend;
+            return;
+        }
+
+        _totalHealthFriend = _friendStatSO.health;
+        _currHealthFriend = _totalHealthFriend;
+
+        _armourTypeFriend = _friendStatSO.armourType;
+        _armourFriend = _friendStatSO.armor;
+
+        GetPlayableUseWeaponData.SetCharaFriendAccuracy(_friendStatSO.acuracy);
+        _stealthStatsFriend = _friendStatSO.stealth;
+
+    }
+
     public override void ReloadWeapon()
     {
         float bulletNeed = CurrWeapon.weaponStatSO.magSize - CurrWeapon.currBullet;
@@ -106,40 +191,40 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         base.Death();
         _isAnimatingOtherAnimation = true;
-        StartCoroutine(DeathANim());
     }
-    public IEnumerator DeathANim()
+
+    public override void AfterFinishDeathAnimation()
     {
-        yield return new WaitForSeconds(2f); // ded anim
-        if(IsInputPlayer)OnPlayableDeath?.Invoke();
+        if(IsPlayerInput)OnPlayableDeath?.Invoke();
         _getPlayableMovementStateData.SetCharaGameObjRotationToNormal();
         _isAnimatingOtherAnimation = false;
+        _deadColl.SetActive(true);
         if(!_getPlayableMovementStateData.IsCrawling)
         {
             _getPlayableMovementStateData.IsCrawling = true;
         }
-        //state rangkak on
-        
     }
 
-    public void Revive()
+    public void Revive(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
-        _useWeaponStateMachine.ForceStopUseWeapon();
-        _moveStateMachine.ForceStopMoving();
+        ForceStopAllStateMachine();
+        _deadColl.SetActive(false);
         _isAnimatingOtherAnimation = true;
-        StartCoroutine(Reviving());
+        StartCoroutine(Reviving(characterIdentityWhoReviving));
     }
-    private IEnumerator Reviving()
+    private IEnumerator Reviving(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
         Debug.Log("reviving");
+        
         yield return new WaitForSeconds(2f);
         _animator.SetTrigger("ReviveTrigger");
         _fovMachine.enabled = true;
 
         if(_getPlayableMovementStateData.IsCrawling)_getPlayableMovementStateData.IsCrawling = false;
-        _currhealth = _totalHealth;
+        ResetHealth();
 
         _isDead = false;
+        characterIdentityWhoReviving.IsReviving = false;
         _isAnimatingOtherAnimation = false;
         Debug.Log("reviving Done");
     }
@@ -147,6 +232,14 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public void TurnOnOffFriendAI(bool isTurnOn)
     {
         FriendAIStateMachine.enabled = isTurnOn;
+        if(!isTurnOn)
+        {
+            if(FriendAIStateMachine.IsAIEngage)
+            {
+                FriendAIStateMachine.IsAIEngage = false;
+                FriendAIStateMachine.IsAIIdle = true;
+            }
+        }
         if(isTurnOn)
         {
             if(!IsDead)FOVMachine.enabled = isTurnOn;
@@ -155,5 +248,24 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         {
             if(FOVMachine.enabled) FOVMachine.enabled = isTurnOn;
         }
+    }
+
+    public void ResetHealth()
+    {
+        _currHealth = _totalHealth;
+        _currHealthFriend = _totalHealthFriend;
+    }
+
+
+    public void Interact(PlayableCharacterIdentity characterIdentityWhoReviving)
+    {
+        characterIdentityWhoReviving.IsReviving = true;
+        characterIdentityWhoReviving.ForceStopAllStateMachine();
+        Revive(characterIdentityWhoReviving);
+    }
+    public void ForceStopAllStateMachine()
+    {
+        _useWeaponStateMachine.ForceStopUseWeapon();
+        _moveStateMachine.ForceStopMoving();
     }
 }

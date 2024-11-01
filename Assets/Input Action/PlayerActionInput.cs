@@ -145,6 +145,42 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""CommandFriend1"",
+                    ""type"": ""Button"",
+                    ""id"": ""fcb6ce12-f4b2-42f6-a5ef-57df6ada4e8b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CommandFriend2"",
+                    ""type"": ""Button"",
+                    ""id"": ""33d23430-c250-4460-850e-2f962a033942"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ExitCommand"",
+                    ""type"": ""Button"",
+                    ""id"": ""93be8564-6b13-4a85-bea0-d938476786aa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RegroupFriend"",
+                    ""type"": ""Button"",
+                    ""id"": ""e684fd00-42a9-45e1-824c-5d96317f38b4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""44403a63-af6d-400c-b989-041ffc7ba145"",
@@ -187,7 +223,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""ce50390c-ee25-4867-8064-458229c96c72"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -392,6 +428,50 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""NightVision"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c7959ed7-cc80-4d9e-af2b-02106a9f5926"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CommandFriend2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8fe09bb1-fd1d-45d7-a438-2c8be20635a1"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CommandFriend1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f59f7b38-3d4b-4adf-85fe-825f7ef64e12"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RegroupFriend"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1be8e208-dde3-43c4-b874-86b4ce71ac13"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ExitCommand"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -413,6 +493,10 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_UnCommand = m_InputPlayerAction.FindAction("UnCommand", throwIfNotFound: true);
         m_InputPlayerAction_HoldPosition = m_InputPlayerAction.FindAction("HoldPosition", throwIfNotFound: true);
         m_InputPlayerAction_UnHoldPosition = m_InputPlayerAction.FindAction("UnHoldPosition", throwIfNotFound: true);
+        m_InputPlayerAction_CommandFriend1 = m_InputPlayerAction.FindAction("CommandFriend1", throwIfNotFound: true);
+        m_InputPlayerAction_CommandFriend2 = m_InputPlayerAction.FindAction("CommandFriend2", throwIfNotFound: true);
+        m_InputPlayerAction_ExitCommand = m_InputPlayerAction.FindAction("ExitCommand", throwIfNotFound: true);
+        m_InputPlayerAction_RegroupFriend = m_InputPlayerAction.FindAction("RegroupFriend", throwIfNotFound: true);
         m_InputPlayerAction_Interact = m_InputPlayerAction.FindAction("Interact", throwIfNotFound: true);
         m_InputPlayerAction_SkillButton = m_InputPlayerAction.FindAction("SkillButton", throwIfNotFound: true);
         m_InputPlayerAction_NightVision = m_InputPlayerAction.FindAction("NightVision", throwIfNotFound: true);
@@ -490,6 +574,10 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_UnCommand;
     private readonly InputAction m_InputPlayerAction_HoldPosition;
     private readonly InputAction m_InputPlayerAction_UnHoldPosition;
+    private readonly InputAction m_InputPlayerAction_CommandFriend1;
+    private readonly InputAction m_InputPlayerAction_CommandFriend2;
+    private readonly InputAction m_InputPlayerAction_ExitCommand;
+    private readonly InputAction m_InputPlayerAction_RegroupFriend;
     private readonly InputAction m_InputPlayerAction_Interact;
     private readonly InputAction m_InputPlayerAction_SkillButton;
     private readonly InputAction m_InputPlayerAction_NightVision;
@@ -510,6 +598,10 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @UnCommand => m_Wrapper.m_InputPlayerAction_UnCommand;
         public InputAction @HoldPosition => m_Wrapper.m_InputPlayerAction_HoldPosition;
         public InputAction @UnHoldPosition => m_Wrapper.m_InputPlayerAction_UnHoldPosition;
+        public InputAction @CommandFriend1 => m_Wrapper.m_InputPlayerAction_CommandFriend1;
+        public InputAction @CommandFriend2 => m_Wrapper.m_InputPlayerAction_CommandFriend2;
+        public InputAction @ExitCommand => m_Wrapper.m_InputPlayerAction_ExitCommand;
+        public InputAction @RegroupFriend => m_Wrapper.m_InputPlayerAction_RegroupFriend;
         public InputAction @Interact => m_Wrapper.m_InputPlayerAction_Interact;
         public InputAction @SkillButton => m_Wrapper.m_InputPlayerAction_SkillButton;
         public InputAction @NightVision => m_Wrapper.m_InputPlayerAction_NightVision;
@@ -561,6 +653,18 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @UnHoldPosition.started += instance.OnUnHoldPosition;
             @UnHoldPosition.performed += instance.OnUnHoldPosition;
             @UnHoldPosition.canceled += instance.OnUnHoldPosition;
+            @CommandFriend1.started += instance.OnCommandFriend1;
+            @CommandFriend1.performed += instance.OnCommandFriend1;
+            @CommandFriend1.canceled += instance.OnCommandFriend1;
+            @CommandFriend2.started += instance.OnCommandFriend2;
+            @CommandFriend2.performed += instance.OnCommandFriend2;
+            @CommandFriend2.canceled += instance.OnCommandFriend2;
+            @ExitCommand.started += instance.OnExitCommand;
+            @ExitCommand.performed += instance.OnExitCommand;
+            @ExitCommand.canceled += instance.OnExitCommand;
+            @RegroupFriend.started += instance.OnRegroupFriend;
+            @RegroupFriend.performed += instance.OnRegroupFriend;
+            @RegroupFriend.canceled += instance.OnRegroupFriend;
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
@@ -613,6 +717,18 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @UnHoldPosition.started -= instance.OnUnHoldPosition;
             @UnHoldPosition.performed -= instance.OnUnHoldPosition;
             @UnHoldPosition.canceled -= instance.OnUnHoldPosition;
+            @CommandFriend1.started -= instance.OnCommandFriend1;
+            @CommandFriend1.performed -= instance.OnCommandFriend1;
+            @CommandFriend1.canceled -= instance.OnCommandFriend1;
+            @CommandFriend2.started -= instance.OnCommandFriend2;
+            @CommandFriend2.performed -= instance.OnCommandFriend2;
+            @CommandFriend2.canceled -= instance.OnCommandFriend2;
+            @ExitCommand.started -= instance.OnExitCommand;
+            @ExitCommand.performed -= instance.OnExitCommand;
+            @ExitCommand.canceled -= instance.OnExitCommand;
+            @RegroupFriend.started -= instance.OnRegroupFriend;
+            @RegroupFriend.performed -= instance.OnRegroupFriend;
+            @RegroupFriend.canceled -= instance.OnRegroupFriend;
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
@@ -654,6 +770,10 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnUnCommand(InputAction.CallbackContext context);
         void OnHoldPosition(InputAction.CallbackContext context);
         void OnUnHoldPosition(InputAction.CallbackContext context);
+        void OnCommandFriend1(InputAction.CallbackContext context);
+        void OnCommandFriend2(InputAction.CallbackContext context);
+        void OnExitCommand(InputAction.CallbackContext context);
+        void OnRegroupFriend(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnSkillButton(InputAction.CallbackContext context);
         void OnNightVision(InputAction.CallbackContext context);
