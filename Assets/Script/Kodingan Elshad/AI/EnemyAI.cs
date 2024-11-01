@@ -203,7 +203,6 @@ public class EnemyAI : ExecuteLogic
                     }
                 }
 
-                Debug.Log(this.gameObject.name + "engage");
 
                 FOVStateHandler();
                 Shoot();
@@ -565,13 +564,11 @@ public class EnemyAI : ExecuteLogic
         }
         else if(enemyState == alertState.Engage)
         {
-            Debug.Log(this.gameObject.name + FOVState);
             switch (FOVState)
             {
                 case FOVDistState.far:
 
                     enemyNavmesh.speed = enemyStat.speed;
-                    Debug.Log(this.gameObject.name + "Far");
 
                     if(visibleTargets.Count != 0)
                     {
