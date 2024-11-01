@@ -215,6 +215,9 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         //we can actually use the sound D:
         if(Vector3.Distance(enemy.transform.position, transform.position) <= EnemyAIManager.EnemyAnnouncementMaxRange || EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
         {
+            if(GetUseWeaponStateMachine.ChosenTarget != null)GetUseWeaponStateMachine.GiveChosenTarget(null);
+            if(GetUseWeaponStateMachine.IsUsingWeapon)GetUseWeaponStateMachine.IsUsingWeapon = false;
+
             _alertValue = MaxAlertValue/2 + 10f;
             Vector3 closestLastSeenPos = Vector3.zero;
             if(EnemyAIManager.EnemyCaptainList.Count == 0)closestLastSeenPos = enemy.GetFOVAdvancedData.EnemyCharalastSeenPosition;
