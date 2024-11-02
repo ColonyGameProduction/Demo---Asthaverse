@@ -1070,6 +1070,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 944927156297921104, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Controller
       value: 
@@ -1774,6 +1778,9 @@ MonoBehaviour:
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
   _enemyMaxDistanceFromWalls: 10
+  _runAwayObstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
   _moveStateMachine: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _alertValue: 0
@@ -3516,6 +3523,9 @@ MonoBehaviour:
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
   _enemyMaxDistanceFromWalls: 10
+  _runAwayObstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
   _moveStateMachine: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _alertValue: 0
@@ -9496,6 +9506,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 944927156297921104, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Controller
       value: 
@@ -10103,6 +10117,9 @@ MonoBehaviour:
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
   _enemyMaxDistanceFromWalls: 10
+  _runAwayObstacleMask:
+    serializedVersion: 2
+    m_Bits: 12288
   _enemyAIManager: {fileID: 0}
   _playableCharaIdentity: {fileID: 0}
   _playableMoveStateMachine: {fileID: 0}
@@ -10112,9 +10129,6 @@ MonoBehaviour:
   _isAIEngage: 0
   _isEngageTimer: 0
   _isEngageTimerMax: 0.3
-  _runAwayObstacleMask:
-    serializedVersion: 2
-    m_Bits: 12288
 --- !u!114 &743586312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11174,6 +11188,9 @@ MonoBehaviour:
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
   _enemyMaxDistanceFromWalls: 10
+  _runAwayObstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
   _moveStateMachine: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _alertValue: 0
@@ -15133,6 +15150,9 @@ MonoBehaviour:
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
   _enemyMaxDistanceFromWalls: 10
+  _runAwayObstacleMask:
+    serializedVersion: 2
+    m_Bits: 12288
   _enemyAIManager: {fileID: 0}
   _playableCharaIdentity: {fileID: 0}
   _playableMoveStateMachine: {fileID: 0}
@@ -15142,9 +15162,6 @@ MonoBehaviour:
   _isAIEngage: 0
   _isEngageTimer: 0
   _isEngageTimerMax: 0.3
-  _runAwayObstacleMask:
-    serializedVersion: 2
-    m_Bits: 12288
 --- !u!114 &1156905606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15723,6 +15740,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 944927156297921104, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Controller
@@ -17105,6 +17126,9 @@ MonoBehaviour:
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
   _enemyMaxDistanceFromWalls: 10
+  _runAwayObstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
   _moveStateMachine: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _alertValue: 0
@@ -17492,6 +17516,9 @@ MonoBehaviour:
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
   _enemyMaxDistanceFromWalls: 10
+  _runAwayObstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
   _moveStateMachine: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _alertValue: 0
@@ -20328,6 +20355,9 @@ MonoBehaviour:
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
   _enemyMaxDistanceFromWalls: 10
+  _runAwayObstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
   _moveStateMachine: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _alertValue: 0
@@ -22056,6 +22086,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -109009404412102082, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
   m_PrefabInstance: {fileID: 69638178}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1751604644
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1751604646}
+  - component: {fileID: 1751604645}
+  m_Layer: 0
+  m_Name: Fourlung
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1751604645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751604644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17c07be9af0faa64eb4de449ebc613e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pipeline: {fileID: 11400000, guid: 4a92c2fac66ba294480e02548bb0efd2, type: 2}
+--- !u!4 &1751604646
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751604644}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.357674, y: 1.3284662, z: 18.956907}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1752141959 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8180554509775468080, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
@@ -22127,11 +22202,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 944927156297921104, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Controller
@@ -23448,11 +23527,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 944927156297921104, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Controller
@@ -24196,6 +24279,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 944927156297921104, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Controller
@@ -25090,11 +25177,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 944927156297921104, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Controller
@@ -25750,6 +25841,9 @@ MonoBehaviour:
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
   _enemyMaxDistanceFromWalls: 10
+  _runAwayObstacleMask:
+    serializedVersion: 2
+    m_Bits: 0
   _moveStateMachine: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _alertValue: 0
@@ -26521,6 +26615,9 @@ MonoBehaviour:
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
   _enemyMaxDistanceFromWalls: 10
+  _runAwayObstacleMask:
+    serializedVersion: 2
+    m_Bits: 12288
   _enemyAIManager: {fileID: 0}
   _playableCharaIdentity: {fileID: 0}
   _playableMoveStateMachine: {fileID: 0}
@@ -26530,9 +26627,6 @@ MonoBehaviour:
   _isAIEngage: 0
   _isEngageTimer: 0
   _isEngageTimerMax: 0.3
-  _runAwayObstacleMask:
-    serializedVersion: 2
-    m_Bits: 12288
 --- !u!114 &2066745672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27420,3 +27514,4 @@ SceneRoots:
   - {fileID: 1987224369}
   - {fileID: 1263895746}
   - {fileID: 1360397990}
+  - {fileID: 1751604646}
