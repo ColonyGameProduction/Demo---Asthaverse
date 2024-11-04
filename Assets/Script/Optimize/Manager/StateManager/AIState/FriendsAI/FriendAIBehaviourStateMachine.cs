@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBehaviourStateData, IUnsubscribeEvent
@@ -11,18 +12,20 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     [SerializeField] private EnemyAIManager _enemyAIManager;
     protected IReceiveInputFromPlayer _getCanInputPlayer;
     private bool isToldHold;
-    private Transform _friendsDefaultDirection;
+    [SerializeField]private Transform _friendsDefaultDirection;
     private Transform _friendsCommandDirection;
     private Transform _currPlayable;
     [SerializeField] protected PlayableCharacterIdentity _playableCharaIdentity;
     [SerializeField] protected PlayableMovementStateMachine _playableMoveStateMachine;
     [SerializeField] protected PlayableUseWeaponStateMachine _playableUseWeaponStateMachine;
 
-    [SerializeField] private float _mainPlayableMaxDistance;
+    [SerializeField] private float _mainPlayableMaxDistance = 3.5f;
+    [SerializeField] private float _friendsDefaultMaxDistanceFromPlayer = 2.5f;
 
     [Header("Friend AI States")]
     [SerializeField] protected bool _isAIIdle;
     [SerializeField] protected bool _isAIEngage;
+    [SerializeField] protected bool _isAIRunningAway;
     [SerializeField] protected float _isEngageTimer;
     [SerializeField] protected float _isEngageTimerMax = 0.3f;
     
@@ -39,6 +42,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
     public bool IsAIEngage {get {return _isAIEngage;} set {_isAIEngage = value;}}
+    public bool IsAIRunningAway {get { return _isAIRunningAway;} set {_isAIRunningAway = value;}}
     public bool IsAIInput {get {return _isAIInput;}}
     public Transform FriendsDefaultDirection {get {return _friendsDefaultDirection;}}   
     public Transform FriendsCommandDirection {get {return _friendsCommandDirection;}}    
@@ -108,15 +112,24 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     public void GiveUpdateFriendDirection(Transform currPlayable, Transform defaultPos, Transform commandPos)
     {   
         _currPlayable = currPlayable;
-        _friendsDefaultDirection = defaultPos;
+        // _friendsDefaultDirection = defaultPos; // kalo mo balik kek sebelumnya, nyalakan ini :D
+        _friendsDefaultDirection = _currPlayable.transform;
+
+
+
         _friendsCommandDirection = commandPos;
     }
 
-    public bool IsFriendTooFarFromPlayer()
+    public bool IsFriendTooFarFromPlayerWhenIdle()
     {
         // Debug.Log(transform.position + " " + _currPlayable.position + " " + Vector3.Distance(transform.position, _currPlayable.position));
         if(Vector3.Distance(transform.position, _currPlayable.position) <= _mainPlayableMaxDistance) return false;
         return true;
+    }
+    public bool IsFriendAlreadyAtDefaultDistance()
+    {
+        if(Vector3.Distance(transform.position, _currPlayable.position) <= _friendsDefaultMaxDistanceFromPlayer) return true;
+        return false;
     }
 
     private void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos)
@@ -148,5 +161,11 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     {
         if(wallHeight <= charaHeight * (5/8)) return false;
         return true;
+    }
+    public override void RunAway()
+    {
+        GetMoveStateMachine.IsRunning = true;
+        base.RunAway();
+        GetMoveStateMachine.SetAIDirection(RunAwayPos);
     }
 }

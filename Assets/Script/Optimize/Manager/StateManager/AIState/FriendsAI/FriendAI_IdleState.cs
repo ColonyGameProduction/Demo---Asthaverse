@@ -31,14 +31,15 @@ public class FriendAI_IdleState : FriendAIState
             _sm.SwitchState(_factory.AI_EngageState());
             if(_sm.IsToldHold)_sm.IsToldHold = false;
             _sm.FriendsCommandDirection.position = _sm.FriendsDefaultDirection.position;
+
+            return;
         }
         
         if(_sm.GotDetectedbyEnemy && _sm.LeaveDirection != Vector3.zero && !_sm.IsCharacterDead)
         {
             if(_sm.IsToldHold)_sm.IsToldHold = false;
-            _sm.GetMoveStateMachine.IsRunning = true;
-            _sm.RunAwayDirCalculation();
-            _sm.GetMoveStateMachine.SetAIDirection(_sm.RunAwayPos);
+            _sm.RunAway();
+            
             _sm.FriendsCommandDirection.position = _sm.FriendsDefaultDirection.position;
             return;
         }
@@ -46,8 +47,19 @@ public class FriendAI_IdleState : FriendAIState
         {
             if(!_sm.IsToldHold)
             {
-                if(_sm.GetMoveStateMachine.IsIdle && !_sm.IsFriendTooFarFromPlayer()) _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
-                else _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
+                if(_sm.GetMoveStateMachine.IsIdle && !_sm.IsFriendTooFarFromPlayerWhenIdle()) _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
+                else
+                {
+                    if(!_sm.IsFriendAlreadyAtDefaultDistance())
+                    {
+                        _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
+                    }
+                    else
+                    {
+                        _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
+                    }
+
+                }
                                         
             }
             else
@@ -66,7 +78,14 @@ public class FriendAI_IdleState : FriendAIState
         {
             if(_sm.IsCharacterDead)
             {
-                _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
+                if(!_sm.IsFriendAlreadyAtDefaultDistance())
+                {
+                    _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
+                }
+                else
+                {
+                    _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
+                }
             }
             else
             {

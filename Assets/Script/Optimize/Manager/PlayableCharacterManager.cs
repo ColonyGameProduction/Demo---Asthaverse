@@ -47,6 +47,7 @@ public class PlayableCharacterManager : MonoBehaviour
     //Get Standmovement bool -> isIdle, isWalking, isRunning
     private PlayableCamera _currPlayableCamera;
     private PlayableInteraction _currPlayableInteraction;
+    private PlayableSkill _currPlayableSkill;
 
 
     [Header("Events")]
@@ -231,6 +232,8 @@ public class PlayableCharacterManager : MonoBehaviour
         _currPlayableCamera = CurrPlayableChara.GetPlayableCamera;
         _playableCharacterCameraManager.SetCurrPlayableCamera(_currPlayableCamera);
 
+        _currPlayableSkill = CurrPlayableChara.GetPlayableSkill;
+
     }
     #endregion
 
@@ -384,11 +387,7 @@ public class PlayableCharacterManager : MonoBehaviour
 
         _gameInputManager.OnInteractPerformed += GameInput_OnInteractPerformed;
         _gameInputManager.OnNightVisionPerformed += GameInput_OnNightVisionPerformed;
-    }
-
-    private void GameInput_OnNightVisionPerformed()
-    {
-        _playableCharacterCameraManager.NightVision();
+        _gameInputManager.OnSkillButtonPerformed += GameInput_OnSkillButtonPerformed;
     }
 
     private void GameInput_OnInteractPerformed()
@@ -396,6 +395,19 @@ public class PlayableCharacterManager : MonoBehaviour
         //Ntr kasi syarat lain
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)_currPlayableInteraction.Interact();
     }
+
+    private void GameInput_OnNightVisionPerformed()
+    {
+        _playableCharacterCameraManager.NightVision();
+    }
+    private void GameInput_OnSkillButtonPerformed()
+    {
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && _currPlayableSkill != null && !_currPlayableSkill.IsSkillOnGoing)
+        {
+            _currPlayableSkill.UseSkill();
+        }   
+    }
+
 
     private void GameInput_Movement()
     {

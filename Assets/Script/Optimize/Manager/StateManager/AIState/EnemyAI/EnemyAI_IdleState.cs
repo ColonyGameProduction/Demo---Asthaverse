@@ -28,7 +28,7 @@ public class EnemyAI_IdleState : EnemyAIState
         {
             if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
             _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position, false);
-            if(!_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = true;
+            if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
             
             if(_sm.GetFOVState.CurrState == FOVDistState.middle)
             {
@@ -51,13 +51,13 @@ public class EnemyAI_IdleState : EnemyAIState
 
         if(_sm.GetFOVState.CurrState == FOVDistState.none) //no person
         {
-            if(_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = false;
+            if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
             Patrol();
         }
     }
     public override void ExitState()
     {
-        if(_sm.GetMoveStateMachine.AllowLookTargetWhileIdle)_sm.GetMoveStateMachine.AllowLookTargetWhileIdle = false;
+        if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
         // else 
 
         _sm.IsAIIdle = false;

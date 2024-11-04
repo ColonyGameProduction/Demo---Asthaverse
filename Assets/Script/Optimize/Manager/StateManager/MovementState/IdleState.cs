@@ -53,7 +53,7 @@ public class IdleState : MovementState
     private void CheckMustRotateWhileIdle()
     {
         if(!_sm.IsAIInput && _playableData.IsMustLookForward)_playableData.RotateToAim_Idle();
-        if(_sm.IsAIInput && _sm.IsAIAtDirPos())if(_sm.AllowLookTargetWhileIdle)_sm.RotateAIToTarget_Idle();
+        if(_sm.IsAIInput && _sm.IsAIAtDirPos())if(_sm.AllowLookTarget)_sm.RotateAIToTarget_Idle();
     }
     private void CheckIsCrouchWhileIdle()
     {

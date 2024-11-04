@@ -28,6 +28,9 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     protected Vector3 _takeCoverPosition;
     protected bool _canTakeCoverInThePosition;
     protected bool _isWallTallerThanChara;
+    protected Vector3 _dirToLookAtWhenTakingCover;
+    protected bool _isAtTheLeftSideOfTheWall;
+    protected bool _isMovingOnXPos;
 
     [Header("Component to Save Enemy Who sees us")]
     [SerializeField] protected List<Transform> _enemyWhoSawAIList = new List<Transform>();
@@ -52,6 +55,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     public bool CanTakeCoverInThePosition {get { return _canTakeCoverInThePosition;}}
     public bool IsTakingCover {get { return _isTakingCover;} set { _isTakingCover = value;}}
     public bool isWallTallerThanChara {get { return _isWallTallerThanChara;}}
+    public Vector3 DirToLookAtWhenTakingCover {get { return _dirToLookAtWhenTakingCover;}}
     public Transform NoEnemyToPointObj {get { return _noEnemyToPointObj;}}
     public LayerMask RunAwayObstacleMask {get {return _runAwayObstacleMask;}}
     public Vector3 RunAwayPos {get {return _runAwayPos;} }
@@ -194,6 +198,68 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 _canTakeCoverInThePosition = true;
                 _takeCoverPosition = newPos;
                 Debug.DrawRay(_takeCoverPosition, Vector3.up * 100f, Color.red);
+                
+                Vector3 NewPosToWall = (newPos - wallCenter).normalized;
+                float NewPosForwardDistance = Vector3.Dot(NewPosToWall, wallForward); 
+                float NewPosRightDistance = Vector3.Dot(NewPosToWall, wallRight); 
+
+                if(_isMovingOnXPos)
+                {
+                    if(NewPosRightDistance >= 0)
+                    {
+                        if(NewPosForwardDistance >= 0)
+                        {
+                            _isAtTheLeftSideOfTheWall = false;
+                        }
+                        else
+                        {
+                            _isAtTheLeftSideOfTheWall = true;
+                        }
+                        _dirToLookAtWhenTakingCover = new Vector3(wallRight.x, 0, newPos.z);
+                    }
+                    else
+                    {
+                        if(NewPosForwardDistance > 0)
+                        {
+                            _isAtTheLeftSideOfTheWall = true;
+                            
+                        }
+                        else
+                        {
+                            _isAtTheLeftSideOfTheWall = false;
+                        }
+                        _dirToLookAtWhenTakingCover = new Vector3(-wallRight.x, 0, newPos.z);
+                    }
+                }
+                else
+                {
+                    if(NewPosForwardDistance >= 0)
+                    {
+                        if(NewPosRightDistance > 0)
+                        {
+                            _isAtTheLeftSideOfTheWall = true;
+                        }
+                        else
+                        {
+                            _isAtTheLeftSideOfTheWall = false;
+                        }
+                        _dirToLookAtWhenTakingCover = new Vector3(newPos.x, 0, wallForward.z);
+                    }
+                    else
+                    {
+                        if(NewPosRightDistance >= 0) 
+                        {
+                            _isAtTheLeftSideOfTheWall = false;
+                        }
+                        else 
+                        {
+                            _isAtTheLeftSideOfTheWall = true;
+                        }
+                        _dirToLookAtWhenTakingCover = new Vector3(newPos.x, 0, -wallForward.z);
+                    }
+                }
+
+                
                 break;
             } 
             else _canTakeCoverInThePosition = false;
@@ -213,6 +279,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         float newHalfWallLength = 0;
         
         Vector3 tempNewPos = wallCenter;
+        _isMovingOnXPos = isFrontBehind;
         if(isFrontBehind)
         {
             newHalfWallLength = halfWallLength - _buffer;
@@ -489,6 +556,10 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         _runAwayPos = transform.position + runAwayDir * 2f;
         // }
 
+    }
+    public virtual void RunAway()
+    {
+        RunAwayDirCalculation();
     }
     #endregion
 }

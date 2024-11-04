@@ -42,10 +42,11 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected PlayableUseWeaponStateMachine _getPlayableUseWeaponStateData;
     protected PlayableCamera _getPlayableCamera;
     protected PlayableInteraction _getPlayableInteraction;
+    protected PlayableSkill _getPlayableSkill;
 
     protected FriendAIBehaviourStateMachine _friendAIStateMachine;
     
-
+    protected IEnumerator _revCoroutine;
     [Header("Death Animation Component")]
     private bool _isAnimatingOtherAnimation;
     #region GETTERSETTER Variable
@@ -109,6 +110,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public PlayableUseWeaponStateMachine GetPlayableUseWeaponData {get { return _getPlayableUseWeaponStateData;}}
     public PlayableCamera GetPlayableCamera {get {return _getPlayableCamera;}}
     public PlayableInteraction GetPlayableInteraction {get {return _getPlayableInteraction;}}
+    public PlayableSkill GetPlayableSkill {get {return _getPlayableSkill;}}
 
     public FriendAIBehaviourStateMachine FriendAIStateMachine {get { return _friendAIStateMachine;}}
     public FOVMachine FOVMachine{get { return _fovMachine;}}
@@ -116,7 +118,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public bool IsAnimatingOtherAnimation {get {return _isAnimatingOtherAnimation;}}
 
     public Transform InteractableTransform {get{return transform;}}
-    public bool CanInteract {get{return IsDead;}}
+    public bool CanInteract {get{return IsDead && !IsAnimatingOtherAnimation;}}
     public bool IsReviving {get {return _isReviving;} set { _isReviving = value;}}
     public bool IsSilentKilling {get {return _getPlayableUseWeaponStateData.IsSilentKill;} set { _getPlayableUseWeaponStateData.IsSilentKill = value;}}
 
@@ -129,6 +131,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _getPlayableUseWeaponStateData = UseWeaponStateMachine as PlayableUseWeaponStateMachine;
         _getPlayableCamera = GetComponent<PlayableCamera>();
         _getPlayableInteraction = GetComponentInChildren<PlayableInteraction>();
+        _getPlayableSkill = GetComponent<PlayableSkill>();
         InitializeFriend();
 
 
@@ -189,6 +192,10 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     public override void Death()
     {
+        if(_revCoroutine != null)
+        {
+            StopCoroutine(_revCoroutine);
+        }
         base.Death();
         _isAnimatingOtherAnimation = true;
     }
@@ -210,7 +217,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         ForceStopAllStateMachine();
         _deadColl.SetActive(false);
         _isAnimatingOtherAnimation = true;
-        StartCoroutine(Reviving(characterIdentityWhoReviving));
+        _revCoroutine = Reviving(characterIdentityWhoReviving);
+        StartCoroutine(_revCoroutine);
     }
     private IEnumerator Reviving(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
@@ -226,7 +234,11 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _isDead = false;
         characterIdentityWhoReviving.IsReviving = false;
         _isAnimatingOtherAnimation = false;
+        
+        _revCoroutine = null;
         Debug.Log("reviving Done");
+        yield return new WaitForSeconds(0.1f);
+        _animator.SetBool("Death", false);
     }
     
     public void TurnOnOffFriendAI(bool isTurnOn)

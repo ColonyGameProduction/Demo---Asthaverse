@@ -40,9 +40,10 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     [Space(1)]
     [Header("AI Rotation")]
-    protected Vector3 _idleAILookTarget; //position for AI To look at
+    protected Vector3 _AILookTarget; //position for AI To look at
     protected bool _isReceivePosADirection;
-    protected bool _allowLookTargetWhileIdle;
+    protected bool _allowLookTarget;
+    [SerializeField]protected float _faceDirCount = 0.9f;
 
     public Action<Vector3> OnIsTheSamePosition;
 
@@ -71,7 +72,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     public NavMeshAgent AgentNavMesh {get {return _agentNavMesh;}}
     public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
-    public bool AllowLookTargetWhileIdle {get {return _allowLookTargetWhileIdle;} set{_allowLookTargetWhileIdle = value;}}
+    public bool AllowLookTarget {get {return _allowLookTarget;} set{_allowLookTarget = value;}}
     
     #endregion
 
@@ -126,21 +127,39 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     {
         if(AgentNavMesh.speed != _currSpeed)AgentNavMesh.speed = _currSpeed;
 
+        bool isFacingTheDirection = true;
+        float checkFaceDir = 0;
         Vector3 facedir = (AgentNavMesh.steeringTarget - transform.position).normalized;
-        Vector3 animatedFaceDir = transform.InverseTransformDirection(facedir);
         // Debug.Log("Dot Move" + Vector3.Dot(facedir, transform.forward));
         // bool isFacingMoveDirection = Vector3.Dot(facedir, transform.forward) > .5f;
+        Vector3 animatedFaceDir = transform.InverseTransformDirection(facedir);
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
+        if(!AllowLookTarget)
+        {
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
+            checkFaceDir = Vector3.Dot(facedir, transform.forward);
+            isFacingTheDirection = checkFaceDir > _faceDirCount;
+        }
+        else
+        {
+            if(!_isReceivePosADirection)facedir = (_AILookTarget - transform.position).normalized;
+            else facedir = _AILookTarget;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
 
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, animatedFaceDir.x, 0.5f, Time.deltaTime);
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, animatedFaceDir.z, 0.5f, Time.deltaTime);
+            checkFaceDir = Vector3.Dot(facedir, transform.forward);
+            isFacingTheDirection = checkFaceDir > _faceDirCount;
+        }
+        
+
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, isFacingTheDirection? animatedFaceDir.x : 0.1f* animatedFaceDir.x, 0.5f, Time.deltaTime);
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, isFacingTheDirection? animatedFaceDir.z : 0.1f * animatedFaceDir.z, 0.5f, Time.deltaTime);
 
     }
     public bool IsAIAtDirPos()
     {
         if(AgentNavMesh.destination != CurrAIDirPos)
         {
+
             AgentNavMesh.destination = CurrAIDirPos;
         }
         // Debug.Log(AgentNavMesh.hasPath + " " + gameObject.name);
@@ -180,14 +199,14 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     }
     public void SetAITargetToLook(Vector3 posToLook, bool isReceivePosADirection)
     {
-        _idleAILookTarget = posToLook;
+        _AILookTarget = posToLook;
         _isReceivePosADirection = isReceivePosADirection;
     }
     public void RotateAIToTarget_Idle()
     {
         Vector3 facedir = Vector3.zero;
-        if(!_isReceivePosADirection)facedir = (_idleAILookTarget - transform.position).normalized;
-        else facedir = _idleAILookTarget;
+        if(!_isReceivePosADirection)facedir = (_AILookTarget - transform.position).normalized;
+        else facedir = _AILookTarget;
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
     }
     #endregion
