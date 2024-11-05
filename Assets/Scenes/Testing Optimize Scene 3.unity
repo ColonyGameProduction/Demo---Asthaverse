@@ -1697,7 +1697,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!143 &106554972
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1774,6 +1774,7 @@ MonoBehaviour:
   _charaWidthBuffer: 0.2
   _buffer: -1.5
   _enemyWhoSawAIList: []
+  _minEnemyMakeCharaFeelOverwhelmed: 3
   _gotDetectedByEnemy: 0
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
@@ -3443,7 +3444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!143 &317604553
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3520,6 +3521,7 @@ MonoBehaviour:
   _charaWidthBuffer: 0.2
   _buffer: -1.5
   _enemyWhoSawAIList: []
+  _minEnemyMakeCharaFeelOverwhelmed: 3
   _gotDetectedByEnemy: 0
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
@@ -10116,6 +10118,7 @@ MonoBehaviour:
   _charaWidthBuffer: 0.2
   _buffer: -1.5
   _enemyWhoSawAIList: []
+  _minEnemyMakeCharaFeelOverwhelmed: 3
   _gotDetectedByEnemy: 0
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
@@ -10132,7 +10135,6 @@ MonoBehaviour:
   _friendsDefaultMaxDistanceFromPlayer: 2.5
   _isAIIdle: 1
   _isAIEngage: 0
-  _isAIRunningAway: 0
   _isEngageTimer: 0
   _isEngageTimerMax: 0.3
 --- !u!114 &743586312
@@ -11190,6 +11192,7 @@ MonoBehaviour:
   _charaWidthBuffer: 0.2
   _buffer: -1.5
   _enemyWhoSawAIList: []
+  _minEnemyMakeCharaFeelOverwhelmed: 3
   _gotDetectedByEnemy: 0
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
@@ -11329,7 +11332,7 @@ Transform:
   m_GameObject: {fileID: 839744754}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.26, y: 0, z: 0.2999997}
+  m_LocalPosition: {x: 7.33, y: 0, z: 0.2999997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14166,7 +14169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5213727cc95cecc4494f076732481665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Debugs: 0
+  Debugs: 1
 --- !u!114 &1077971751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15154,6 +15157,7 @@ MonoBehaviour:
   _charaWidthBuffer: 0.2
   _buffer: -1.5
   _enemyWhoSawAIList: []
+  _minEnemyMakeCharaFeelOverwhelmed: 3
   _gotDetectedByEnemy: 0
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
@@ -15170,7 +15174,6 @@ MonoBehaviour:
   _friendsDefaultMaxDistanceFromPlayer: 2.5
   _isAIIdle: 1
   _isAIEngage: 0
-  _isAIRunningAway: 0
   _isEngageTimer: 0
   _isEngageTimerMax: 0.3
 --- !u!114 &1156905606
@@ -17056,7 +17059,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!143 &1303898442
 CharacterController:
   m_ObjectHideFlags: 0
@@ -17133,6 +17136,7 @@ MonoBehaviour:
   _charaWidthBuffer: 0.2
   _buffer: -1.5
   _enemyWhoSawAIList: []
+  _minEnemyMakeCharaFeelOverwhelmed: 3
   _gotDetectedByEnemy: 0
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
@@ -17163,7 +17167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   STOP: 0
-  _stopView: 0
+  _stopView: 1
   _edgeResolveIteration: 4
   _edgeDistanceTreshold: 0.5
   _viewRadius: 20
@@ -17524,6 +17528,7 @@ MonoBehaviour:
   _charaWidthBuffer: 0.2
   _buffer: -1.5
   _enemyWhoSawAIList: []
+  _minEnemyMakeCharaFeelOverwhelmed: 3
   _gotDetectedByEnemy: 0
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
@@ -17554,7 +17559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   STOP: 0
-  _stopView: 0
+  _stopView: 1
   _edgeResolveIteration: 4
   _edgeDistanceTreshold: 0.5
   _viewRadius: 20
@@ -20365,6 +20370,7 @@ MonoBehaviour:
   _charaWidthBuffer: 0.2
   _buffer: -1.5
   _enemyWhoSawAIList: []
+  _minEnemyMakeCharaFeelOverwhelmed: 3
   _gotDetectedByEnemy: 0
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
@@ -20504,7 +20510,7 @@ Transform:
   m_GameObject: {fileID: 1576229285}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -19.87, y: 0, z: 0.43999982}
+  m_LocalPosition: {x: -4.99, y: 0, z: 7.84}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -25798,7 +25804,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!195 &2017098523
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -25943,6 +25949,7 @@ MonoBehaviour:
   _charaWidthBuffer: 0.2
   _buffer: -1.5
   _enemyWhoSawAIList: []
+  _minEnemyMakeCharaFeelOverwhelmed: 3
   _gotDetectedByEnemy: 0
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
@@ -26719,6 +26726,7 @@ MonoBehaviour:
   _charaWidthBuffer: 0.2
   _buffer: -1.5
   _enemyWhoSawAIList: []
+  _minEnemyMakeCharaFeelOverwhelmed: 3
   _gotDetectedByEnemy: 0
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
@@ -26735,7 +26743,6 @@ MonoBehaviour:
   _friendsDefaultMaxDistanceFromPlayer: 2.5
   _isAIIdle: 1
   _isAIEngage: 0
-  _isAIRunningAway: 0
   _isEngageTimer: 0
   _isEngageTimerMax: 0.3
 --- !u!114 &2066745672

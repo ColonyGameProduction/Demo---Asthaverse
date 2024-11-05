@@ -26,6 +26,9 @@ public class FriendAI_IdleState : FriendAIState
             // if(_charaIdentity.MovementStateMachine.CurrAIDirection != null)_charaIdentity.MovementStateMachine.ForceStopMoving();
             // return;
         }
+        
+        if(_sm.GetUseWeaponStateMachine.IsUsingWeapon || _sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.ForceStopUseWeapon();
+
         if(_sm.IsAIEngage && !_sm.IsCharacterDead)
         {
             _sm.SwitchState(_factory.AI_EngageState());

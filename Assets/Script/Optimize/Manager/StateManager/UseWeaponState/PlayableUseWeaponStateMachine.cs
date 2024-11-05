@@ -78,7 +78,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected override void Awake()
     {
         base.Awake();
-
+        CharaIdentity_OnIsPlayerInputChange(!IsAIInput);
         _getCanSwitchWeapon = GetComponent<ICanSwitchWeapon>();
         _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
         _getCanInputPlayer = GetComponent<IReceiveInputFromPlayer>();
@@ -181,6 +181,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     #endregion
     private void CharaIdentity_OnIsPlayerInputChange(bool obj)
     {
+        Debug.Log("AAA" + transform.name);
         _isAIInput = !obj;
         if(!IsAIInput)
         {

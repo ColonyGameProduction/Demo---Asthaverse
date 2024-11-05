@@ -25,7 +25,6 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     [Header("Friend AI States")]
     [SerializeField] protected bool _isAIIdle;
     [SerializeField] protected bool _isAIEngage;
-    [SerializeField] protected bool _isAIRunningAway;
     [SerializeField] protected float _isEngageTimer;
     [SerializeField] protected float _isEngageTimerMax = 0.3f;
     
@@ -42,7 +41,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
     public bool IsAIEngage {get {return _isAIEngage;} set {_isAIEngage = value;}}
-    public bool IsAIRunningAway {get { return _isAIRunningAway;} set {_isAIRunningAway = value;}}
+
     public bool IsAIInput {get {return _isAIInput;}}
     public Transform FriendsDefaultDirection {get {return _friendsDefaultDirection;}}   
     public Transform FriendsCommandDirection {get {return _friendsCommandDirection;}}    

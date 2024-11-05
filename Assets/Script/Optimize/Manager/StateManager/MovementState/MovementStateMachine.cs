@@ -142,6 +142,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         }
         else
         {
+            
             if(!_isReceivePosADirection)facedir = (_AILookTarget - transform.position).normalized;
             else facedir = _AILookTarget;
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);

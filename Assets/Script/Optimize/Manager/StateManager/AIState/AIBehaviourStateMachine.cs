@@ -34,6 +34,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
     [Header("Component to Save Enemy Who sees us")]
     [SerializeField] protected List<Transform> _enemyWhoSawAIList = new List<Transform>();
+    protected Transform _closestEnemyWhoSawAI;
+    [SerializeField] protected int _minEnemyMakeCharaFeelOverwhelmed = 3;
     [SerializeField] protected bool _gotDetectedByEnemy;
     [SerializeField] protected float _gotDetectedTimer;
     [SerializeField] protected float _gotDetectedTimerMax = 0.3f;
@@ -46,9 +48,11 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     protected Vector3 _runAwayPos;
     #endregion
     #region  GETTER SETTER VARIABLE
+    public NavMeshAgent Agent {get {return _agent;}}
     public FOVMachine GetFOVMachine { get { return _fovMachine; } }
     public bool GotDetectedbyEnemy {get { return _gotDetectedByEnemy;}}
     public List<Transform> EnemyWhoSawAIList { get{return _enemyWhoSawAIList;}} 
+    public Transform ClosestEnemyWhoSawAI { get { return _closestEnemyWhoSawAI;}}
     public Vector3 LeaveDirection {get { return _leaveDirection;}}
 
     public Vector3 TakeCoverPosition {get { return _takeCoverPosition;}}
@@ -59,6 +63,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     public Transform NoEnemyToPointObj {get { return _noEnemyToPointObj;}}
     public LayerMask RunAwayObstacleMask {get {return _runAwayObstacleMask;}}
     public Vector3 RunAwayPos {get {return _runAwayPos;} }
+    public int MinEnemyMakeCharaFeelOverwhelmed {get {return _minEnemyMakeCharaFeelOverwhelmed;}}
 
     #endregion
     protected override void Awake() 
@@ -562,4 +567,23 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         RunAwayDirCalculation();
     }
     #endregion
+
+    public virtual void GetClosestEnemyWhoSawAI()
+    {
+        float _tempDistanceEnemy = Mathf.Infinity;
+        _closestEnemyWhoSawAI = null;
+        if(EnemyWhoSawAIList.Count > 0)
+        {
+            foreach(Transform enemy in EnemyWhoSawAIList)
+            {
+                // Debug.Log("Shoot dirrr23" + enemy.position);
+                float currDis = Vector3.Distance(transform.position, enemy.position);
+                if(_tempDistanceEnemy > currDis)
+                {
+                    _tempDistanceEnemy = currDis;
+                    _closestEnemyWhoSawAI = enemy;
+                }
+            }
+        }
+    }
 }
