@@ -6,6 +6,10 @@ using Cinemachine;
 using UnityEngine.AI;
 using System;
 using System.Security.Cryptography;
+using System.Linq;
+using UnityEngine.Rendering;
+using UnityEngine.InputSystem.Android;
+using Unity.VisualScripting;
 
 /* PERHATIAN!!!
  * Kalo mau akses logic di skrip ini
@@ -16,7 +20,8 @@ using System.Security.Cryptography;
 public class ExecuteLogic : AILogic
 {
 
-    
+    public Collider[] walls;
+    public float buffer = -1.5f;
 
     //setelah di extend, klean bisa make function ini tanpa perlu refrence
 
@@ -65,7 +70,6 @@ public class ExecuteLogic : AILogic
             weaponStatSO.totalBullet = 0;
         }        
 
-        Debug.Log("Reload");
     }
 
     //untuk ganti weapon
@@ -90,10 +94,10 @@ public class ExecuteLogic : AILogic
 
     
     //logic 'Shoot'
-    public void Shoot(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask)
+    public void Shoot(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask, float recoil)
     {
         WeaponLogicHandler weaponHandler = new WeaponLogicHandler();
-        weaponHandler.ShootingPerformed(origin, direction, entityStat, weaponStat, entityMask);
+        weaponHandler.ShootingPerformed(origin, direction, entityStat, weaponStat, entityMask, recoil);
     }    
 
 
@@ -189,6 +193,234 @@ public class ExecuteLogic : AILogic
         }
     }
 
+    public void PlayFootstepsSound(AudioSource footstepsSource)
+    {
+        if (!footstepsSource.isPlaying)
+        {
+            footstepsSource.Play();
+            NotifyEnemies(footstepsSource);
+        }
+    }
+
+    public void PlayWhistleSound(AudioSource whistleSource)
+    {
+        whistleSource.Play();
+        NotifyEnemies(whistleSource);
+    }
+
+    // ini tuh logic buat ngasih tau si enemy kalo yang lagi dia denger tuh audio apa
+    public void NotifyEnemies(AudioSource soundSource)
+    {
+        EnemySoundDetection[] enemies = FindObjectsOfType<EnemySoundDetection>();
+
+        foreach (EnemySoundDetection enemy in enemies)
+        {
+            enemy.HearSound(gameObject, soundSource); // ngasih tau setiap enemy dia dengan sound apa
+        }
+    }
+
+    //untuk taking cover
+    public void TakingCover(NavMeshAgent agent, List<Transform> target)
+    {
+        walls = Physics.OverlapSphere(agent.transform.position, 20f, LayerMask.GetMask("Wall"));
+        int wallsLength = walls.Length;
+
+        for(int i = 0; i < walls.Length; i++)
+        {
+            foreach(Transform targetPos in target)
+            {
+                if (Vector3.Distance(walls[i].transform.position, targetPos.position) < 5f)
+                {
+                    wallsLength--;
+                    walls[i] = null;
+                    break;
+                }
+            }
+        }
+
+        if(wallsLength <= 0)
+        {
+            return;
+        }
+
+
+        System.Array.Sort(walls, ColliderSortArrayComparer);
+
+        if(wallsLength > 7)
+        {
+            wallsLength = 7;
+        }
+
+        for (int i = 0; i <= wallsLength - 1; i++)
+        {
+
+            if (NavMesh.SamplePosition(walls[i].transform.position, out NavMeshHit hit, 5f, agent.areaMask))
+            {
+                if (NavMesh.FindClosestEdge(hit.position, out hit, agent.areaMask))
+                {
+                    Vector3 directionToTarget = HitDirection(target, hit.position);
+                    if (Vector3.Dot(hit.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
+                    {
+                        if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 100f)
+                        {
+                            Debug.Log("Masuk Continue");
+                            continue;
+                        }
+                        Vector3 edgePos = CheckPositionBasedOnWall(hit.position, walls[i]);
+                        if (walls[i].transform.localScale.y > agent.height)
+                        {
+                            hit.position = edgePos;
+                        }
+
+                        agent.SetDestination(hit.position);
+                        break;
+                    }
+                    else
+                    {
+                        Vector3 coverPosition = walls[i].transform.position - directionToTarget * 2;
+                        if (NavMesh.SamplePosition(coverPosition, out NavMeshHit hit2, 5f, agent.areaMask))
+                        {
+
+                            //if (Vector3.Dot(hit2.normal, directionToTarget) < 0)
+                            //{
+                            //    agent.SetDestination(hit2.position);
+                            //    break;
+                            //}
+
+                            Debug.Log("hit position before find edge 2 = " + hit.position);
+                            if (NavMesh.FindClosestEdge(hit.position, out hit2, agent.areaMask))
+                            {
+                                Debug.Log("hit position after find edge 2 = " + hit.position);
+                                directionToTarget = HitDirection(target, hit.position);
+                                if (Vector3.Dot(hit2.normal, directionToTarget) < 0) // Jika wall ada di antara agent dan target
+                                {
+                                    if (CountNavMeshPathDistance(agent.transform, hit.position, agent) > 100f)
+                                    {
+                                        Debug.Log("Masuk Continue");
+                                        continue;
+                                    }
+
+                                    if (walls[i].transform.localScale.y > agent.height)
+                                    {
+                                        hit2.position = CheckPositionBasedOnWall(hit2.position, walls[i]);
+                                    }
+
+                                    agent.SetDestination(hit2.position);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public Vector3 HitDirection(List<Transform> target, Vector3 position)
+    {
+        Vector3 direction = Vector3.zero;
+        Vector3 totalDir = Vector3.zero;
+
+        if (target.Count > 0)
+        {
+            direction = (target[0].position - position).normalized;
+
+            for (int i = 0; i < target.Count; i++)
+            {
+                totalDir += direction;
+            }
+        }
+
+        return totalDir;
+    }
+
+    public Vector3 CheckPositionBasedOnWall(Vector3 targetPos, Collider wallColl)
+    {
+        bool isLeft = false;
+        float ySafe = targetPos.y;
+
+        // targetPos = new Vector3(targetPos.x, 0, targetPos.z);
+        Vector3 wallCenter = wallColl.bounds.center;
+        Vector3 wallFwd = wallColl.transform.forward;
+        Vector3 wallRight = wallColl.transform.right;
+
+        float halfWallLength = wallColl.transform.localScale.z * 0.5f;
+        float halfWallWidth = wallColl.transform.localScale.x * 0.5f;
+        
+        Vector3 wallToTarget = targetPos - wallCenter;
+
+        float forwardDistance = Vector3.Dot(wallToTarget, wallFwd);
+        float rightDistance = Vector3.Dot(wallToTarget, wallRight);
+        
+        Vector3 newPos = wallCenter;
+   
+        
+        float newHalfWallWidth = 0;
+        float newHalfWallLength = 0;
+
+        if(Mathf.Abs(forwardDistance) > halfWallLength)
+        {
+            newHalfWallWidth = halfWallWidth + buffer;
+            newHalfWallLength = halfWallLength - buffer;
+            // isX = true;
+            newPos += wallRight * (rightDistance >= 0 ? newHalfWallWidth : -newHalfWallWidth);
+            newPos += wallFwd * Mathf.Clamp(forwardDistance, -newHalfWallLength, newHalfWallLength);
+            if(rightDistance >= 0)
+            {
+                if(forwardDistance >= 0) isLeft = false;
+                else isLeft = true;
+            }
+            else
+            {
+                if(forwardDistance > 0) isLeft = true;
+                else isLeft = false;
+            }
+            
+        }
+        else
+        {
+            newHalfWallLength = halfWallLength + buffer;
+            newHalfWallWidth = halfWallWidth - buffer;
+            // isX = false;
+            newPos += wallFwd * (forwardDistance >= 0 ? newHalfWallLength : -newHalfWallLength);
+            newPos += wallRight * Mathf.Clamp(rightDistance, -newHalfWallWidth, newHalfWallWidth);
+            if(forwardDistance >= 0)
+            {
+                if(rightDistance > 0) isLeft = true;
+                else isLeft = false;
+            }
+            else
+            {
+                if(rightDistance >= 0) isLeft = false;
+                else isLeft = true;
+            }
+        }   
+        newPos = new Vector3(newPos.x, ySafe, newPos.z);
+        return newPos;
+    }
+
+    public int ColliderSortArrayComparer(Collider A, Collider B)
+    {
+        if (A == null && B != null) return 1;
+        else if (A != null && B == null) return -1;
+        else if (A == null && B == null) return 0;
+        return Vector3.Distance(transform.position, A.transform.position).CompareTo(Vector3.Distance(transform.position, B.transform.position));
+    }
+
+    public float CountNavMeshPathDistance(Transform origin, Vector3 target, NavMeshAgent agent)
+    {
+        NavMeshPath path = new NavMeshPath();
+        if (NavMesh.CalculatePath(origin.position, target, agent.areaMask, path))
+        {
+            float distance = Vector3.Distance(origin.position, path.corners[0]);
+            for (int j = 1; j < path.corners.Length; j++)
+            {
+                distance += Vector3.Distance(path.corners[j - 1], path.corners[j]);
+            }
+            return distance;
+        }
+        return 0;
+    }
 
     //Logic 'Switch Character'
     public void SwitchCharacter()

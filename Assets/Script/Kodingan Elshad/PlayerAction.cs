@@ -21,6 +21,7 @@ public class PlayerAction : ExecuteLogic
     private bool fireRateOn = false;
     private bool isRun = false;
     private bool IsCrouching = false;
+    private bool isMoving = false;
 
     [Header("Untuk Movement dan Kamera")]
     [SerializeField]
@@ -47,8 +48,13 @@ public class PlayerAction : ExecuteLogic
     private WeaponStatSO[] weaponStat;
     private WeaponStatSO activeWeapon;
 
+    [Header("Audio")]
+    public AudioSource footstepsSource;
+    public AudioSource whistleSource;
+
     [SerializeField]
     private EntityStatSO character;
+    private float playerHP;
 
     private AnimationTestScript testAnimation;
     
@@ -65,6 +71,13 @@ public class PlayerAction : ExecuteLogic
 
     private int currBreadCrumbs;
 
+    private float curRecoil = 0;
+    private float curRecoilMod = 0;
+    private float maxRecoil = 0;
+    private float movingMaxRecoil = 0;
+    private float recoilCooldown = 0;
+    private float recoilAddMultiplier = 0;
+
     //supaya input action bisa digunakan
     private void Awake()
     {
@@ -78,6 +91,7 @@ public class PlayerAction : ExecuteLogic
 
         gm = GameManager.instance;
         testAnimation = GetComponent<AnimationTestScript>();
+        playerHP = character.health;
 
         //membuat event untuk menjalankan aksi yang dipakai oleh player
         inputActions.InputPlayerAction.Run.performed += Run_performed;
@@ -101,6 +115,7 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.UnCommand.performed += UnCommand_performed;
         inputActions.InputPlayerAction.RegroupFriend.performed += HoldPosition_performed;
         inputActions.InputPlayerAction.UnHoldPosition.performed += UnHoldPosition_performed;
+        inputActions.InputPlayerAction.Whistle.performed += Whistle_Performed;
 
         CC = GetComponent<CharacterController>();
 
@@ -225,9 +240,47 @@ public class PlayerAction : ExecuteLogic
         testAnimation?.animator.SetBool("Scope", true);
         isShooting = true;
         //only once
-        if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
+        if (!activeWeapon.allowHoldDownButton && isShooting && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn && !isRun)
         {
-            Shoot(Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask);
+            if (isMoving)
+            {
+                if (gm.scope)
+                {
+                    movingMaxRecoil = activeWeapon.recoil + activeWeapon.recoil * .5f;
+                    curRecoilMod = activeWeapon.recoil * .25f;
+                    recoilAddMultiplier = 1.5f;
+                }
+                else
+                {
+                    movingMaxRecoil = activeWeapon.recoil + activeWeapon.recoil;
+                    curRecoilMod = activeWeapon.recoil * .5f;
+                    recoilAddMultiplier = 3;
+                }
+            }
+            else if (IsCrouching)
+            {
+                if (gm.scope)
+                {
+                    movingMaxRecoil = activeWeapon.recoil;
+                    curRecoilMod = activeWeapon.recoil;
+                    recoilAddMultiplier = 0f;
+                }
+                else
+                {
+                    movingMaxRecoil = activeWeapon.recoil + activeWeapon.recoil * .5f;
+                    curRecoilMod = activeWeapon.recoil * .25f;
+                    recoilAddMultiplier = 1.5f;
+                }
+            }
+            else
+            {
+                movingMaxRecoil = 0;
+                curRecoilMod = 0;
+                recoilAddMultiplier = 0;
+            }
+
+            RecoilHandler();
+            Shoot(Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask, curRecoil + curRecoilMod);
             StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
             isShooting = false;
             if (activeWeapon.currBullet == 0 && activeWeapon.totalBullet > 0)
@@ -250,9 +303,31 @@ public class PlayerAction : ExecuteLogic
         isShooting = false;
     }
 
+    // event ketika 'Whistle' dilakukan
+    private void Whistle_Performed(InputAction.CallbackContext context)
+    {
+        PlayWhistleSound(whistleSource);
+    }
+
     private void Update()
     {
         // Input yang ini itu sementara aja
+
+        // ketika player move maka sound footsteps bakal aktif
+        if (isMoving)
+        {
+            //PlayFootstepsSound(footstepsSource);
+        }
+
+        // ketika player crouch maka volume sound footsteps bakal berkurang
+        if (IsCrouching)
+        {
+            //footstepsSource.volume = 0.2f;
+        }
+        else
+        {
+            //footstepsSource.volume = 1.0f;
+        }
 
         // Select the AI friend by pressing keys 1, 2, etc.
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -274,8 +349,21 @@ public class PlayerAction : ExecuteLogic
 
             if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground")))
             {
-                // Set the destination for the selected friend based on the mouse click
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
+            }
+            else if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hithit, 100f, LayerMask.GetMask("Wall")))
+            {
+                Debug.Log(hithit.point);
+                Vector3 movePos = hithit.point;
+                Vector3 movePosWithoutY = new Vector3();
+
+                if (Physics.Raycast(hithit.point, Vector3.down, out RaycastHit hit2, 100f, LayerMask.GetMask("Ground")))
+                {
+                    movePosWithoutY = new Vector3(movePos.x, hit2.point.y, movePos.z);
+                }
+
+                // Set the destination for the selected friend based on the mouse click
+                GoToTargetPosition[selectedFriendID - 1].transform.position = movePosWithoutY;
             }
         }
         // Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
@@ -284,13 +372,50 @@ public class PlayerAction : ExecuteLogic
 
     private void FixedUpdate()
     {
+        ComplexRecoil(ref curRecoil);
         //continous Shoot
-        if(isShooting && activeWeapon.allowHoldDownButton && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn)
+        if (isShooting && activeWeapon.allowHoldDownButton && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn && !isRun)
         {
             if(activeWeapon != null)
             {
-
-                Shoot(Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask);
+                if (isMoving)
+                {
+                    if(gm.scope)
+                    {
+                        movingMaxRecoil = activeWeapon.recoil + activeWeapon.recoil * .5f;
+                        curRecoilMod = activeWeapon.recoil * .25f;
+                        recoilAddMultiplier = 1.5f;
+                    }
+                    else
+                    {
+                        movingMaxRecoil = activeWeapon.recoil + activeWeapon.recoil;
+                        curRecoilMod = activeWeapon.recoil * .5f;
+                        recoilAddMultiplier = 3;
+                    }
+                }
+                else if (IsCrouching)
+                {
+                    if(gm.scope)
+                    {
+                        movingMaxRecoil = activeWeapon.recoil;
+                        curRecoilMod = activeWeapon.recoil;
+                        recoilAddMultiplier = 0f;
+                    }
+                    else
+                    {
+                        movingMaxRecoil = activeWeapon.recoil + activeWeapon.recoil * .5f;
+                        curRecoilMod = activeWeapon.recoil * .25f;
+                        recoilAddMultiplier = 1.5f;
+                    }
+                }
+                else
+                {
+                    movingMaxRecoil = 0;
+                    curRecoilMod = 0;
+                    recoilAddMultiplier = 0;
+                }
+                RecoilHandler();
+                Shoot(Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask, curRecoil + curRecoilMod);
                 StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
                 if (activeWeapon.currBullet == 0)
                 {
@@ -310,7 +435,18 @@ public class PlayerAction : ExecuteLogic
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
         Vector3 flatForward = new Vector3(followTarget.forward.x, 0, followTarget.forward.z).normalized;
-        Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;        
+        Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;
+
+        if (move == Vector2.zero)
+        {
+            testAnimation?.animator.SetBool("Move", false);
+            isMoving = false;
+        }
+        else
+        {
+            testAnimation?.animator.SetBool("Move", true);
+            isMoving = true;
+        }
 
         if (IsCrouching)
         {
@@ -325,14 +461,7 @@ public class PlayerAction : ExecuteLogic
             CC.SimpleMove(direction * moveSpeed);
         }
 
-        if(move == Vector2.zero)
-        {
-            testAnimation?.animator.SetBool("Move", false);
-        }
-        else
-        {
-            testAnimation?.animator.SetBool("Move", true);
-        }
+        
 
         testAnimation?.WalkAnimation(move);
         if (!isShooting && !gm.scope)
@@ -344,6 +473,39 @@ public class PlayerAction : ExecuteLogic
         {
             testAnimation?.animator.SetBool("Move", false);
             Rotation(flatForward);
+        }
+    }
+
+    private void RecoilHandler()
+    {
+        recoilCooldown = activeWeapon.fireRate + (activeWeapon.fireRate * .1f);
+        maxRecoil = activeWeapon.recoil + movingMaxRecoil;
+    }
+
+    private void ComplexRecoil(ref float curRecoil)
+    {
+        if (recoilCooldown > 0)
+        {
+            recoilCooldown -= Time.deltaTime * activeWeapon.fireRate;
+            if (curRecoil <= maxRecoil)
+            {
+                if(recoilAddMultiplier != 0)
+                {
+                    curRecoil += Time.deltaTime * activeWeapon.recoil * recoilAddMultiplier;
+                }
+                else
+                {
+                    curRecoil += Time.deltaTime * activeWeapon.recoil;
+                }
+            }
+            else
+            {
+                curRecoil = maxRecoil;
+            }
+        }
+        else if(recoilCooldown <= 0)
+        {
+            curRecoil = 0;
         }
     }
 
@@ -401,6 +563,16 @@ public class PlayerAction : ExecuteLogic
     private void FireRateFlag(bool value)
     {
         fireRateOn = value;
+    }
+
+    public float GetPlayerHP()
+    {
+        return playerHP + character.armor;
+    }
+
+    public void SetPlayerHP(float HP)
+    {
+        playerHP = HP;
     }
 
     private IEnumerator BreadCrumbsDrop(float delay)
