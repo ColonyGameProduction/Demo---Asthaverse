@@ -529,4 +529,5 @@ public class FriendsAI : ExecuteLogic
         return character;
     }
 
+
 }
