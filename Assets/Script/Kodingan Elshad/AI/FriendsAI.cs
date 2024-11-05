@@ -67,6 +67,18 @@ public class FriendsAI : ExecuteLogic
 
     private Vector3 tempDirTotal;
 
+    private Transform tempEnemy;
+    private Transform curEnemy;
+    private Transform enemyBodyToShoot;
+    private Body tempBody;
+    private Body enemyBodyParts;
+    bool headIsFound;
+
+
+    private float curRecoil = 0;
+    private float maxRecoil = 0;
+    private float recoilCooldown = 0;
+
     private void Start()
     {
         viewMesh = new Mesh();
@@ -91,6 +103,8 @@ public class FriendsAI : ExecuteLogic
     }
     void Update()
     {
+        ComplexRecoil(ref curRecoil);
+
         if (detectedTimer > 0)
         {
             detectedTimer -= Time.deltaTime;
@@ -198,24 +212,106 @@ public class FriendsAI : ExecuteLogic
 
     private void Shooting()
     {
-        Vector3 dis = new Vector3();
+        Vector3 dir = new Vector3();
+
+
         foreach (Transform enemy in visibleTargets)
         {
+            tempEnemy = null;
+            tempBody = null;
             tempDistance = 0;
             if (tempDistance > Vector3.Distance(transform.position, enemy.position) || tempDistance == 0)
             {
-                dis = visibleTargets[0].transform.position - FOVPoint.transform.position;
                 tempDistance = Vector3.Distance(transform.position, enemy.position);
+                tempEnemy = enemy;
+                tempBody = enemy.GetComponent<Body>();
             }
         }
+
+        enemyBodyParts = tempBody;
+        curEnemy = tempEnemy;
+
+
+        if (enemyBodyParts != null)
+        {
+            headIsFound = false; // Initialize to false at the start
+            for (int i = 0; i < enemyBodyParts.bodyParts.Count; i++)
+            {
+                if (enemyBodyParts.bodyParts[i].bodyType == bodyParts.head)
+                {
+                    Vector3 direction = (enemyBodyParts.bodyParts[i].transform.position - FOVPoint.position).normalized;
+                    if (Physics.Raycast(FOVPoint.position, direction, out RaycastHit hit, isItFriend))
+                    {
+                        if (hit.transform == enemyBodyParts.bodyParts[i].transform) // Ensure it's hitting the intended target
+                        {
+                            headIsFound = true;
+                            enemyBodyToShoot = enemyBodyParts.bodyParts[i].gameObject.transform;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (headIsFound)
+            {
+                dir = enemyBodyToShoot.position - FOVPoint.position;
+            }
+            else
+            {
+                for (int i = 0; i < enemyBodyParts.bodyParts.Count; i++)
+                {
+                    Vector3 direction = (enemyBodyParts.bodyParts[i].transform.position - FOVPoint.position).normalized;
+                    if (Physics.Raycast(FOVPoint.position, direction, out RaycastHit hit, isItFriend))
+                    {
+                        if (hit.transform == enemyBodyParts.bodyParts[i].transform)
+                        {
+                            enemyBodyToShoot = enemyBodyParts.bodyParts[i].gameObject.transform;
+                            break;
+                        }
+                    }
+                }
+
+                if (enemyBodyToShoot != null) // Ensure `enemyBodyToShoot` is not null before calculating `dir`
+                {
+                    dir = enemyBodyToShoot.position - FOVPoint.position;
+                }
+            }
+        }
+
+        if (dir == Vector3.zero)
+        {
+            dir = curEnemy.transform.position - FOVPoint.transform.position;
+        }
         // Debug.Log("Shoot direction " + dis + " " + FOVPoint.position + " " + visibleTargets[0].transform.position);
-        if (visibleTargets.Count > 0) Shoot(FOVPoint.position, dis, friendsStat, currentWeapon, isItFriend);
+        if (visibleTargets.Count > 0) Shoot(FOVPoint.position, dir.normalized, friendsStat, currentWeapon, isItFriend, curRecoil);
     }
 
+    private void RecoilHandler()
+    {
+        recoilCooldown = currentWeapon.fireRate + (currentWeapon.fireRate * .1f);
+        maxRecoil = currentWeapon.recoil;
+    }
+
+    private void ComplexRecoil(ref float curRecoil)
+    {
+        if (recoilCooldown > 0)
+        {
+            recoilCooldown -= Time.deltaTime;
+            if (curRecoil <= maxRecoil)
+            {
+                curRecoil += Time.deltaTime * currentWeapon.recoil;
+            }
+        }
+        else
+        {
+            curRecoil = 0;
+        }
+    }
     private void Shoot()
     {
         if (!fireRateOn && !isReloading && visibleTargets.Count != 0)
         {
+            RecoilHandler();
             Shooting();
             StartCoroutine(FireRate(FireRateFlag, currentWeapon.fireRate));
             if (currentWeapon.currBullet == 0)
@@ -405,7 +501,12 @@ public class FriendsAI : ExecuteLogic
 
     public float GetFriendHP()
     {
-        return friendsHP;
+        return friendsHP + character.armor;
+    }
+
+    public void SetFriendsHP(float HP)
+    {
+        friendsHP = HP;
     }
 
     public void SetEnemyHP(float hp)

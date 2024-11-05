@@ -165,6 +165,7 @@ public class AILogic : MonoBehaviour
         //Titik awal berada di posisi character
         //Selanjutnya akan membuat lingkaran sebesar 'viewRadius'
         //Jika collider game object nya memiliki mask yang ditentukan, maka akan disimpan
+
         Collider[] targetInViewRadius = Physics.OverlapSphere(FOVPoint.position, viewRadius, playerMask);
 
         //Untuk mendeteksi jarak dan arah musuh/player
@@ -177,11 +178,22 @@ public class AILogic : MonoBehaviour
             //jika arah nya berada di dalam FOV
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {
-                
+
                 float distanceToTarget = Vector3.Distance(FOVPoint.position, target.position);
                 if (!Physics.Raycast(FOVPoint.position, dirToTarget, distanceToTarget, groundMask))
                 {
-                    visibleTargets.Add(target);
+                    Body body = target.GetComponentInParent<Body>();
+                    if (body != null)
+                    {
+                        if(!visibleTargets.Contains(body.transform))
+                        {
+                            visibleTargets.Add(body.transform);
+                        }
+                    }
+                    else
+                    {
+                        visibleTargets.Add(target);
+                    }
                 }
             }
         }
