@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,6 +10,7 @@ using UnityEngine.AI;
 public abstract class AIBehaviourStateMachine : BaseStateMachine
 {
     #region Normal Variable
+    [SerializeField] private TakeCoverManager _takeCoverManager;
     [Header("Other Important Variable")]
     [SerializeField] protected FOVMachine _fovMachine;
     [SerializeField] protected Transform _aimAIPoint;
@@ -29,6 +32,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     protected bool _canTakeCoverInThePosition;
     protected bool _isWallTallerThanChara;
     protected Vector3 _dirToLookAtWhenTakingCover;
+    protected Vector3 _dirToLookAtWhenChecking;
+    protected Vector3 _posToGoWhenCheckingWhenWallIsHigher;
     protected bool _isAtTheLeftSideOfTheWall;
     protected bool _isMovingOnXPos;
 
@@ -60,6 +65,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     public bool IsTakingCover {get { return _isTakingCover;} set { _isTakingCover = value;}}
     public bool isWallTallerThanChara {get { return _isWallTallerThanChara;}}
     public Vector3 DirToLookAtWhenTakingCover {get { return _dirToLookAtWhenTakingCover;}}
+    public Vector3 DirToLookAtWhenChecking {get { return _dirToLookAtWhenChecking;}}
+    public Vector3 PosToGoWhenCheckingWhenWallIsHigher {get { return _posToGoWhenCheckingWhenWallIsHigher;}}
     public Transform NoEnemyToPointObj {get { return _noEnemyToPointObj;}}
     public LayerMask RunAwayObstacleMask {get {return _runAwayObstacleMask;}}
     public Vector3 RunAwayPos {get {return _runAwayPos;} }
@@ -76,6 +83,10 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         if(_agent)_agent = GetComponent<NavMeshAgent>();
         if(_fovMachine == null)_fovMachine = GetComponent<FOVMachine>();
         
+    }
+    protected virtual void Start()
+    {
+        _takeCoverManager = TakeCoverManager.Instance;
     }
     public void AimAIPointLookAt(Transform lookAt)
     {
@@ -154,7 +165,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     // Debug.Log("Dot fwd normal " + forwardWithEnemy);
                     Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallForward * 100f, Color.blue);
 
-                    GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, wallRight);
+                    GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, wallRight, directionTotalEnemyToWall);
                     
 
                 }
@@ -166,7 +177,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         // Debug.Log("Dot fwd balik " + forwardWithEnemy);
                         Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallForward * 100f, Color.red);
 
-                        GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, -wallForward, wallRight);
+                        GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, -wallForward, wallRight,directionTotalEnemyToWall);
                     } 
                 }
                 
@@ -180,7 +191,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 {
                     // Debug.Log("Dot right normal " + rightWithEnemy);
                     Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallRight * 100f, Color.grey);
-                    GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, wallRight);
+                    GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, wallRight, directionTotalEnemyToWall);
                 }
                 else // real life wise, ga mungkin di sisi 1 aman, sisi 1 lg aman juga
                 {
@@ -189,7 +200,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     {
                         // Debug.Log("Dot right balik " + rightWithEnemy);
                         Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallRight * 100f, Color.magenta);
-                        GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, -wallRight);
+                        GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, -wallRight, directionTotalEnemyToWall);
                     }
                     
                 }
@@ -208,33 +219,47 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 float NewPosForwardDistance = Vector3.Dot(NewPosToWall, wallForward); 
                 float NewPosRightDistance = Vector3.Dot(NewPosToWall, wallRight); 
 
+                Debug.DrawRay(wallCenter, wallForward * 100f, Color.red);
+                Debug.DrawRay(wallCenter, wallRight * 100f, Color.blue);
                 if(_isMovingOnXPos)
                 {
                     if(NewPosRightDistance >= 0)
                     {
                         if(NewPosForwardDistance >= 0)
                         {
+                            Debug.Log("Depan, kanan" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
+                            _dirToLookAtWhenChecking = -wallForward;
                         }
                         else
                         {
+                            Debug.Log("Bawah, kiri" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
+                            _dirToLookAtWhenChecking = wallForward;
                         }
-                        _dirToLookAtWhenTakingCover = new Vector3(wallRight.x, 0, newPos.z);
+                        _dirToLookAtWhenTakingCover = wallRight;
+                        
                     }
                     else
                     {
                         if(NewPosForwardDistance > 0)
                         {
+                            Debug.Log("Depan, kiri" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
+                            _dirToLookAtWhenChecking = -wallForward;
                             
                         }
                         else
                         {
+                            Debug.Log("Bawah, kanan" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
+                            _dirToLookAtWhenChecking = wallForward;
                         }
-                        _dirToLookAtWhenTakingCover = new Vector3(-wallRight.x, 0, newPos.z);
+                        _dirToLookAtWhenTakingCover = -wallRight;
                     }
+                    // Debug.Log(_dirToLookAtWhenChecking + " " + transform.name);
+                    // if(isWallTallerThanChara) _dirToLookAtWhenChecking = new Vector3(_posToGoWhenCheckingWhenWallIsHigher.x, 0, _dirToLookAtWhenChecking.z);
+                    // else _dirToLookAtWhenChecking = new Vector3(newPos.x, 0, _dirToLookAtWhenChecking.z);
                 }
                 else
                 {
@@ -242,26 +267,37 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     {
                         if(NewPosRightDistance > 0)
                         {
+                            Debug.Log("kiri, atas" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
+                            _dirToLookAtWhenChecking = -wallRight;
                         }
                         else
                         {
+                            Debug.Log("kanan, atas" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
+                            _dirToLookAtWhenChecking = wallRight;
                         }
-                        _dirToLookAtWhenTakingCover = new Vector3(newPos.x, 0, wallForward.z);
+                        _dirToLookAtWhenTakingCover = wallForward;
                     }
                     else
                     {
                         if(NewPosRightDistance >= 0) 
                         {
+                            Debug.Log("kanan, bawah" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
+                            _dirToLookAtWhenChecking = -wallRight;
                         }
                         else 
                         {
+                            Debug.Log("kiri, bawah" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
+                            _dirToLookAtWhenChecking = wallRight;
                         }
-                        _dirToLookAtWhenTakingCover = new Vector3(newPos.x, 0, -wallForward.z);
+                        _dirToLookAtWhenTakingCover = -wallForward;
                     }
+                    // Debug.Log(_dirToLookAtWhenChecking + " " + transform.name);
+                    // if(isWallTallerThanChara) _dirToLookAtWhenChecking = new Vector3(_dirToLookAtWhenChecking.x, 0, _posToGoWhenCheckingWhenWallIsHigher.z);
+                    // else _dirToLookAtWhenChecking = new Vector3(_dirToLookAtWhenChecking.x, 0, newPos.z);
                 }
 
                 
@@ -278,13 +314,13 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         return true;
     }
     //KALO MO NYARI INI HARUS NYARI LEAVEDIRECTION DL
-    public void GetClosestPosition(bool isFrontBehind, ref float closestDistance, ref Vector3 newPos, float halfWallLength, float halfWallWidth, bool isWallTallerThanChara, Vector3 wallCenter, Vector3 wallForwardDir, Vector3 wallRightDir)
+    public void GetClosestPosition(bool isFrontBehind, ref float closestDistance, ref Vector3 newPos, float halfWallLength, float halfWallWidth, bool isWallTallerThanChara, Vector3 wallCenter, Vector3 wallForwardDir, Vector3 wallRightDir, Vector3 dirEnemyToWall)
     {
         float newHalfWallWidth = 0;
         float newHalfWallLength = 0;
         
         Vector3 tempNewPos = wallCenter;
-        _isMovingOnXPos = isFrontBehind;
+        
         if(isFrontBehind)
         {
             newHalfWallLength = halfWallLength - _buffer;
@@ -299,6 +335,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     if(x == 1) tempNewPos += wallRightDir * -newHalfWallWidth;
                     tempNewPos += wallForwardDir * newHalfWallLength;
 
+                    if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
+                    // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue; // if it's before I can take cover, but i go through here again and it's the same place, meaning it's not a safe place,
                     float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
 
                     if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
@@ -306,12 +344,22 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         Debug.Log(x + " " + distanceCharaToWall + "beforefb");
                         Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
                         float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
-                        if(dotLeaveDirWithNewPosDir >= _HideDotMin)
+                        
+
+                        //ini dicek biar tau apakah masi keliatan ama enemy ga di posisi wall itu; wallcenter = transform wall
+                        Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
+                        float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
+                        if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "afterfb");
                             closestDistance = distanceCharaToWall;
                             newPos = tempNewPos;
-                            // Debug.Log(x + " " + newPos + "after");
+                            _isMovingOnXPos = isFrontBehind;
+
+                            _posToGoWhenCheckingWhenWallIsHigher = wallCenter;
+                            if(x == 0) _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * (halfWallWidth - _buffer);
+                            if(x == 1) _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * -(halfWallWidth - _buffer);
+                            _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * newHalfWallLength;
                         }
                         
                     }
@@ -334,17 +382,24 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         tempNewPos += wallRightDir * newHalfWallWidth;
                         tempNewPos += wallForwardDir * newHalfWallLength;
 
+                        if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
+                        // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue;
                         float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
+
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "beforefb");
                             Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
                             float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
-                            if(dotLeaveDirWithNewPosDir >= _HideDotMin)
+
+                            Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
+                            float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
+                            if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterfb");
                                 closestDistance = distanceCharaToWall;
                                 newPos = tempNewPos;
+                                _isMovingOnXPos = isFrontBehind;
                             }
                             // Debug.Log(x + " " + newPos + " FrontBehind");
                         }
@@ -359,17 +414,23 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         if(x == 1) tempNewPos += wallRightDir * -newHalfWallWidth;
                         tempNewPos += wallForwardDir * newHalfWallLength;
 
+                        if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
+                        // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue;
                         float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "beforefb");
                             Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
                             float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
-                            if(dotLeaveDirWithNewPosDir >= _HideDotMin)
+
+                            Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
+                            float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
+                            if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterfb");
                                 closestDistance = distanceCharaToWall;
                                 newPos = tempNewPos;
+                                _isMovingOnXPos = isFrontBehind;
                             }
                         }
                     }
@@ -389,17 +450,30 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     if(x == 1) tempNewPos += wallForwardDir * -newHalfWallLength;
                     tempNewPos += wallRightDir * newHalfWallWidth;
 
+                    if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
+                    // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue;
                     float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
                     if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                     {
                         Debug.Log(x + " " + distanceCharaToWall + "beforelr");
                         Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
                         float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
-                        if(dotLeaveDirWithNewPosDir >= _HideDotMin)
+
+                        Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
+                        float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
+                        
+                        if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "afterlr");
                             closestDistance = distanceCharaToWall;
                             newPos = tempNewPos;
+
+                            _posToGoWhenCheckingWhenWallIsHigher = wallCenter;
+                            if(x == 0) _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * (halfWallLength - _buffer);
+                            if(x == 1) _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * -(halfWallLength - _buffer);
+                            _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * newHalfWallWidth;
+
+                            _isMovingOnXPos = isFrontBehind;
                         }
                     }
                 }
@@ -420,17 +494,25 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         tempNewPos += wallForwardDir * newHalfWallLength;
                         tempNewPos += wallRightDir * newHalfWallWidth;
 
+                        if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
+                        // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue;
                         float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "beforelr");
                             Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
                             float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
-                            if(dotLeaveDirWithNewPosDir >= _HideDotMin)
+
+                            Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
+                            float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
+                            
+                            if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterlr");
                                 closestDistance = distanceCharaToWall;
                                 newPos = tempNewPos;
+
+                                _isMovingOnXPos = isFrontBehind;
                             }
                             // Debug.Log(x + " " + newPos + " LeftRight");
                         }
@@ -446,17 +528,25 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         if(x == 1) tempNewPos += wallForwardDir * -newHalfWallLength;
                         tempNewPos += wallRightDir * newHalfWallWidth;
 
+                        if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
+                        // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue;
                         float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "beforelr");
                             Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
                             float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
-                            if(dotLeaveDirWithNewPosDir >= _HideDotMin)
+
+                            Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
+                            float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
+                            
+                            if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterlr");
                                 closestDistance = distanceCharaToWall;
                                 newPos = tempNewPos;
+
+                                _isMovingOnXPos = isFrontBehind;
                             }
                         }
                     }
@@ -479,6 +569,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         path = new NavMeshPath();
         if(NavMesh.CalculatePath(origin, target, _agent.areaMask, path))
         {
+            Debug.Log(path.status + " PATH STATUS NOW" + target);
+            // if(path.status != NavMeshPathStatus.PathComplete)return Mathf.Infinity;
             float distance = Vector3.Distance(origin, path.corners[0]);
             for(int j = 1; j < path.corners.Length; j++)
             {
@@ -486,7 +578,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             }
             return distance;
         }
-        return 0;
+        Debug.Log("no path");
+        return Mathf.Infinity;
     }
     public Vector3 GetTotalDirectionTargetPosAndEnemy(Transform targetPos, bool isFromTarget)
     {

@@ -10,6 +10,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     [Space(2)]
     [Header("Other Component Variable")]
     [SerializeField] private EnemyAIManager _enemyAIManager;
+    
     protected IReceiveInputFromPlayer _getCanInputPlayer;
     private bool isToldHold;
     [SerializeField]private Transform _friendsDefaultDirection;
@@ -27,6 +28,8 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     [SerializeField] protected bool _isAIEngage;
     [SerializeField] protected float _isEngageTimer;
     [SerializeField] protected float _isEngageTimerMax = 0.3f;
+    [SerializeField] protected float _isCheckingLastPosTImer;
+    [SerializeField] protected float _isCheckingLastPosTImerMax = 0.8f;
     
     protected FriendAIState _currState;
     protected FriendAIStateFactory _states;
@@ -46,6 +49,9 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     public Transform FriendsDefaultDirection {get {return _friendsDefaultDirection;}}   
     public Transform FriendsCommandDirection {get {return _friendsCommandDirection;}}    
 
+    public float IsCheckingLastPosTImer {get {return _isCheckingLastPosTImer; } set {_isCheckingLastPosTImer = value;}}
+    public float IsCheckingLastPosTImerMax {get {return _isCheckingLastPosTImerMax;}}
+
 
     public PlayableCharacterIdentity GetPlayableCharaIdentity { get { return _playableCharaIdentity; } }    
     public PlayableMovementStateMachine GetMoveStateMachine { get { return _playableMoveStateMachine; } }
@@ -62,8 +68,9 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
         _states = new FriendAIStateFactory(this);
     }
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         _enemyAIManager = EnemyAIManager.Instance;
         _enemyAIManager.OnEnemyisEngaging += OnEnemyStartedEngaging;
         _enemyAIManager.OnEnemyStopEngaging += OnEnemyStopEngaging;
@@ -167,4 +174,5 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         base.RunAway();
         GetMoveStateMachine.SetAIDirection(RunAwayPos);
     }
+    
 }

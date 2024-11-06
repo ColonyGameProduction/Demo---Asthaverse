@@ -62,8 +62,9 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         _enemyIdentity = _charaIdentity as EnemyIdentity;
         _states = new EnemyAIStateFactory(this);
     }
-    private void Start() 
+    protected override void Start() 
     {
+        base.Start();
         _enemyAIManager = EnemyAIManager.Instance;
         _enemyAIManager.OnCaptainsStartHunting += EnemyAIManager_OnCaptainsStartHunting;
         _enemyAIManager.OnCaptainsStartEngaging += EnemyAIManager_OnCaptainsStartEngaging;

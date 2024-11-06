@@ -74,17 +74,18 @@ public class FriendAI_EngageState : FriendAIState
                 }
                 else
                 {
+                    if(_sm.GetMoveStateMachine.IsRunning)_sm.GetMoveStateMachine.IsRunning = false;
+                    if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
                     if(_sm.IsTakingCover)
                     {
+                        
                         Debug.Log(_sm.transform.name + "I'm at the place");
-                        _sm.IsTakingCover = false;
+                        
                         _sm.SwitchState(_factory.AI_TakingCoverState());
                         return;
                     }
                     else
                     {
-                        if(_sm.GetMoveStateMachine.IsRunning)_sm.GetMoveStateMachine.IsRunning = false;
-                        if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
                         if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
                     }
                     
@@ -99,10 +100,6 @@ public class FriendAI_EngageState : FriendAIState
             bool isClosestEnemy = false;
             if(_sm.GetFOVMachine.ClosestEnemy != null)
             {
-                // float distanceWithClosestEnemyFOV = Vector3.Distance(_sm.transform.position, _sm.GetFOVMachine.ClosestEnemy.position);
-                // float distanceWithClosestEnemyWhoSawAI = Vector3.Distance(_sm.transform.position, _sm.ClosestEnemyWhoSawAI.position);
-                // if(distanceWithClosestEnemyFOV <= distanceWithClosestEnemyWhoSawAI) currTarget = _sm.GetFOVMachine.ClosestEnemy;
-                // else currTarget = _sm.ClosestEnemyWhoSawAI;
                 currTarget = _sm.GetFOVMachine.ClosestEnemy;
                 isClosestEnemy = true;
             }

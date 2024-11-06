@@ -69,7 +69,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         set{ 
             if(value) 
             {
-                if(CurrWeapon.totalBullet > 0)_isUsingWeapon = value;
+                if(CurrWeapon.currBullet > 0)_isUsingWeapon = value;
             }
             
             else _isUsingWeapon = value;
