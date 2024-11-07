@@ -29,7 +29,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     [SerializeField] protected float _isEngageTimer;
     [SerializeField] protected float _isEngageTimerMax = 0.3f;
     [SerializeField] protected float _isCheckingLastPosTImer;
-    [SerializeField] protected float _isCheckingLastPosTImerMax = 0.8f;
+    [SerializeField] protected float _isCheckingLastPosTImerMax = 1f;
     
     protected FriendAIState _currState;
     protected FriendAIStateFactory _states;

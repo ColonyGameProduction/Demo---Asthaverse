@@ -18,17 +18,12 @@ public class FriendAI_EngageState : FriendAIState
 
     public override void UpdateState()
     {
+        Debug.Log("I'm engaging" + _sm.transform.name);
         if(!_sm.IsAIEngage || PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || !_sm.IsAIInput || _sm.GetPlayableCharaIdentity.IsAnimatingOtherAnimation || _sm.GetPlayableCharaIdentity.IsReviving || _sm.GetPlayableCharaIdentity.IsSilentKilling || _sm.IsCharacterDead)
         {
             _sm.SwitchState(_factory.AI_IdleState());
             return;
         }
-
-        // if(!_sm.IsTakingCover)
-        // {
-        //     _sm.SwitchState(_factory.AI_TakingCoverState());
-        //     return;
-        // }
 
         _sm.GetFOVMachine.GetClosestEnemy();
         
@@ -37,6 +32,7 @@ public class FriendAI_EngageState : FriendAIState
             
             if(_sm.GetFOVMachine.ClosestEnemy != null)
             {
+                _sm.IsCheckingLastPosTImer = _sm.IsCheckingLastPosTImerMax;
                 Debug.Log(_sm.transform.name + "no one see me but I see someone");
                 if(_sm.GetMoveStateMachine.IsRunning)_sm.GetMoveStateMachine.IsRunning = false;
                 if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
@@ -64,12 +60,32 @@ public class FriendAI_EngageState : FriendAIState
                 StopShooting();
                 if(!_sm.GetMoveStateMachine.IsIdle)
                 {
-                    if(!_sm.GetMoveStateMachine.IsRunning && _sm.ClosestEnemyWhoSawAI != null)
+                    if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.GetFOVMachine.EnemyCharalastSeenPosition)
                     {
-                        Vector3 facedir = (_sm.Agent.steeringTarget - _sm.transform.position).normalized;
-                        if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
-                        _sm.GetMoveStateMachine.SetAITargetToLook(-facedir, true);
-                        if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
+                        if(!_sm.GetMoveStateMachine.IsRunning && _sm.ClosestEnemyWhoSawAI != null)
+                        {
+                            Vector3 facedir = (_sm.Agent.steeringTarget - _sm.transform.position).normalized;
+                            if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
+                            _sm.GetMoveStateMachine.SetAITargetToLook(-facedir, true);
+                            if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
+                        }  
+                    }
+                    else
+                    {
+                        if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
+                        {
+                            float distanceBetweenCharaWithEnemyLastSeenPos = Vector3.Distance(_sm.GetFOVMachine.EnemyCharalastSeenPosition, _sm.transform.position);
+                            if(distanceBetweenCharaWithEnemyLastSeenPos > _sm.GetFOVMachine.viewRadius - 5 || Physics.Raycast(_sm.transform.position, _sm.GetFOVMachine.EnemyCharalastSeenPosition, out RaycastHit hit,_sm.GetFOVMachine.GroundMask))
+                            {
+                                _sm.GetMoveStateMachine.SetAIDirection(_sm.GetFOVMachine.EnemyCharalastSeenPosition);
+                            }
+                            else
+                            {
+                                if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
+                            }
+                            _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
+                            if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
+                        }
                     }
                 }
                 else
@@ -86,7 +102,37 @@ public class FriendAI_EngageState : FriendAIState
                     }
                     else
                     {
-                        if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
+                        if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
+                        {
+                            float distanceBetweenCharaWithEnemyLastSeenPos = Vector3.Distance(_sm.GetFOVMachine.EnemyCharalastSeenPosition, _sm.transform.position);
+                            if(distanceBetweenCharaWithEnemyLastSeenPos > _sm.GetFOVMachine.viewRadius - 5 || Physics.Raycast(_sm.transform.position, _sm.GetFOVMachine.EnemyCharalastSeenPosition, out RaycastHit hit,_sm.GetFOVMachine.GroundMask))
+                            {
+                                _sm.GetMoveStateMachine.SetAIDirection(_sm.GetFOVMachine.EnemyCharalastSeenPosition);
+                            }
+                            _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
+                            if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
+
+                            Vector3 dirEnemyLastSeenToChara = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
+                            float dotBetweenCharaWithEnemyLastSeen = Vector3.Dot(dirEnemyLastSeenToChara, _sm.transform.forward);
+                            if(dotBetweenCharaWithEnemyLastSeen >= 0.95f)
+                            {   
+                                if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
+                                {
+                                    Debug.Log("I'm checking1 !!!" + _sm.transform.name);
+                                    if(_sm.IsCheckingLastPosTImer > 0)_sm.IsCheckingLastPosTImer -= Time.deltaTime;
+                                    else
+                                    {
+                                        Debug.Log("I'm  done checking1 !!!" + _sm.transform.name);
+                                        _sm.GetFOVMachine.IsCheckingEnemyLastPosition();
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
+                        }
+                        
                     }
                     
                 }
@@ -100,6 +146,7 @@ public class FriendAI_EngageState : FriendAIState
             bool isClosestEnemy = false;
             if(_sm.GetFOVMachine.ClosestEnemy != null)
             {
+                _sm.IsCheckingLastPosTImer = _sm.IsCheckingLastPosTImerMax;
                 currTarget = _sm.GetFOVMachine.ClosestEnemy;
                 isClosestEnemy = true;
             }
@@ -331,7 +378,7 @@ public class FriendAI_EngageState : FriendAIState
         if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
         if(_sm.GetMoveStateMachine.IsRunning)_sm.GetMoveStateMachine.IsRunning = false;
         if(_sm.GetUseWeaponStateMachine.IsUsingWeapon || _sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.ForceStopUseWeapon();
-        if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)_sm.GetFOVMachine.IsCheckingEnemyLastPosition();
+        
     }
 
     private void StartShooting(Transform chosenTarget)

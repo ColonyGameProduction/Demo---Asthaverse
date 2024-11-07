@@ -25,6 +25,7 @@ public class FriendAI_TakingCoverState : FriendAIState
 
     public override void UpdateState()
     {
+        Debug.Log("I'm taking cover" + _sm.transform.name);
         //I'm on my way to the take cover place
         _sm.GetFOVMachine.GetClosestEnemy();
         _sm.GetClosestEnemyWhoSawAI();
@@ -36,6 +37,7 @@ public class FriendAI_TakingCoverState : FriendAIState
             Patroling();
             if(_sm.GetFOVMachine.ClosestEnemy != null)
             {
+                _sm.IsCheckingLastPosTImer = _sm.IsCheckingLastPosTImerMax;
                 _sm.GetMoveStateMachine.IsRunning = false;
                 if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
                 // if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
@@ -74,28 +76,42 @@ public class FriendAI_TakingCoverState : FriendAIState
                 }
                 else if(_isChecking)
                 {
-                    Vector3 chosenPos = Vector3.zero;
+
+                    float dotBetweenCharaWithEnemyLastSeen = 0;
                     if(!_sm.isWallTallerThanChara)
                     {
                         _sm.GetMoveStateMachine.IsRunning = false;
 
-                        // if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
-                        // {
-                        //     chosenPos = _sm.GetFOVMachine.EnemyCharalastSeenPosition;
-                        //     _sm.GetMoveStateMachine.SetAITargetToLook(_sm.DirToLookAtWhenChecking, true);
-                        // }
-                        // else
-                        // {
-                            chosenPos = _sm.DirToLookAtWhenChecking;
+                        if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
+                        {
+
+                            _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
+                            Vector3 dirEnemyLastSeenToChara = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
+                            dotBetweenCharaWithEnemyLastSeen = Vector3.Dot(dirEnemyLastSeenToChara, _sm.transform.forward);
+                            Debug.Log("Muncul di sini" + dirEnemyLastSeenToChara + " xx" + _sm.transform.name);
+                        }
+                        else
+                        {
+
                             _sm.GetMoveStateMachine.SetAITargetToLook(_sm.DirToLookAtWhenChecking, true);
-                        // }
-                        // _sm.GetMoveStateMachine.SetAITargetToLook(_sm.DirToLookAtWhenChecking, true);
+                            dotBetweenCharaWithEnemyLastSeen = Vector3.Dot(_sm.DirToLookAtWhenChecking, _sm.transform.forward);
+                            Debug.Log("Muncul di sina" + _sm.DirToLookAtWhenChecking + " xx" + _sm.transform.name);
+                        }
+
                         if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
 
-                        // Vector3 dirEnemyLastSeenToChara = (_sm.DirToLookAtWhenChecking - _sm.transform.position).normalized;
-                        float dotBetweenCharaWithEnemyLastSeen = Vector3.Dot(_sm.DirToLookAtWhenChecking, _sm.transform.forward);
                         if(dotBetweenCharaWithEnemyLastSeen >= 0.95f)
                         {   
+                            if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
+                            {
+                                Debug.Log("I'm checking !!!" + _sm.transform.name);
+                                if(_sm.IsCheckingLastPosTImer > 0)_sm.IsCheckingLastPosTImer -= Time.deltaTime;
+                                else
+                                {
+                                    Debug.Log("I'm  done checking !!!" + _sm.transform.name);
+                                    _sm.GetFOVMachine.IsCheckingEnemyLastPosition();
+                                }
+                            }
                             Debug.Log("Check when wall is nmot taller" + _sm.transform.name);
                             if(_sm.GetMoveStateMachine.IsCrouching)_sm.GetMoveStateMachine.IsCrouching = false;
                         }
@@ -105,14 +121,38 @@ public class FriendAI_TakingCoverState : FriendAIState
                         if(_sm.GetMoveStateMachine.CurrAIDirPos == _sm.PosToGoWhenCheckingWhenWallIsHigher && _sm.GetMoveStateMachine.IsIdle)
                         {
                             _sm.GetMoveStateMachine.IsRunning = false;
-                            _sm.GetMoveStateMachine.SetAITargetToLook(_sm.DirToLookAtWhenChecking, true);
+
+                            if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
+                            {
+
+                                _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
+                                Vector3 dirEnemyLastSeenToCharas = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
+                                dotBetweenCharaWithEnemyLastSeen = Vector3.Dot(dirEnemyLastSeenToCharas, _sm.transform.forward);
+                                Debug.Log("Muncul di sini" + dirEnemyLastSeenToCharas + " xx" + _sm.transform.name);
+                            }
+                            else
+                            {
+
+                                _sm.GetMoveStateMachine.SetAITargetToLook(_sm.DirToLookAtWhenChecking, true);
+                                dotBetweenCharaWithEnemyLastSeen = Vector3.Dot(_sm.DirToLookAtWhenChecking, _sm.transform.forward);
+                                Debug.Log("Muncul di sina" + _sm.DirToLookAtWhenChecking + " xx" + _sm.transform.name);
+                            }
+                            
                             if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
 
-                            Vector3 dirEnemyLastSeenToChara = (_sm.DirToLookAtWhenChecking - _sm.transform.position).normalized;
-                            float dotBetweenCharaWithEnemyLastSeen = Vector3.Dot(_sm.DirToLookAtWhenChecking, _sm.transform.forward);
+
                             if(dotBetweenCharaWithEnemyLastSeen >= 0.95f)
                             {   
-
+                                if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
+                                {
+                                    Debug.Log("I'm checking !!!" + _sm.transform.name);
+                                    if(_sm.IsCheckingLastPosTImer > 0)_sm.IsCheckingLastPosTImer -= Time.deltaTime;
+                                    else
+                                    {
+                                        Debug.Log("I'm  done checking !!!" + _sm.transform.name);
+                                        _sm.GetFOVMachine.IsCheckingEnemyLastPosition();
+                                    }
+                                }
                                 Debug.Log("I did it" + _sm.transform.name);
                             }
 
@@ -127,6 +167,7 @@ public class FriendAI_TakingCoverState : FriendAIState
             bool isClosestEnemy = false;
             if(_sm.GetFOVMachine.ClosestEnemy != null)
             {
+                _sm.IsCheckingLastPosTImer = _sm.IsCheckingLastPosTImerMax;
                 currTarget = _sm.GetFOVMachine.ClosestEnemy;
                 isClosestEnemy = true;
             }
@@ -260,7 +301,7 @@ public class FriendAI_TakingCoverState : FriendAIState
             // Debug.Log("Change now" + _sm.transform.name);
             if(_isHiding)
             {
-                if(!_sm.GetPlayableCharaIdentity.IsHalfHealthOrLower)
+                if(!_sm.GetPlayableCharaIdentity.IsHalfHealthOrLower && !_sm.GetUseWeaponStateMachine.IsReloading)
                 {
                     _isHiding = !_isHiding;
                     _isChecking = !_isChecking;
