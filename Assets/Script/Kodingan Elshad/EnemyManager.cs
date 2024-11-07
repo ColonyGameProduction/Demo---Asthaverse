@@ -15,6 +15,7 @@ public class EnemyManager : MonoBehaviour
     public Action<EnemyAI> enemyEngage;
     public Action<EnemyAI> lastPosIsFound;
     public Action closestPOI;
+    public Action isEngaging;
 
 
     private void Awake()

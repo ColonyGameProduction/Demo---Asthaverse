@@ -199,6 +199,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Whistle"",
+                    ""type"": ""Button"",
+                    ""id"": ""867fd6f3-cc8d-40d8-82bd-22ee705ded89"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""NightVision"",
                     ""type"": ""Button"",
                     ""id"": ""fc427d59-c9d3-4f11-89aa-58cc4e6f4251"",
@@ -420,6 +429,17 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""fac45b6b-e6cd-4c43-8eef-51a3dcea0633"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Whistle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""9920ae0b-8d2d-4c44-bf96-86f1558d8c1a"",
                     ""path"": ""<Keyboard>/n"",
                     ""interactions"": """",
@@ -499,6 +519,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_RegroupFriend = m_InputPlayerAction.FindAction("RegroupFriend", throwIfNotFound: true);
         m_InputPlayerAction_Interact = m_InputPlayerAction.FindAction("Interact", throwIfNotFound: true);
         m_InputPlayerAction_SkillButton = m_InputPlayerAction.FindAction("SkillButton", throwIfNotFound: true);
+        m_InputPlayerAction_Whistle = m_InputPlayerAction.FindAction("Whistle", throwIfNotFound: true);
         m_InputPlayerAction_NightVision = m_InputPlayerAction.FindAction("NightVision", throwIfNotFound: true);
     }
 
@@ -580,6 +601,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_RegroupFriend;
     private readonly InputAction m_InputPlayerAction_Interact;
     private readonly InputAction m_InputPlayerAction_SkillButton;
+    private readonly InputAction m_InputPlayerAction_Whistle;
     private readonly InputAction m_InputPlayerAction_NightVision;
     public struct InputPlayerActionActions
     {
@@ -604,6 +626,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @RegroupFriend => m_Wrapper.m_InputPlayerAction_RegroupFriend;
         public InputAction @Interact => m_Wrapper.m_InputPlayerAction_Interact;
         public InputAction @SkillButton => m_Wrapper.m_InputPlayerAction_SkillButton;
+        public InputAction @Whistle => m_Wrapper.m_InputPlayerAction_Whistle;
         public InputAction @NightVision => m_Wrapper.m_InputPlayerAction_NightVision;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
@@ -671,6 +694,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @SkillButton.started += instance.OnSkillButton;
             @SkillButton.performed += instance.OnSkillButton;
             @SkillButton.canceled += instance.OnSkillButton;
+            @Whistle.started += instance.OnWhistle;
+            @Whistle.performed += instance.OnWhistle;
+            @Whistle.canceled += instance.OnWhistle;
             @NightVision.started += instance.OnNightVision;
             @NightVision.performed += instance.OnNightVision;
             @NightVision.canceled += instance.OnNightVision;
@@ -735,6 +761,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @SkillButton.started -= instance.OnSkillButton;
             @SkillButton.performed -= instance.OnSkillButton;
             @SkillButton.canceled -= instance.OnSkillButton;
+            @Whistle.started -= instance.OnWhistle;
+            @Whistle.performed -= instance.OnWhistle;
+            @Whistle.canceled -= instance.OnWhistle;
             @NightVision.started -= instance.OnNightVision;
             @NightVision.performed -= instance.OnNightVision;
             @NightVision.canceled -= instance.OnNightVision;
@@ -776,6 +805,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnRegroupFriend(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnSkillButton(InputAction.CallbackContext context);
+        void OnWhistle(InputAction.CallbackContext context);
         void OnNightVision(InputAction.CallbackContext context);
     }
 }

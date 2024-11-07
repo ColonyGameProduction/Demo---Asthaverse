@@ -7,33 +7,35 @@ public class WeaponLogicHandler
 {    
 
     //Logic Shooting
-    public void ShootingPerformed(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask)
+    public void ShootingPerformed(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask, float recoil)
     {       
         weaponStat.currBullet -= weaponStat.bulletPerTap;
         if (weaponStat.bulletPerTap > 1)
         {
             for(int i = 0; i < weaponStat.bulletPerTap; i++)
             {
-                BulletShoot(origin, direction, entityStat, weaponStat, entityMask);
+                BulletShoot(origin, direction, entityStat, weaponStat, entityMask, recoil);
             }
 
         }   
         else
         {
-            BulletShoot(origin, direction, entityStat, weaponStat, entityMask);
+            BulletShoot(origin, direction, entityStat, weaponStat, entityMask, recoil);
         }
 
     }
     
-    public void BulletShoot(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask)
+    public void BulletShoot(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask, float recoil)
     {
-        float recoilMod = weaponStat.recoil + ((100 - entityStat.acuracy) * weaponStat.recoil / 100);
+        float maxRecoilMod = recoil + ((100 - entityStat.acuracy) * recoil / 100);
 
-        float x = Random.Range(-recoilMod, recoilMod);
-        float y = Random.Range(-recoilMod, recoilMod);
+        //Debug.Log(maxRecoilMod);
 
-        Vector3 recoil = new Vector3(x, y, 0);
-        Vector3 bulletDirection = (direction + recoil).normalized;  
+        float x = Random.Range(-maxRecoilMod/2, maxRecoilMod/2);
+        float y = Random.Range(-maxRecoilMod, maxRecoilMod);
+
+        Vector3 recoils = new Vector3(x, y, 0);
+        Vector3 bulletDirection = (direction + recoils).normalized;  
 
         // Debug.Log(origin + " " + direction + " " + weaponStat + " " + entityMask);
 
@@ -45,7 +47,13 @@ public class WeaponLogicHandler
 
             GameObject entityGameObject = hit.collider.gameObject;
 
-            CalculateDamage(weaponStat, entityGameObject);
+            if(hit.transform.gameObject.GetComponent<BodyParts>() != null)
+            {
+                BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
+
+                ElshadCalculateDamage(weaponStat, entityStat, entityGameObject, body.bodyType);
+            }
+            
             // Debug.Log(hit.point);
 
         }
@@ -54,6 +62,84 @@ public class WeaponLogicHandler
             hit.point = origin + bulletDirection * weaponStat.range;
             Debug.DrawRay(origin, hit.point, Color.black);
             //Debug.Log(hit.point);
+        }
+    }
+
+    public void ElshadCalculateDamage(WeaponStatSO weapon, EntityStatSO entityStat, GameObject entityGameObject, bodyParts parts)
+    {
+         if(entityGameObject.CompareTag("Enemy"))
+         {
+            EnemyAI enemy = entityGameObject.GetComponentInParent<EnemyAI>(); 
+            float enemyHP = enemy.GetEnemyHP();
+
+            if(parts == bodyParts.head)
+            {
+                enemyHP -= ((weapon.baseDamage * weapon.headDamageMultiplier) - ((weapon.baseDamage * weapon.headDamageMultiplier) * (int)entityStat.armourType / 100));
+                Debug.Log("Hit Head");
+            }
+            else if(parts == bodyParts.body)
+            {
+                enemyHP -= ((weapon.baseDamage) - ((weapon.baseDamage) * (int)entityStat.armourType / 100));
+                Debug.Log("Hit Body");
+            }
+            else
+            {
+                enemyHP -= ((weapon.baseDamage * weapon.legDamageMultiplier) - ((weapon.baseDamage * weapon.legDamageMultiplier) * (int)entityStat.armourType / 100));
+                Debug.Log("Hit Leg");
+            }
+
+
+            enemy.SetEnemyHP(enemyHP);
+            Debug.Log("Enemy Hit!");
+         }
+         else if(entityGameObject.CompareTag("Player"))
+         {
+            if(entityGameObject.GetComponentInParent<PlayerAction>().enabled)
+            {
+                PlayerAction player = entityGameObject.GetComponentInParent<PlayerAction>();
+                float playerHP = player.GetPlayerHP();
+
+                if (parts == bodyParts.head)
+                {
+                    playerHP -= ((weapon.baseDamage * weapon.headDamageMultiplier) - ((weapon.baseDamage * weapon.headDamageMultiplier) * (int)entityStat.armourType / 100));
+                    Debug.Log("Hit Head");
+                }
+                else if (parts == bodyParts.body)
+                {
+                    playerHP -= ((weapon.baseDamage) - ((weapon.baseDamage) * (int)entityStat.armourType / 100));
+                    Debug.Log("Hit Body");
+                }
+                else
+                {
+                    playerHP -= ((weapon.baseDamage * weapon.legDamageMultiplier) - ((weapon.baseDamage * weapon.legDamageMultiplier) * (int)entityStat.armourType / 100));
+                    Debug.Log("Hit Leg");
+                }
+
+                player.SetPlayerHP(playerHP);
+            }
+            else
+            {
+                FriendsAI friends = entityGameObject.GetComponentInParent<FriendsAI>();
+                float friendsHP = friends.GetFriendHP();
+
+                if (parts == bodyParts.head)
+                {
+                    friendsHP -= ((weapon.baseDamage * weapon.headDamageMultiplier) - ((weapon.baseDamage * weapon.headDamageMultiplier) * (int)entityStat.armourType / 100));
+                    Debug.Log("Hit Head");
+                }
+                else if (parts == bodyParts.body)
+                {
+                    friendsHP -= ((weapon.baseDamage) - ((weapon.baseDamage) * (int)entityStat.armourType / 100));
+                    Debug.Log("Hit Body");
+                }
+                else
+                {
+                    friendsHP -= ((weapon.baseDamage * weapon.legDamageMultiplier) - ((weapon.baseDamage * weapon.legDamageMultiplier) * (int)entityStat.armourType / 100));
+                    Debug.Log("Hit Leg");
+                }
+
+                friends.SetFriendsHP(friendsHP);
+            }       
         }
     }
 
