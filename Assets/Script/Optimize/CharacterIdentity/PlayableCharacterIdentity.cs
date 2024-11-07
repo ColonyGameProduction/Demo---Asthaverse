@@ -243,14 +243,11 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     
     public void TurnOnOffFriendAI(bool isTurnOn)
     {
-        FriendAIStateMachine.enabled = isTurnOn;
+        // FriendAIStateMachine.enabled = isTurnOn;
         if(!isTurnOn)
         {
-            if(FriendAIStateMachine.IsAIEngage)
-            {
-                FriendAIStateMachine.IsAIEngage = false;
-                FriendAIStateMachine.IsAIIdle = true;
-            }
+            FriendAIStateMachine.IsAIEngage = false;
+            FriendAIStateMachine.IsAIIdle = true;
         }
         if(isTurnOn)
         {

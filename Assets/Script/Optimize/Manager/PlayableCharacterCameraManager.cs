@@ -5,6 +5,7 @@ using UnityEngine.Rendering;
 
 public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffect
 {
+    public static PlayableCharacterCameraManager Instance { get;private set; }
     private PlayableCamera _currPlayableCamera;
     [Header("Camera Effect Variable")]
     [Header("Camera Scope")]
@@ -32,6 +33,10 @@ public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffe
     public bool IsNormalHeight {get { return _isNormalHeight;}}
     #endregion
     const float EPSILON = 0.0001f;
+    private void Awake() 
+    {
+        Instance = this;
+    }
 
     private void Update() 
     {

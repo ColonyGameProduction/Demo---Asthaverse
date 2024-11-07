@@ -33,7 +33,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     
     protected FriendAIState _currState;
     protected FriendAIStateFactory _states;
-    protected bool _isAIInput;
+    
 
 
 
@@ -78,6 +78,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         
         _playableMoveStateMachine = _playableCharaIdentity.GetPlayableMovementData;
         _playableUseWeaponStateMachine = _playableCharaIdentity.GetPlayableUseWeaponData;
+        _bodyPartMask = _playableUseWeaponStateMachine.CharaEnemyMask;
         _playableMoveStateMachine.OnIsTheSamePosition += MoveStateMachine_OnIsTheSamePosition;
 
         SwitchState(_states.AI_IdleState());
@@ -94,12 +95,15 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     {
         _fovMachine.FOVJob();
         DetectEnemy();
-        GotDetectedTimerCounter();
-        if(_gotDetectedByEnemy)
-        {   
-            _leaveDirection = GetTotalDirectionTargetPosAndEnemy(transform, false);
+        if(IsAIInput)
+        {
+            GotDetectedTimerCounter();
+            if(_gotDetectedByEnemy)
+            {   
+                _leaveDirection = GetTotalDirectionTargetPosAndEnemy(transform, false);
+            }
+            _currState?.UpdateState();
         }
-        _currState?.UpdateState();
 
     }
     public override void SwitchState(BaseState newState)
@@ -140,7 +144,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     private void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos)
     {
-        if(IsAIIdle && GotDetectedbyEnemy && LeaveDirection != Vector3.zero && agentPos == _runAwayPos)
+        if(IsAIIdle && GotDetectedbyEnemy && LeaveDirection != Vector3.zero && agentPos == _runAwayPos && IsAIInput)
         {
             GetMoveStateMachine.IsRunning = false;
         }
@@ -149,11 +153,11 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     private void OnEnemyStartedEngaging()
     {
-        IsAIEngage = true;
+        if(IsAIInput)IsAIEngage = true;
     }
     private void OnEnemyStopEngaging()
     {
-        IsAIEngage = false;
+        if(IsAIInput)IsAIEngage = false;
     }
 
     public void UnsubscribeEvent()

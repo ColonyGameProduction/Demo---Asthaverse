@@ -83,7 +83,7 @@ public class EnemyAI_EngageState : EnemyAIState
     private void StartShooting()
     {
         // Debug.Log("shoot di 2" + _sm.GetFOVMachine.ClosestEnemy.position);
-        _sm.GetUseWeaponStateMachine.GiveChosenTarget(_sm.GetFOVMachine.ClosestEnemy);
+        _sm.GetUseWeaponStateMachine.GiveChosenTarget(_sm.SearchBestBodyPartToShoot(_sm.GetFOVMachine.ClosestEnemy));
         if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
         if(!_sm.GetUseWeaponStateMachine.IsUsingWeapon)_sm.GetUseWeaponStateMachine.IsUsingWeapon = true;
     }

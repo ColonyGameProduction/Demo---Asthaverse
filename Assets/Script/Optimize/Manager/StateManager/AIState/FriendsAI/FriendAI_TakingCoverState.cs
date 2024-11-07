@@ -26,6 +26,16 @@ public class FriendAI_TakingCoverState : FriendAIState
     public override void UpdateState()
     {
         Debug.Log("I'm taking cover" + _sm.transform.name);
+
+        if(_isHiding)Debug.Log("I'm hiding");
+        else Debug.Log("I'm checking");
+        if(!_sm.IsAIEngage || PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || !_sm.IsAIInput || _sm.GetPlayableCharaIdentity.IsAnimatingOtherAnimation || _sm.GetPlayableCharaIdentity.IsReviving || _sm.GetPlayableCharaIdentity.IsSilentKilling || _sm.IsCharacterDead)
+        {
+            _sm.SwitchState(_factory.AI_EngageState());
+            return;
+        }
+
+
         //I'm on my way to the take cover place
         _sm.GetFOVMachine.GetClosestEnemy();
         _sm.GetClosestEnemyWhoSawAI();
@@ -46,7 +56,11 @@ public class FriendAI_TakingCoverState : FriendAIState
 
                     _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position, false);
                     if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
-                    StartShooting(_sm.GetFOVMachine.ClosestEnemy);
+
+                    
+                    // StartShooting(_sm.GetFOVMachine.ClosestEnemy);
+                    StartShooting(_sm.SearchBestBodyPartToShoot(_sm.GetFOVMachine.ClosestEnemy));
+                   
                 }
                 
                 if(_sm.GetUseWeaponStateMachine.IsReloading)
@@ -187,7 +201,10 @@ public class FriendAI_TakingCoverState : FriendAIState
                     if(_isChecking)if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
                     _sm.GetMoveStateMachine.SetAITargetToLook(currTarget.position, false);
                     if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
-                    if(isClosestEnemy)StartShooting(currTarget);
+                    if(isClosestEnemy)
+                    {
+                        StartShooting(_sm.SearchBestBodyPartToShoot(currTarget));
+                    }
                     if(changeTimer <= 0)changeTimer = changeTimerMax * 0.5f;
                 }
                 if(_sm.GetUseWeaponStateMachine.IsReloading)

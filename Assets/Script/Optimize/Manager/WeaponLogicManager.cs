@@ -11,7 +11,7 @@ public class WeaponLogicManager : MonoBehaviour
         Instance = this;
     }
     //Logic Shooting
-    public void ShootingPerformed(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask)
+    public void ShootingPerformed(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask, float shootRecoil)
     {       
         
         weaponStat.currBullet -= weaponStat.bulletPerTap;
@@ -19,22 +19,22 @@ public class WeaponLogicManager : MonoBehaviour
         {
             for(int i = 0; i < weaponStat.bulletPerTap; i++)
             {
-                BulletShoot(origin,direction, aimAccuracy, weaponStat,entityMask);
+                BulletShoot(origin, direction, aimAccuracy, weaponStat, entityMask, shootRecoil);
             }
 
         }   
         else
         {
-            BulletShoot(origin, direction, aimAccuracy, weaponStat, entityMask);
+            BulletShoot(origin, direction, aimAccuracy, weaponStat, entityMask, shootRecoil);
         }
 
     }
     
-    public void BulletShoot(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask)
+    public void BulletShoot(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask, float shootRecoil)
     {
-        float recoilMod = weaponStat.recoil + ((100 - aimAccuracy) * weaponStat.recoil / 100);
+        float recoilMod = shootRecoil + ((100 - aimAccuracy) * shootRecoil / 100);
 
-        float x = Random.Range(-recoilMod, recoilMod);
+        float x = Random.Range(-recoilMod/2, recoilMod/2);
         float y = Random.Range(-recoilMod, recoilMod);
 
         Vector3 recoil = new Vector3(x, y, 0);
@@ -48,9 +48,19 @@ public class WeaponLogicManager : MonoBehaviour
         {
             Debug.DrawRay(origin, bulletDirection * weaponStat.range, Color.black);
 
-            GameObject entityGameObject = hit.collider.gameObject;
 
-            if(!Debugs)CalculateDamage(weaponStat, entityGameObject);
+            BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
+            if(body != null)
+            {
+                GameObject entityGameObject = hit.collider.gameObject;
+                Debug.Log(entityGameObject.name + " di sini " + body);
+                CalculateDamage(weaponStat, entityGameObject, body.bodyType);
+            }
+            else
+            {
+                Debug.Log("I hit Obstacle");
+            }
+
             // Debug.Log(hit.point);
 
         }
@@ -62,15 +72,31 @@ public class WeaponLogicManager : MonoBehaviour
         }
     }
 
-    public void CalculateDamage(WeaponStatSO weapon, GameObject entityGameObject)
+    public void CalculateDamage(WeaponStatSO weapon, GameObject entityGameObject, bodyParts hitBodyPart)
     {
-        IHealth _getHealthFunction;
-        _getHealthFunction =  entityGameObject.transform.GetComponent<IHealth>();
+        IHealth _getHealthFunction =  entityGameObject.transform.GetComponentInParent<IHealth>();
+
         // if(_getHealthFunction == null) _getHealthFunction = entityGameObject.transform.GetComponentInParent<IHealth>();
         // Debug.Log("Halooo????");
         if(_getHealthFunction != null)
         {
-            _getHealthFunction.Hurt(weapon.baseDamage);
+            float totalDamage = 0;
+            if(hitBodyPart == bodyParts.head)
+            {
+                totalDamage = (weapon.baseDamage * weapon.headDamageMultiplier) - ((weapon.baseDamage * weapon.headDamageMultiplier) * ((int)_getHealthFunction.GetCharaArmourType/100));
+                Debug.Log("I hit Head");
+            }
+            else if(hitBodyPart == bodyParts.body)
+            {
+                totalDamage = (weapon.baseDamage) - ((weapon.baseDamage) * ((int)_getHealthFunction.GetCharaArmourType/100));
+                Debug.Log("I hit Body");
+            }
+            else if(hitBodyPart == bodyParts.leg)
+            {
+                totalDamage = (weapon.baseDamage * weapon.legDamageMultiplier) - ((weapon.baseDamage * weapon.legDamageMultiplier) * ((int)_getHealthFunction.GetCharaArmourType/100));
+                Debug.Log("I hit Leg");
+            }
+            if(!Debugs)_getHealthFunction.Hurt(totalDamage);
             Debug.Log(entityGameObject.name + " Hit!" + " HP:" + _getHealthFunction.CurrHealth);
         }
  

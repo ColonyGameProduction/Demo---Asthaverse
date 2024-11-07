@@ -42,7 +42,8 @@ public class FriendAI_EngageState : FriendAIState
 
                     _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position, false);
                     if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
-                    StartShooting(_sm.GetFOVMachine.ClosestEnemy);
+                    // StartShooting(_sm.GetFOVMachine.ClosestEnemy);
+                    StartShooting(_sm.SearchBestBodyPartToShoot(_sm.GetFOVMachine.ClosestEnemy));
                 }
                 
                 if(_sm.GetUseWeaponStateMachine.IsReloading)
@@ -75,7 +76,7 @@ public class FriendAI_EngageState : FriendAIState
                         if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
                         {
                             float distanceBetweenCharaWithEnemyLastSeenPos = Vector3.Distance(_sm.GetFOVMachine.EnemyCharalastSeenPosition, _sm.transform.position);
-                            if(distanceBetweenCharaWithEnemyLastSeenPos > _sm.GetFOVMachine.viewRadius - 5 || Physics.Raycast(_sm.transform.position, _sm.GetFOVMachine.EnemyCharalastSeenPosition, out RaycastHit hit,_sm.GetFOVMachine.GroundMask))
+                            if(distanceBetweenCharaWithEnemyLastSeenPos > _sm.GetFOVMachine.viewRadius - 5 || Physics.Raycast(_sm.transform.position, _sm.GetFOVMachine.EnemyCharalastSeenPosition, out RaycastHit hit, _sm.GetFOVMachine.viewRadius, _sm.GetFOVMachine.GroundMask))
                             {
                                 _sm.GetMoveStateMachine.SetAIDirection(_sm.GetFOVMachine.EnemyCharalastSeenPosition);
                             }
@@ -105,7 +106,7 @@ public class FriendAI_EngageState : FriendAIState
                         if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
                         {
                             float distanceBetweenCharaWithEnemyLastSeenPos = Vector3.Distance(_sm.GetFOVMachine.EnemyCharalastSeenPosition, _sm.transform.position);
-                            if(distanceBetweenCharaWithEnemyLastSeenPos > _sm.GetFOVMachine.viewRadius - 5 || Physics.Raycast(_sm.transform.position, _sm.GetFOVMachine.EnemyCharalastSeenPosition, out RaycastHit hit,_sm.GetFOVMachine.GroundMask))
+                            if(distanceBetweenCharaWithEnemyLastSeenPos > _sm.GetFOVMachine.viewRadius - 5 || Physics.Raycast(_sm.transform.position, _sm.GetFOVMachine.EnemyCharalastSeenPosition, out RaycastHit hit,  _sm.GetFOVMachine.viewRadius, _sm.GetFOVMachine.GroundMask))
                             {
                                 _sm.GetMoveStateMachine.SetAIDirection(_sm.GetFOVMachine.EnemyCharalastSeenPosition);
                             }
@@ -168,7 +169,7 @@ public class FriendAI_EngageState : FriendAIState
                         if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
                         _sm.GetMoveStateMachine.SetAITargetToLook(currTarget.position, false);
                         if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
-                        if(isClosestEnemy)StartShooting(currTarget);
+                        if(isClosestEnemy)StartShooting(_sm.SearchBestBodyPartToShoot(currTarget));
                         
                     }
                     
@@ -215,7 +216,7 @@ public class FriendAI_EngageState : FriendAIState
                         if(!_sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.IsAiming = true;
                         _sm.GetMoveStateMachine.SetAITargetToLook(currTarget.position, false);
                         if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
-                        if(isClosestEnemy)StartShooting(currTarget);
+                        if(isClosestEnemy)StartShooting(_sm.SearchBestBodyPartToShoot(currTarget));
                         
                     }
                     else
@@ -275,7 +276,7 @@ public class FriendAI_EngageState : FriendAIState
                         Debug.Log("is it closest enemy" + isClosestEnemy + _sm.transform.name);
                         _sm.GetMoveStateMachine.SetAITargetToLook(currTarget.position, false);
                         if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
-                        if(isClosestEnemy)StartShooting(currTarget);
+                        if(isClosestEnemy)StartShooting(_sm.SearchBestBodyPartToShoot(currTarget));
                         
                     }
 
@@ -295,83 +296,7 @@ public class FriendAI_EngageState : FriendAIState
 
 
         
-        // {
-        //     StopShooting();
-        //     _sm.GetMoveStateMachine.IsRunning = true;
-        //     if(!_sm.GotDetectedbyEnemy)
-        //     {
-        //         Debug.Log(_sm.gameObject.name + "not detected not see person");
-        //         if(!_sm.IsTakingCover)
-        //         {
-        //             Debug.Log(_sm.gameObject.name + "not detected not see person I'mnot taking cover" );
-        //             if(!_sm.GetMoveStateMachine.IsCrouching)
-        //             {
-
-        //                 if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
-        //                 {
-        //                     float distanceBetweenCharaWithEnemyLastSeenPos = Vector3.Distance(_sm.GetFOVMachine.EnemyCharalastSeenPosition, _sm.transform.position);
-        //                     if(distanceBetweenCharaWithEnemyLastSeenPos > _sm.GetFOVMachine.viewRadius || Physics.Raycast(_sm.transform.position, _sm.GetFOVMachine.EnemyCharalastSeenPosition, out RaycastHit hit,_sm.GetFOVMachine.GroundMask))
-        //                     {
-        //                         _sm.GetMoveStateMachine.SetAIDirection(_sm.GetFOVMachine.EnemyCharalastSeenPosition);
-        //                     }
-        //                     else
-        //                     {
-        //                         if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
-        //                     }
-        //                     _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
-        //                     if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
-                            
-        //                     Vector3 dirEnemyLastSeenToChara = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
-        //                     float dotBetweenCharaWithEnemyLastSeen = Vector3.Dot(dirEnemyLastSeenToChara, _sm.transform.forward);
-        //                     if(dotBetweenCharaWithEnemyLastSeen >= 0.95f)
-        //                     {   
-        //                         _sm.GetFOVMachine.IsCheckingEnemyLastPosition();
-        //                     }
-        //                 }
-        //             }
-        //             else
-        //             {
-        //                 if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
-        //                 {
-        //                     _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
-        //                     if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
-
-        //                     Vector3 dirEnemyLastSeenToChara = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
-        //                     float dotBetweenCharaWithEnemyLastSeen = Vector3.Dot(dirEnemyLastSeenToChara, _sm.transform.forward);
-        //                     if(dotBetweenCharaWithEnemyLastSeen >= 0.95f)
-        //                     {   
-
-        //                         _sm.GetFOVMachine.IsCheckingEnemyLastPosition();
-        //                         if(_sm.GetMoveStateMachine.IsCrouching)_sm.GetMoveStateMachine.IsCrouching = false;
-        //                     }
-        //                 }
-        //             }
-                    
-        //         }
-        //         else
-        //         {
-        //             Debug.Log(_sm.gameObject.name + "not detected not see person I'm taking cover" );
-        //             if(_sm.GetMoveStateMachine.IsIdle) // is at taking cover pos
-        //             {
-        //                 _sm.GetMoveStateMachine.SetAITargetToLook(_sm.DirToLookAtWhenTakingCover, true);
-        //                 if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
-                        
-        //                 if(!_sm.isWallTallerThanChara)_sm.GetMoveStateMachine.IsCrouching = true;
-        //                 if(_sm.GetPlayableCharaIdentity.CurrHealth == _sm.GetPlayableCharaIdentity.TotalHealth && !_sm.GetUseWeaponStateMachine.IsReloading)
-        //                 {
-        //                     _sm.IsTakingCover = false;
-                            
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     else if(_sm.GotDetectedbyEnemy)
-        //     {
-        //         if(_sm.GetMoveStateMachine.IsCrouching)_sm.GetMoveStateMachine.IsCrouching = false;
-        //         Debug.Log(_sm.gameObject.name + "detected not see person");
-        //         AllRunAwayOption();
-        //     }
-        // }
+     
     }
     public override void ExitState()
     {

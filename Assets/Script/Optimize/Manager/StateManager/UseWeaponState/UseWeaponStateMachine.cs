@@ -57,6 +57,10 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     protected WeaponLogicManager _weaponLogicManager;
 
     public Action OnWasUsinghGun;
+
+    [Header("Recoil Data")]
+    protected float _currRecoil, _maxRecoil, _recoilCoolDown, _finalCountRecoil;
+    
     
     #endregion
     
@@ -102,6 +106,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     public Transform CurrDirectionShootPoint { get{return _currDirectionShootPoint;}}
     public int CurrActiveAnimLayer { get {return _currActiveAnimLayer;}}
     public float CurrAnimTime {get {return _currAnimTIme;}set {_currAnimTIme = value;}}
+    public LayerMask CharaEnemyMask {get{return _charaEnemyMask;}}
 
     #endregion
 
@@ -119,7 +124,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         _FOVPoint = GetComponent<FOVMachine>().GetFOVPoint;
         _states = new UseWeaponStateFactory(this);
     }
-    private void Start() 
+    protected virtual void Start() 
     {
         _weaponLogicManager = WeaponLogicManager.Instance;
 
@@ -132,6 +137,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         _currState?.UpdateState();
     }
     private void FixedUpdate() {
+        ComplexRecoil();
         _currState?.PhysicsLogicUpdateState();
     }
 
@@ -150,12 +156,14 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     {
         Shoot();
     }
+
     protected void Shoot()
     {
         if(CurrWeapon.currBullet > 0 && !_isfireRateOn)
         {
+            RecoilHandler();
             SetShootPosition();
-            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask);
+            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask, _finalCountRecoil);
             CurrWeapon.currBullet -= 1;
             if(!CurrWeapon.weaponStatSO.allowHoldDownButton)IsUsingWeapon = false;
             StartCoroutine(FireRate(CurrWeapon.weaponStatSO.fireRate));
@@ -178,7 +186,9 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     protected virtual void SetShootPosition()
     {
         _originShootPosition = CurrOriginShootPoint.position;
-        _directionShootPosition = CurrDirectionShootPoint.position - transform.position;
+        // _directionShootPosition = (CurrDirectionShootPoint.position - transform.position).normalized;
+
+        _directionShootPosition = (CurrDirectionShootPoint.position - CurrOriginShootPoint.position).normalized;
 
         // Debug.Log("Shoot direction " + _directionShootPosition);
     }
@@ -247,4 +257,29 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     public void DeactivateRigAim() => _rigController.weight = 0;
 
     public void SetCharaAimAccuracy(float newAccuracy) => _charaAimAccuracy = newAccuracy;
+
+    #region Recoil
+    protected virtual void RecoilHandler()
+    {
+        _recoilCoolDown = _currWeapon.weaponStatSO.fireRate + (_currWeapon.weaponStatSO.fireRate * 0.1f);
+        _maxRecoil = _currWeapon.weaponStatSO.recoil;
+        _finalCountRecoil = _currRecoil;
+    }
+    protected virtual void ComplexRecoil()
+    {
+        if (_recoilCoolDown > 0)
+        {
+            _recoilCoolDown -= Time.deltaTime;
+            if (_currRecoil <= _maxRecoil) // Ini batasnya sampai maxrecoil ato lebihin max recoil ?
+            {
+                _currRecoil += Time.deltaTime * _currWeapon.weaponStatSO.recoil;
+            }
+            // else if(_currRecoil > _maxRecoil)_currRecoil = 
+        }
+        else
+        {
+            _currRecoil = 0;
+        }
+    }
+    #endregion
 }

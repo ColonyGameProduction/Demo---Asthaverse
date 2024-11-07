@@ -59,6 +59,7 @@ public class FOVMachine : MonoBehaviour
     public Vector3 EnemyCharalastSeenPosition {get {return _enemyCharalastSeenPosition;} set { _enemyCharalastSeenPosition = value;}}
     public bool HasToCheckEnemyLastSeenPosition {get {return _hasToCheckEnemyLastSeenPosition;}}
     public LayerMask GroundMask {get {return _groundMask;}}
+    public LayerMask CharaEnemyMask {get{return _charaEnemyMask;}}
 
     
 
@@ -294,9 +295,10 @@ public class FOVMachine : MonoBehaviour
         //Selanjutnya akan membuat lingkaran sebesar 'viewRadius'
         //Jika collider game object nya memiliki mask yang ditentukan, maka akan disimpan
         // _targetInViewRadius = Physics.OverlapSphere(_FOVPoint.position, _viewRadius, _charaEnemyMask);
-        _currTotalTarget = Physics.OverlapSphereNonAlloc(_FOVPoint.position, _viewRadius, _targetInViewRadius,_charaEnemyMask, QueryTriggerInteraction.UseGlobal);
+        // _currTotalTarget = Physics.OverlapSphereNonAlloc(_FOVPoint.position, _viewRadius, _targetInViewRadius,_charaEnemyMask, QueryTriggerInteraction.UseGlobal);
+        _targetInViewRadius = Physics.OverlapSphere(_FOVPoint.position, _viewRadius, _charaEnemyMask);
         //Untuk mendeteksi jarak dan arah musuh/player
-        for (int i = 0; i < _currTotalTarget; i++)
+        for (int i = 0; i < _targetInViewRadius.Length; i++)
         {
             //menghitung arah dari collider yang dideteksi
             Transform target = _targetInViewRadius[i].transform;
@@ -310,14 +312,25 @@ public class FOVMachine : MonoBehaviour
                 float distanceToTarget = Vector3.Distance(_FOVPoint.position, target.position);
                 if (!Physics.Raycast(_FOVPoint.position, dirToTarget, distanceToTarget, _groundMask))
                 {
+                    Transform targetTransform = null;
+                    Body body = target.GetComponentInParent<Body>();
+                    if(body != null)
+                    {
+                        targetTransform = body.transform;
+                    }
+                    else
+                    {
+                        targetTransform = target;
+                    }
                     if(_visibleTargets.Count > 0)
                     {
-                        if(_visibleTargets.Contains(target))continue;
+                        if(_visibleTargets.Contains(targetTransform))continue;
                     }
-                    CharacterIdentity chara = target.GetComponent<CharacterIdentity>();
+
+                    CharacterIdentity chara = targetTransform.GetComponent<CharacterIdentity>();
                     if(chara != null && chara.IsDead)continue;
                     
-                    _visibleTargets.Add(target);
+                    _visibleTargets.Add(targetTransform);
                 }
             }
         }

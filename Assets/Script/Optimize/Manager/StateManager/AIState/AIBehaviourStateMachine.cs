@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
 public abstract class AIBehaviourStateMachine : BaseStateMachine
 {
     #region Normal Variable
+    protected bool _isAIInput = true;
     [SerializeField] private TakeCoverManager _takeCoverManager;
     [Header("Other Important Variable")]
     [SerializeField] protected FOVMachine _fovMachine;
@@ -51,6 +53,14 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     protected RaycastHit _runAwayObstacleHit;
     protected bool _isThereNoPathInRunAwayDirection;
     protected Vector3 _runAwayPos;
+
+    [Header("Advanced Shooting AI")]
+    [SerializeField]protected bodyParts _focusedBodyPartsToShoot;
+    protected Transform _focusedBodyPartToShootTransform;
+    protected Transform _bodyPartToShootTransform;
+    protected LayerMask _bodyPartMask;
+
+
     #endregion
     #region  GETTER SETTER VARIABLE
     public NavMeshAgent Agent {get {return _agent;}}
@@ -71,6 +81,9 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     public LayerMask RunAwayObstacleMask {get {return _runAwayObstacleMask;}}
     public Vector3 RunAwayPos {get {return _runAwayPos;} }
     public int MinEnemyMakeCharaFeelOverwhelmed {get {return _minEnemyMakeCharaFeelOverwhelmed;}}
+
+    public Transform FocusedBodyPartToShootTransform {get {return _focusedBodyPartToShootTransform;}}
+    public Transform BodyPartToShootTransform {get {return _bodyPartToShootTransform;}}
 
     #endregion
     protected override void Awake() 
@@ -607,7 +620,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             foreach(Transform target in GetFOVMachine.VisibleTargets)
             {
                 AIBehaviourStateMachine targetAI = target.GetComponent<AIBehaviourStateMachine>();
-                if(targetAI != null && targetAI.enabled)targetAI.EnemyDetectedChara(transform);
+                if(targetAI != null && targetAI._isAIInput)targetAI.EnemyDetectedChara(transform);
             }
         }
     }
@@ -679,4 +692,46 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             }
         }
     }
+
+    #region BestBodyPartToShoot
+    public Transform SearchBestBodyPartToShoot(Transform ClosestEnemy)
+    {
+        _focusedBodyPartToShootTransform = null;
+        _bodyPartToShootTransform = null;
+        Body closestEnemyBody = ClosestEnemy.GetComponent<Body>();
+        for(int i=0; i < closestEnemyBody.bodyParts.Count; i++)
+        {
+            Vector3 dir = (closestEnemyBody.bodyParts[i].transform.position - _fovMachine.GetFOVPoint.position).normalized;
+            if(Physics.Raycast(_fovMachine.GetFOVPoint.position, dir, out RaycastHit hit, _fovMachine.viewRadius,_bodyPartMask))
+            {
+                // Debug.DrawRay(_fovMachine.GetFOVPoint.position, dir * 100f, Color.red);
+                // Debug.Log(_fovMachine.CharaEnemyMask + " LAYER MASK BICH");
+                Debug.Log(transform.name + " AAAAAAAAAAAAA" + hit.transform + "   " + i );
+                if(hit.transform == closestEnemyBody.bodyParts[i].transform)
+                {
+                    if(closestEnemyBody.bodyParts[i].bodyType == _focusedBodyPartsToShoot)
+                    {
+                        _focusedBodyPartToShootTransform = closestEnemyBody.bodyParts[i].transform;
+                        break;
+                    }
+                    if(_bodyPartToShootTransform == null)_bodyPartToShootTransform = closestEnemyBody.bodyParts[i].transform;
+                    
+                }
+            }
+        }
+        Debug.Log(transform.name + "Focus keeee" + _focusedBodyPartsToShoot + " lalu kee" + _bodyPartToShootTransform + " atauu " + ClosestEnemy + "raa" + closestEnemyBody);
+        if(_focusedBodyPartToShootTransform != null)
+        {
+            return _focusedBodyPartToShootTransform;
+        }
+        else if(_bodyPartToShootTransform != null)
+        {
+            return _bodyPartToShootTransform;
+        }
+        else
+        {
+            return ClosestEnemy;
+        }
+    }
+    #endregion
 }

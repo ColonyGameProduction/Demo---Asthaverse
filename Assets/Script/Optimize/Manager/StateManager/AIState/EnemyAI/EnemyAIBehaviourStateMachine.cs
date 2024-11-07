@@ -72,6 +72,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
 
         if(_moveStateMachine == null) _moveStateMachine = _charaIdentity.MovementStateMachine;
         if(_useWeaponStateMachine == null) _useWeaponStateMachine = _charaIdentity.UseWeaponStateMachine;
+        _bodyPartMask = _useWeaponStateMachine.CharaEnemyMask;
         _moveStateMachine.OnIsTheSamePosition += MoveStateMachine_OnIsTheSamePosition;
         SwitchState(_states.AI_IdleState());
     }
@@ -121,7 +122,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         if(GetFOVMachine.ClosestEnemy != null)
         {
             GetMoveStateMachine.SetAIDirection(GetFOVMachine.ClosestEnemy.position);
-            AimAIPointLookAt(GetFOVMachine.ClosestEnemy);
+            AimAIPointLookAt(SearchBestBodyPartToShoot(GetFOVMachine.ClosestEnemy));
         }
         else 
         {

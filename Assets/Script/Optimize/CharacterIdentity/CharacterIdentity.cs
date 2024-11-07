@@ -63,6 +63,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     public virtual float TotalHealth {get { return _totalHealth; } }
     public virtual float CurrHealth {get {return _currHealth; } set { _currHealth = value; } }
     public virtual bool IsHalfHealthOrLower {get {return _currHealth <= _totalHealth/2; }} 
+    public armourType GetCharaArmourType {get {return _armourType;}}
     public bool IsDead {get { return _isDead;}}
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
