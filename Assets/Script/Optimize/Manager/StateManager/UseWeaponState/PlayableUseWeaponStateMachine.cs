@@ -189,7 +189,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     #endregion
     private void CharaIdentity_OnIsPlayerInputChange(bool obj)
     {
-        Debug.Log("AAA" + transform.name);
+        // Debug.Log("AAA" + transform.name);
         _isAIInput = !obj;
         if(!IsAIInput)
         {

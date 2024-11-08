@@ -84,6 +84,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         _fovMachine.FOVJob();
         CalculateAlertValue();
         DetectEnemy();
+        CheckPastVisibleTargets();
         if(_gotDetectedByEnemy)
         {   
             _leaveDirection = GetTotalDirectionTargetPosAndEnemy(transform, false);
@@ -277,7 +278,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         _enemyAIManager.OnGoToClosestPOI -= EnemyAIManager_OnGoToClosestPOI;
         _moveStateMachine.OnIsTheSamePosition -= MoveStateMachine_OnIsTheSamePosition;
     }
-    protected override bool IsPassedWallHeightChecker(float wallHeight, float charaHeight)
+    protected override bool IsPassedWallHeightChecker(float wallHeight)
     {
         if(!isWallTallerThanChara) return false;
         return true;

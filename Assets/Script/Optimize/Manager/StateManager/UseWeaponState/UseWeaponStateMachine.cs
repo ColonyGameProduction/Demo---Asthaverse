@@ -97,6 +97,13 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     
     public bool CanReload { get {return _canReload;} set {_canReload = value;}}
     public bool IsFireRateOn { get{return _isfireRateOn;} set {_isfireRateOn = value;}}
+    public bool HasNoMoreBullets 
+    {
+        get {
+            if(_currWeapon.totalBullet == 0)return true;
+            return false;
+        }
+    }
 
     public WeaponData CurrWeapon{get{return _currWeapon;} }
     public Transform ChosenTarget { get {return _currChosenTarget;}}

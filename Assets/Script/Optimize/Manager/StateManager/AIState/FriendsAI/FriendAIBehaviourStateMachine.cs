@@ -95,6 +95,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     {
         _fovMachine.FOVJob();
         DetectEnemy();
+        CheckPastVisibleTargets();
         if(IsAIInput)
         {
             GotDetectedTimerCounter();
@@ -148,6 +149,14 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         {
             GetMoveStateMachine.IsRunning = false;
         }
+        if(!IsAIIdle && _states.AI_IsItEngageState(_currState) && agentPos == TakeCoverPosition && IsAIInput)
+        {
+            IsAtTakingCoverPlace = true;
+        }
+        if(!IsAIIdle && !_states.AI_IsItEngageState(_currState) && agentPos == TakeCoverPosition && IsAIInput)
+        {
+            IsAtTakingCoverPlace = true;
+        }
     }
 
 
@@ -167,9 +176,16 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         _enemyAIManager.OnEnemyStopEngaging -= OnEnemyStopEngaging;
         _playableMoveStateMachine.OnIsTheSamePosition -= MoveStateMachine_OnIsTheSamePosition;
     }
-    protected override bool IsPassedWallHeightChecker(float wallHeight, float charaHeight)
+    protected override bool IsPassedWallHeightChecker(float wallHeight)
     {
-        if(wallHeight <= charaHeight * (5/8)) return false;
+        float charaHeightCrouch = _charaHeadColl.bounds.max.y;
+        Debug.Log("WAAAAALLLLLLLLL CROUCH CHECK1 " + charaHeightCrouch + " " + wallHeight + " " + transform.name + " " + _charaHeightBuffer);
+        charaHeightCrouch += _charaHeightBuffer;
+        Debug.Log("WAAAAALLLLLLLLL CROUCH CHECK2 " + charaHeightCrouch + " " + wallHeight + " " + transform.name);
+
+        charaHeightCrouch -= 0.6f;
+        Debug.Log("WAAAAALLLLLLLLL CROUCH CHECK3 " + charaHeightCrouch + " " + wallHeight + " " + transform.name);
+        if(wallHeight <= charaHeightCrouch) return false;
         return true;
     }
     public override void RunAway()

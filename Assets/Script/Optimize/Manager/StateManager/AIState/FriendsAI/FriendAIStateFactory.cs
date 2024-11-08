@@ -25,4 +25,9 @@ public class FriendAIStateFactory
         if(_takeCover == null)_takeCover = new FriendAI_TakingCoverState(_machine, this);
         return _takeCover;
     }
+    public bool AI_IsItEngageState(FriendAIState state)
+    {
+        if(state == _engage)return true;
+        return false;
+    }
 }

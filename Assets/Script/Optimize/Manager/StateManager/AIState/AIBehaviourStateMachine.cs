@@ -20,6 +20,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     [Header("Take Cover Component")]
     [SerializeField] protected Vector3 _leaveDirection;
     [SerializeField] protected bool _isTakingCover;
+    [SerializeField] protected bool _isAtTakingCoverPlace;
     [SerializeField] protected Collider[] _wallArrayNearChara;
     [SerializeField] protected float _wallScannerDistance;
     [SerializeField] protected LayerMask _wallTakeCoverLayer;
@@ -27,7 +28,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     [SerializeField][Range(-1, 1f)] protected float _HideDotMin = 0f;
     [SerializeField] protected float _charaMaxTakeCoverDistance = 100f;
     protected float _charaWidth;
-    protected Collider _charaColl;
+    [SerializeField] protected Collider _charaHeadColl;
+    [SerializeField] protected float _charaHeightBuffer = 0.15f;
     [SerializeField] protected float _charaWidthBuffer = 0.2f;
     [SerializeField] protected float _buffer = -1.5f;
     protected Vector3 _takeCoverPosition;
@@ -41,6 +43,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
     [Header("Component to Save Enemy Who sees us")]
     [SerializeField] protected List<Transform> _enemyWhoSawAIList = new List<Transform>();
+    [SerializeField] protected List<Transform> _enemyWhoSawAIListContainer = new List<Transform>();
+    [SerializeField] protected List<Transform> _pastVisibleTargets = new List<Transform>();
     protected Transform _closestEnemyWhoSawAI;
     [SerializeField] protected int _minEnemyMakeCharaFeelOverwhelmed = 3;
     [SerializeField] protected bool _gotDetectedByEnemy;
@@ -67,12 +71,14 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     public FOVMachine GetFOVMachine { get { return _fovMachine; } }
     public bool GotDetectedbyEnemy {get { return _gotDetectedByEnemy;}}
     public List<Transform> EnemyWhoSawAIList { get{return _enemyWhoSawAIList;}} 
+    public List<Transform> EnemyWhoSawAIListContainer { get{return _enemyWhoSawAIListContainer;}} 
     public Transform ClosestEnemyWhoSawAI { get { return _closestEnemyWhoSawAI;}}
     public Vector3 LeaveDirection {get { return _leaveDirection;}}
 
     public Vector3 TakeCoverPosition {get { return _takeCoverPosition;}}
     public bool CanTakeCoverInThePosition {get { return _canTakeCoverInThePosition;}}
     public bool IsTakingCover {get { return _isTakingCover;} set { _isTakingCover = value;}}
+    public bool IsAtTakingCoverPlace {get { return _isAtTakingCoverPlace;} set { _isAtTakingCoverPlace = value;}}
     public bool isWallTallerThanChara {get { return _isWallTallerThanChara;}}
     public Vector3 DirToLookAtWhenTakingCover {get { return _dirToLookAtWhenTakingCover;}}
     public Vector3 DirToLookAtWhenChecking {get { return _dirToLookAtWhenChecking;}}
@@ -90,7 +96,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     {
         //Dari Chara Identity bisa akses ke semua yg berhubungan dgn characteridentity
         base.Awake();
-        _charaColl = GetComponent<CharacterController>();
+        
         _charaWidth = GetComponent<CharacterController>().radius * 2 + _charaWidthBuffer;
         
         if(_agent)_agent = GetComponent<NavMeshAgent>();
@@ -117,7 +123,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         
         for(int i=0; i < _wallArrayNearChara.Length; i++)
         {
-            foreach(Transform enemy in _enemyWhoSawAIList)
+            foreach(Transform enemy in _enemyWhoSawAIListContainer)
             {
                 // Debug.Log(_wallArrayNearChara[i].name + " " + Vector3.Distance(_wallArrayNearChara[i].transform.position, enemy.transform.position));
                 if(Vector3.Distance(_wallArrayNearChara[i].transform.position, enemy.transform.position) <= _enemyMaxDistanceFromWalls)
@@ -138,10 +144,10 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         for(int i = 0; i < _wallTotal; i++)
         {
             Collider currColl = _wallArrayNearChara[i];
-            _isWallTallerThanChara = currColl.bounds.max.y > _charaColl.bounds.max.y;
-            if(!IsPassedWallHeightChecker(currColl.bounds.max.y, _charaColl.bounds.max.y))continue;
-            if(currColl.bounds.max.y <= _charaColl.bounds.max.y * (5/8)) continue; // Kalo lebi pendek dr crouch height, skip
-
+            _isWallTallerThanChara = currColl.bounds.max.y > _charaHeadColl.bounds.max.y + _charaHeightBuffer;
+            if(!IsPassedWallHeightChecker(currColl.bounds.max.y))continue;
+            
+            
 
             Transform currWall = currColl.transform;
 
@@ -158,6 +164,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             if(halfWallWidth * 2 <= _charaWidth)canCheckFrontBehind = false;
             if(halfWallLength * 2 <= _charaWidth)canCheckLeftRightSide = false;
 
+            Debug.Log("Wallsss1" + i + " " + _wallTotal + " " + _wallArrayNearChara[i].name + " " + transform.name + " " + canCheckFrontBehind + " " + canCheckLeftRightSide);
             // Debug.Log(halfWallWidth * 2 + " " + halfWallLength * 2 + " " + _charaWidth + " aa" + canCheckFrontBehind + canCheckLeftRightSide);
             if(!canCheckLeftRightSide && !canCheckFrontBehind) continue;
             Vector3 directionTotalEnemyToWall = GetTotalDirectionTargetPosAndEnemy(currWall, true);
@@ -219,7 +226,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 }
             }
 
-            
+            Debug.Log("Wallsss2" + i + " " + _wallTotal + " " + _wallArrayNearChara[i].name + " " + closestDistance + " " + transform.name);
 
             // Vector3 dotEnemyWallFwd = Vector3.Dot()
             if(closestDistance != Mathf.Infinity)
@@ -321,9 +328,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
         }
     }
-    protected virtual bool IsPassedWallHeightChecker(float wallHeight, float charaHeight)
+    protected virtual bool IsPassedWallHeightChecker(float wallHeight)
     {
-
         return true;
     }
     //KALO MO NYARI INI HARUS NYARI LEAVEDIRECTION DL
@@ -598,7 +604,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     {
         Vector3 directionTotal = Vector3.zero;
         
-        foreach(Transform enemy in _enemyWhoSawAIList)
+        foreach(Transform enemy in _enemyWhoSawAIListContainer)
         {
             Vector3 direction = Vector3.zero;
             if(isFromTarget) direction = enemy.transform.position - targetPos.position;
@@ -624,21 +630,48 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             }
         }
     }
+    public void CheckPastVisibleTargets()
+    {
+        if(_pastVisibleTargets.Count > 0)
+        {
+            for(int i=0; i < _pastVisibleTargets.Count; i++)
+            {
+                if(!_fovMachine.VisibleTargets.Contains(_pastVisibleTargets[i]))
+                {
+                    AIBehaviourStateMachine _pastVisibleTargetsAI = _pastVisibleTargets[i].GetComponent<AIBehaviourStateMachine>();
+                    if(_pastVisibleTargetsAI != null && _pastVisibleTargetsAI._isAIInput)_pastVisibleTargetsAI.EnemyNotDetectCharaAnymore(transform);
+                }
+
+            }
+        }
+        _pastVisibleTargets = new List<Transform>(_fovMachine.VisibleTargets);
+    }
     public void EnemyDetectedChara(Transform enemyTransform)
     {
         if(!_enemyWhoSawAIList.Contains(enemyTransform))_enemyWhoSawAIList.Add(enemyTransform);
+        _enemyWhoSawAIListContainer = new List<Transform>(EnemyWhoSawAIList);
+
         _gotDetectedByEnemy = true;
         _gotDetectedTimer = _gotDetectedTimerMax;
+    }
+    public void EnemyNotDetectCharaAnymore(Transform enemyTransform)
+    {
+        if(_enemyWhoSawAIList.Contains(enemyTransform))_enemyWhoSawAIList.Remove(enemyTransform);
     }
     public void GotDetectedTimerCounter()
     {
         if(_gotDetectedTimer > 0)_gotDetectedTimer -= Time.deltaTime;
         else
         {
-            _gotDetectedTimer = 0f;
-            _gotDetectedByEnemy = false;
-            _enemyWhoSawAIList.Clear();
+            NotDetectedAnymore();
         }
+    }
+    public void NotDetectedAnymore()
+    {
+        _gotDetectedTimer = 0f;
+        _gotDetectedByEnemy = false;
+        _enemyWhoSawAIList.Clear();
+        _enemyWhoSawAIListContainer.Clear();
     }
 
     #endregion
@@ -678,9 +711,9 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     {
         float _tempDistanceEnemy = Mathf.Infinity;
         _closestEnemyWhoSawAI = null;
-        if(EnemyWhoSawAIList.Count > 0)
+        if(EnemyWhoSawAIListContainer.Count > 0)
         {
-            foreach(Transform enemy in EnemyWhoSawAIList)
+            foreach(Transform enemy in EnemyWhoSawAIListContainer)
             {
                 // Debug.Log("Shoot dirrr23" + enemy.position);
                 float currDis = Vector3.Distance(transform.position, enemy.position);
@@ -706,7 +739,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             {
                 // Debug.DrawRay(_fovMachine.GetFOVPoint.position, dir * 100f, Color.red);
                 // Debug.Log(_fovMachine.CharaEnemyMask + " LAYER MASK BICH");
-                Debug.Log(transform.name + " AAAAAAAAAAAAA" + hit.transform + "   " + i );
+                // Debug.Log(transform.name + " AAAAAAAAAAAAA" + hit.transform + "   " + i );
                 if(hit.transform == closestEnemyBody.bodyParts[i].transform)
                 {
                     if(closestEnemyBody.bodyParts[i].bodyType == _focusedBodyPartsToShoot)
@@ -719,7 +752,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 }
             }
         }
-        Debug.Log(transform.name + "Focus keeee" + _focusedBodyPartsToShoot + " lalu kee" + _bodyPartToShootTransform + " atauu " + ClosestEnemy + "raa" + closestEnemyBody);
+        // Debug.Log(transform.name + "Focus keeee" + _focusedBodyPartsToShoot + " lalu kee" + _bodyPartToShootTransform + " atauu " + ClosestEnemy + "raa" + closestEnemyBody);
         if(_focusedBodyPartToShootTransform != null)
         {
             return _focusedBodyPartToShootTransform;
