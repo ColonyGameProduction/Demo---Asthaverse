@@ -25,7 +25,7 @@ public class RunState : WalkState
     {
         if(!_standData.IsRunning)
         {
-            if(_groundData != null && _groundData.IsCrouching) _sm.SwitchState(_factory.CrouchState());
+            if(_standData.IsCrouching) _sm.SwitchState(_factory.CrouchState());
             else _sm.SwitchState(_factory.WalkState());
         }
     }

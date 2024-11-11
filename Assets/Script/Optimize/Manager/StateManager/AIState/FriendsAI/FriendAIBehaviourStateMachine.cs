@@ -85,7 +85,6 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     }
 
 
-
     private void OnDrawGizmos() 
     {
         Gizmos.color = Color.yellow;
@@ -94,8 +93,8 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     void Update()
     {
         _fovMachine.FOVJob();
-        DetectEnemy();
         CheckPastVisibleTargets();
+        DetectEnemy();
         if(IsAIInput)
         {
             GotDetectedTimerCounter();
@@ -149,13 +148,28 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         {
             GetMoveStateMachine.IsRunning = false;
         }
-        if(!IsAIIdle && _states.AI_IsItEngageState(_currState) && agentPos == TakeCoverPosition && IsAIInput)
+
+        if(IsTakingCover && !IsAIIdle && IsAIInput)
         {
-            IsAtTakingCoverPlace = true;
-        }
-        if(!IsAIIdle && !_states.AI_IsItEngageState(_currState) && agentPos == TakeCoverPosition && IsAIInput)
-        {
-            IsAtTakingCoverPlace = true;
+            Debug.Log(agentPos + " AAAAAAAAAA POSSS "+transform.position + " " + TakeCoverPosition + " " + PosToGoWhenCheckingWhenWallIsHigher);
+            if(agentPos == TakeCoverPosition)
+            {
+                IsAtTakingCoverHidingPlace = true;
+            }
+            else
+            {
+                IsAtTakingCoverHidingPlace = false;
+            }
+
+            if(isWallTallerThanChara && agentPos == PosToGoWhenCheckingWhenWallIsHigher)
+            {
+                IsAtTakingCoverCheckingPlace = true;
+            }
+            else
+            {
+                IsAtTakingCoverCheckingPlace = false;
+            }
+
         }
     }
 
@@ -178,21 +192,24 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     }
     protected override bool IsPassedWallHeightChecker(float wallHeight)
     {
-        float charaHeightCrouch = _charaHeadColl.bounds.max.y;
-        Debug.Log("WAAAAALLLLLLLLL CROUCH CHECK1 " + charaHeightCrouch + " " + wallHeight + " " + transform.name + " " + _charaHeightBuffer);
-        charaHeightCrouch += _charaHeightBuffer;
-        Debug.Log("WAAAAALLLLLLLLL CROUCH CHECK2 " + charaHeightCrouch + " " + wallHeight + " " + transform.name);
-
-        charaHeightCrouch -= 0.6f;
-        Debug.Log("WAAAAALLLLLLLLL CROUCH CHECK3 " + charaHeightCrouch + " " + wallHeight + " " + transform.name);
+        float charaHeightCrouch = _charaHeadColl.bounds.max.y + _charaHeightBuffer - 0.6f;
         if(wallHeight <= charaHeightCrouch) return false;
         return true;
+    }
+    public bool isCrouchingBehindWall()
+    {
+        if(_currWallHeight > _charaHeadColl.bounds.max.y + _charaHeightBuffer)return true;
+        return false;
     }
     public override void RunAway()
     {
         GetMoveStateMachine.IsRunning = true;
         base.RunAway();
         GetMoveStateMachine.SetAIDirection(RunAwayPos);
+    }
+    public bool IsCurrTakeCoverAlreadyOccupied()
+    {
+        return _takeCoverManager.IsTakeCoverPosOccupied(TakeCoverPosition, this);
     }
     
 }

@@ -6440,7 +6440,10 @@ MonoBehaviour:
   _noEnemyToPointObj: {fileID: 0}
   _leaveDirection: {x: 0, y: 0, z: 0}
   _isTakingCover: 0
-  _isAtTakingCoverPlace: 0
+  _isHiding: 0
+  _isChecking: 0
+  _isAtTakingCoverHidingPlace: 0
+  _isAtTakingCoverCheckingPlace: 0
   _wallArrayNearChara: []
   _wallScannerDistance: 0
   _wallTakeCoverLayer:
@@ -6552,12 +6555,14 @@ MonoBehaviour:
   _isIdle: 1
   _isWalking: 0
   _isRun: 0
+  _isCrouch: 0
   _idleAnimCycleTimeTarget:
   - 2
   - 6
   - 10
   _idleAnimCycleSpeed: 2
-  _runMultiplier: 0
+  _runMultiplier: 2
+  _crouchMultiplier: 0.5
   _faceDirCount: 0.9
 --- !u!114 &500153887
 MonoBehaviour:
@@ -11086,16 +11091,16 @@ MonoBehaviour:
   _isIdle: 1
   _isWalking: 0
   _isRun: 0
+  _isCrouch: 0
   _idleAnimCycleTimeTarget:
   - 2
   - 6
   - 10
   _idleAnimCycleSpeed: 2
   _runMultiplier: 2
-  _faceDirCount: 0.9
-  _isCrouch: 0
-  _isCrawl: 0
   _crouchMultiplier: 0.5
+  _faceDirCount: 0.9
+  _isCrawl: 0
   _crawlMultiplier: 0.4
   _crouchHeightCharaCon:
     center: {x: 0, y: 0, z: 0}
@@ -11190,7 +11195,10 @@ MonoBehaviour:
   _noEnemyToPointObj: {fileID: 0}
   _leaveDirection: {x: 0, y: 0, z: 0}
   _isTakingCover: 0
-  _isAtTakingCoverPlace: 0
+  _isHiding: 0
+  _isChecking: 0
+  _isAtTakingCoverHidingPlace: 0
+  _isAtTakingCoverCheckingPlace: 0
   _wallArrayNearChara: []
   _wallScannerDistance: 20
   _wallTakeCoverLayer:
@@ -17834,16 +17842,16 @@ MonoBehaviour:
   _isIdle: 1
   _isWalking: 0
   _isRun: 0
+  _isCrouch: 0
   _idleAnimCycleTimeTarget:
   - 2
   - 6
   - 10
   _idleAnimCycleSpeed: 2
   _runMultiplier: 2
-  _faceDirCount: 0.9
-  _isCrouch: 0
-  _isCrawl: 0
   _crouchMultiplier: 0.5
+  _faceDirCount: 0.9
+  _isCrawl: 0
   _crawlMultiplier: 0.4
   _crouchHeightCharaCon:
     center: {x: 0, y: 0, z: 0}
@@ -17954,7 +17962,10 @@ MonoBehaviour:
   _noEnemyToPointObj: {fileID: 0}
   _leaveDirection: {x: 0, y: 0, z: 0}
   _isTakingCover: 0
-  _isAtTakingCoverPlace: 0
+  _isHiding: 0
+  _isChecking: 0
+  _isAtTakingCoverHidingPlace: 0
+  _isAtTakingCoverCheckingPlace: 0
   _wallArrayNearChara: []
   _wallScannerDistance: 20
   _wallTakeCoverLayer:
@@ -19159,7 +19170,10 @@ MonoBehaviour:
   _noEnemyToPointObj: {fileID: 0}
   _leaveDirection: {x: 0, y: 0, z: 0}
   _isTakingCover: 0
-  _isAtTakingCoverPlace: 0
+  _isHiding: 0
+  _isChecking: 0
+  _isAtTakingCoverHidingPlace: 0
+  _isAtTakingCoverCheckingPlace: 0
   _wallArrayNearChara: []
   _wallScannerDistance: 0
   _wallTakeCoverLayer:
@@ -19271,12 +19285,14 @@ MonoBehaviour:
   _isIdle: 1
   _isWalking: 0
   _isRun: 0
+  _isCrouch: 0
   _idleAnimCycleTimeTarget:
   - 2
   - 6
   - 10
   _idleAnimCycleSpeed: 2
-  _runMultiplier: 0
+  _runMultiplier: 2
+  _crouchMultiplier: 0.5
   _faceDirCount: 0.9
 --- !u!114 &1252209725
 MonoBehaviour:
@@ -20105,7 +20121,10 @@ MonoBehaviour:
   _noEnemyToPointObj: {fileID: 0}
   _leaveDirection: {x: 0, y: 0, z: 0}
   _isTakingCover: 0
-  _isAtTakingCoverPlace: 0
+  _isHiding: 0
+  _isChecking: 0
+  _isAtTakingCoverHidingPlace: 0
+  _isAtTakingCoverCheckingPlace: 0
   _wallArrayNearChara: []
   _wallScannerDistance: 0
   _wallTakeCoverLayer:
@@ -20217,12 +20236,14 @@ MonoBehaviour:
   _isIdle: 1
   _isWalking: 0
   _isRun: 0
+  _isCrouch: 0
   _idleAnimCycleTimeTarget:
   - 2
   - 6
   - 10
   _idleAnimCycleSpeed: 2
-  _runMultiplier: 0
+  _runMultiplier: 2
+  _crouchMultiplier: 0.5
   _faceDirCount: 0.9
 --- !u!114 &1297871094
 MonoBehaviour:
@@ -25988,7 +26009,10 @@ MonoBehaviour:
   _noEnemyToPointObj: {fileID: 0}
   _leaveDirection: {x: 0, y: 0, z: 0}
   _isTakingCover: 0
-  _isAtTakingCoverPlace: 0
+  _isHiding: 0
+  _isChecking: 0
+  _isAtTakingCoverHidingPlace: 0
+  _isAtTakingCoverCheckingPlace: 0
   _wallArrayNearChara: []
   _wallScannerDistance: 0
   _wallTakeCoverLayer:
@@ -26100,12 +26124,14 @@ MonoBehaviour:
   _isIdle: 1
   _isWalking: 0
   _isRun: 0
+  _isCrouch: 0
   _idleAnimCycleTimeTarget:
   - 2
   - 6
   - 10
   _idleAnimCycleSpeed: 2
-  _runMultiplier: 0
+  _runMultiplier: 2
+  _crouchMultiplier: 0.5
   _faceDirCount: 0.9
 --- !u!114 &1769942164
 MonoBehaviour:
@@ -30092,12 +30118,14 @@ MonoBehaviour:
   _isIdle: 1
   _isWalking: 0
   _isRun: 0
+  _isCrouch: 0
   _idleAnimCycleTimeTarget:
   - 2
   - 6
   - 10
   _idleAnimCycleSpeed: 2
-  _runMultiplier: 0
+  _runMultiplier: 2
+  _crouchMultiplier: 0.5
   _faceDirCount: 0.9
 --- !u!4 &2017098525
 Transform:
@@ -30188,7 +30216,10 @@ MonoBehaviour:
   _noEnemyToPointObj: {fileID: 0}
   _leaveDirection: {x: 0, y: 0, z: 0}
   _isTakingCover: 0
-  _isAtTakingCoverPlace: 0
+  _isHiding: 0
+  _isChecking: 0
+  _isAtTakingCoverHidingPlace: 0
+  _isAtTakingCoverCheckingPlace: 0
   _wallArrayNearChara: []
   _wallScannerDistance: 0
   _wallTakeCoverLayer:
@@ -30860,16 +30891,16 @@ MonoBehaviour:
   _isIdle: 1
   _isWalking: 0
   _isRun: 0
+  _isCrouch: 0
   _idleAnimCycleTimeTarget:
   - 2
   - 6
   - 10
   _idleAnimCycleSpeed: 2
   _runMultiplier: 2
-  _faceDirCount: 0.9
-  _isCrouch: 0
-  _isCrawl: 0
   _crouchMultiplier: 0.5
+  _faceDirCount: 0.9
+  _isCrawl: 0
   _crawlMultiplier: 0.2
   _crouchHeightCharaCon:
     center: {x: 0, y: 0, z: 0}
@@ -30980,7 +31011,10 @@ MonoBehaviour:
   _noEnemyToPointObj: {fileID: 0}
   _leaveDirection: {x: 0, y: 0, z: 0}
   _isTakingCover: 0
-  _isAtTakingCoverPlace: 0
+  _isHiding: 0
+  _isChecking: 0
+  _isAtTakingCoverHidingPlace: 0
+  _isAtTakingCoverCheckingPlace: 0
   _wallArrayNearChara: []
   _wallScannerDistance: 20
   _wallTakeCoverLayer:

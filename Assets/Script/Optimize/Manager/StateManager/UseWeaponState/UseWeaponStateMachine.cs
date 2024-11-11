@@ -100,7 +100,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     public bool HasNoMoreBullets 
     {
         get {
-            if(_currWeapon.totalBullet == 0)return true;
+            if(_currWeapon.totalBullet == 0 && _currWeapon.currBullet == 0)return true;
             return false;
         }
     }

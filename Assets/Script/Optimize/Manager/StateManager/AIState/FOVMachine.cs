@@ -60,6 +60,7 @@ public class FOVMachine : MonoBehaviour
     public bool HasToCheckEnemyLastSeenPosition {get {return _hasToCheckEnemyLastSeenPosition;}}
     public LayerMask GroundMask {get {return _groundMask;}}
     public LayerMask CharaEnemyMask {get{return _charaEnemyMask;}}
+    public float FindDelayTimerNow {get {return _findTargetDelay;}}
 
     
 

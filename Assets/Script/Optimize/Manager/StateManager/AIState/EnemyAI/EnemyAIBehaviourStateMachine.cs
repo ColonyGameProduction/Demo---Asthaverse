@@ -83,12 +83,15 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
     {
         _fovMachine.FOVJob();
         CalculateAlertValue();
-        DetectEnemy();
         CheckPastVisibleTargets();
+        DetectEnemy();
+
+        GotDetectedTimerCounter();
         if(_gotDetectedByEnemy)
         {   
             _leaveDirection = GetTotalDirectionTargetPosAndEnemy(transform, false);
         }
+        
         _currState?.UpdateState();
     }
     public void CalculateAlertValue()

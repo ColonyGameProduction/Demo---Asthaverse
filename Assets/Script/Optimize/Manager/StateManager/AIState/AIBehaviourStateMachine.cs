@@ -12,7 +12,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 {
     #region Normal Variable
     protected bool _isAIInput = true;
-    [SerializeField] private TakeCoverManager _takeCoverManager;
+    [SerializeField] protected TakeCoverManager _takeCoverManager;
     [Header("Other Important Variable")]
     [SerializeField] protected FOVMachine _fovMachine;
     [SerializeField] protected Transform _aimAIPoint;
@@ -20,7 +20,9 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     [Header("Take Cover Component")]
     [SerializeField] protected Vector3 _leaveDirection;
     [SerializeField] protected bool _isTakingCover;
-    [SerializeField] protected bool _isAtTakingCoverPlace;
+    [SerializeField] protected bool _isHiding, _isChecking;
+    [SerializeField] protected bool _isAtTakingCoverHidingPlace;
+    [SerializeField] protected bool _isAtTakingCoverCheckingPlace;
     [SerializeField] protected Collider[] _wallArrayNearChara;
     [SerializeField] protected float _wallScannerDistance;
     [SerializeField] protected LayerMask _wallTakeCoverLayer;
@@ -28,6 +30,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     [SerializeField][Range(-1, 1f)] protected float _HideDotMin = 0f;
     [SerializeField] protected float _charaMaxTakeCoverDistance = 100f;
     protected float _charaWidth;
+    protected float _currWallHeight;
     [SerializeField] protected Collider _charaHeadColl;
     [SerializeField] protected float _charaHeightBuffer = 0.15f;
     [SerializeField] protected float _charaWidthBuffer = 0.2f;
@@ -64,6 +67,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     protected Transform _bodyPartToShootTransform;
     protected LayerMask _bodyPartMask;
 
+    protected Vector3 _tempFirstPathPos;
+    protected float _hidingCheckDelayTimer;
 
     #endregion
     #region  GETTER SETTER VARIABLE
@@ -78,7 +83,10 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     public Vector3 TakeCoverPosition {get { return _takeCoverPosition;}}
     public bool CanTakeCoverInThePosition {get { return _canTakeCoverInThePosition;}}
     public bool IsTakingCover {get { return _isTakingCover;} set { _isTakingCover = value;}}
-    public bool IsAtTakingCoverPlace {get { return _isAtTakingCoverPlace;} set { _isAtTakingCoverPlace = value;}}
+    public bool IsHiding {get { return _isHiding;} set { _isHiding = value;}}
+    public bool IsChecking {get { return _isChecking;} set { _isChecking = value;}}
+    public bool IsAtTakingCoverHidingPlace {get { return _isAtTakingCoverHidingPlace;} set { _isAtTakingCoverHidingPlace = value;}}
+    public bool IsAtTakingCoverCheckingPlace {get { return _isAtTakingCoverCheckingPlace;} set { _isAtTakingCoverCheckingPlace = value;}}
     public bool isWallTallerThanChara {get { return _isWallTallerThanChara;}}
     public Vector3 DirToLookAtWhenTakingCover {get { return _dirToLookAtWhenTakingCover;}}
     public Vector3 DirToLookAtWhenChecking {get { return _dirToLookAtWhenChecking;}}
@@ -87,6 +95,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     public LayerMask RunAwayObstacleMask {get {return _runAwayObstacleMask;}}
     public Vector3 RunAwayPos {get {return _runAwayPos;} }
     public int MinEnemyMakeCharaFeelOverwhelmed {get {return _minEnemyMakeCharaFeelOverwhelmed;}}
+    public float HidingCheckDelayTimer {get{ return _hidingCheckDelayTimer;} set{_hidingCheckDelayTimer = value;}}
 
     public Transform FocusedBodyPartToShootTransform {get {return _focusedBodyPartToShootTransform;}}
     public Transform BodyPartToShootTransform {get {return _bodyPartToShootTransform;}}
@@ -144,6 +153,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         for(int i = 0; i < _wallTotal; i++)
         {
             Collider currColl = _wallArrayNearChara[i];
+            _currWallHeight = currColl.bounds.max.y;
             _isWallTallerThanChara = currColl.bounds.max.y > _charaHeadColl.bounds.max.y + _charaHeightBuffer;
             if(!IsPassedWallHeightChecker(currColl.bounds.max.y))continue;
             
@@ -361,14 +371,14 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                     {
                         Debug.Log(x + " " + distanceCharaToWall + "beforefb");
-                        Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
-                        float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
+                        Vector3 firstPathNewPosToPlayer = (_tempFirstPathPos - transform.position).normalized;
+                        float dotLeaveDirWithNewPosDir = Vector3.Dot(firstPathNewPosToPlayer, _leaveDirection);
                         
 
                         //ini dicek biar tau apakah masi keliatan ama enemy ga di posisi wall itu; wallcenter = transform wall
                         Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                         float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
-                        if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
+                        if(dotLeaveDirWithNewPosDir >= -0.5f && dotEnemyVSNewPOs < _HideDotMin)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "afterfb");
                             closestDistance = distanceCharaToWall;
@@ -408,12 +418,12 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "beforefb");
-                            Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
-                            float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
+                            Vector3 firstPathNewPosToPlayer = (_tempFirstPathPos - transform.position).normalized;
+                            float dotLeaveDirWithNewPosDir = Vector3.Dot(firstPathNewPosToPlayer, _leaveDirection);
 
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
-                            if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
+                            if(dotLeaveDirWithNewPosDir >= -0.5f && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterfb");
                                 closestDistance = distanceCharaToWall;
@@ -439,12 +449,12 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "beforefb");
-                            Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
-                            float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
+                            Vector3 firstPathNewPosToPlayer = (_tempFirstPathPos - transform.position).normalized;
+                            float dotLeaveDirWithNewPosDir = Vector3.Dot(firstPathNewPosToPlayer, _leaveDirection);
 
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
-                            if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
+                            if(dotLeaveDirWithNewPosDir >= -0.5f && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterfb");
                                 closestDistance = distanceCharaToWall;
@@ -475,13 +485,13 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                     {
                         Debug.Log(x + " " + distanceCharaToWall + "beforelr");
-                        Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
-                        float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
+                        Vector3 firstPathNewPosToPlayer = (_tempFirstPathPos - transform.position).normalized;
+                        float dotLeaveDirWithNewPosDir = Vector3.Dot(firstPathNewPosToPlayer, _leaveDirection);
 
                         Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                         float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                         
-                        if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
+                        if(dotLeaveDirWithNewPosDir >= -0.5f && dotEnemyVSNewPOs < _HideDotMin)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "afterlr");
                             closestDistance = distanceCharaToWall;
@@ -519,13 +529,13 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "beforelr");
-                            Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
-                            float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
+                            Vector3 firstPathNewPosToPlayer = (_tempFirstPathPos - transform.position).normalized;
+                            float dotLeaveDirWithNewPosDir = Vector3.Dot(firstPathNewPosToPlayer, _leaveDirection);
 
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                             
-                            if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
+                            if(dotLeaveDirWithNewPosDir >= -0.5f && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterlr");
                                 closestDistance = distanceCharaToWall;
@@ -553,13 +563,13 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "beforelr");
-                            Vector3 newPosToPlayer = (tempNewPos - transform.position).normalized;
-                            float dotLeaveDirWithNewPosDir = Vector3.Dot(newPosToPlayer, _leaveDirection);
+                            Vector3 firstPathNewPosToPlayer = (_tempFirstPathPos - transform.position).normalized;
+                            float dotLeaveDirWithNewPosDir = Vector3.Dot(firstPathNewPosToPlayer, _leaveDirection);
 
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                             
-                            if(dotLeaveDirWithNewPosDir >= _HideDotMin && dotEnemyVSNewPOs < _HideDotMin)
+                            if(dotLeaveDirWithNewPosDir >= -0.5f && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterlr");
                                 closestDistance = distanceCharaToWall;
@@ -590,6 +600,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         {
             Debug.Log(path.status + " PATH STATUS NOW" + target);
             // if(path.status != NavMeshPathStatus.PathComplete)return Mathf.Infinity;
+            _tempFirstPathPos = path.corners[0];
             float distance = Vector3.Distance(origin, path.corners[0]);
             for(int j = 1; j < path.corners.Length; j++)
             {

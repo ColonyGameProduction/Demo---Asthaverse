@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.IO.LowLevel.Unsafe;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,6 +10,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [SerializeField] protected bool _isIdle = true;
     [SerializeField] protected bool _isWalking;
     [SerializeField] protected bool _isRun;
+    [SerializeField] protected bool _isCrouch;
     
     protected MovementStateFactory _states;
     protected MovementState _currState;
@@ -29,8 +26,10 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [Space(1)]
     [Header("Move Speed - State Multiplier")]
     [SerializeField] protected float _runMultiplier;
+    [SerializeField] protected float _crouchMultiplier;
     protected float _walkSpeed;
     protected float _runSpeed;
+    private float _crouchSpeed;
     protected float _currSpeed;
 
     [Space(1)]
@@ -61,6 +60,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public bool IsIdle {get {return _isIdle;} set{ _isIdle = value;} }
     public bool IsWalking {get {return _isWalking;}set{ _isWalking = value;} }
     public bool IsRunning { get {return _isRun;}set{ _isRun = value;} }
+    public bool IsCrouching { get {return _isCrouch;}set{ _isCrouch = value;} }
 
     public float IdleAnimCycleIdx {get {return _idleAnimCycleIdx;}}
     public float[] IdleAnimCycleTimeTarget {get {return _idleAnimCycleTimeTarget;}}
@@ -69,6 +69,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     public float WalkSpeed { get {return _walkSpeed;}}
     public float RunSpeed { get {return _runSpeed;}}
+    public float CrouchSpeed {get{return _crouchSpeed;}}
 
     public NavMeshAgent AgentNavMesh {get {return _agentNavMesh;}}
     public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
@@ -164,8 +165,13 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
             AgentNavMesh.destination = CurrAIDirPos;
         }
         // Debug.Log(AgentNavMesh.hasPath + " " + gameObject.name);
+        if (AgentNavMesh.pathPending)
+        {
+            return false;
+        }
         if(!AgentNavMesh.hasPath)
         {
+            Debug.Log("I'm at same pos" + transform.name + " " + AgentNavMesh.destination + " " + CurrAIDirPos);
             OnIsTheSamePosition?.Invoke(CurrAIDirPos);
             return true;
         }
@@ -173,6 +179,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentNavMesh.radius)
         {
             AgentNavMesh.ResetPath();
+            Debug.Log("I'm at same pos2" + transform.name + " " + AgentNavMesh.destination + " " + CurrAIDirPos);
             OnIsTheSamePosition?.Invoke(CurrAIDirPos);
 
             return true;
@@ -217,6 +224,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     {
         _walkSpeed = speed;
         _runSpeed = _walkSpeed * _runMultiplier;
+        _crouchSpeed = _walkSpeed * _crouchMultiplier;
     }
     public void ChangeCurrSpeed(float newSpeed)
     {

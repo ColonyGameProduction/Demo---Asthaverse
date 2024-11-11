@@ -249,7 +249,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             FriendAIStateMachine.IsAIEngage = false;
             FriendAIStateMachine.IsAIIdle = true;
             FriendAIStateMachine.NotDetectedAnymore();
-            FriendAIStateMachine.IsAtTakingCoverPlace = false;
+            FriendAIStateMachine.IsAtTakingCoverHidingPlace = false;
+            FriendAIStateMachine.IsAtTakingCoverHidingPlace = false;
         }
         if(isTurnOn)
         {

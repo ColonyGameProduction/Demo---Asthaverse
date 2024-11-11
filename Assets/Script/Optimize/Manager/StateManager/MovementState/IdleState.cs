@@ -33,7 +33,7 @@ public class IdleState : MovementState
         if((!_sm.IsAIInput && _playableData.InputMovement != Vector3.zero) || (_sm.IsAIInput && !_sm.IsAIAtDirPos()))
         {
             if(_groundData != null && _groundData.IsCrawling)_sm.SwitchState(_factory.CrawlState());
-            else if(_groundData != null && _groundData.IsCrouching)_sm.SwitchState(_factory.CrouchState());
+            else if(_standData.IsCrouching)_sm.SwitchState(_factory.CrouchState());
             else if(_standData.IsRunning)_sm.SwitchState(_factory.RunState());
             else _sm.SwitchState(_factory.WalkState());
         }
@@ -41,7 +41,7 @@ public class IdleState : MovementState
         CheckMustRotateWhileIdle();
 
         CheckingIdleAnimationCycle();
-        if(_groundData != null) CheckIsCrouchWhileIdle();
+        CheckIsCrouchWhileIdle();
     }
     public override void ExitState()
     {
@@ -57,7 +57,7 @@ public class IdleState : MovementState
     }
     private void CheckIsCrouchWhileIdle()
     {
-        if(_groundData.IsCrouching)
+        if(_standData.IsCrouching)
         {
             if(_sm.IdleAnimCycleIdx > 1) 
             {
@@ -101,7 +101,7 @@ public class IdleState : MovementState
         {
             if(_sm.IdleAnimCycleIdx >= 0)
             {
-                if(_sm.IdleAnimCycleIdx == 0 || _groundData == null || (_groundData != null && !_groundData.IsCrouching))
+                if(_sm.IdleAnimCycleIdx == 0 || !_standData.IsCrouching)
                 {
                     if(_sm.IdleAnimCycleIdx < STAND_IDLE_ANIM_CYCLE_TOTAL)
                     {
