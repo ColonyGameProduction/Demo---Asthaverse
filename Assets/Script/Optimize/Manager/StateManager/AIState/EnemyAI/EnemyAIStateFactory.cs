@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyAIStateFactory
 {
     EnemyAIBehaviourStateMachine _machine;
-    EnemyAIState _idle, _hunted, _engage;
+    EnemyAIState _idle, _hunted, _engage, _takingCover;
     public EnemyAIStateFactory (EnemyAIBehaviourStateMachine currStateMachine)
     {
         _machine = currStateMachine;
@@ -25,6 +25,11 @@ public class EnemyAIStateFactory
     {
         if(_engage == null)_engage = new EnemyAI_EngageState(_machine, this);
         return _engage;
+    }
+    public EnemyAIState AI_TakeingCoverState()
+    {
+        if(_takingCover == null)_takingCover = new EnemyAI_TakingCoverState(_machine, this);
+        return _takingCover;
     }
 }
 

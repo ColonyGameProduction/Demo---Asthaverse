@@ -205,7 +205,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                 {
                     // Debug.Log("TEsstt??");
                     _isCheckingEnemyInHunt = true;
-                    EnemyAIManager.OnFoundLastCharaSeenPos?.Invoke(this);
+                    // EnemyAIManager.OnFoundLastCharaSeenPos?.Invoke(this);
                 }
             }
             else if(CurrPOI != null && CurrPOI.position == agentPos)
@@ -264,7 +264,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         {
             if(GetUseWeaponStateMachine.ChosenTarget != null)GetUseWeaponStateMachine.GiveChosenTarget(null);
             if(GetUseWeaponStateMachine.IsUsingWeapon)GetUseWeaponStateMachine.IsUsingWeapon = false;
-
+            if(MaxAlertValue == 0)MaxAlertValue = enemy.MaxAlertValue;
             _alertValue = MaxAlertValue/2 + 10f;
             Vector3 closestLastSeenPos = Vector3.zero;
             if(EnemyAIManager.EnemyCaptainList.Count == 0)closestLastSeenPos = enemy.GetFOVAdvancedData.EnemyCharalastSeenPosition;
@@ -291,6 +291,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         //we can actually use the sound D:
         if(Vector3.Distance(enemy.transform.position, transform.position) <= EnemyAIManager.EnemyAnnouncementMaxRange || EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
         {
+            if(MaxAlertValue == 0)MaxAlertValue = enemy.MaxAlertValue;
             _alertValue = MaxAlertValue + 10f;
 
             Vector3 closestLastSeenPos = Vector3.zero;
@@ -318,4 +319,13 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         _moveStateMachine.OnIsTheSamePosition -= MoveStateMachine_OnIsTheSamePosition;
     }
 
+    public bool IsThePersonImLookingAlsoSeeMe(Transform enemyISaw)
+    {
+        if(_enemyWhoSawAIList.Count == 0) return false;
+        foreach(Transform enemy in _enemyWhoSawAIList)
+        {
+            if(enemyISaw == enemy)return true;
+        }
+        return false;
+    }
 }

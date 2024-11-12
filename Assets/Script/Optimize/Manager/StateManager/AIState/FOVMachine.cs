@@ -62,8 +62,6 @@ public class FOVMachine : MonoBehaviour
     public LayerMask CharaEnemyMask {get{return _charaEnemyMask;}}
     public float FindDelayTimerNow {get {return _findTargetDelay;}}
 
-    
-
     #endregion
     private void Awake() 
     {

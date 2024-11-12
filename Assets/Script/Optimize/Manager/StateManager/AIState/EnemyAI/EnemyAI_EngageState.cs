@@ -33,14 +33,15 @@ public class EnemyAI_EngageState : EnemyAIState
 
         if(_sm.GetFOVState.CurrState != FOVDistState.none)
         {
-            _sm.AimAIPointLookAt(_sm.SearchBestBodyPartToShoot(_sm.GetFOVMachine.ClosestEnemy));
+            _sm.AimAIPointLookAt(_sm.GetFOVMachine.ClosestEnemy);
             if(_sm.GetFOVState.CurrState == FOVDistState.far)
             {
                 // if()
                 _sm.RunningTowardsEnemy();
                 StopShooting();
+
                 if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
-                _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position, false);
+                
             }
             else if(_sm.GetFOVState.CurrState == FOVDistState.middle || _sm.GetFOVState.CurrState == FOVDistState.close)
             {
@@ -49,7 +50,7 @@ public class EnemyAI_EngageState : EnemyAIState
                 _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position, false);
                 if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
                 //kalo masuk sini pasti ada enemy, kalo ga pasti jd none || aturan d bwh jaga jaga biar ga error
-                if(_sm.GetFOVMachine.ClosestEnemy != null)StartShooting();
+                if(_sm.GetFOVMachine.ClosestEnemy != null)StartShooting(_sm.SearchBestBodyPartToShoot(_sm.GetFOVMachine.ClosestEnemy));
                 // Debug.Log("pew pew pew");
             }
         }
@@ -82,10 +83,11 @@ public class EnemyAI_EngageState : EnemyAIState
         StopShooting();
         _sm.RunningToEnemyLastPosition();
     }
-    private void StartShooting()
+    private void StartShooting(Transform chosenTarget)
     {
         // Debug.Log("shoot di 2" + _sm.GetFOVMachine.ClosestEnemy.position);
-        _sm.GetUseWeaponStateMachine.GiveChosenTarget(_sm.SearchBestBodyPartToShoot(_sm.GetFOVMachine.ClosestEnemy));
+        _sm.AimAIPointLookAt(chosenTarget);
+        _sm.GetUseWeaponStateMachine.GiveChosenTarget(chosenTarget);
         _sm.EnemyIdentity.Shooting(true);
     }
     private void StopShooting()
