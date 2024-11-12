@@ -28,8 +28,8 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     [SerializeField] protected bool _isAIEngage;
     [SerializeField] protected float _isEngageTimer;
     [SerializeField] protected float _isEngageTimerMax = 0.3f;
-    [SerializeField] protected float _isCheckingLastPosTImer;
-    [SerializeField] protected float _isCheckingLastPosTImerMax = 1f;
+    [SerializeField] protected float _isCheckingLastPosTimer;
+    [SerializeField] protected float _isCheckingLastPosTimerMax = 1f;
     
     protected FriendAIState _currState;
     protected FriendAIStateFactory _states;
@@ -49,8 +49,8 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     public Transform FriendsDefaultDirection {get {return _friendsDefaultDirection;}}   
     public Transform FriendsCommandDirection {get {return _friendsCommandDirection;}}    
 
-    public float IsCheckingLastPosTImer {get {return _isCheckingLastPosTImer; } set {_isCheckingLastPosTImer = value;}}
-    public float IsCheckingLastPosTImerMax {get {return _isCheckingLastPosTImerMax;}}
+    public float IsCheckingLastPosTimer {get {return _isCheckingLastPosTimer; } set {_isCheckingLastPosTimer = value;}}
+    public float IsCheckingLastPosTimerMax {get {return _isCheckingLastPosTimerMax;}}
 
 
     public PlayableCharacterIdentity GetPlayableCharaIdentity { get { return _playableCharaIdentity; } }    
@@ -190,26 +190,29 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         _enemyAIManager.OnEnemyStopEngaging -= OnEnemyStopEngaging;
         _playableMoveStateMachine.OnIsTheSamePosition -= MoveStateMachine_OnIsTheSamePosition;
     }
-    protected override bool IsPassedWallHeightChecker(float wallHeight)
-    {
-        float charaHeightCrouch = _charaHeadColl.bounds.max.y + _charaHeightBuffer - 0.6f;
-        if(wallHeight <= charaHeightCrouch) return false;
-        return true;
-    }
-    public bool isCrouchingBehindWall()
-    {
-        if(_currWallHeight > _charaHeadColl.bounds.max.y + _charaHeightBuffer)return true;
-        return false;
-    }
+
+    
     public override void RunAway()
     {
-        GetMoveStateMachine.IsRunning = true;
+        _charaIdentity.Run(true);
         base.RunAway();
         GetMoveStateMachine.SetAIDirection(RunAwayPos);
     }
     public bool IsCurrTakeCoverAlreadyOccupied()
     {
         return _takeCoverManager.IsTakeCoverPosOccupied(TakeCoverPosition, this);
+    }
+
+    public void StartShooting(Transform chosenTarget)
+    {
+        AimAIPointLookAt(chosenTarget);
+        GetUseWeaponStateMachine.GiveChosenTarget(chosenTarget);
+        _charaIdentity.Shooting(true);
+    }
+    public void StopShooting()
+    {
+        GetUseWeaponStateMachine.GiveChosenTarget(null);
+        _charaIdentity.Shooting(false);
     }
     
 }

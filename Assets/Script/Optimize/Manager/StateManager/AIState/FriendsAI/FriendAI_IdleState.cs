@@ -13,6 +13,7 @@ public class FriendAI_IdleState : FriendAIState
     public override void EnterState()
     {
         _sm.IsAIIdle = true;
+        _sm.AimAIPointLookAt(null);
         if(_sm.GetUseWeaponStateMachine.IsUsingWeapon || _sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.ForceStopUseWeapon();
         if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)_sm.GetFOVMachine.IsCheckingEnemyLastPosition();
     }

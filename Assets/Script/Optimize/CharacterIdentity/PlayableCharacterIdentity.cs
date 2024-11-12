@@ -280,4 +280,43 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _useWeaponStateMachine.ForceStopUseWeapon();
         _moveStateMachine.ForceStopMoving();
     }
+
+    #region StateMachine Command
+    public override void Run(bool isRunning)
+    {
+        if(IsPlayerInput)
+        {
+            if(isRunning)
+            {
+                if(GetPlayableMovementData.IsMustLookForward)GetPlayableMovementData.IsMustLookForward = false;
+                UseWeaponStateMachine.ForceStopUseWeapon();
+                // PlayableCharacterCameraManager.Instance.ResetScope();
+                if(MovementStateMachine.IsCrouching)
+                {
+                    MovementStateMachine.IsCrouching = false;
+                    // PlayableCharacterCameraManager.Instance.ResetCameraHeight();
+                }
+            }
+            MovementStateMachine.IsRunning = isRunning;
+        }
+        else
+        {
+            base.Run(isRunning);
+        }
+        
+    }
+    public override void Aiming(bool isAiming)
+    {
+        
+        if(IsPlayerInput)
+        {
+            base.Aiming(isAiming);
+            GetPlayableMovementData.IsMustLookForward = isAiming;
+        }
+        else
+        {
+            base.Aiming(isAiming);
+        }
+    }
+    #endregion
 }

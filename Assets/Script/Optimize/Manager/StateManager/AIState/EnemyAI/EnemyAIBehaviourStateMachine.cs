@@ -20,7 +20,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
     [SerializeField] private float _alertValueCountMultiplier = 10f;
 
     [Header("Enemy AI States")]
-    [SerializeField] private bool _isAIIdle, _isAIHunted, _isAIEngage, _isIdlePatroling;
+    [SerializeField] private bool _isAIIdle, _isAIHunted, _isAIEngage, _isCheckingEnemyInHunt;
     private IFOVMachineState _getFOVState;
     private IHuntPlayable _getFOVAdvancedData;
     private EnemyAIState _currState;
@@ -38,7 +38,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
     public bool IsAIIdle {get {return _isAIIdle;} set{ _isAIIdle = value;} }
     public bool IsAIHunted {get {return _isAIHunted;} set{ _isAIHunted = value;} }
     public bool IsAIEngage {get {return _isAIEngage;} set{ _isAIEngage = value;} }
-    // public bool IsIdlePatroling {get {return _isIdlePatroling;} set{ _isIdlePatroling = value;} }
+    public bool IsCheckingEnemyInHunt {get {return _isCheckingEnemyInHunt;} set{ _isCheckingEnemyInHunt = value;} }
 
     public float AlertValue {get {return _alertValue;} set { _alertValue = value;}}
     public float MaxAlertValue {get {return _maxAlertValue;} set { _maxAlertValue = value;}}
@@ -99,13 +99,25 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         // if(_charaIdentity.IsDead || _enemyIdentity.IsSilentKilled) return;
         if(_fovMachine.VisibleTargets.Count > 0)
         {
+            float oldmaxAlert = _maxAlertValue;
             _maxAlertValue = _getFOVAdvancedData.GetMinimalPlayableStealth();
+            if(oldmaxAlert != _maxAlertValue)
+            {
+                if(IsAIHunted)
+                {
+                    if(_alertValue < _maxAlertValue/2) _alertValue = _maxAlertValue/2 + _alertValueCountMultiplier;
+                }
+                else if(IsAIEngage)
+                {
+                    if(_alertValue < _maxAlertValue) _alertValue = _maxAlertValue + _alertValueCountMultiplier;
+                }
+            }
             if(_alertValue <= _maxAlertValue) _alertValue += Time.deltaTime * _alertValueCountMultiplier;
         }
         else
         {
 
-            if(_alertValue >= 0 && _fovMachine.VisibleTargets.Count == 0 && _getFOVAdvancedData.OtherVisibleTargets.Count == 0 && (IsAIIdle || (!IsAIIdle && GetMoveStateMachine.IsIdle)))
+            if(_alertValue >= 0 && _fovMachine.VisibleTargets.Count == 0 && _getFOVAdvancedData.OtherVisibleTargets.Count == 0 && (IsAIIdle || (!IsAIIdle &&GetMoveStateMachine.IsIdle && !_isCheckingEnemyInHunt)))
             {
                 _alertValue -= Time.deltaTime * _alertValueCountMultiplier;
             }
@@ -126,7 +138,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         if(GetFOVMachine.ClosestEnemy != null)
         {
             GetMoveStateMachine.SetAIDirection(GetFOVMachine.ClosestEnemy.position);
-            AimAIPointLookAt(SearchBestBodyPartToShoot(GetFOVMachine.ClosestEnemy));
+            
         }
         else 
         {
@@ -192,6 +204,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                 if(EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
                 {
                     // Debug.Log("TEsstt??");
+                    _isCheckingEnemyInHunt = true;
                     EnemyAIManager.OnFoundLastCharaSeenPos?.Invoke(this);
                 }
             }
@@ -202,14 +215,37 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                     _currPOI = EnemyAIManager.GetClosestPOI(this);
                     _getFOVAdvancedData.IsCheckingEnemyLastPosition();
                     _alertValue = MaxAlertValue/2 + 10f;
+                    _isCheckingEnemyInHunt = true;
                 }
                 else
                 {
                     EnemyAIManager.POIPosNearLastSeenPosListSave.Clear();
                     EnemyAIManager.EditEnemyHearAnnouncementList(this, false);
                     _currPOI = null;
+                    _isCheckingEnemyInHunt = false;
                 }
             }
+        }
+        if(IsTakingCover && !IsAIIdle)
+        {
+            if(agentPos == TakeCoverPosition)
+            {
+                IsAtTakingCoverHidingPlace = true;
+            }
+            else
+            {
+                IsAtTakingCoverHidingPlace = false;
+            }
+
+            if(isWallTallerThanChara && agentPos == PosToGoWhenCheckingWhenWallIsHigher)
+            {
+                IsAtTakingCoverCheckingPlace = true;
+            }
+            else
+            {
+                IsAtTakingCoverCheckingPlace = false;
+            }
+
         }
         
     }
@@ -281,9 +317,5 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         _enemyAIManager.OnGoToClosestPOI -= EnemyAIManager_OnGoToClosestPOI;
         _moveStateMachine.OnIsTheSamePosition -= MoveStateMachine_OnIsTheSamePosition;
     }
-    protected override bool IsPassedWallHeightChecker(float wallHeight)
-    {
-        if(!isWallTallerThanChara) return false;
-        return true;
-    }
+
 }

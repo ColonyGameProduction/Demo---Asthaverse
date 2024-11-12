@@ -12,6 +12,7 @@ public class EnemyAI_IdleState : EnemyAIState
     public override void EnterState()
     {
         _sm.IsAIIdle = true;
+        _sm.IsCheckingEnemyInHunt = false;
         if(_sm.GetUseWeaponStateMachine.IsUsingWeapon || _sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.ForceStopUseWeapon();
     }
 

@@ -417,27 +417,38 @@ public class PlayableCharacterManager : MonoBehaviour
     {
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
         {
-            foreach(PlayableCharacterIdentity chara in _charaIdentities)
-            {
-                chara.UseWeaponStateMachine.ForceStopUseWeapon();
-            }
+            // foreach(PlayableCharacterIdentity chara in _charaIdentities)
+            // {
+            //     chara.UseWeaponStateMachine.ForceStopUseWeapon();
+            // }
 
-            // _currUseWeaponFunction.ForceStopUseWeapon();
-            if(_currPlayableMoveStateMachine.IsMustLookForward)_currPlayableMoveStateMachine.IsMustLookForward = false;
+            // // _currUseWeaponFunction.ForceStopUseWeapon();
+            // if(_currPlayableMoveStateMachine.IsMustLookForward)_currPlayableMoveStateMachine.IsMustLookForward = false;
 
+            // if(_playableCharacterCameraManager.IsScope)_playableCharacterCameraManager.ResetScope();
+            // if(_currPlayableMoveStateMachine.IsCrouching)
+            // {
+            //     _currPlayableMoveStateMachine.IsCrouching = false;
+            //     _playableCharacterCameraManager.ResetCameraHeight();
+            // }
+            // _currPlayableMoveStateMachine.IsRunning = true;
+            
+
+            // foreach(PlayableCharacterIdentity chara in _charaIdentities)
+            // {
+            //     if(chara == CurrPlayableChara)continue;
+            //     if(!chara.FriendAIStateMachine.IsAIEngage)if(chara.GetPlayableMovementData.IsCrouching)chara.GetPlayableMovementData.IsCrouching = false;
+            //     if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)chara.MovementStateMachine.IsRunning = true;
+            // }
+
+            if(_currPlayableMoveStateMachine.IsCrouching)_playableCharacterCameraManager.ResetCameraHeight();
             if(_playableCharacterCameraManager.IsScope)_playableCharacterCameraManager.ResetScope();
-            if(_currPlayableMoveStateMachine.IsCrouching)
-            {
-                _currPlayableMoveStateMachine.IsCrouching = false;
-                _playableCharacterCameraManager.ResetCameraHeight();
-            }
-            _currPlayableMoveStateMachine.IsRunning = true;
-
+            CurrPlayableChara.Run(true);
             foreach(PlayableCharacterIdentity chara in _charaIdentities)
             {
                 if(chara == CurrPlayableChara)continue;
-                if(!chara.FriendAIStateMachine.IsAIEngage)if(chara.GetPlayableMovementData.IsCrouching)chara.GetPlayableMovementData.IsCrouching = false;
-                if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)chara.MovementStateMachine.IsRunning = true;
+                if(chara.FriendAIStateMachine.IsAIEngage || chara.FriendAIStateMachine.GotDetectedbyEnemy)continue;
+                chara.Run(true);
             }
             
         }
@@ -445,11 +456,11 @@ public class PlayableCharacterManager : MonoBehaviour
 
     private void GameInput_OnRunCanceled()
     {
-         _currPlayableMoveStateMachine.IsRunning = false;
+        CurrPlayableChara.Run(false);
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
             if(chara == CurrPlayableChara)continue;
-            if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)chara.MovementStateMachine.IsRunning = false;
+            if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)chara.Run(false);
         }
     }
 
@@ -457,27 +468,35 @@ public class PlayableCharacterManager : MonoBehaviour
     {
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
         {
-            if(_currPlayableMoveStateMachine.IsRunning)_currPlayableMoveStateMachine.IsRunning = false;
-            _currPlayableMoveStateMachine.IsCrouching = true;
-            _playableCharacterCameraManager.SetCameraCrouchHeight();
+            // if(_currPlayableMoveStateMachine.IsRunning)_currPlayableMoveStateMachine.IsRunning = false;
+            // _currPlayableMoveStateMachine.IsCrouching = true;
 
+            // foreach(PlayableCharacterIdentity chara in _charaIdentities)
+            // {
+            //     if(chara == CurrPlayableChara)continue;
+            //     if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)if(chara.MovementStateMachine.IsRunning)chara.MovementStateMachine.IsRunning = false;
+            //     if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)chara.GetPlayableMovementData.IsCrouching = true;
+            // }
+            CurrPlayableChara.Crouch(true);
+            _playableCharacterCameraManager.SetCameraCrouchHeight();
             foreach(PlayableCharacterIdentity chara in _charaIdentities)
             {
                 if(chara == CurrPlayableChara)continue;
-                if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)if(chara.MovementStateMachine.IsRunning)chara.MovementStateMachine.IsRunning = false;
-                if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)chara.GetPlayableMovementData.IsCrouching = true;
+                if(chara.FriendAIStateMachine.IsAIEngage || chara.FriendAIStateMachine.GotDetectedbyEnemy)continue;
+                chara.Crouch(true);
             }
+
         }
     }
 
     private void GameInput_OnCrouchCanceled()
     {
-        _currPlayableMoveStateMachine.IsCrouching = false;
+        CurrPlayableChara.Crouch(false);
         _playableCharacterCameraManager.ResetCameraHeight();
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
             if(chara == CurrPlayableChara)continue;
-            if(!chara.FriendAIStateMachine.IsAIEngage)chara.GetPlayableMovementData.IsCrouching = false;
+            if(!chara.FriendAIStateMachine.IsAIEngage)CurrPlayableChara.Crouch(false);
         }
     }
 
@@ -555,20 +574,23 @@ public class PlayableCharacterManager : MonoBehaviour
     {
         if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving)
         {   
-            if(!_currPlayableUseWeaponStateMachine.IsAiming)_currPlayableUseWeaponStateMachine.IsAiming = true;
-            _currPlayableUseWeaponStateMachine.IsUsingWeapon = true;
-            if(!_currPlayableMoveStateMachine.IsMustLookForward)_currPlayableMoveStateMachine.IsMustLookForward = true;
+            CurrPlayableChara.Shooting(true);
+            // if(!_currPlayableUseWeaponStateMachine.IsAiming)_currPlayableUseWeaponStateMachine.IsAiming = true;
+            // _currPlayableUseWeaponStateMachine.IsUsingWeapon = true;
+            // if(!_currPlayableMoveStateMachine.IsMustLookForward)_currPlayableMoveStateMachine.IsMustLookForward = true;
         }
     }
     private void GameInput_OnShootingCanceled()
     {
         if(CanDoThisFunction())
         {
+            CurrPlayableChara.Shooting(false);
             _currPlayableUseWeaponStateMachine.IsUsingWeapon = false;
             if(!_playableCharacterCameraManager.IsScope)
             {
-                _currPlayableMoveStateMachine.IsMustLookForward = false;
-                _currPlayableUseWeaponStateMachine.IsAiming = false;
+                // _currPlayableMoveStateMachine.IsMustLookForward = false;
+                // _currPlayableUseWeaponStateMachine.IsAiming = false;
+                CurrPlayableChara.Aiming(false);
             }
 
         }
@@ -582,14 +604,12 @@ public class PlayableCharacterManager : MonoBehaviour
             //tp kalo unscope, dan
             if(!_playableCharacterCameraManager.IsScope)
             {
-                _currPlayableUseWeaponStateMachine.IsAiming = true;
-                _currPlayableMoveStateMachine.IsMustLookForward = true;
+                CurrPlayableChara.Aiming(true);
                 _playableCharacterCameraManager.ScopeCamera();
             }
             else
             {
-                _currPlayableUseWeaponStateMachine.IsAiming = false;
-                _currPlayableMoveStateMachine.IsMustLookForward = false;
+                CurrPlayableChara.Aiming(false);
                 _playableCharacterCameraManager.ResetScope();
             }
 

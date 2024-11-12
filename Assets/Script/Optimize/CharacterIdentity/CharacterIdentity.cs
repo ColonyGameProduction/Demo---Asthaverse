@@ -192,4 +192,50 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     }
     public abstract void ReloadWeapon();
     #endregion
+
+    #region StateMachine Command
+    public virtual void Run(bool isRunning)
+    {
+        if(isRunning)
+        {
+            if(MovementStateMachine.AllowLookTarget)MovementStateMachine.AllowLookTarget = false;
+            UseWeaponStateMachine.ForceStopUseWeapon();
+            if(MovementStateMachine.IsCrouching)
+            {
+                MovementStateMachine.IsCrouching = false;
+            }
+        }
+        MovementStateMachine.IsRunning = isRunning;
+    }
+    public virtual void Crouch(bool isCrouching)
+    {
+        if(isCrouching)
+        {
+            if(MovementStateMachine.IsRunning)
+            {
+                MovementStateMachine.IsRunning = false;
+            }
+        }
+        MovementStateMachine.IsCrouching = isCrouching;
+    }
+    public virtual void Aiming(bool isAiming)
+    {
+        if(isAiming)
+        {
+            if(MovementStateMachine.IsRunning)
+            {
+                MovementStateMachine.IsRunning = false;
+            }
+        }
+        UseWeaponStateMachine.IsAiming = isAiming;
+    }
+    public virtual void Shooting(bool isShooting)
+    {
+        if(isShooting)
+        {
+            Aiming(true);
+        }
+        UseWeaponStateMachine.IsUsingWeapon = isShooting;
+    }
+    #endregion
 }

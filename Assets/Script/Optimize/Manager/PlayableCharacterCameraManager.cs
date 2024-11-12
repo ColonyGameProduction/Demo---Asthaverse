@@ -99,4 +99,5 @@ public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffe
     {
         _currPlayableCamera = curr;
     }
+
 }

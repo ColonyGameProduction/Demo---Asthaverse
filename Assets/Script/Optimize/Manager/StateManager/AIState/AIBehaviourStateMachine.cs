@@ -24,6 +24,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     [SerializeField] protected bool _isAtTakingCoverHidingPlace;
     [SerializeField] protected bool _isAtTakingCoverCheckingPlace;
     [SerializeField] protected Collider[] _wallArrayNearChara;
+    protected float _wallTotal;
     [SerializeField] protected float _wallScannerDistance;
     [SerializeField] protected LayerMask _wallTakeCoverLayer;
     [SerializeField] protected NavMeshAgent _agent;
@@ -124,25 +125,20 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             if(_aimAIPoint.localRotation != Quaternion.identity)_aimAIPoint.localRotation = Quaternion.Euler(0, 0, 0);
         }
     }
+    public void SetAllowLookTarget(bool isAllowed, MovementStateMachine machine, Vector3 target, bool isReceivePosADirection)
+    {
+        if(isAllowed)machine.SetAITargetToLook(target, isReceivePosADirection);
+        machine.AllowLookTarget = isAllowed;
+    }
+
+
     #region TakeCover
     public void TakingCover()
     {
         _wallArrayNearChara = Physics.OverlapSphere(transform.position, _wallScannerDistance, _wallTakeCoverLayer);
-        float _wallTotal = _wallArrayNearChara.Length;
+        _wallTotal = _wallArrayNearChara.Length;
         
-        for(int i=0; i < _wallArrayNearChara.Length; i++)
-        {
-            foreach(Transform enemy in _enemyWhoSawAIListContainer)
-            {
-                // Debug.Log(_wallArrayNearChara[i].name + " " + Vector3.Distance(_wallArrayNearChara[i].transform.position, enemy.transform.position));
-                if(Vector3.Distance(_wallArrayNearChara[i].transform.position, enemy.transform.position) <= _enemyMaxDistanceFromWalls)
-                {
-                    _wallTotal -= 1;
-                    _wallArrayNearChara[i] = null;
-                    break;
-                }
-            }
-        }
+        WallListChecker();
 
         if(_wallTotal == 0) return;
 
@@ -340,7 +336,14 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     }
     protected virtual bool IsPassedWallHeightChecker(float wallHeight)
     {
+        float charaHeightCrouch = _charaHeadColl.bounds.max.y + _charaHeightBuffer - 0.6f;
+        if(wallHeight <= charaHeightCrouch) return false;
         return true;
+    }
+    public bool IsCrouchingBehindWall()
+    {
+        if(_currWallHeight > _charaHeadColl.bounds.max.y + _charaHeightBuffer - 0.6f)return true;
+        return false;
     }
     //KALO MO NYARI INI HARUS NYARI LEAVEDIRECTION DL
     public void GetClosestPosition(bool isFrontBehind, ref float closestDistance, ref Vector3 newPos, float halfWallLength, float halfWallWidth, bool isWallTallerThanChara, Vector3 wallCenter, Vector3 wallForwardDir, Vector3 wallRightDir, Vector3 dirEnemyToWall)
@@ -579,6 +582,23 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+    
+    protected virtual void WallListChecker()
+    {
+        for(int i=0; i < _wallArrayNearChara.Length; i++)
+        {
+            foreach(Transform enemy in _enemyWhoSawAIListContainer)
+            {
+                // Debug.Log(_wallArrayNearChara[i].name + " " + Vector3.Distance(_wallArrayNearChara[i].transform.position, enemy.transform.position));
+                if(Vector3.Distance(_wallArrayNearChara[i].transform.position, enemy.transform.position) <= _enemyMaxDistanceFromWalls)
+                {
+                    _wallTotal -= 1;
+                    _wallArrayNearChara[i] = null;
+                    break;
                 }
             }
         }
