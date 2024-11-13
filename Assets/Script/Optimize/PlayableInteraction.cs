@@ -70,6 +70,7 @@ public class PlayableInteraction : MonoBehaviour
         IInteractable chosenInteractable = null;
         foreach(IInteractable interactable in _interactablesList)
         {
+            if(interactable == null)continue;
             float InteractableToPlayerDistance = Vector3.Distance(interactable.InteractableTransform.position, _thisObjInteractable.InteractableTransform.position);
             
 
@@ -90,6 +91,7 @@ public class PlayableInteraction : MonoBehaviour
         ISilentKillAble chosen = null;
         foreach(ISilentKillAble interactable in _silentKillAbleList)
         {
+            if(interactable == null)continue;
             float InteractableToPlayerDistance = Vector3.Distance(interactable.SilentKillAbleTransform.position, _thisObjInteractable.InteractableTransform.position);
             
             if(closestDistance > InteractableToPlayerDistance)
