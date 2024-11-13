@@ -27,7 +27,7 @@ public class EnemyAI_TakingCoverState : EnemyAIState
 
     public override void UpdateState()
     {
-        if(_sm.IsCharacterDead || _sm.EnemyIdentity.IsSilentKilled)
+        if(_sm.IsCharacterDead || _sm.EnemyIdentity.IsSilentKilled || !_sm.GetFOVAdvancedData.HasToCheckEnemyLastSeenPosition)
         {
             _sm.SwitchState(_factory.AI_EngageState());
             return;
@@ -74,6 +74,7 @@ public class EnemyAI_TakingCoverState : EnemyAIState
             }
             else if(_sm.IsChecking)
             {
+                
                 _sm.EnemyIdentity.Aiming(true);
                 _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.ClosestEnemy.position, false);
 
@@ -198,108 +199,14 @@ public class EnemyAI_TakingCoverState : EnemyAIState
             }
         }
 
-        // if(_sm.FOVMachine.ClosestEnemy == null)
-        // {
-        //     ChangeState();
-        //     Patroling();
-        //     _sm.StopShooting();
-        //     // if(_sm.IsHiding)
-        //     // {
-        //     //     if(_sm.IsAtTakingCoverHidingPlace)
-        //     //     {
-        //     //         Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M HIDING AND IDLE AND LOOKING AT TAKE COVER DIR" + _sm.transform.name);
-                    
-        //     //         _sm.GetPlayableCharaIdentity.Aiming(true);
-        //     //         _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenTakingCover, true);
-
-        //     //         if(!_sm.isWallTallerThanChara && !_sm.GetMoveStateMachine.IsCrouching)_sm.GetPlayableCharaIdentity.Crouch(true);
-        //     //     }
-        //     // }
-        //     // else if(_sm.IsChecking)
-        //     // {
-        //     //     float dotCharaWithEnemyLastSeen = 0;
-        //     //     if(!_sm.isWallTallerThanChara)
-        //     //     {
-        //     //         Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS NOT TALLER THAN ME" + _sm.transform.name);
-        //     //         _sm.GetMoveStateMachine.IsRunning = false;
-
-        //     //         if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
-        //     //         {
-        //     //             Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING ENEMYLASTPOS" + _sm.transform.name);
-        //     //             _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
-
-        //     //             Vector3 dirEnemyLastSeenToChara = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
-        //     //             dotCharaWithEnemyLastSeen = Vector3.Dot(dirEnemyLastSeenToChara, _sm.transform.forward);
-        //     //             // Debug.Log("Muncul di sini" + dirEnemyLastSeenToChara + " xx" + _sm.transform.name);
-        //     //         }
-        //     //         else
-        //     //         {
-
-        //     //             _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenChecking, true);
-        //     //             dotCharaWithEnemyLastSeen = Vector3.Dot(_sm.DirToLookAtWhenChecking, _sm.transform.forward);
-        //     //             Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING NORMALPOS" + _sm.transform.name);
-        //     //         }
-
-
-        //     //         if(dotCharaWithEnemyLastSeen >= 0.95f)
-        //     //         {   
-        //     //             if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
-        //     //             {
-
-        //     //                 if(_sm.IsCheckingLastPosTimer > 0)_sm.IsCheckingLastPosTimer -= Time.deltaTime;
-        //     //                 else
-        //     //                 {
-        //     //                     Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M DONE CHECKING POS" + _sm.transform.name);
-        //     //                     _sm.GetFOVMachine.IsCheckingEnemyLastPosition();
-        //     //                 }
-        //     //             }
-
-        //     //             if(_sm.GetMoveStateMachine.IsCrouching)_sm.GetPlayableCharaIdentity.Crouch(false);
-        //     //         }
-        //     //     }
-        //     //     else
-        //     //     {
-        //     //         Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME" + _sm.transform.name);
-        //     //         if(_sm.IsAtTakingCoverCheckingPlace)
-        //     //         {
-        //     //             _sm.GetMoveStateMachine.IsRunning = false;
-
-        //     //             if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
-        //     //             {
-        //     //                 Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME - I'M CHECKING ENEMYLASTPOS" + _sm.transform.name);
-        //     //                 _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
-        //     //                 Vector3 dirEnemyLastSeenToCharas = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
-        //     //                 dotCharaWithEnemyLastSeen = Vector3.Dot(dirEnemyLastSeenToCharas, _sm.transform.forward);
-
-        //     //             }
-        //     //             else
-        //     //             {
-        //     //                 Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME - I'M CHECKING NORMALPOS" + _sm.transform.name);
-        //     //                 _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenChecking, true);
-        //     //                 dotCharaWithEnemyLastSeen = Vector3.Dot(_sm.DirToLookAtWhenChecking, _sm.transform.forward);
-
-        //     //             }
-                        
-
-
-        //     //             if(dotCharaWithEnemyLastSeen >= 0.95f)
-        //     //             {   
-        //     //                 if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
-        //     //                 {
-
-        //     //                     if(_sm.IsCheckingLastPosTimer > 0)_sm.IsCheckingLastPosTimer -= Time.deltaTime;
-        //     //                     else
-        //     //                     {
-        //     //                         Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME - I'M DONE CHECKING POS" + _sm.transform.name);
-        //     //                         _sm.GetFOVMachine.IsCheckingEnemyLastPosition();
-        //     //                     }
-        //     //                 }
-        //     //             }
-        //     //         }
-        //     //     }
-        //     // }
-        // }
-        
+        if(_sm.GetFOVMachine.VisibleTargets.Count > 0 || _sm.GetFOVAdvancedData.OtherVisibleTargets.Count > 0) //meaning visible targets or other visible ada
+        {
+            _sm.EnemyAIManager.OnCaptainsStartEngaging?.Invoke(_sm);
+        }
+        else
+        {
+            _sm.EnemyAIManager.EditEnemyCaptainList(_sm, false);
+        }
 
         if(_sm.HidingCheckDelayTimer > 0 && _sm.IsAtTakingCoverHidingPlace && ((!_sm.isWallTallerThanChara && _sm.IsCrouchingBehindWall()) || _sm.isWallTallerThanChara)) _sm.HidingCheckDelayTimer -= Time.deltaTime;
     }

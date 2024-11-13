@@ -205,7 +205,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                 {
                     // Debug.Log("TEsstt??");
                     _isCheckingEnemyInHunt = true;
-                    // EnemyAIManager.OnFoundLastCharaSeenPos?.Invoke(this);
+                    EnemyAIManager.OnFoundLastCharaSeenPos?.Invoke(this);
                 }
             }
             else if(CurrPOI != null && CurrPOI.position == agentPos)
