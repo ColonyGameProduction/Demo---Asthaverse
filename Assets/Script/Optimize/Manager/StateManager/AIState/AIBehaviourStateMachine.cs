@@ -25,6 +25,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     [SerializeField] protected bool _isAtTakingCoverCheckingPlace;
     [SerializeField] protected Collider[] _wallArrayNearChara;
     protected float _wallTotal;
+    protected Collider _currWall;
     [SerializeField] protected float _wallScannerDistance;
     [SerializeField] protected LayerMask _wallTakeCoverLayer;
     [SerializeField] protected NavMeshAgent _agent;
@@ -70,6 +71,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
     protected Vector3 _tempFirstPathPos;
     protected float _hidingCheckDelayTimer;
+    [SerializeField] protected float _isCheckingLastPosTimer;
+    [SerializeField] protected float _isCheckingLastPosTimerMax = 1f;
 
     #endregion
     #region  GETTER SETTER VARIABLE
@@ -100,6 +103,9 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
     public Transform FocusedBodyPartToShootTransform {get {return _focusedBodyPartToShootTransform;}}
     public Transform BodyPartToShootTransform {get {return _bodyPartToShootTransform;}}
+    public Collider CurrWall {get {return _currWall;}}
+    public float IsCheckingLastPosTimer {get {return _isCheckingLastPosTimer; } set {_isCheckingLastPosTimer = value;}}
+    public float IsCheckingLastPosTimerMax {get {return _isCheckingLastPosTimerMax;}}
 
     #endregion
     protected override void Awake() 
@@ -109,7 +115,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         
         _charaWidth = GetComponent<CharacterController>().radius * 2 + _charaWidthBuffer;
         
-        if(_agent)_agent = GetComponent<NavMeshAgent>();
+        if(_agent == null)_agent = GetComponent<NavMeshAgent>();
         if(_fovMachine == null)_fovMachine = GetComponent<FOVMachine>();
         
     }
@@ -143,6 +149,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         if(_wallTotal == 0) 
         {
             _canTakeCoverInThePosition = false;
+            _currWall = null;
             return;
         }
 
@@ -174,11 +181,13 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             if(halfWallWidth * 2 <= _charaWidth)canCheckFrontBehind = false;
             if(halfWallLength * 2 <= _charaWidth)canCheckLeftRightSide = false;
 
-            Debug.Log("Wallsss1" + i + " " + _wallTotal + " " + _wallArrayNearChara[i].name + " " + transform.name + " " + canCheckFrontBehind + " " + canCheckLeftRightSide);
+            // Debug.Log("Wallsss1" + i + " " + _wallTotal + " " + _wallArrayNearChara[i].name + " " + transform.name + " " + canCheckFrontBehind + " " + canCheckLeftRightSide);
             // Debug.Log(halfWallWidth * 2 + " " + halfWallLength * 2 + " " + _charaWidth + " aa" + canCheckFrontBehind + canCheckLeftRightSide);
             if(!canCheckLeftRightSide && !canCheckFrontBehind) continue;
             Vector3 directionTotalEnemyToWall = GetTotalDirectionTargetPosAndEnemy(currWall, true);
-            Debug.DrawRay(_wallArrayNearChara[i].transform.position, directionTotalEnemyToWall * 100f, Color.black);
+            Debug.DrawRay(_wallArrayNearChara[i].transform.position, directionTotalEnemyToWall * 100f, Color.black, 2f);
+
+            Debug.Log("Tolong ini enemy ga masuk sini ato apa maksudnya "+ i + " " + transform.name);
 
 
 
@@ -193,7 +202,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 if(forwardWithEnemy < _HideDotMin)
                 {
                     // Debug.Log("Dot fwd normal " + forwardWithEnemy);
-                    Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallForward * 100f, Color.blue);
+                    Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallForward * 100f, Color.blue, 2f);
 
                     GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, wallRight, directionTotalEnemyToWall);
                     
@@ -205,7 +214,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     if(forwardWithEnemy < _HideDotMin)
                     {
                         // Debug.Log("Dot fwd balik " + forwardWithEnemy);
-                        Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallForward * 100f, Color.red);
+                        Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallForward * 100f, Color.red, 2f);
 
                         GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, -wallForward, wallRight,directionTotalEnemyToWall);
                     } 
@@ -220,7 +229,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 if(rightWithEnemy < _HideDotMin)
                 {
                     // Debug.Log("Dot right normal " + rightWithEnemy);
-                    Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallRight * 100f, Color.grey);
+                    Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallRight * 100f, Color.grey, 2f);
                     GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, wallRight, directionTotalEnemyToWall);
                 }
                 else // real life wise, ga mungkin di sisi 1 aman, sisi 1 lg aman juga
@@ -229,19 +238,20 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     if(rightWithEnemy < _HideDotMin)
                     {
                         // Debug.Log("Dot right balik " + rightWithEnemy);
-                        Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallRight * 100f, Color.magenta);
+                        Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallRight * 100f, Color.magenta, 2f);
                         GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, -wallRight, directionTotalEnemyToWall);
                     }
                     
                 }
             }
 
-            Debug.Log("Wallsss2" + i + " " + _wallTotal + " " + _wallArrayNearChara[i].name + " " + closestDistance + " " + transform.name);
+            // Debug.Log("Wallsss2" + i + " " + _wallTotal + " " + _wallArrayNearChara[i].name + " " + closestDistance + " " + transform.name);
 
             // Vector3 dotEnemyWallFwd = Vector3.Dot()
             if(closestDistance != Mathf.Infinity)
             {
                 _canTakeCoverInThePosition = true;
+                _currWall = _wallArrayNearChara[i];
                 _takeCoverPosition = newPos;
                 Debug.DrawRay(_takeCoverPosition, Vector3.up * 100f, Color.red);
                 
@@ -333,7 +343,11 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 
                 break;
             } 
-            else _canTakeCoverInThePosition = false;
+            else
+            {
+                _canTakeCoverInThePosition = false;
+                _currWall = null;
+            }
             
 
         }

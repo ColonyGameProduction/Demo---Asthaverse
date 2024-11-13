@@ -317,15 +317,10 @@ public class FriendAI_TakingCoverState : FriendAIState
                 _sm.GetMoveStateMachine.SetAIDirection(_sm.TakeCoverPosition);
             }
             
-            
         }
         else if(_sm.IsChecking)
         {
-            if(!_sm.isWallTallerThanChara)
-            {
-
-            }
-            else
+            if(_sm.isWallTallerThanChara)
             {
                 if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.PosToGoWhenCheckingWhenWallIsHigher)
                 {

@@ -28,8 +28,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     [SerializeField] protected bool _isAIEngage;
     [SerializeField] protected float _isEngageTimer;
     [SerializeField] protected float _isEngageTimerMax = 0.3f;
-    [SerializeField] protected float _isCheckingLastPosTimer;
-    [SerializeField] protected float _isCheckingLastPosTimerMax = 1f;
+
     
     protected FriendAIState _currState;
     protected FriendAIStateFactory _states;
@@ -49,8 +48,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     public Transform FriendsDefaultDirection {get {return _friendsDefaultDirection;}}   
     public Transform FriendsCommandDirection {get {return _friendsCommandDirection;}}    
 
-    public float IsCheckingLastPosTimer {get {return _isCheckingLastPosTimer; } set {_isCheckingLastPosTimer = value;}}
-    public float IsCheckingLastPosTimerMax {get {return _isCheckingLastPosTimerMax;}}
+
 
 
     public PlayableCharacterIdentity GetPlayableCharaIdentity { get { return _playableCharaIdentity; } }    

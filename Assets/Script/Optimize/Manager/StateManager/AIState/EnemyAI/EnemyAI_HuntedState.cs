@@ -46,10 +46,12 @@ public class EnemyAI_HuntedState : EnemyAIState
         if(_sm.AlertValue < _sm.MaxAlertValue / 2 || _sm.IsCharacterDead || _sm.EnemyIdentity.IsSilentKilled)
         {
             _sm.SwitchState(_factory.AI_IdleState());
+            return;
         }
         else if(_sm.AlertValue >= _sm.MaxAlertValue)
         {
             _sm.SwitchState(_factory.AI_EngageState());
+            return;
         }
 
 

@@ -26,7 +26,8 @@ public class EnemyAIStateFactory
         if(_engage == null)_engage = new EnemyAI_EngageState(_machine, this);
         return _engage;
     }
-    public EnemyAIState AI_TakeingCoverState()
+    
+    public EnemyAIState AI_TakingCoverState()
     {
         if(_takingCover == null)_takingCover = new EnemyAI_TakingCoverState(_machine, this);
         return _takingCover;

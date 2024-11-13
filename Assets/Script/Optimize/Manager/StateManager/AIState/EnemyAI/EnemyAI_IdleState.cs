@@ -44,10 +44,12 @@ public class EnemyAI_IdleState : EnemyAIState
         if(_sm.AlertValue >= _sm.MaxAlertValue / 2 && _sm.AlertValue < _sm.MaxAlertValue)
         {
             _sm.SwitchState(_factory.AI_HuntedState());
+            return;
         }
         else if(_sm.AlertValue >= _sm.MaxAlertValue)
         {
             _sm.SwitchState(_factory.AI_EngageState());
+            return;
         }
 
         if(_sm.GetFOVState.CurrState == FOVDistState.none) //no person

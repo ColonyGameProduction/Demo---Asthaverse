@@ -22,43 +22,130 @@ public class EnemyAI_EngageState : EnemyAIState
         if(_sm.AlertValue < _sm.MaxAlertValue / 2 || _sm.IsCharacterDead || _sm.EnemyIdentity.IsSilentKilled)
         {
             _sm.SwitchState(_factory.AI_IdleState());
+            return;
         }
         else if(_sm.AlertValue >= _sm.MaxAlertValue / 2 && _sm.AlertValue < _sm.MaxAlertValue)
         {
             _sm.SwitchState(_factory.AI_HuntedState());
+            return;
         }
 
         _sm.EnemyAIManager.OnEnemyisEngaging?.Invoke();
         _sm.GetFOVState.FOVStateHandler();
+        if(_sm.IsTakingCover && _sm.IsAtTakingCoverHidingPlace)
+        {
+            Debug.Log("Taking cover now" + _sm.transform.name);
+            _sm.IsTakingCover = false;
+            // _sm.SwitchState(_factory.AI_TakingCoverState());
+            return;
+            
+        }
 
         if(_sm.GetFOVState.CurrState != FOVDistState.none)
         {
+            // _sm.IsCheckingLastPosTimer = _sm.IsCheckingLastPosTimerMax;
             _sm.AimAIPointLookAt(_sm.GetFOVMachine.ClosestEnemy);
+            _sm.EnemyIdentity.Aiming(true);
+            _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.ClosestEnemy.position, false);
             if(_sm.GetFOVState.CurrState == FOVDistState.far)
             {
-                // if()
-                _sm.RunningTowardsEnemy();
-                StopShooting();
+                if(_sm.GotDetectedbyEnemy && _sm.IsThePersonImLookingAlsoSeeMe(_sm.GetFOVMachine.ClosestEnemy))
+                {
+                    _sm.TakingCover();
+                    if(_sm.CanTakeCoverInThePosition)
+                    {
 
-                if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
+                        _sm.GetMoveStateMachine.SetAIDirection(_sm.TakeCoverPosition);
+                        _sm.IsTakingCover = true;
+                    }
+                    else
+                    {
+                        _sm.IsTakingCover = false;
+                        _sm.RunningTowardsEnemy();
+                    }
+                }
+                else
+                {
+                    if(!_sm.IsTakingCover)
+                    {
+                        _sm.RunningTowardsEnemy();
+                    }
+                    
+                }
+                _sm.StopShooting();
+
+                // if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
                 
             }
             else if(_sm.GetFOVState.CurrState == FOVDistState.middle || _sm.GetFOVState.CurrState == FOVDistState.close)
             {
-                if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving(); //Stop gerak
+                
 
-                _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position, false);
-                if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
+                // _sm.IsTakingCover = false;
                 //kalo masuk sini pasti ada enemy, kalo ga pasti jd none || aturan d bwh jaga jaga biar ga error
-                if(_sm.GetFOVMachine.ClosestEnemy != null)StartShooting(_sm.SearchBestBodyPartToShoot(_sm.GetFOVMachine.ClosestEnemy));
+                if(!_sm.GetUseWeaponStateMachine.IsReloading)
+                {
+                    if(_sm.GetFOVMachine.ClosestEnemy != null)_sm.StartShooting(_sm.SearchBestBodyPartToShoot(_sm.GetFOVMachine.ClosestEnemy));
+                }
+                else
+                {
+                    // _sm.GetPlayableCharaIdentity.Run();
+                    _sm.StopShooting();
+                }
+                if(!_sm.IsTakingCover)
+                {
+                    if(_sm.GetFOVAdvancedData.IsAlreadyAtMiddleSafeDistance())
+                    {
+                        if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving(); //Stop gerak
+                    }
+                    else
+                    {
+                        if(_sm.LeaveDirection != Vector3.zero)
+                        {
+                            RunAwayOption();
+                        }
+                        else
+                        {
+                            Vector3 runAwayPos = _sm.transform.position - _sm.transform.forward * 2f;
+                            _sm.GetMoveStateMachine.SetAIDirection(runAwayPos);
+                        }
+                    }
+                }
+                else
+                {
+                    if(_sm.GotDetectedbyEnemy && _sm.IsThePersonImLookingAlsoSeeMe(_sm.GetFOVMachine.ClosestEnemy))
+                    {
+                        _sm.TakingCover();
+                        if(_sm.CanTakeCoverInThePosition)
+                        {
+
+                            _sm.GetMoveStateMachine.SetAIDirection(_sm.TakeCoverPosition);
+                            _sm.IsTakingCover = true;
+                        }
+                        else
+                        {
+                            _sm.IsTakingCover = false;
+                        }
+                    }
+                }
                 // Debug.Log("pew pew pew");
             }
         }
         if(_sm.GetFOVState.CurrState == FOVDistState.none || _sm.GetFOVMachine.ClosestEnemy == null)    
         {
             _sm.AimAIPointLookAt(null);
-            if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
-            WhenEnemyMissingInEngage();
+            if(_sm.IsTakingCover)
+            {
+                _sm.EnemyIdentity.Aiming(true);
+                Vector3 facedir = (_sm.Agent.steeringTarget - _sm.transform.position).normalized;
+                _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, -facedir, true);
+                _sm.GetMoveStateMachine.SetAIDirection(_sm.TakeCoverPosition);
+            }
+            else
+            {
+                if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
+                WhenEnemyMissingInEngage();
+            }
         }
 
         if(_sm.GetFOVAdvancedData.HasToCheckEnemyLastSeenPosition) //meaning visible targets or other visible ada
@@ -68,6 +155,7 @@ public class EnemyAI_EngageState : EnemyAIState
         else
         {
             _sm.EnemyAIManager.EditEnemyCaptainList(_sm, false);
+            _sm.IsCheckingLastPosTimer = 0;
         }
         
     }
@@ -75,24 +163,19 @@ public class EnemyAI_EngageState : EnemyAIState
     {
         if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
 
-        StopShooting();
+        _sm.StopShooting();
         _sm.IsAIEngage = false;
     }
     private void WhenEnemyMissingInEngage()
     {
-        StopShooting();
+        _sm.StopShooting();
         _sm.RunningToEnemyLastPosition();
     }
-    private void StartShooting(Transform chosenTarget)
+
+    private void RunAwayOption()
     {
-        // Debug.Log("shoot di 2" + _sm.GetFOVMachine.ClosestEnemy.position);
-        _sm.AimAIPointLookAt(chosenTarget);
-        _sm.GetUseWeaponStateMachine.GiveChosenTarget(chosenTarget);
-        _sm.EnemyIdentity.Shooting(true);
-    }
-    private void StopShooting()
-    {
-        if(_sm.GetUseWeaponStateMachine.ChosenTarget != null)_sm.GetUseWeaponStateMachine.GiveChosenTarget(null);
-        _sm.EnemyIdentity.Shooting(false);
+        _sm.IsTakingCover = false;
+        
+        _sm.RunAway();
     }
 }

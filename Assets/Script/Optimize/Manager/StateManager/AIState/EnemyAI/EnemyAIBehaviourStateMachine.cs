@@ -117,7 +117,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         else
         {
 
-            if(_alertValue >= 0 && _fovMachine.VisibleTargets.Count == 0 && _getFOVAdvancedData.OtherVisibleTargets.Count == 0 && (IsAIIdle || (!IsAIIdle &&GetMoveStateMachine.IsIdle && !_isCheckingEnemyInHunt)))
+            if(_alertValue >= 0 && _fovMachine.VisibleTargets.Count == 0 && _getFOVAdvancedData.OtherVisibleTargets.Count == 0 && (IsAIIdle || (!IsAIIdle &&GetMoveStateMachine.IsIdle && !_isCheckingEnemyInHunt && !_isTakingCover)))
             {
                 _alertValue -= Time.deltaTime * _alertValueCountMultiplier;
             }
@@ -327,5 +327,67 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
             if(enemyISaw == enemy)return true;
         }
         return false;
+        
+    }
+    public override void RunAway()
+    {
+        base.RunAway();
+        GetMoveStateMachine.SetAIDirection(RunAwayPos);
+        
+    }
+    protected override void WallListChecker()
+    {
+        for(int i=0; i < _wallArrayNearChara.Length; i++)
+        {
+            if(_currWall != null && (IsHiding || IsChecking))
+            {
+                if(_wallArrayNearChara[i] == _currWall)
+                {
+                    _wallTotal--;
+                    _wallArrayNearChara[i] = null;
+                    continue;
+                }
+            }
+            Vector3 wallToChara = (_wallArrayNearChara[i].transform.position - transform.position).normalized;
+            float dotWallChara = Vector3.Dot(wallToChara, transform.forward);
+            Debug.DrawRay(transform.position, wallToChara * 100f, Color.black, 2f);
+            if(dotWallChara <= 0)
+            {
+                Debug.Log(_wallArrayNearChara[i].transform.name + "  aaa " + " dotwallChara" + dotWallChara + " " + wallToChara + " " + transform.forward + " " + transform.name);
+                _wallTotal--;
+                _wallArrayNearChara[i] = null;
+                continue;
+            }
+            // Vector3 CharaToWall = (transform.position - _wallArrayNearChara[i].transform.position).normalized;
+            
+            
+        }
+    }
+    public void StartShooting(Transform chosenTarget)
+    {
+        // Debug.Log("shoot di 2" + _sm.GetFOVMachine.ClosestEnemy.position);
+        AimAIPointLookAt(chosenTarget);
+        GetUseWeaponStateMachine.GiveChosenTarget(chosenTarget);
+        EnemyIdentity.Shooting(true);
+    }
+    public void StopShooting()
+    {
+        if(GetUseWeaponStateMachine.ChosenTarget != null)GetUseWeaponStateMachine.GiveChosenTarget(null);
+        EnemyIdentity.Shooting(false);
+    }
+    protected override bool IsThisASafePathToGo()
+    {
+        // Vector3 EnemyToWall = (_fovMachine.ClosestEnemy.position -_wallArrayNearChara[i].transform.position).normalized;
+        // float dotWallEnemy = Vector3.Dot(transform.forward, EnemyToWall);
+        // Debug.DrawRay(_wallArrayNearChara[i].transform.position, EnemyToWall * 100f, Color.red, 2f);
+        // Debug.DrawRay(transform.position, transform.forward * 100f, Color.green, 2f);
+        // if(dotWallEnemy <= 0)
+        // {
+        //     Debug.Log(_wallArrayNearChara[i].transform.name + "  aaa " + " dotwallEnemy" + dotWallEnemy + " " +  EnemyToWall +" "+ transform.name);
+        //     _wallTotal--;
+        //     _wallArrayNearChara[i] = null;
+        //     continue;
+        // }
+        return true;
     }
 }
