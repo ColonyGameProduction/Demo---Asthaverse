@@ -303,9 +303,10 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         }
     }
 
-    private void EnemyAIManager_OnGoToClosestPOI()
+    private void EnemyAIManager_OnGoToClosestPOI(Vector3 enemyLastPos)
     {
         // Debug.Log("Test");
+        // if(enemyLastPos != GetFOVAdvancedData.EnemyCharalastSeenPosition)return; -> //the problem is, krn 1 poi list sama yg lain, yg td ga disuru ke sini, bs ke sini...; tp kalo ga gini ntr yg lain ngejer apa, jg poi ikut ini
         if(_currPOI == null)_currPOI = EnemyAIManager.GetClosestPOI(this);
         _getFOVAdvancedData.IsCheckingEnemyLastPosition(); // make this false so it wont go to lastseenpos                      
         _alertValue = MaxAlertValue/2 + 10f;
@@ -321,6 +322,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
 
     public bool IsThePersonImLookingAlsoSeeMe(Transform enemyISaw)
     {
+        
         if(_enemyWhoSawAIList.Count == 0) return false;
         foreach(Transform enemy in _enemyWhoSawAIList)
         {
@@ -339,14 +341,25 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
     {
         for(int i=0; i < _wallArrayNearChara.Length; i++)
         {
-            if(_currWall != null && (IsHiding || IsChecking))
+            if(IsHiding || IsChecking)
             {
-                if(_wallArrayNearChara[i] == _currWall)
+                if(_currWall != null)
+                {
+                    if(_wallArrayNearChara[i] == _currWall)
+                    {
+                        _wallTotal--;
+                        _wallArrayNearChara[i] = null;
+                        continue;
+                    }
+                }
+                float distance = Vector3.Distance(_wallArrayNearChara[i].transform.position, GetFOVAdvancedData.EnemyCharalastSeenPosition);
+                if(distance <= 5f)
                 {
                     _wallTotal--;
                     _wallArrayNearChara[i] = null;
                     continue;
                 }
+                
             }
             Vector3 wallToChara = (_wallArrayNearChara[i].transform.position - transform.position).normalized;
             float dotWallChara = Vector3.Dot(wallToChara, transform.forward);
@@ -390,4 +403,28 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         // }
         return true;
     }
+    // private void SearchForWallToHide()
+    // {
+    //     _wallArrayNearChara = Physics.OverlapSphere(transform.position, _wallScannerDistance, _wallTakeCoverLayer);
+    //     _wallTotal = _wallArrayNearChara.Length;
+    //     WallListChecker();
+    //     if(_wallTotal == 0) 
+    //     {
+    //         _canTakeCoverInThePosition = false;
+    //         return;
+    //     }
+    //     System.Array.Sort(_wallArrayNearChara,SortWallBasedOnClosestDistance);
+    //     for(int i=0; i<_wallTotal;i++)
+    //     {
+    //         Vector3 wallToChara = (_wallArrayNearChara[i].position - transform.position).normalized;
+    //         float wallvschara = Vector3.Dot(wallToChara, transform.forward);
+    //         if(wallvschara < 0.85f) continue;
+
+    //         Collider currColl = _wallArrayNearChara[i];
+    //         float currWallHeight = currColl.bounds.max.y;
+    //         bool isWallTallerThanChara = currColl.bounds.max.y > _charaHeadColl.bounds.max.y + _charaHeightBuffer;
+    //         if(!IsPassedWallHeightChecker(currColl.bounds.max.y))continue;
+
+    //     }
+    // }
 }

@@ -724,15 +724,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     #region RunAway
     public void RunAwayDirCalculation()
     {
-        // Vector3 EnemyToChara = GetTotalDirectionTargetPosAndEnemy(transform, true);
-        // Vector3 MainPlayerToChara = _friendsDefaultDirection.position - transform.position;
 
-        // if(Vector3.Dot(EnemyToChara, MainPlayerToChara) < 0.5f)
-        // {
-        //     _runAwayPos = _friendsDefaultDirection.position;
-        // }
-        // else
-        // {
         Vector3 runAwayDir = LeaveDirection;
         _isThereNoPathInRunAwayDirection = Physics.Raycast(transform.position, LeaveDirection, out _runAwayObstacleHit, 4f, RunAwayObstacleMask);
         Debug.DrawRay(transform.position, LeaveDirection, Color.blue);

@@ -18,7 +18,7 @@ public class FriendAI_TakingCoverState : FriendAIState
         _sm.IsHiding = true;
         _sm.IsChecking = false;
         changeTimer = changeTimerMax;
-        _sm.HidingCheckDelayTimer = _sm.GetFOVMachine.FindDelayTimerNow;
+        _sm.HidingCheckDelayTimer = _sm.GetFOVMachine.FindDelayTimerNow+ 0.15f;
         _sm.EnemyWhoSawAIList.Clear();
 
         _sm.GetPlayableCharaIdentity.Aiming(true);
@@ -38,7 +38,7 @@ public class FriendAI_TakingCoverState : FriendAIState
         // {
         //     _sm.IsAtTakingCoverHidingPlace = false;
         // }
-        if(!_sm.IsAIEngage || PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || !_sm.IsAIInput || _sm.GetPlayableCharaIdentity.IsAnimatingOtherAnimation || _sm.GetPlayableCharaIdentity.IsReviving || _sm.GetPlayableCharaIdentity.IsSilentKilling || _sm.IsCharacterDead || TakeCoverManager.Instance.IsTakeCoverPosOccupied(_sm.TakeCoverPosition, _sm))
+        if(!_sm.IsAIEngage || PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || !_sm.IsAIInput || _sm.GetPlayableCharaIdentity.IsAnimatingOtherAnimation || _sm.GetPlayableCharaIdentity.IsReviving || _sm.GetPlayableCharaIdentity.IsSilentKilling || _sm.IsCharacterDead || _sm.IsCurrTakeCoverAlreadyOccupied())
         {
             _sm.SwitchState(_factory.AI_EngageState());
             return;
@@ -365,7 +365,7 @@ public class FriendAI_TakingCoverState : FriendAIState
         if(_sm.IsHiding)
         {
             _sm.EnemyWhoSawAIList.Clear();
-            _sm.HidingCheckDelayTimer = _sm.GetFOVMachine.FindDelayTimerNow;
+            _sm.HidingCheckDelayTimer = _sm.GetFOVMachine.FindDelayTimerNow+ 0.15f;
         }
         Patroling();
         if(_sm.IsHiding && !_sm.isWallTallerThanChara)

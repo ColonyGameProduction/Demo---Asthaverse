@@ -35,8 +35,9 @@ public class EnemyAI_EngageState : EnemyAIState
         if(_sm.IsTakingCover && _sm.IsAtTakingCoverHidingPlace)
         {
             Debug.Log("Taking cover now" + _sm.transform.name);
-            _sm.IsTakingCover = false;
-            // _sm.SwitchState(_factory.AI_TakingCoverState());
+            // _sm.IsTakingCover = false;
+            _sm.EnemyAIManager.EditEnemyCaptainList(_sm, false);
+            _sm.SwitchState(_factory.AI_TakingCoverState());
             return;
             
         }
@@ -72,6 +73,7 @@ public class EnemyAI_EngageState : EnemyAIState
                     }
                     
                 }
+                // _sm.RunningTowardsEnemy();
                 _sm.StopShooting();
 
                 // if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
@@ -155,7 +157,6 @@ public class EnemyAI_EngageState : EnemyAIState
         else
         {
             _sm.EnemyAIManager.EditEnemyCaptainList(_sm, false);
-            _sm.IsCheckingLastPosTimer = 0;
         }
         
     }

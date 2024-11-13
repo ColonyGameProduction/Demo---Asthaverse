@@ -496,7 +496,7 @@ public class PlayableCharacterManager : MonoBehaviour
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
             if(chara == CurrPlayableChara)continue;
-            if(!chara.FriendAIStateMachine.IsAIEngage)CurrPlayableChara.Crouch(false);
+            if(!chara.FriendAIStateMachine.IsAIEngage)chara.Crouch(false);
         }
     }
 

@@ -15,7 +15,7 @@ public class EnemyAI_TakingCoverState : EnemyAIState
         _sm.IsHiding = true;
         _sm.IsChecking = false;
         changeTimer = changeTimerMax;
-        _sm.HidingCheckDelayTimer = _sm.GetFOVMachine.FindDelayTimerNow;
+        _sm.HidingCheckDelayTimer = _sm.GetFOVMachine.FindDelayTimerNow+ 0.15f;
         _sm.EnemyWhoSawAIList.Clear();
 
         _sm.EnemyIdentity.Aiming(true);
@@ -44,8 +44,9 @@ public class EnemyAI_TakingCoverState : EnemyAIState
                 _sm.EnemyIdentity.Aiming(true);
                 _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.ClosestEnemy.position, false);
 
-                if(_sm.IsAtTakingCoverHidingPlace && _sm.HidingCheckDelayTimer <= 0 && ((!_sm.isWallTallerThanChara && _sm.IsCrouchingBehindWall()) || _sm.isWallTallerThanChara))
+                if(_sm.IsAtTakingCoverHidingPlace && _sm.HidingCheckDelayTimer <= 0 && ((!_sm.isWallTallerThanChara && _sm.IsCrouchingBehindWall()) || _sm.isWallTallerThanChara) && _sm.EnemyWhoSawAIList.Count > 0 && _sm.IsThePersonImLookingAlsoSeeMe(_sm.GetFOVMachine.ClosestEnemy))
                 {
+                    Debug.Log("HALOOO ?? HARUSNYA GA ADA?"+ _sm.transform.name + _sm.EnemyWhoSawAIList.Count);
                     if(_sm.GetFOVState.CurrState == FOVDistState.far || _sm.GetFOVState.CurrState == FOVDistState.close)
                     {
                         if(_sm.GetFOVState.CurrState == FOVDistState.far)_sm.StopShooting();
@@ -93,11 +94,15 @@ public class EnemyAI_TakingCoverState : EnemyAIState
                 if(_sm.GetFOVState.CurrState == FOVDistState.far)
                 {
                     _sm.StopShooting();
-                    if(_sm.IsAtTakingCoverCheckingPlace)
-                    if(changeTimer <= 0)
+                    if((_sm.isWallTallerThanChara &&_sm.IsAtTakingCoverCheckingPlace) || !_sm.isWallTallerThanChara)
                     {
-                        ForceChangeHide();
+                        if(changeTimer <= 0)
+                        {
+                            Debug.Log("change timerrrr" + changeTimer + " " + _sm.transform.name);
+                            ForceChangeHide();
+                        }
                     }
+                    
                 }
 
             }
@@ -356,11 +361,6 @@ public class EnemyAI_TakingCoverState : EnemyAIState
         _sm.IsHiding = !_sm.IsHiding;
         _sm.IsChecking = !_sm.IsChecking;
         changeTimer = changeTimerMax;
-        if(_sm.IsHiding)
-        {
-            _sm.EnemyWhoSawAIList.Clear();
-            _sm.HidingCheckDelayTimer = _sm.GetFOVMachine.FindDelayTimerNow;
-        }
         Patroling();
         if(_sm.IsHiding && !_sm.isWallTallerThanChara)
         {
@@ -370,5 +370,11 @@ public class EnemyAI_TakingCoverState : EnemyAIState
             // if(!_sm.isWallTallerThanChara && !_sm.GetMoveStateMachine.IsCrouching && _sm.GetMoveStateMachine.IsIdle)_sm.GetPlayableCharaIdentity.Crouch(true);
             if(!_sm.isWallTallerThanChara && !_sm.GetMoveStateMachine.IsCrouching)_sm.EnemyIdentity.Crouch(true);   
         }
+        if(_sm.IsHiding)
+        {
+            _sm.EnemyWhoSawAIList.Clear();
+            _sm.HidingCheckDelayTimer = _sm.GetFOVMachine.FindDelayTimerNow + 0.15f;
+        }
     }
+    
 }
