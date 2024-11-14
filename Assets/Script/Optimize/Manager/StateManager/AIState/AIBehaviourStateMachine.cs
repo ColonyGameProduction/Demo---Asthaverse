@@ -370,6 +370,9 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         float dotLeaveDirWithNewPosDir = Vector3.Dot(firstPathNewPosToPlayer, _leaveDirection);
 
         if(dotLeaveDirWithNewPosDir >= -0.5f)return true;
+
+        float dotForwardWithNewPosDir = Vector3.Dot(firstPathNewPosToPlayer, transform.forward);
+        // if(dotForwardWithNewPosDir >= 0.95f && _fovMachine.VisibleTargets.Count == 0)return true;
         return false;
     }
     public void GetClosestPosition(bool isFrontBehind, ref float closestDistance, ref Vector3 newPos, float halfWallLength, float halfWallWidth, bool isWallTallerThanChara, Vector3 wallCenter, Vector3 wallForwardDir, Vector3 wallRightDir, Vector3 dirEnemyToWall)

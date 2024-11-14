@@ -418,17 +418,9 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
     }
     protected override bool IsThisASafePathToGo(Vector3 tempNewPos)
     {
-        // Vector3 EnemyToWall = (_fovMachine.ClosestEnemy.position -_wallArrayNearChara[i].transform.position).normalized;
-        // float dotWallEnemy = Vector3.Dot(transform.forward, EnemyToWall);
-        // Debug.DrawRay(_wallArrayNearChara[i].transform.position, EnemyToWall * 100f, Color.red, 2f);
-        // Debug.DrawRay(transform.position, transform.forward * 100f, Color.green, 2f);
-        // if(dotWallEnemy <= 0)
-        // {
-        //     Debug.Log(_wallArrayNearChara[i].transform.name + "  aaa " + " dotwallEnemy" + dotWallEnemy + " " +  EnemyToWall +" "+ transform.name);
-        //     _wallTotal--;
-        //     _wallArrayNearChara[i] = null;
-        //     continue;
-        // }
+        Vector3 firstPathNewPosToPlayer = (_tempFirstPathPos - transform.position).normalized;
+        float dotForwardWithNewPosDir = Vector3.Dot(firstPathNewPosToPlayer, transform.forward);
+        // if(dotForwardWithNewPosDir >= 0.95f && _fovMachine.VisibleTargets.Count > 0)return false;
         return true;
     }
     public void SearchForWallToHide()
