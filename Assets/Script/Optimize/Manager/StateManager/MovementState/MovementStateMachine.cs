@@ -11,6 +11,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [SerializeField] protected bool _isWalking;
     [SerializeField] protected bool _isRun;
     [SerializeField] protected bool _isCrouch;
+    protected bool _isMustStayAlert;
     
     protected MovementStateFactory _states;
     protected MovementState _currState;
@@ -74,6 +75,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public NavMeshAgent AgentNavMesh {get {return _agentNavMesh;}}
     public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
     public bool AllowLookTarget {get {return _allowLookTarget;} set{_allowLookTarget = value;}}
+    public bool IsMustStayAlert { get {return _isMustStayAlert;}set{ _isMustStayAlert = value;} }
     
     #endregion
 
@@ -246,6 +248,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         _idleAnimCycleIdx = x;
         _animator.SetFloat(ANIMATION_MOVE_PARAMETER_IDLECOUNTER, IdleAnimCycleIdx);
     }
+
     #endregion
 
 

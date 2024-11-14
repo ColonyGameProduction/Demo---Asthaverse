@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -82,16 +83,24 @@ public class IdleState : MovementState
     #region Idle Anim Cycle
     private void CheckingIdleAnimationCycle()
     {
-        if(!_isIdleAnimChanging) IdleAnimCycleTimerUpdate();
-        else if(_isIdleAnimChanging) ChangingIdleAnimation();
-        if(_sm.WasCharacterAiming)
+        if(_sm.IsMustStayAlert)
         {
-            _isIdleAnimChanging = false;
-            _sm.WasCharacterAiming = false;
-            _sm.SetIdleAnimAfterAim();
-            _timeCounter = 0;
-            _currTargetTime = _sm.IdleAnimCycleTimeTarget[0];
+            if(_sm.IdleAnimCycleIdx != 0)SetIdleAnimToAlert();
         }
+        else
+        {
+            if(!_isIdleAnimChanging) IdleAnimCycleTimerUpdate();
+            else if(_isIdleAnimChanging) ChangingIdleAnimation();
+            if(_sm.WasCharacterAiming)
+            {
+                _isIdleAnimChanging = false;
+                _sm.WasCharacterAiming = false;
+                _sm.SetIdleAnimAfterAim();
+                _timeCounter = 0;
+                _currTargetTime = _sm.IdleAnimCycleTimeTarget[0];
+            }
+        }
+
     }
     private void IdleAnimCycleTimerUpdate()
     {
@@ -147,6 +156,13 @@ public class IdleState : MovementState
             _timeCounter = _sm.IdleAnimCycleTimeTarget[0];
             _currTargetTime = _sm.IdleAnimCycleTimeTarget[1];
         }
+    }
+    private void SetIdleAnimToAlert()
+    {
+        _isIdleAnimChanging = false;
+        _sm.SetIdleAnimAfterAim();
+        _timeCounter = 0;
+        _currTargetTime = _sm.IdleAnimCycleTimeTarget[0];
     }
     #endregion
         

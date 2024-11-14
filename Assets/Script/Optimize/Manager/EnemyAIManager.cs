@@ -23,7 +23,7 @@ public class EnemyAIManager : MonoBehaviour
     public Action<Vector3> OnGoToClosestPOI;
     public Action OnEnemyisEngaging;
     public Action OnEnemyStopEngaging;
-    public Action<EnemyAIBehaviourStateMachine> OnEnemyDead;
+    public Action<Transform> OnEnemyDead;
 
     [Header("Engage timer for telling")]
     [SerializeField] protected float _isEngageTimer;

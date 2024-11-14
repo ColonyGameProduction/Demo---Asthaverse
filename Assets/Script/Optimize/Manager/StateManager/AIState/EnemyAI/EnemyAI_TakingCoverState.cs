@@ -6,6 +6,7 @@ public class EnemyAI_TakingCoverState : EnemyAIState
 {
     float changeTimer;
     float changeTimerMax = 3f;
+    bool isGoingToNewWall;
     public EnemyAI_TakingCoverState(EnemyAIBehaviourStateMachine currStateMachine, EnemyAIStateFactory factory) : base(currStateMachine, factory)
     {
     }
@@ -14,6 +15,7 @@ public class EnemyAI_TakingCoverState : EnemyAIState
     {
         _sm.IsHiding = true;
         _sm.IsChecking = false;
+        isGoingToNewWall = false;
         changeTimer = changeTimerMax;
         _sm.HidingCheckDelayTimer = _sm.GetFOVMachine.FindDelayTimerNow+ 0.15f;
         _sm.EnemyWhoSawAIList.Clear();
@@ -44,6 +46,11 @@ public class EnemyAI_TakingCoverState : EnemyAIState
                 _sm.EnemyIdentity.Aiming(true);
                 _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.ClosestEnemy.position, false);
 
+                if(isGoingToNewWall)
+                {
+                    _sm.SwitchState(_factory.AI_EngageState());
+                    return;
+                }
                 if(_sm.IsAtTakingCoverHidingPlace && _sm.HidingCheckDelayTimer <= 0 && ((!_sm.isWallTallerThanChara && _sm.IsCrouchingBehindWall()) || _sm.isWallTallerThanChara) && _sm.EnemyWhoSawAIList.Count > 0 && _sm.IsThePersonImLookingAlsoSeeMe(_sm.GetFOVMachine.ClosestEnemy))
                 {
                     Debug.Log("HALOOO ?? HARUSNYA GA ADA?"+ _sm.transform.name + _sm.EnemyWhoSawAIList.Count);
@@ -116,8 +123,14 @@ public class EnemyAI_TakingCoverState : EnemyAIState
             _sm.StopShooting();
             if(_sm.IsHiding)
             {
+                if(!_sm.IsAtTakingCoverHidingPlace)
+                {
+                    if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
+                    if(_sm.GetMoveStateMachine.IsCrouching)_sm.EnemyIdentity.Crouch(false);
+                }
                 if(_sm.IsAtTakingCoverHidingPlace)
                 {
+                    if(isGoingToNewWall)isGoingToNewWall = false;
                     _sm.EnemyIdentity.Aiming(true);
                     _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenTakingCover, true);
 
@@ -159,7 +172,24 @@ public class EnemyAI_TakingCoverState : EnemyAIState
                         if(_sm.IsCheckingLastPosTimer > 0)_sm.IsCheckingLastPosTimer -= Time.deltaTime;
                         else
                         {
-                            //Checking lastseenpos, get wall dkk raaa
+                            isGoingToNewWall = true;
+                            _sm.SearchForWallToHide();
+                            if(_sm.CanTakeCoverInThePosition)
+                            {
+                                _sm.IsHiding = !_sm.IsHiding;
+                                _sm.IsChecking = !_sm.IsChecking;
+                                changeTimer = changeTimerMax;
+                                Patroling();
+                                _sm.HidingCheckDelayTimer = _sm.GetFOVMachine.FindDelayTimerNow + 0.15f;
+                                if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
+                            }
+                            else
+                            {
+                                _sm.SwitchState(_factory.AI_EngageState());
+                                return;
+                            }
+                            // _sm.SwitchState(_factory.AI_EngageState());
+                            // return;
                         }
 
                         if(_sm.GetMoveStateMachine.IsCrouching)_sm.EnemyIdentity.Crouch(false);
@@ -190,7 +220,22 @@ public class EnemyAI_TakingCoverState : EnemyAIState
                             if(_sm.IsCheckingLastPosTimer > 0)_sm.IsCheckingLastPosTimer -= Time.deltaTime;
                             else
                             {
-                                //Checking lastseenpos, get wall dkk raaa
+                                isGoingToNewWall = true;
+                                _sm.SearchForWallToHide();
+                                if(_sm.CanTakeCoverInThePosition)
+                                {
+                                    _sm.IsHiding = !_sm.IsHiding;
+                                    _sm.IsChecking = !_sm.IsChecking;
+                                    changeTimer = changeTimerMax;
+                                    Patroling();
+                                    _sm.HidingCheckDelayTimer = _sm.GetFOVMachine.FindDelayTimerNow + 0.15f;
+                                    if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
+                                }
+                                else
+                                {
+                                    _sm.SwitchState(_factory.AI_EngageState());
+                                    return;
+                                }
                             }
                         }
                     }
@@ -218,6 +263,7 @@ public class EnemyAI_TakingCoverState : EnemyAIState
         _sm.IsAtTakingCoverCheckingPlace = false;
         _sm.IsHiding = false;
         _sm.IsChecking = false;
+        isGoingToNewWall = false;
     }
     private void ChangeTimerCounter()
     {
@@ -247,6 +293,7 @@ public class EnemyAI_TakingCoverState : EnemyAIState
         {
             if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.TakeCoverPosition)
             {
+                _sm.IsAtTakingCoverHidingPlace = false;
                 _sm.GetMoveStateMachine.SetAIDirection(_sm.TakeCoverPosition);
             }
             

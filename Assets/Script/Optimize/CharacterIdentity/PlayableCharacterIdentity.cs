@@ -138,6 +138,14 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _friendAIStateMachine = GetComponent<FriendAIBehaviourStateMachine>();
         
     }
+    protected override void Start() 
+    {
+        base.Start();
+        EnemyAIManager.Instance.OnEnemyDead += DeleteEnemyFromList;
+    }
+
+
+
     protected override void Update() 
     {
         base.Update();
@@ -319,4 +327,10 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         }
     }
     #endregion
+    private void DeleteEnemyFromList(Transform transform)
+    {
+        _getPlayableInteraction.DeleteKilledEnemyFromList(transform);
+        if(_fovMachine.VisibleTargets.Contains(transform))_fovMachine.VisibleTargets.Remove(transform);
+        _friendAIStateMachine.DeleteKilledEnemyFromList(transform);
+    }
 }

@@ -187,7 +187,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             Vector3 directionTotalEnemyToWall = GetTotalDirectionTargetPosAndEnemy(currWall, true);
             Debug.DrawRay(_wallArrayNearChara[i].transform.position, directionTotalEnemyToWall * 100f, Color.black, 2f);
 
-            Debug.Log("Tolong ini enemy ga masuk sini ato apa maksudnya "+ i + " " + transform.name);
+            // Debug.Log("Tolong ini enemy ga masuk sini ato apa maksudnya "+ i + " " + transform.name);
 
 
 
@@ -364,7 +364,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         return false;
     }
     //KALO MO NYARI INI HARUS NYARI LEAVEDIRECTION DL
-    protected virtual bool IsThisASafePathToGo()
+    protected virtual bool IsThisASafePathToGo(Vector3 tempNewPos)
     {
         Vector3 firstPathNewPosToPlayer = (_tempFirstPathPos - transform.position).normalized;
         float dotLeaveDirWithNewPosDir = Vector3.Dot(firstPathNewPosToPlayer, _leaveDirection);
@@ -406,7 +406,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         //ini dicek biar tau apakah masi keliatan ama enemy ga di posisi wall itu; wallcenter = transform wall
                         Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                         float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
-                        if(IsThisASafePathToGo() && dotEnemyVSNewPOs < _HideDotMin)
+                        if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "afterfb");
                             closestDistance = distanceCharaToWall;
@@ -449,7 +449,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
-                            if(IsThisASafePathToGo() && dotEnemyVSNewPOs < _HideDotMin)
+                            if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterfb");
                                 closestDistance = distanceCharaToWall;
@@ -478,7 +478,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
-                            if(IsThisASafePathToGo() && dotEnemyVSNewPOs < _HideDotMin)
+                            if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterfb");
                                 closestDistance = distanceCharaToWall;
@@ -513,7 +513,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                         float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                         
-                        if(IsThisASafePathToGo() && dotEnemyVSNewPOs < _HideDotMin)
+                        if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                         {
                             Debug.Log(x + " " + distanceCharaToWall + "afterlr");
                             closestDistance = distanceCharaToWall;
@@ -555,7 +555,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                             
-                            if(IsThisASafePathToGo() && dotEnemyVSNewPOs < _HideDotMin)
+                            if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterlr");
                                 closestDistance = distanceCharaToWall;
@@ -587,7 +587,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                             
-                            if(IsThisASafePathToGo() && dotEnemyVSNewPOs < _HideDotMin)
+                            if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                             {
                                 Debug.Log(x + " " + distanceCharaToWall + "afterlr");
                                 closestDistance = distanceCharaToWall;
@@ -618,7 +618,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             }
         }
     }
-    private int SortWallBasedOnClosestDistance(Collider A, Collider B)
+    protected int SortWallBasedOnClosestDistance(Collider A, Collider B)
     {
         if(A != null && B == null) return -1;
         if(A == null && B != null) return 1;
@@ -805,4 +805,5 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         }
     }
     #endregion
+
 }

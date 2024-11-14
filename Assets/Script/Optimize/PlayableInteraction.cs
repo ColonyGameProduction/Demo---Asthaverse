@@ -179,5 +179,10 @@ public class PlayableInteraction : MonoBehaviour
             }
         }
     }
+    public void DeleteKilledEnemyFromList(Transform enemy)
+    {
+        ISilentKillAble silentKillAble = enemy.GetComponent<ISilentKillAble>() ?? enemy.GetComponentInParent<ISilentKillAble>();
+        if(_silentKillAbleList.Contains(silentKillAble))_silentKillAbleList.Remove(silentKillAble);
+    }
 
 }
