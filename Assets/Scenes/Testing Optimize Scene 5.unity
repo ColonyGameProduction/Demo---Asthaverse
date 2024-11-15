@@ -343,7 +343,7 @@ Transform:
   m_GameObject: {fileID: 34346502}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 32.97, y: 0, z: -26.55}
+  m_LocalPosition: {x: 26.9, y: 0, z: -5.0599995}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2562,7 +2562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boneShape: 1
-  drawBones: 1
+  drawBones: 0
   drawTripods: 0
   boneSize: 0.01
   tripodSize: 1
@@ -6494,7 +6494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   STOP: 0
-  _stopView: 1
+  _stopView: 0
   _edgeResolveIteration: 4
   _edgeDistanceTreshold: 0.5
   _viewRadius: 20
@@ -6540,6 +6540,7 @@ MonoBehaviour:
   _rigController: {fileID: 509340193}
   _notAimSpamClickDelayTime: 0.1
   _originShootPoint_AIContainer: {fileID: 466782658}
+  _gunOriginShootPoint: {fileID: 1971715155}
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 12480
@@ -6606,7 +6607,7 @@ Transform:
   m_GameObject: {fileID: 500153879}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.67, y: 0, z: 14.74}
+  m_LocalPosition: {x: 4.76, y: 0, z: 0.27999926}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10333,11 +10334,11 @@ PrefabInstance:
     - target: {fileID: -8134667007107732436, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 206db97994006e149a68693e33125cd4, type: 2}
+      objectReference: {fileID: 2100000, guid: 04618a2969eef3b4e990d0838288fea7, type: 2}
     - target: {fileID: -8134667007107732436, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 206db97994006e149a68693e33125cd4, type: 2}
+      objectReference: {fileID: 2100000, guid: 04618a2969eef3b4e990d0838288fea7, type: 2}
     - target: {fileID: -8119701519746578901, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -11172,6 +11173,7 @@ MonoBehaviour:
   _rigController: {fileID: 1365075184}
   _notAimSpamClickDelayTime: 0.1
   _originShootPoint_AIContainer: {fileID: 2095406101}
+  _gunOriginShootPoint: {fileID: 1348194852}
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 12608
@@ -11457,7 +11459,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 206db97994006e149a68693e33125cd4, type: 2}
+  - {fileID: 2100000, guid: 375bdbee2eb236a49a993c93e4888ab2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11687,11 +11689,11 @@ PrefabInstance:
     - target: {fileID: -8134667007107732436, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 206db97994006e149a68693e33125cd4, type: 2}
+      objectReference: {fileID: 2100000, guid: 04618a2969eef3b4e990d0838288fea7, type: 2}
     - target: {fileID: -8134667007107732436, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 206db97994006e149a68693e33125cd4, type: 2}
+      objectReference: {fileID: 2100000, guid: 04618a2969eef3b4e990d0838288fea7, type: 2}
     - target: {fileID: -8119701519746578901, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -12640,7 +12642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boneShape: 1
-  drawBones: 1
+  drawBones: 0
   drawTripods: 0
   boneSize: 0.01
   tripodSize: 1
@@ -14337,7 +14339,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boneShape: 1
-  drawBones: 1
+  drawBones: 0
   drawTripods: 0
   boneSize: 0.01
   tripodSize: 1
@@ -16685,7 +16687,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boneShape: 1
-  drawBones: 1
+  drawBones: 0
   drawTripods: 0
   boneSize: 0.01
   tripodSize: 1
@@ -16888,7 +16890,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5213727cc95cecc4494f076732481665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Debugs: 1
+  Debugs: 0
 --- !u!114 &1077971751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16956,7 +16958,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boneShape: 1
-  drawBones: 1
+  drawBones: 0
   drawTripods: 0
   boneSize: 0.01
   tripodSize: 1
@@ -17939,6 +17941,7 @@ MonoBehaviour:
   _rigController: {fileID: 1032098280}
   _notAimSpamClickDelayTime: 0.1
   _originShootPoint_AIContainer: {fileID: 946796280}
+  _gunOriginShootPoint: {fileID: 1116039922}
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 12608
@@ -19082,7 +19085,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1252209718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19228,7 +19231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   STOP: 0
-  _stopView: 1
+  _stopView: 0
   _edgeResolveIteration: 4
   _edgeDistanceTreshold: 0.5
   _viewRadius: 20
@@ -19274,6 +19277,7 @@ MonoBehaviour:
   _rigController: {fileID: 868645254}
   _notAimSpamClickDelayTime: 0.1
   _originShootPoint_AIContainer: {fileID: 754929552}
+  _gunOriginShootPoint: {fileID: 568921847}
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 12480
@@ -19340,7 +19344,7 @@ Transform:
   m_GameObject: {fileID: 1252209717}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.63, y: 0, z: 5.9}
+  m_LocalPosition: {x: -18.63, y: 0, z: 24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20183,7 +20187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   STOP: 0
-  _stopView: 1
+  _stopView: 0
   _edgeResolveIteration: 4
   _edgeDistanceTreshold: 0.5
   _viewRadius: 20
@@ -20229,6 +20233,7 @@ MonoBehaviour:
   _rigController: {fileID: 1557769483}
   _notAimSpamClickDelayTime: 0.1
   _originShootPoint_AIContainer: {fileID: 1868833919}
+  _gunOriginShootPoint: {fileID: 1222440792}
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 12480
@@ -20295,7 +20300,7 @@ Transform:
   m_GameObject: {fileID: 1297871086}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -24.55, y: 0, z: 15.69}
+  m_LocalPosition: {x: -1.1199989, y: 0, z: 1.2299991}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20492,7 +20497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boneShape: 1
-  drawBones: 1
+  drawBones: 0
   drawTripods: 0
   boneSize: 0.01
   tripodSize: 1
@@ -21698,7 +21703,7 @@ Transform:
   m_GameObject: {fileID: 1429382168}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.35, y: 0, z: -36.21}
+  m_LocalPosition: {x: 8.35, y: 0, z: -14.719999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -22466,11 +22471,11 @@ PrefabInstance:
     - target: {fileID: -8134667007107732436, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 206db97994006e149a68693e33125cd4, type: 2}
+      objectReference: {fileID: 2100000, guid: 04618a2969eef3b4e990d0838288fea7, type: 2}
     - target: {fileID: -8134667007107732436, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 206db97994006e149a68693e33125cd4, type: 2}
+      objectReference: {fileID: 2100000, guid: 04618a2969eef3b4e990d0838288fea7, type: 2}
     - target: {fileID: -8119701519746578901, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -24285,11 +24290,11 @@ PrefabInstance:
     - target: {fileID: -8134667007107732436, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 206db97994006e149a68693e33125cd4, type: 2}
+      objectReference: {fileID: 2100000, guid: 04618a2969eef3b4e990d0838288fea7, type: 2}
     - target: {fileID: -8134667007107732436, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 206db97994006e149a68693e33125cd4, type: 2}
+      objectReference: {fileID: 2100000, guid: 04618a2969eef3b4e990d0838288fea7, type: 2}
     - target: {fileID: -8119701519746578901, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -25059,7 +25064,7 @@ Transform:
   m_GameObject: {fileID: 1690937460}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.42, y: 0, z: -37.39}
+  m_LocalPosition: {x: 19.42, y: 0, z: -15.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -26121,6 +26126,7 @@ MonoBehaviour:
   _rigController: {fileID: 325046232}
   _notAimSpamClickDelayTime: 0.1
   _originShootPoint_AIContainer: {fileID: 1752146190}
+  _gunOriginShootPoint: {fileID: 1970041138}
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 12480
@@ -26187,7 +26193,7 @@ Transform:
   m_GameObject: {fileID: 1769942156}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.37418395, z: -0, w: 0.9273545}
-  m_LocalPosition: {x: -10.72, y: 0, z: 15.26}
+  m_LocalPosition: {x: 12.71, y: 0, z: 0.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -26676,11 +26682,11 @@ PrefabInstance:
     - target: {fileID: -8134667007107732436, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 206db97994006e149a68693e33125cd4, type: 2}
+      objectReference: {fileID: 2100000, guid: 04618a2969eef3b4e990d0838288fea7, type: 2}
     - target: {fileID: -8134667007107732436, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 206db97994006e149a68693e33125cd4, type: 2}
+      objectReference: {fileID: 2100000, guid: 04618a2969eef3b4e990d0838288fea7, type: 2}
     - target: {fileID: -8119701519746578901, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -30095,7 +30101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!195 &2017098523
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -30152,7 +30158,7 @@ Transform:
   m_GameObject: {fileID: 2017098522}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 34, y: 0, z: -30.3}
+  m_LocalPosition: {x: 24.3, y: 0, z: -6.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -30211,6 +30217,7 @@ MonoBehaviour:
   _rigController: {fileID: 1523431562}
   _notAimSpamClickDelayTime: 0.1
   _originShootPoint_AIContainer: {fileID: 301498854}
+  _gunOriginShootPoint: {fileID: 619287133}
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 12480
@@ -30289,7 +30296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   STOP: 0
-  _stopView: 1
+  _stopView: 0
   _edgeResolveIteration: 4
   _edgeDistanceTreshold: 0.5
   _viewRadius: 20
@@ -31004,6 +31011,7 @@ MonoBehaviour:
   _rigController: {fileID: 1771888838}
   _notAimSpamClickDelayTime: 0.1
   _originShootPoint_AIContainer: {fileID: 961320780}
+  _gunOriginShootPoint: {fileID: 1813728356}
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 12608
@@ -31213,7 +31221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boneShape: 1
-  drawBones: 1
+  drawBones: 0
   drawTripods: 0
   boneSize: 0.01
   tripodSize: 1
@@ -31451,7 +31459,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boneShape: 1
-  drawBones: 1
+  drawBones: 0
   drawTripods: 0
   boneSize: 0.01
   tripodSize: 1

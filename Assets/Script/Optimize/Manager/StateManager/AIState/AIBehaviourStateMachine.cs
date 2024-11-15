@@ -185,7 +185,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             // Debug.Log(halfWallWidth * 2 + " " + halfWallLength * 2 + " " + _charaWidth + " aa" + canCheckFrontBehind + canCheckLeftRightSide);
             if(!canCheckLeftRightSide && !canCheckFrontBehind) continue;
             Vector3 directionTotalEnemyToWall = GetTotalDirectionTargetPosAndEnemy(currWall, true);
-            Debug.DrawRay(_wallArrayNearChara[i].transform.position, directionTotalEnemyToWall * 100f, Color.black, 2f);
+            // Debug.DrawRay(_wallArrayNearChara[i].transform.position, directionTotalEnemyToWall * 100f, Color.black, 2f);
 
             // Debug.Log("Tolong ini enemy ga masuk sini ato apa maksudnya "+ i + " " + transform.name);
 
@@ -202,7 +202,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 if(forwardWithEnemy < _HideDotMin)
                 {
                     // Debug.Log("Dot fwd normal " + forwardWithEnemy);
-                    Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallForward * 100f, Color.blue, 2f);
+                    // Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallForward * 100f, Color.blue, 2f);
 
                     GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, wallRight, directionTotalEnemyToWall);
                     
@@ -214,7 +214,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     if(forwardWithEnemy < _HideDotMin)
                     {
                         // Debug.Log("Dot fwd balik " + forwardWithEnemy);
-                        Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallForward * 100f, Color.red, 2f);
+                        // Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallForward * 100f, Color.red, 2f);
 
                         GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, -wallForward, wallRight,directionTotalEnemyToWall);
                     } 
@@ -229,7 +229,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 if(rightWithEnemy < _HideDotMin)
                 {
                     // Debug.Log("Dot right normal " + rightWithEnemy);
-                    Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallRight * 100f, Color.grey, 2f);
+                    // Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallRight * 100f, Color.grey, 2f);
                     GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, wallRight, directionTotalEnemyToWall);
                 }
                 else // real life wise, ga mungkin di sisi 1 aman, sisi 1 lg aman juga
@@ -238,7 +238,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     if(rightWithEnemy < _HideDotMin)
                     {
                         // Debug.Log("Dot right balik " + rightWithEnemy);
-                        Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallRight * 100f, Color.magenta, 2f);
+                        // Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallRight * 100f, Color.magenta, 2f);
                         GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, -wallRight, directionTotalEnemyToWall);
                     }
                     
@@ -253,14 +253,14 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 _canTakeCoverInThePosition = true;
                 _currWall = _wallArrayNearChara[i];
                 _takeCoverPosition = newPos;
-                Debug.DrawRay(_takeCoverPosition, Vector3.up * 100f, Color.red);
+                // Debug.DrawRay(_takeCoverPosition, Vector3.up * 100f, Color.red);
                 
                 Vector3 NewPosToWall = (newPos - wallCenter).normalized;
                 float NewPosForwardDistance = Vector3.Dot(NewPosToWall, wallForward); 
                 float NewPosRightDistance = Vector3.Dot(NewPosToWall, wallRight); 
 
-                Debug.DrawRay(wallCenter, wallForward * 100f, Color.red);
-                Debug.DrawRay(wallCenter, wallRight * 100f, Color.blue);
+                // Debug.DrawRay(wallCenter, wallForward * 100f, Color.red);
+                // Debug.DrawRay(wallCenter, wallRight * 100f, Color.blue);
                 if(_isMovingOnXPos)
                 {
                     if(NewPosRightDistance >= 0)
@@ -730,7 +730,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
         Vector3 runAwayDir = LeaveDirection;
         _isThereNoPathInRunAwayDirection = Physics.Raycast(transform.position, LeaveDirection, out _runAwayObstacleHit, 4f, RunAwayObstacleMask);
-        Debug.DrawRay(transform.position, LeaveDirection, Color.blue);
+        // Debug.DrawRay(transform.position, LeaveDirection, Color.blue);
         
         if(_isThereNoPathInRunAwayDirection)
         {

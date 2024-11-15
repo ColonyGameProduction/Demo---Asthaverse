@@ -388,8 +388,8 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                 }
                 // Vector3 wallToCharaNow = (_wallArrayNearChara[i].transform.position - transform.position).normalized;
                 // float wallvschara = Vector3.Dot(wallToCharaNow, transform.forward);
-                Debug.DrawRay(transform.position, wallToChara * 100f, Color.black, 2f);
-                Debug.DrawRay(transform.position, transform.forward * 100f, Color.green, 2f);
+                // Debug.DrawRay(transform.position, wallToChara * 100f, Color.black, 2f);
+                // Debug.DrawRay(transform.position, transform.forward * 100f, Color.green, 2f);
                 if(dotWallChara < 0.95f)
                 {
                     _wallTotal--;
@@ -473,7 +473,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                 if(forwardWithEnemy < _HideDotMin)
                 {
                     // Debug.Log("Dot fwd normal " + forwardWithEnemy);
-                    Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallForward * 100f, Color.blue, 2f);
+                    // Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallForward * 100f, Color.blue, 2f);
 
                     GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, wallForward, wallRight, directionLastSeenPosToWall);
                     
@@ -485,7 +485,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                     if(forwardWithEnemy < _HideDotMin)
                     {
                         // Debug.Log("Dot fwd balik " + forwardWithEnemy);
-                        Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallForward * 100f, Color.red, 2f);
+                        // Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallForward * 100f, Color.red, 2f);
 
                         GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, -wallForward, wallRight,directionLastSeenPosToWall);
                     } 
@@ -500,7 +500,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                 if(rightWithEnemy < _HideDotMin)
                 {
                     // Debug.Log("Dot right normal " + rightWithEnemy);
-                    Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallRight * 100f, Color.grey, 2f);
+                    // Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallRight * 100f, Color.grey, 2f);
                     GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, wallForward, wallRight, directionLastSeenPosToWall);
                 }
                 else // real life wise, ga mungkin di sisi 1 aman, sisi 1 lg aman juga
@@ -509,7 +509,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                     if(rightWithEnemy < _HideDotMin)
                     {
                         // Debug.Log("Dot right balik " + rightWithEnemy);
-                        Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallRight * 100f, Color.magenta, 2f);
+                        // Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallRight * 100f, Color.magenta, 2f);
                         GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, wallForward, -wallRight, directionLastSeenPosToWall);
                     }
                     
@@ -522,14 +522,14 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                 _currWallHeight = currWallHeight;
                 _isWallTallerThanChara = isWallTallerThanCharaHere;
                 _takeCoverPosition = newPos;
-                Debug.DrawRay(_takeCoverPosition, Vector3.up * 100f, Color.red);
+                // Debug.DrawRay(_takeCoverPosition, Vector3.up * 100f, Color.red);
                 
                 Vector3 NewPosToWall = (newPos - wallCenter).normalized;
                 float NewPosForwardDistance = Vector3.Dot(NewPosToWall, wallForward); 
                 float NewPosRightDistance = Vector3.Dot(NewPosToWall, wallRight); 
 
-                Debug.DrawRay(wallCenter, wallForward * 100f, Color.red);
-                Debug.DrawRay(wallCenter, wallRight * 100f, Color.blue);
+                // Debug.DrawRay(wallCenter, wallForward * 100f, Color.red);
+                // Debug.DrawRay(wallCenter, wallRight * 100f, Color.blue);
                 if(_isMovingOnXPos)
                 {
                     if(NewPosRightDistance >= 0)

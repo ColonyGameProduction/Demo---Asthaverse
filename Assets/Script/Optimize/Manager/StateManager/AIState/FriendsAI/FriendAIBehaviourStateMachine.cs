@@ -86,7 +86,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     private void OnDrawGizmos() 
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, _wallScannerDistance);
+        // Gizmos.DrawWireSphere(transform.position, _wallScannerDistance);
     }
     void Update()
     {

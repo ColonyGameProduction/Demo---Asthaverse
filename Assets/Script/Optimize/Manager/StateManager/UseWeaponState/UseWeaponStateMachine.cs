@@ -46,6 +46,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     protected Transform _currOriginShootPoint, _currDirectionShootPoint;
     protected Vector3 _originShootPosition, _directionShootPosition;
     protected Transform _FOVPoint;
+    [SerializeField]protected Transform _gunOriginShootPoint;
 
     [Space(1)]
     [Header("Enemy Character Layermask")]
@@ -170,7 +171,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         {
             RecoilHandler();
             SetShootPosition();
-            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask, _finalCountRecoil);
+            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask, _finalCountRecoil, _gunOriginShootPoint.position);
             CurrWeapon.currBullet -= 1;
             if(!CurrWeapon.weaponStatSO.allowHoldDownButton)IsUsingWeapon = false;
             StartCoroutine(FireRate(CurrWeapon.weaponStatSO.fireRate));

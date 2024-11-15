@@ -195,6 +195,17 @@ public class FOVMachine : MonoBehaviour
             _viewMesh.vertices = vertices;
             //Segitiga mesh dimasukan
             _viewMesh.triangles = triangles;
+
+            //Change Alpha
+            Color[] newcolor = _viewMesh.colors;
+            for (int i = 0; i < newcolor.Length; i++)
+            {
+                Color color = newcolor[i];
+                color.a = 0.15f; 
+                newcolor[i] = color;
+            }
+            _viewMesh.colors = newcolor;
+
             //Mengkalkulasi lagi mesh nya supaya sesuai dengan orientasi
             _viewMesh.RecalculateNormals();
         }
