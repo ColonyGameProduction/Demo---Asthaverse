@@ -56,7 +56,7 @@ public class PlayerAction : ExecuteLogic
     private EntityStatSO character;
 
     private AnimationTestScript testAnimation;
-    
+
     private int curWeapon;
 
     [SerializeField]
@@ -70,6 +70,9 @@ public class PlayerAction : ExecuteLogic
 
     private int currBreadCrumbs;
 
+    [Header("Object Interaction")]
+    public Transform holdPoint;
+    public GameObject heldObject;
     //supaya input action bisa digunakan
     private void Awake()
     {
@@ -100,6 +103,7 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
         inputActions.InputPlayerAction.Reload.performed += Reload_performed;
         inputActions.InputPlayerAction.Interact.performed += Interact_performed;
+        inputActions.InputPlayerAction.Throw.performed += Throw_performed;
         inputActions.InputPlayerAction.NightVision.performed += NightVision_performed;
 
         inputActions.InputPlayerAction.Command.performed += Command_performed;
@@ -205,7 +209,7 @@ public class PlayerAction : ExecuteLogic
 
     private void ChangePlayer_performed(InputAction.CallbackContext context)
     {
-        GameManager gm = GameManager.instance;        
+        GameManager gm = GameManager.instance;
 
         if (gm.canSwitch)
         {
@@ -216,6 +220,14 @@ public class PlayerAction : ExecuteLogic
     private void Interact_performed(InputAction.CallbackContext context)
     {
         Interact();
+    }
+
+    private void Throw_performed(InputAction.CallbackContext context)
+    {
+        if (heldObject != null)
+        {
+            ThrowObject();
+        }
     }
 
 
@@ -346,12 +358,12 @@ public class PlayerAction : ExecuteLogic
 
     //movement
     private void Movement()
-    {       
+    {
         Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
         Vector3 flatForward = new Vector3(followTarget.forward.x, 0, followTarget.forward.z).normalized;
-        Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;        
+        Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;
 
         if (IsCrouching)
         {
@@ -380,7 +392,7 @@ public class PlayerAction : ExecuteLogic
         testAnimation?.WalkAnimation(move);
         if (!isShooting && !gm.scope)
         {
-            
+
             Rotation(direction);
         }
         else if(isShooting || gm.scope)

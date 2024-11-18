@@ -179,6 +179,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Throw"",
+                    ""type"": ""Button"",
+                    ""id"": ""f54134e1-0604-4392-9454-04748a4fe8ad"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -412,6 +421,17 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""NightVision"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b41fcccb-ab18-4b46-a094-fcf703c12cfc"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -437,6 +457,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_SkillButton = m_InputPlayerAction.FindAction("SkillButton", throwIfNotFound: true);
         m_InputPlayerAction_Whistle = m_InputPlayerAction.FindAction("Whistle", throwIfNotFound: true);
         m_InputPlayerAction_NightVision = m_InputPlayerAction.FindAction("NightVision", throwIfNotFound: true);
+        m_InputPlayerAction_Throw = m_InputPlayerAction.FindAction("Throw", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -515,6 +536,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_SkillButton;
     private readonly InputAction m_InputPlayerAction_Whistle;
     private readonly InputAction m_InputPlayerAction_NightVision;
+    private readonly InputAction m_InputPlayerAction_Throw;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -536,6 +558,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @SkillButton => m_Wrapper.m_InputPlayerAction_SkillButton;
         public InputAction @Whistle => m_Wrapper.m_InputPlayerAction_Whistle;
         public InputAction @NightVision => m_Wrapper.m_InputPlayerAction_NightVision;
+        public InputAction @Throw => m_Wrapper.m_InputPlayerAction_Throw;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -596,6 +619,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @NightVision.started += instance.OnNightVision;
             @NightVision.performed += instance.OnNightVision;
             @NightVision.canceled += instance.OnNightVision;
+            @Throw.started += instance.OnThrow;
+            @Throw.performed += instance.OnThrow;
+            @Throw.canceled += instance.OnThrow;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -651,6 +677,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @NightVision.started -= instance.OnNightVision;
             @NightVision.performed -= instance.OnNightVision;
             @NightVision.canceled -= instance.OnNightVision;
+            @Throw.started -= instance.OnThrow;
+            @Throw.performed -= instance.OnThrow;
+            @Throw.canceled -= instance.OnThrow;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -687,5 +716,6 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnSkillButton(InputAction.CallbackContext context);
         void OnWhistle(InputAction.CallbackContext context);
         void OnNightVision(InputAction.CallbackContext context);
+        void OnThrow(InputAction.CallbackContext context);
     }
 }

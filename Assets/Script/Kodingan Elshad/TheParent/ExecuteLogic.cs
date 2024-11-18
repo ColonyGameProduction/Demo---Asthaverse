@@ -185,11 +185,50 @@ public class ExecuteLogic : AILogic
             if (hit.collider.GetComponent<PickableItems>())
             {
                 Debug.Log("Ambil!");
+
+                PlayerAction playerAction = GetComponent<PlayerAction>();
+
+                if (playerAction.heldObject == null)
+                {
+                    playerAction.heldObject = hit.collider.gameObject;
+
+                    PickupObject(playerAction.heldObject);
+                }
             }
             else if (hit.collider.GetComponent<OpenableObject>())
             {
                 Debug.Log("Buka!");
             }
+        }
+    }
+
+    private void PickupObject(GameObject obj)
+    {
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+        PlayerAction playerAction = GetComponent<PlayerAction>();
+
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+        }
+
+        obj.transform.position = playerAction.holdPoint.position;
+        obj.transform.rotation = playerAction.holdPoint.rotation;
+        obj.transform.SetParent(playerAction.holdPoint);
+    }
+
+    public void ThrowObject()
+    {
+        PlayerAction playerAction = GetComponent<PlayerAction>();
+        Rigidbody rb = playerAction.heldObject.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.AddForce(Camera.main.transform.forward * 10f, ForceMode.VelocityChange);
+
+            playerAction.heldObject.transform.SetParent(null);
+            playerAction.heldObject = null;
         }
     }
 
