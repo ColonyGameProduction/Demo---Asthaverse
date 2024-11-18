@@ -64,22 +64,44 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
 
         if (first)
         {
-            
-            LeanTween.alpha(faces[0].GetComponentInChildren<RawImage>().rectTransform, 1, .7f).setOnComplete(() => 
-            {
+
+            LeanTween.alpha(faces[0].GetComponentInChildren<RawImage>().rectTransform, 1, .7f);
 
                 startCharID = curCutsceneDialog.charID[index] - 1;
                 leftName.text = curCutsceneDialog.character[startCharID].Name;
 
-            });
-            LeanTween.alpha(faces[1].GetComponentInChildren<RawImage>().rectTransform, 1, .7f).setOnComplete(() =>
-            {
 
+            LeanTween.alpha(faces[1].GetComponentInChildren<RawImage>().rectTransform, 1, .7f);
                 startCharID = curCutsceneDialog.charID[index + 1] - 1;
                 rightName.text = curCutsceneDialog.character[startCharID].Name;
                 StartCoroutine(TypeLine());
+            if (charID % 2 == 0)
+            {
+                LeanTween.value(.1f, 1, 0.5f).setOnUpdate((float value) => {
+                    Color color = leftName.color;
+                    color.a = value;
+                    leftName.color = color;
+                });
+                LeanTween.value(1, .1f, 0.5f).setOnUpdate((float value) => {
+                    Color color = rightName.color;
+                    color.a = value;
+                    rightName.color = color;
+                });
+            }
+            else
+            {
+                LeanTween.value(.1f, 1, 0.5f).setOnUpdate((float value) => {
+                    Color color = rightName.color;
+                    color.a = value;
+                    rightName.color = color;
+                });
+                LeanTween.value(1, .1f, 0.5f).setOnUpdate((float value) => {
+                    Color color = leftName.color;
+                    color.a = value;
+                    leftName.color = color;
+                });
+            }
 
-            });
             faces[curCutsceneDialog.charID[index]].GetComponentInChildren<VideoPlayer>().Play();
             faces[curCutsceneDialog.charID[index]].GetComponentInChildren<VideoPlayer>().Pause();
             first = false;
@@ -90,10 +112,46 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
             if (charID % 2 == 0)
             {
                 leftName.text = curCutsceneDialog.character[charID].Name;
+                LeanTween.value(.1f, 1, 0.5f).setOnUpdate((float value) => {
+                    Color color = leftName.color;
+                    color.a = value;
+                    leftName.color = color;
+                });
+
+                float decreaseValue = rightName.color.a;
+                Debug.Log(decreaseValue);
+
+                LeanTween.value(decreaseValue, .1f, 0.5f).setOnUpdate((float value) => {
+                    if(decreaseValue > .1f)
+                    {
+                        Color color = rightName.color;
+                        color.a = value;
+                        rightName.color = color;
+                    }                    
+                });
             }
             else
             {
                 rightName.text = curCutsceneDialog.character[charID].Name;
+                LeanTween.value(.1f, 1, 0.5f).setOnUpdate((float value) => {
+                    Color color = rightName.color;
+                    color.a = value;
+                    rightName.color = color;
+                });
+                
+                float decreaseValue = leftName.color.a;
+                Debug.Log(decreaseValue);
+
+                LeanTween.value(decreaseValue, .1f, 0.5f).setOnUpdate((float value) => {
+                    if (decreaseValue > .1f)
+                    {
+                        Debug.Log("Masuk");
+                        Color color = leftName.color;
+                        color.a = value;
+                        leftName.color = color;
+                    }
+                    
+                });
             }
         }
     }
