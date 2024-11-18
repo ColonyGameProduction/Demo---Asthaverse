@@ -74,7 +74,7 @@ public class PlayerAction : ExecuteLogic
     [Header("Object Interaction")]
     public Transform holdPoint;
     public GameObject heldObject;
-
+    
     private float curRecoil = 0;
     private float curRecoilMod = 0;
     private float maxRecoil = 0;
