@@ -5,7 +5,7 @@ using UnityEngine;
 public interface IHealth
 {
     public float TotalHealth{ get;}
-    public float HealthNow{ get;}
+    public float CurrHealth{ get;}
     void Hurt(float Damage);
     void Heal(float Healing);
     void Death();

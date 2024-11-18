@@ -32,7 +32,12 @@ public enum alertState
     Engage,
 }
 
-
+public enum bodyParts
+{
+    head,
+    body,
+    leg,
+}
 public enum FOVDistState
 {
     none,

@@ -69,8 +69,19 @@ public class EnemyAI : ExecuteLogic
     private Transform tempPOI;
 
     public List<FriendsAI> friendAI = new List<FriendsAI>();
+    Transform curEnemy;
+    Transform enemyBodyToShoot;
+    Transform tempEnemy;
+    Body tempBody;
+    Body enemyBodyParts;
+    bool bodyIsFound = false;
 
-    
+
+    private float curRecoil = 0;
+    private float maxRecoil = 0;
+    private float recoilCooldown = 0;
+
+
 
     private void Start()
     {
@@ -100,7 +111,7 @@ public class EnemyAI : ExecuteLogic
 
     private void Update()
     {
-
+        ComplexRecoil(ref curRecoil);
         ChangingState();
         
         switch (enemyState)
@@ -445,6 +456,7 @@ public class EnemyAI : ExecuteLogic
     {
         if (!fireRateOn && !isReloading && visibleTargets.Count != 0)
         {
+            RecoilHandler();
             Shooting();
             StartCoroutine(FireRate(FireRateFlag, weapon.fireRate));
             if (weapon.currBullet == 0)
@@ -508,18 +520,78 @@ public class EnemyAI : ExecuteLogic
 
     private void Shooting()
     {
-        Vector3 dis = new Vector3();
+        Vector3 dir = new Vector3();
+        
+
         foreach (Transform enemy in visibleTargets)
         {
+            tempEnemy = null;
+            tempBody = null;
             tempDistance = 0;
             if (tempDistance > Vector3.Distance(transform.position, enemy.position) || tempDistance == 0)
             {
-                dis = visibleTargets[0].transform.position - FOVPoint.transform.position;
                 tempDistance = Vector3.Distance(transform.position, enemy.position);
+                tempEnemy = enemy;
+                tempBody = enemy.GetComponent<Body>();
             }
         }
+
+        enemyBodyParts = tempBody;
+        curEnemy = tempEnemy;
+
+
+        if (enemyBodyParts != null)
+        {
+            bodyIsFound = false; // Initialize to false at the start
+            for (int i = 0; i < enemyBodyParts.bodyParts.Count; i++)
+            {
+                if (enemyBodyParts.bodyParts[i].bodyType == bodyParts.body)
+                {
+                    Vector3 direction = (enemyBodyParts.bodyParts[i].transform.position - FOVPoint.position).normalized;
+                    if (Physics.Raycast(FOVPoint.position, direction, out RaycastHit hit, isItEnemy))
+                    {
+                        if (hit.transform == enemyBodyParts.bodyParts[i].transform) // Ensure it's hitting the intended target
+                        {
+                            bodyIsFound = true;
+                            enemyBodyToShoot = enemyBodyParts.bodyParts[i].gameObject.transform;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (bodyIsFound)
+            {
+                dir = enemyBodyToShoot.position - FOVPoint.position;
+            }
+            else
+            {
+                for (int i = 0; i < enemyBodyParts.bodyParts.Count; i++)
+                {
+                    Vector3 direction = (enemyBodyParts.bodyParts[i].transform.position - FOVPoint.position).normalized;
+                    if (Physics.Raycast(FOVPoint.position, direction, out RaycastHit hit, isItEnemy))
+                    {
+                        if (hit.transform == enemyBodyParts.bodyParts[i].transform)
+                        {
+                            enemyBodyToShoot = enemyBodyParts.bodyParts[i].gameObject.transform;
+                            break;
+                        }
+                    }
+                }
+
+                if (enemyBodyToShoot != null) // Ensure `enemyBodyToShoot` is not null before calculating `dir`
+                {
+                    dir = enemyBodyToShoot.position - FOVPoint.position;
+                }
+            }
+        }
+
+        if(dir == Vector3.zero)
+        {
+            dir = curEnemy.transform.position - FOVPoint.transform.position;
+        }
         // Debug.Log("Shoot direction " + dis + " " + FOVPoint.position + " " + visibleTargets[0].transform.position);
-        if(visibleTargets.Count > 0)Shoot(FOVPoint.position, dis, enemyStat , weapon, isItEnemy);
+        if (visibleTargets.Count > 0)Shoot(FOVPoint.position, dir.normalized, enemyStat , weapon, isItEnemy, curRecoil);
     }
 
     public IEnumerator FindTargetWithDelay(float delay)
@@ -655,9 +727,30 @@ public class EnemyAI : ExecuteLogic
        
     }
 
+    private void RecoilHandler()
+    {
+        recoilCooldown = weapon.fireRate + (weapon.fireRate * .1f);
+        maxRecoil = weapon.recoil;
+    }
+
+    private void ComplexRecoil(ref float curRecoil)
+    {
+        if (recoilCooldown > 0)
+        {
+            recoilCooldown -= Time.deltaTime;
+            if(curRecoil <= maxRecoil)
+            {
+                curRecoil += Time.deltaTime * weapon.recoil;
+            }
+        }
+        else
+        {
+            curRecoil = 0;
+        }
+    }
     public float GetEnemyHP()
     {
-        return enemyHP;
+        return enemyHP + enemyStat.armor;
     }
 
     public void SetEnemyHP(float hp)
