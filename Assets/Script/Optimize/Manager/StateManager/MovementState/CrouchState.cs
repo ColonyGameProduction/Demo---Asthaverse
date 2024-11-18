@@ -10,7 +10,7 @@ public class CrouchState : WalkState
     public CrouchState(MovementStateMachine currStateMachine, MovementStateFactory factory) : base(currStateMachine, factory) => _activeStateAnimParamName = "Crouch";
     public override void EnterState()
     {
-        base.EnterState();
+        SetAnimParamActive(_activeStateAnimParamName);
         
         _sm.ChangeCurrSpeed(_standData.CrouchSpeed);
     }

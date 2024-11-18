@@ -10,7 +10,7 @@ public class RunState : WalkState
     public RunState(MovementStateMachine currStateMachine, MovementStateFactory factory) : base(currStateMachine, factory) =>_activeStateAnimParamName = "Run";
     public override void EnterState()
     {
-        base.EnterState(); 
+        SetAnimParamActive(_activeStateAnimParamName);
 
         _sm.ChangeCurrSpeed(_sm.RunSpeed);
     }

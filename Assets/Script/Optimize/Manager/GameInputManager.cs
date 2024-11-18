@@ -14,7 +14,7 @@ public class GameInputManager : MonoBehaviour
                   OnChangePlayerPerformed, OnChangeWeaponPerformed, 
                   OnExitCommandPerformed, OnRegroupFriendPerformed,
                   OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnReloadPerformed,
-                  OnInteractPerformed, OnNightVisionPerformed, OnSkillButtonPerformed;
+                  OnInteractPerformed, OnNightVisionPerformed, OnSkillPerformed, OnWhistlePerformed;
     public Action<int> OnCommandFriendPerformed;
     private void Awake() 
     {
@@ -45,9 +45,11 @@ public class GameInputManager : MonoBehaviour
         _inputActions.InputPlayerAction.Interact.performed += Interact_performed;
         _inputActions.InputPlayerAction.NightVision.performed += NightVision_performed;
         _inputActions.InputPlayerAction.SkillButton.performed += SkillButton_performed;
+        _inputActions.InputPlayerAction.Whistle.performed += Whistle_performed;
         
         _inputActions.Enable();
     }
+
 
 
     private void Start() 
@@ -78,7 +80,9 @@ public class GameInputManager : MonoBehaviour
     private void Reload_performed(InputAction.CallbackContext context)=> OnReloadPerformed?.Invoke();
     private void Interact_performed(InputAction.CallbackContext context) => OnInteractPerformed?.Invoke();
     private void NightVision_performed(InputAction.CallbackContext context) => OnNightVisionPerformed?.Invoke();
-    private void SkillButton_performed(InputAction.CallbackContext context) => OnSkillButtonPerformed?.Invoke();
+    private void SkillButton_performed(InputAction.CallbackContext context) => OnSkillPerformed?.Invoke();
+
+    private void Whistle_performed(InputAction.CallbackContext context) => OnWhistlePerformed?.Invoke();
 
     public Vector2 Movement()
     {

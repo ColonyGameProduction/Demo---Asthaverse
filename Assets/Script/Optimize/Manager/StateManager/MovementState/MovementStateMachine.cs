@@ -87,7 +87,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
         if(AgentNavMesh == null)_agentNavMesh = GetComponent<NavMeshAgent>();
     }
-    private void Start() 
+    protected virtual void Start() 
     {        
         SetIdleAnimToNormal();
         SwitchState(_states.IdleState());

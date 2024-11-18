@@ -177,7 +177,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         if(!IsAIInput)
         {
             _originShootPosition = CurrOriginShootPoint.position;
-            _directionShootPosition = CurrDirectionShootPoint.forward;
+            _directionShootPosition = CurrDirectionShootPoint.forward.normalized;
         }
         else
         {

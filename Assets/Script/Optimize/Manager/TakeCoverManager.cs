@@ -19,7 +19,7 @@ public class TakeCoverManager : MonoBehaviour
             if(machine == from)continue;
             if(machine.IsTakingCover && machine.TakeCoverPosition == checkPos)
             {
-                Debug.Log("it's the same man");
+                // Debug.Log("it's the same man");
                 return true;
             }
         }

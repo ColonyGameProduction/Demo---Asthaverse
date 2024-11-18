@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WeaponLogicManager : MonoBehaviour
 {
     public bool Debugs;
+    public bool DebugPart2;
+    public bool DebugDrawBiasa = true;
     public static WeaponLogicManager Instance {get; private set;}
     private void Awake() 
     {
         Instance = this;
     }
     //Logic Shooting
-    public void ShootingPerformed(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask, float shootRecoil, Vector3 gunOrigionShootPoint)
+    public void ShootingPerformed(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask, float shootRecoil, Vector3 gunOriginShootPoint, bool isAIInput)
     {       
         
         weaponStat.currBullet -= weaponStat.bulletPerTap;
@@ -19,18 +22,18 @@ public class WeaponLogicManager : MonoBehaviour
         {
             for(int i = 0; i < weaponStat.bulletPerTap; i++)
             {
-                BulletShoot(origin, direction, aimAccuracy, weaponStat, entityMask, shootRecoil, gunOrigionShootPoint);
+                BulletShoot(origin, direction, aimAccuracy, weaponStat, entityMask, shootRecoil, gunOriginShootPoint, isAIInput);
             }
 
         }   
         else
         {
-            BulletShoot(origin, direction, aimAccuracy, weaponStat, entityMask, shootRecoil, gunOrigionShootPoint);
+            BulletShoot(origin, direction, aimAccuracy, weaponStat, entityMask, shootRecoil, gunOriginShootPoint, isAIInput);
         }
 
     }
     
-    public void BulletShoot(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask, float shootRecoil, Vector3 gunOrigionShootPoint)
+    public void BulletShoot(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask, float shootRecoil, Vector3 gunOriginShootPoint, bool isAIInput)
     {
         float recoilMod = shootRecoil + ((100 - aimAccuracy) * shootRecoil / 100);
 
@@ -44,7 +47,10 @@ public class WeaponLogicManager : MonoBehaviour
 
         RaycastHit hit;
         // Debug.Log(origin + " and " + bulletDirection);
-        Debug.DrawRay(gunOrigionShootPoint, bulletDirection * weaponStat.range, Color.black, 0.2f, false);
+        Debug.Log("I hit" + origin + " sebelum berubah");
+        if(!DebugPart2)if(!isAIInput)origin = gunOriginShootPoint;
+        Debug.Log("I hit" + origin + " sesudah berubah");
+        if(DebugDrawBiasa)Debug.DrawRay(gunOriginShootPoint, bulletDirection * weaponStat.range, Color.black, 0.2f, false);
         if (Physics.Raycast(origin, direction, out hit, weaponStat.range, entityMask))
         {
             
@@ -52,7 +58,9 @@ public class WeaponLogicManager : MonoBehaviour
             BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
             if(body != null)
             {
-                Debug.DrawRay(gunOrigionShootPoint, bulletDirection * weaponStat.range, Color.red, 0.2f, false);
+                float dis = Vector3.Distance(origin, hit.point);
+                if(!isAIInput)Debug.DrawRay(origin, bulletDirection * dis, Color.blue, 0.2f, false);
+                else Debug.DrawRay(gunOriginShootPoint, bulletDirection * dis, Color.red, 0.2f, false);
                 GameObject entityGameObject = hit.collider.gameObject;
                 Debug.Log(entityGameObject.name + " di sini " + body);
                 CalculateDamage(weaponStat, entityGameObject, body.bodyType);
@@ -68,7 +76,7 @@ public class WeaponLogicManager : MonoBehaviour
         else
         {
             hit.point = origin + bulletDirection * weaponStat.range;
-            Debug.DrawRay(origin, hit.point, Color.red);
+            // Debug.DrawRay(origin, hit.point, Color.red);
             //Debug.Log(hit.point);
         }
     }

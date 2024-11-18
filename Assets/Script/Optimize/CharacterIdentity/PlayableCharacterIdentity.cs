@@ -279,6 +279,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     public void Interact(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
+        if(_revCoroutine != null)return;
         characterIdentityWhoReviving.IsReviving = true;
         characterIdentityWhoReviving.ForceStopAllStateMachine();
         Revive(characterIdentityWhoReviving);

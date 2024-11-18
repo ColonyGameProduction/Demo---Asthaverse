@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscribeEvent
+public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscribeEvent, IHearSound
 {
     [Header("Manager")]
     private EnemyAIManager _enemyAIManager;
@@ -271,11 +271,14 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         //we can actually use the sound D:
         if(Vector3.Distance(enemy.transform.position, transform.position) <= EnemyAIManager.EnemyAnnouncementMaxRange || EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
         {
-            if(GetUseWeaponStateMachine.ChosenTarget != null)GetUseWeaponStateMachine.GiveChosenTarget(null);
-            if(GetUseWeaponStateMachine.IsUsingWeapon)GetUseWeaponStateMachine.IsUsingWeapon = false;
+            if(!IsAIEngage) //hmmmm... gmn ya
+            {
+                if(GetUseWeaponStateMachine.ChosenTarget != null)GetUseWeaponStateMachine.GiveChosenTarget(null);
+                if(GetUseWeaponStateMachine.IsUsingWeapon)GetUseWeaponStateMachine.IsUsingWeapon = false;
+            }
             if(MaxAlertValue == 0)MaxAlertValue = enemy.MaxAlertValue;
 
-            _alertValue = MaxAlertValue/2 + 10f;
+            if(!IsAIEngage)_alertValue = MaxAlertValue/2 + 10f;
             Vector3 closestLastSeenPos = Vector3.zero;
             if(EnemyAIManager.EnemyCaptainList.Count == 0)closestLastSeenPos = enemy.GetFOVAdvancedData.EnemyCharalastSeenPosition;
             else closestLastSeenPos = EnemyAIManager.GetClosestLastSeenPosInfoFromCaptain(transform);
@@ -617,5 +620,24 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                 _canTakeCoverInThePosition = false;
             }
         }
+    }
+
+    public void RespondToSound(Vector3 soundOriginPos)
+    {
+        Debug.Log(transform.name + "heard sound from " + soundOriginPos);
+        if(_fovMachine.VisibleTargets.Count > 0 || _getFOVAdvancedData.OtherVisibleTargets.Count > 0)return;
+        if(!IsAIEngage)
+        {
+            if(GetUseWeaponStateMachine.ChosenTarget != null)GetUseWeaponStateMachine.GiveChosenTarget(null);
+            if(GetUseWeaponStateMachine.IsUsingWeapon)GetUseWeaponStateMachine.IsUsingWeapon = false;
+        }
+
+        if(MaxAlertValue == 0)MaxAlertValue = 25f;
+        if(!IsAIEngage)_alertValue = MaxAlertValue/2 + 10f;
+
+        GetFOVAdvancedData.GoToEnemyLastSeenPosition(soundOriginPos);
+        if(CurrPOI != null)CurrPOI = null;
+
+        // EnemyAIManager.EditEnemyHearAnnouncementList(this, true); perlua keluarin dr list ga ya hm
     }
 }

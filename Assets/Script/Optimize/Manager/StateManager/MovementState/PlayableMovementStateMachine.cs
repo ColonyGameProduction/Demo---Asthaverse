@@ -42,6 +42,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected IReceiveInputFromPlayer _canReceivePlayerInput;
     protected Vector3 _inputMovement;
     protected PlayableCharacterIdentity _getPlayableCharacterIdentity;
+    protected WorldSoundManager _worldSoundManager;
+    protected FOVMachine _fovMachine;
     #endregion
     
     #region GETTERSETTER Variable
@@ -59,6 +61,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected override void Awake()
     {
         base.Awake();
+        _fovMachine = GetComponent<FOVMachine>();
 
         _canReceivePlayerInput = GetComponent<IReceiveInputFromPlayer>();
         _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
@@ -73,12 +76,22 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
         if(_playableLookTarget == null) _playableLookTarget = GetComponent<PlayableCamera>().GetFollowTarget;
     }
+    protected override void Start()
+    {
+        _worldSoundManager = WorldSoundManager.Instance;
+        base.Start();
+    }
 
     #region Move
     public override void Move()
     {
         if(!IsAIInput) MovePlayableChara(InputMovement);
         else base.Move();
+        if(IsWalking || IsRunning)
+        {
+            Debug.Log(transform.position + " produce walk sound");
+            _worldSoundManager.MakeSound(WorldSoundName.Walk, transform.position, _fovMachine.CharaEnemyMask);
+        }
     }
     /// <summary>
     /// Move yang digunakan untuk kontrol dgn input dari player
