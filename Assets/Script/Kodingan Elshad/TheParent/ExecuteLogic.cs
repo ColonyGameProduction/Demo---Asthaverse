@@ -94,10 +94,10 @@ public class ExecuteLogic : AILogic
 
     
     //logic 'Shoot'
-    public void Shoot(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask)
+    public void Shoot(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask, float recoil)
     {
         WeaponLogicHandler weaponHandler = new WeaponLogicHandler();
-        weaponHandler.ShootingPerformed(origin, direction, entityStat, weaponStat, entityMask);
+        weaponHandler.ShootingPerformed(origin, direction, entityStat, weaponStat, entityMask, recoil);
     }    
 
 

@@ -33,7 +33,7 @@ public class ReviveSpeed : MonoBehaviour
     private void Update() {
         if(Input.GetKeyDown(KeyCode.F))
         {
-            if(chosenDed!=null)chosenDed.Revive();
+            // if(chosenDed!=null)chosenDed.Revive();
         }
     }
 }
