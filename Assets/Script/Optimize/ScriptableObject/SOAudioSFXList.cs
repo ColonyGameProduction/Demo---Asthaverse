@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Audio;
 using System;
+using UnityEditor.EditorTools;
 
 public enum AudioSFXName
 {
@@ -19,7 +20,15 @@ public class AudioSFX
     public bool loop;
     [Range(0,1)]public float volume;
     [Range(-3,3)]public float pitch = 1;
+
+    [Header("Spatial Blend")]
+    [Range(0,1)]public float spatialBlend;
+    public float minDistance = 1;
+    public float maxDistance;
     // public bool _needSpecificParent;
+
+    [Tooltip("For Audio Manager Only, true this if you want to create it in audiomanager and no need spacial blend - for example like BGM")]
+    public bool useSpatialBlend = true;
 }
 public class SOAudioSFXList : ScriptableObject
 {

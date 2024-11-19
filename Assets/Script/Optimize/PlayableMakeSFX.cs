@@ -4,7 +4,7 @@ using UnityEngine;
 
 public struct Audio
 {
-    public AudioSFX audioSFX;
+    public AudioSFXName audioName;
     public AudioSource audioSource;
 }
 public class PlayableMakeSFX : MonoBehaviour
@@ -12,19 +12,51 @@ public class PlayableMakeSFX : MonoBehaviour
     // [Header("Foot sound")]
     // private Transform _footSoundParent;
     // public staticv
-    // private Audio[] _audioList;
+    [SerializeField]private SOAudioSFXList _playerSFXList;
+    private Audio[] _audioArray;
     private void Awake() 
     {
-        
+        _audioArray = new Audio[_playerSFXList.audioSFX.Count];
+        for(int i = 0; i < _audioArray.Length ; i++)
+        {
+            _audioArray[i].audioName = _playerSFXList.audioSFX[i].audioName;
+
+            _audioArray[i].audioSource = gameObject.AddComponent<AudioSource>();
+            AudioSource source = _audioArray[i].audioSource;
+            source.clip = _playerSFXList.audioSFX[i].audioClip;
+            source.outputAudioMixerGroup = _playerSFXList.audioSFX[i].audioMixerGroup;
+            source.playOnAwake = _playerSFXList.audioSFX[i].playOnAwake;
+            source.loop = _playerSFXList.audioSFX[i].loop;
+            source.volume = _playerSFXList.audioSFX[i].volume;
+            source.pitch = _playerSFXList.audioSFX[i].pitch;
+
+            source.spatialBlend = _playerSFXList.audioSFX[i].spatialBlend;
+            source.minDistance = _playerSFXList.audioSFX[i].minDistance;
+            source.maxDistance = _playerSFXList.audioSFX[i].maxDistance;
+
+        }
+    }
+    public void PlayStopSFX(AudioSFXName name, bool playSound)
+    {
+        AudioSource audioSource = GetAudioSource(name);
+        if(playSound)
+        {
+            if(!audioSource.isPlaying)audioSource.Play();
+        }
+        else
+        {
+            if(audioSource.isPlaying)audioSource.Stop();
+        }
+    }
+    public void PlaySFXOnce(AudioSFXName name)
+    {
+        AudioSource audioSource = GetAudioSource(name);
+        audioSource.Play();
     }
 
-    // public void PlayWalkingSound()
-    // {
-    //     if(!_footAudioSource.isPlaying)_footAudioSource.Play();
-    // }
-    // public void StopWalkingSound()
-    // {
-    //     if(_footAudioSource.isPlaying)_footAudioSource.Stop();
-    // }
-    // public bool isWalkingSoundPlaying() => _footAudioSource.isPlaying;
+    private AudioSource GetAudioSource(AudioSFXName name)
+    {
+        Audio audio = System.Array.Find(_audioArray, audio => audio.audioName == name);
+        return audio.audioSource;
+    }
 }

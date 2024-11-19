@@ -21,6 +21,7 @@ public class IdleState : MovementState
     
     public override void EnterState()
     {   
+        if(_playableData != null)_playableData.GetPlayableMakeSFX.PlayStopSFX(AudioSFXName.NormalWalk, false);
         ResetIdleAnimCycle();
         
         _standData.IsIdle = true;

@@ -8,5 +8,6 @@ public interface IPlayableMovementDataNeeded
     bool IsMustLookForward{get; set;}
     void RotateToAim_Idle();
     public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get ;}
+    public PlayableMakeSFX GetPlayableMakeSFX {get ;}
     
 }

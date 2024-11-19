@@ -48,6 +48,7 @@ public class PlayableCharacterManager : MonoBehaviour
     private PlayableCamera _currPlayableCamera;
     private PlayableInteraction _currPlayableInteraction;
     private PlayableSkill _currPlayableSkill;
+    private PlayableMakeSFX _currPlayableMakeSFX;
     private WorldSoundManager _worldSoundManager;
 
 
@@ -235,6 +236,7 @@ public class PlayableCharacterManager : MonoBehaviour
         _playableCharacterCameraManager.SetCurrPlayableCamera(_currPlayableCamera);
 
         _currPlayableSkill = CurrPlayableChara.GetPlayableSkill;
+        _currPlayableMakeSFX = CurrPlayableChara.GetPlayableMakeSFX;
 
     }
     #endregion
@@ -398,6 +400,7 @@ public class PlayableCharacterManager : MonoBehaviour
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
         {
             _worldSoundManager.MakeSound(WorldSoundName.Whistle, CurrPlayableChara.transform.position, CurrPlayableChara.FOVMachine.CharaEnemyMask);
+            _currPlayableMakeSFX.PlaySFXOnce(AudioSFXName.Whistle);
         }
     }
 

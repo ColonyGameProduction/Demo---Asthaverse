@@ -43,6 +43,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected Vector3 _inputMovement;
     protected PlayableCharacterIdentity _getPlayableCharacterIdentity;
     protected WorldSoundManager _worldSoundManager;
+    protected PlayableMakeSFX _getPlayableMakeSFX;
     protected FOVMachine _fovMachine;
     #endregion
     
@@ -55,6 +56,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     public CharacterController CC {get { return _cc;} }
     public Vector3 InputMovement { get{ return _inputMovement;} set{_inputMovement = value;}} // Getting Input Movement from playercontroller
     public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get {return _getPlayableCharacterIdentity;}}
+    public PlayableMakeSFX GetPlayableMakeSFX {get {return _getPlayableMakeSFX;}}
 
 
     #endregion
@@ -62,6 +64,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     {
         base.Awake();
         _fovMachine = GetComponent<FOVMachine>();
+        _getPlayableMakeSFX = GetComponentInChildren<PlayableMakeSFX>();
 
         _canReceivePlayerInput = GetComponent<IReceiveInputFromPlayer>();
         _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
@@ -87,10 +90,15 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     {
         if(!IsAIInput) MovePlayableChara(InputMovement);
         else base.Move();
-        if(IsWalking || IsRunning)
+        if(IsRunning)
         {
             Debug.Log(transform.position + " produce walk sound");
             _worldSoundManager.MakeSound(WorldSoundName.Walk, transform.position, _fovMachine.CharaEnemyMask);
+            _getPlayableMakeSFX.PlayStopSFX(AudioSFXName.NormalWalk, true);
+        }
+        else
+        {
+            _getPlayableMakeSFX.PlayStopSFX(AudioSFXName.NormalWalk, false);
         }
     }
     /// <summary>

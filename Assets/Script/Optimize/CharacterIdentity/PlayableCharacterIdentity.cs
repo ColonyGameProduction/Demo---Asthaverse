@@ -43,6 +43,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected PlayableCamera _getPlayableCamera;
     protected PlayableInteraction _getPlayableInteraction;
     protected PlayableSkill _getPlayableSkill;
+    protected PlayableMakeSFX _getPlayableMakeSFX;
 
     protected FriendAIBehaviourStateMachine _friendAIStateMachine;
     
@@ -111,6 +112,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public PlayableCamera GetPlayableCamera {get {return _getPlayableCamera;}}
     public PlayableInteraction GetPlayableInteraction {get {return _getPlayableInteraction;}}
     public PlayableSkill GetPlayableSkill {get {return _getPlayableSkill;}}
+    public PlayableMakeSFX GetPlayableMakeSFX {get {return _getPlayableMakeSFX;}}
 
     public FriendAIBehaviourStateMachine FriendAIStateMachine {get { return _friendAIStateMachine;}}
     public FOVMachine FOVMachine{get { return _fovMachine;}}
@@ -132,6 +134,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _getPlayableCamera = GetComponent<PlayableCamera>();
         _getPlayableInteraction = GetComponentInChildren<PlayableInteraction>();
         _getPlayableSkill = GetComponent<PlayableSkill>();
+        _getPlayableMakeSFX = GetComponentInChildren<PlayableMakeSFX>();
         InitializeFriend();
 
 
