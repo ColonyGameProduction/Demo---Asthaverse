@@ -9,6 +9,12 @@ public class WeaponLogicManager : MonoBehaviour
     public bool DebugPart2;
     public bool DebugDrawBiasa = true;
     public static WeaponLogicManager Instance {get; private set;}
+
+
+    [Header("Trail Renderer for now")]
+    [SerializeField]private TrailRenderer _bulletTrailPrefab;
+    [SerializeField]private ParticleSystem _impactParticleSystem;
+    private bool isHitBody;
     private void Awake() 
     {
         Instance = this;
@@ -47,28 +53,67 @@ public class WeaponLogicManager : MonoBehaviour
 
         RaycastHit hit;
         // Debug.Log(origin + " and " + bulletDirection);
-        Debug.Log("I hit" + origin + " sebelum berubah");
-        if(!DebugPart2)if(!isAIInput)origin = gunOriginShootPoint;
-        Debug.Log("I hit" + origin + " sesudah berubah");
-        if(DebugDrawBiasa)Debug.DrawRay(gunOriginShootPoint, bulletDirection * weaponStat.range, Color.black, 0.2f, false);
-        if (Physics.Raycast(origin, direction, out hit, weaponStat.range, entityMask))
-        {
-            
+        // Debug.Log("I hit" + origin + " sebelum berubah");
+        // if(DebugDrawBiasa)Debug.DrawRay(origin, bulletDirection * weaponStat.range, Color.magenta, 0.2f, false);
 
-            BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
-            if(body != null)
+
+        // if(!DebugPart2)if(!isAIInput)origin = gunOriginShootPoint;
+
+        // Debug.Log("I hit" + origin + " sesudah berubah");
+        if(DebugDrawBiasa)Debug.DrawRay(gunOriginShootPoint, bulletDirection * weaponStat.range, Color.black, 0.2f, false);
+        if(DebugDrawBiasa)Debug.DrawRay(origin, bulletDirection * weaponStat.range, Color.red, 0.2f, false);
+        if (Physics.Raycast(origin, bulletDirection, out hit, weaponStat.range, entityMask))
+        {
+
+            if(!isAIInput)
             {
-                float dis = Vector3.Distance(origin, hit.point);
-                if(!isAIInput)Debug.DrawRay(origin, bulletDirection * dis, Color.blue, 0.2f, false);
-                else Debug.DrawRay(gunOriginShootPoint, bulletDirection * dis, Color.red, 0.2f, false);
-                GameObject entityGameObject = hit.collider.gameObject;
-                Debug.Log(entityGameObject.name + " di sini " + body);
-                CalculateDamage(weaponStat, entityGameObject, body.bodyType);
+                Vector3 newDirBasedOnGunPoint = (hit.point - gunOriginShootPoint).normalized;
+                if (Physics.Raycast(gunOriginShootPoint, newDirBasedOnGunPoint, out hit, weaponStat.range, entityMask))
+                {
+                    isHitBody = false;
+                    BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
+                    if(body != null)
+                    {
+                        isHitBody = true;
+                        float dis = Vector3.Distance(origin, hit.point);
+
+                        GameObject entityGameObject = hit.collider.gameObject;
+                        Debug.Log(entityGameObject.name + " di sini " + body);
+                        CalculateDamage(weaponStat, entityGameObject, body.bodyType);
+                    }
+                    else
+                    {
+                        isHitBody = false;
+                        Debug.Log("I hit Obstacle");
+                    }
+                }
+                else
+                {
+                    hit.point = origin + bulletDirection * weaponStat.range;
+                }
             }
             else
             {
-                Debug.Log("I hit Obstacle");
+                Debug.Log("Hit point now" + hit.point);
+                isHitBody = false;
+                BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
+                if(body != null)
+                {
+                    isHitBody = true;
+                    float dis = Vector3.Distance(origin, hit.point);
+
+                    GameObject entityGameObject = hit.collider.gameObject;
+                    Debug.Log(entityGameObject.name + " di sini " + body);
+                    CalculateDamage(weaponStat, entityGameObject, body.bodyType);
+                }
+                else
+                {
+                    isHitBody = false;
+                    Debug.Log("I hit Obstacle");
+                }
             }
+
+            
 
             // Debug.Log(hit.point);
 
@@ -79,6 +124,8 @@ public class WeaponLogicManager : MonoBehaviour
             // Debug.DrawRay(origin, hit.point, Color.red);
             //Debug.Log(hit.point);
         }
+        TrailRenderer trail = Instantiate(_bulletTrailPrefab, gunOriginShootPoint, Quaternion.identity);
+        StartCoroutine(SpawnTrail(trail, hit, isHitBody));
     }
 
     public void CalculateDamage(WeaponStatSO weapon, GameObject entityGameObject, bodyParts hitBodyPart)
@@ -109,5 +156,22 @@ public class WeaponLogicManager : MonoBehaviour
             Debug.Log(entityGameObject.name + " Hit!" + " HP:" + _getHealthFunction.CurrHealth);
         }
  
+    }
+    private IEnumerator SpawnTrail(TrailRenderer trail, RaycastHit hit, bool isHitBody)
+    {
+        float timer = 0;
+        Vector3 startPos = trail.transform.position;
+
+        while(timer < 1)
+        {
+            trail.transform.position = Vector3.Lerp(startPos, hit.point, timer);
+            timer += Time.deltaTime / trail.time;
+
+            yield return null;
+        }
+        trail.transform.position = hit.point;
+        if(!isHitBody)Instantiate(_impactParticleSystem, hit.point, Quaternion.LookRotation(hit.normal));
+        // Debug.LogError("Stop");
+        Destroy(trail.gameObject, trail.time);
     }
 }
