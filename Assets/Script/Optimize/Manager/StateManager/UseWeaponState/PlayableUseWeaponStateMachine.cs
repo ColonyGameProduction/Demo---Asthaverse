@@ -9,6 +9,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     #region Normal Variable
     [Header ("Playable Character Variable")]
 
+    protected PlayableCharacterCameraManager _charaCameraManager;
     [Space(2)]
     [Header("State Bool - Advanced use")]
     [SerializeField] protected bool _isSwitchingWeapon;
@@ -34,6 +35,8 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected float _charaFriendAimAccuracy;
 
     protected PlayableCharacterIdentity _getPlayableCharacterIdentity;
+    [Header("Recoil Data Advanced")]
+    protected float _movingMaxRecoil, _currRecoilMod, _recoilAddMultiplier;
 
     #endregion
     #region GETTERSETTER Variable
@@ -78,13 +81,18 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected override void Awake()
     {
         base.Awake();
-
+        CharaIdentity_OnIsPlayerInputChange(!IsAIInput);
         _getCanSwitchWeapon = GetComponent<ICanSwitchWeapon>();
         _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
         _getCanInputPlayer = GetComponent<IReceiveInputFromPlayer>();
         _isAIInput = !_getCanInputPlayer.IsPlayerInput;
         _getCanInputPlayer.OnIsPlayerInputChange += CharaIdentity_OnIsPlayerInputChange; // Ditaro di sini biar ga ketinggalan sebelah, krn sebelah diubah di start
 
+    }
+    protected override void Start()
+    {
+        _charaCameraManager = PlayableCharacterCameraManager.Instance;
+        base.Start();
     }
     #region  Weapon
     public void SilentKill()
@@ -169,7 +177,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         if(!IsAIInput)
         {
             _originShootPosition = CurrOriginShootPoint.position;
-            _directionShootPosition = CurrDirectionShootPoint.forward;
+            _directionShootPosition = CurrDirectionShootPoint.forward.normalized;
         }
         else
         {
@@ -181,6 +189,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     #endregion
     private void CharaIdentity_OnIsPlayerInputChange(bool obj)
     {
+        // Debug.Log("AAA" + transform.name);
         _isAIInput = !obj;
         if(!IsAIInput)
         {
@@ -219,4 +228,87 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     {
         _silentKilledEnemy = enemy;
     }
+    #region Recoil
+    protected void MovingRecoilCount()
+    {
+        if(!_getPlayableCharacterIdentity.GetPlayableMovementData.IsIdle)
+        {
+            if(_charaCameraManager.IsScope)
+            {
+                _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil * 0.5f;
+                _currRecoilMod = _currWeapon.weaponStatSO.recoil * 0.25f;
+                _recoilAddMultiplier = 1.5f;
+            }
+            else
+            {
+                _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil;
+                _currRecoilMod = _currWeapon.weaponStatSO.recoil * 0.5f;
+                _recoilAddMultiplier = 3f;
+            }
+        }
+        else
+        {
+            if(_getPlayableCharacterIdentity.GetPlayableMovementData.IsCrouching)
+            {
+                if(_charaCameraManager.IsScope)
+                {
+                    _movingMaxRecoil = _currWeapon.weaponStatSO.recoil;
+                    _currRecoilMod = _currWeapon.weaponStatSO.recoil;
+                    _recoilAddMultiplier = 0f;
+                }
+                else
+                {
+                    _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil * 0.5f;
+                    _currRecoilMod = _currWeapon.weaponStatSO.recoil * 0.25f;
+                    _recoilAddMultiplier = 1.5f;
+                }
+            }
+            else
+            {
+                _movingMaxRecoil = 0;
+                _currRecoilMod = 0;
+                _recoilAddMultiplier = 0;
+            }
+        }
+    }
+    protected override void RecoilHandler()
+    {
+        if(!IsAIInput)
+        {   
+            MovingRecoilCount();
+            _recoilCoolDown = _currWeapon.weaponStatSO.fireRate + (_currWeapon.weaponStatSO.fireRate * 0.1f);
+            _maxRecoil = _currWeapon.weaponStatSO.recoil + _movingMaxRecoil;
+            _finalCountRecoil = _currRecoil + _currRecoilMod;
+        }
+        else base.RecoilHandler();
+        
+    }
+    protected override void ComplexRecoil()
+    {
+        if(IsAIInput)base.ComplexRecoil();
+        else
+        {
+            if (_recoilCoolDown > 0)
+            {
+                _recoilCoolDown -= Time.deltaTime * _currWeapon.weaponStatSO.fireRate;
+                if (_currRecoil <= _maxRecoil)
+                {
+                    if(_recoilAddMultiplier != 0)
+                    {
+                        _currRecoil += Time.deltaTime * _currWeapon.weaponStatSO.recoil * _recoilAddMultiplier;
+                    }
+                    else
+                    {
+                        _currRecoil += Time.deltaTime * _currWeapon.weaponStatSO.recoil;
+                    }
+                }
+            }
+            else
+            {
+                _currRecoil = 0;
+            }
+
+        }
+    }
+    #endregion
 }

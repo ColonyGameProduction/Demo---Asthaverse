@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.IO.LowLevel.Unsafe;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,6 +10,8 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [SerializeField] protected bool _isIdle = true;
     [SerializeField] protected bool _isWalking;
     [SerializeField] protected bool _isRun;
+    [SerializeField] protected bool _isCrouch;
+    protected bool _isMustStayAlert;
     
     protected MovementStateFactory _states;
     protected MovementState _currState;
@@ -29,8 +27,10 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [Space(1)]
     [Header("Move Speed - State Multiplier")]
     [SerializeField] protected float _runMultiplier;
+    [SerializeField] protected float _crouchMultiplier;
     protected float _walkSpeed;
     protected float _runSpeed;
+    private float _crouchSpeed;
     protected float _currSpeed;
 
     [Space(1)]
@@ -40,9 +40,10 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     [Space(1)]
     [Header("AI Rotation")]
-    protected Vector3 _idleAILookTarget; //position for AI To look at
+    protected Vector3 _AILookTarget; //position for AI To look at
     protected bool _isReceivePosADirection;
-    protected bool _allowLookTargetWhileIdle;
+    protected bool _allowLookTarget;
+    [SerializeField]protected float _faceDirCount = 0.9f;
 
     public Action<Vector3> OnIsTheSamePosition;
 
@@ -60,6 +61,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public bool IsIdle {get {return _isIdle;} set{ _isIdle = value;} }
     public bool IsWalking {get {return _isWalking;}set{ _isWalking = value;} }
     public bool IsRunning { get {return _isRun;}set{ _isRun = value;} }
+    public bool IsCrouching { get {return _isCrouch;}set{ _isCrouch = value;} }
 
     public float IdleAnimCycleIdx {get {return _idleAnimCycleIdx;}}
     public float[] IdleAnimCycleTimeTarget {get {return _idleAnimCycleTimeTarget;}}
@@ -68,10 +70,12 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     public float WalkSpeed { get {return _walkSpeed;}}
     public float RunSpeed { get {return _runSpeed;}}
+    public float CrouchSpeed {get{return _crouchSpeed;}}
 
     public NavMeshAgent AgentNavMesh {get {return _agentNavMesh;}}
     public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
-    public bool AllowLookTargetWhileIdle {get {return _allowLookTargetWhileIdle;} set{_allowLookTargetWhileIdle = value;}}
+    public bool AllowLookTarget {get {return _allowLookTarget;} set{_allowLookTarget = value;}}
+    public bool IsMustStayAlert { get {return _isMustStayAlert;}set{ _isMustStayAlert = value;} }
     
     #endregion
 
@@ -83,7 +87,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
         if(AgentNavMesh == null)_agentNavMesh = GetComponent<NavMeshAgent>();
     }
-    private void Start() 
+    protected virtual void Start() 
     {        
         SetIdleAnimToNormal();
         SwitchState(_states.IdleState());
@@ -126,26 +130,50 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     {
         if(AgentNavMesh.speed != _currSpeed)AgentNavMesh.speed = _currSpeed;
 
+        bool isFacingTheDirection = true;
+        float checkFaceDir = 0;
         Vector3 facedir = (AgentNavMesh.steeringTarget - transform.position).normalized;
-        Vector3 animatedFaceDir = transform.InverseTransformDirection(facedir);
         // Debug.Log("Dot Move" + Vector3.Dot(facedir, transform.forward));
         // bool isFacingMoveDirection = Vector3.Dot(facedir, transform.forward) > .5f;
+        Vector3 animatedFaceDir = transform.InverseTransformDirection(facedir);
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
+        if(!AllowLookTarget)
+        {
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
+            checkFaceDir = Vector3.Dot(facedir, transform.forward);
+            isFacingTheDirection = checkFaceDir > _faceDirCount;
+        }
+        else
+        {
+            
+            if(!_isReceivePosADirection)facedir = (_AILookTarget - transform.position).normalized;
+            else facedir = _AILookTarget;
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
 
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, animatedFaceDir.x, 0.5f, Time.deltaTime);
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, animatedFaceDir.z, 0.5f, Time.deltaTime);
+            checkFaceDir = Vector3.Dot(facedir, transform.forward);
+            isFacingTheDirection = checkFaceDir > _faceDirCount;
+        }
+        
+
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, isFacingTheDirection? animatedFaceDir.x : 0.1f* animatedFaceDir.x, 0.5f, Time.deltaTime);
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, isFacingTheDirection? animatedFaceDir.z : 0.1f * animatedFaceDir.z, 0.5f, Time.deltaTime);
 
     }
     public bool IsAIAtDirPos()
     {
         if(AgentNavMesh.destination != CurrAIDirPos)
         {
+
             AgentNavMesh.destination = CurrAIDirPos;
         }
         // Debug.Log(AgentNavMesh.hasPath + " " + gameObject.name);
+        if (AgentNavMesh.pathPending)
+        {
+            return false;
+        }
         if(!AgentNavMesh.hasPath)
         {
+            Debug.Log("I'm at same pos" + transform.name + " " + AgentNavMesh.destination + " " + CurrAIDirPos);
             OnIsTheSamePosition?.Invoke(CurrAIDirPos);
             return true;
         }
@@ -153,6 +181,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentNavMesh.radius)
         {
             AgentNavMesh.ResetPath();
+            Debug.Log("I'm at same pos2" + transform.name + " " + AgentNavMesh.destination + " " + CurrAIDirPos);
             OnIsTheSamePosition?.Invoke(CurrAIDirPos);
 
             return true;
@@ -180,14 +209,14 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     }
     public void SetAITargetToLook(Vector3 posToLook, bool isReceivePosADirection)
     {
-        _idleAILookTarget = posToLook;
+        _AILookTarget = posToLook;
         _isReceivePosADirection = isReceivePosADirection;
     }
     public void RotateAIToTarget_Idle()
     {
         Vector3 facedir = Vector3.zero;
-        if(!_isReceivePosADirection)facedir = (_idleAILookTarget - transform.position).normalized;
-        else facedir = _idleAILookTarget;
+        if(!_isReceivePosADirection)facedir = (_AILookTarget - transform.position).normalized;
+        else facedir = _AILookTarget;
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
     }
     #endregion
@@ -197,6 +226,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     {
         _walkSpeed = speed;
         _runSpeed = _walkSpeed * _runMultiplier;
+        _crouchSpeed = _walkSpeed * _crouchMultiplier;
     }
     public void ChangeCurrSpeed(float newSpeed)
     {
@@ -218,6 +248,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         _idleAnimCycleIdx = x;
         _animator.SetFloat(ANIMATION_MOVE_PARAMETER_IDLECOUNTER, IdleAnimCycleIdx);
     }
+
     #endregion
 
 

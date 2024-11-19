@@ -41,7 +41,7 @@ public class WalkState : MovementState
 
     protected virtual void CheckStateWhileMoving()
     {
-        if(_groundData != null && _groundData.IsCrouching)_sm.SwitchState(_factory.CrouchState());
+        if(_standData.IsCrouching)_sm.SwitchState(_factory.CrouchState());
         else if(_standData.IsRunning)_sm.SwitchState(_factory.RunState());
     }
 }

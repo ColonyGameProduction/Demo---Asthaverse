@@ -63,6 +63,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     public virtual float TotalHealth {get { return _totalHealth; } }
     public virtual float CurrHealth {get {return _currHealth; } set { _currHealth = value; } }
     public virtual bool IsHalfHealthOrLower {get {return _currHealth <= _totalHealth/2; }} 
+    public armourType GetCharaArmourType {get {return _armourType;}}
     public bool IsDead {get { return _isDead;}}
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
@@ -190,5 +191,51 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 
     }
     public abstract void ReloadWeapon();
+    #endregion
+
+    #region StateMachine Command
+    public virtual void Run(bool isRunning)
+    {
+        if(isRunning)
+        {
+            if(MovementStateMachine.AllowLookTarget)MovementStateMachine.AllowLookTarget = false;
+            UseWeaponStateMachine.ForceStopUseWeapon();
+            if(MovementStateMachine.IsCrouching)
+            {
+                MovementStateMachine.IsCrouching = false;
+            }
+        }
+        MovementStateMachine.IsRunning = isRunning;
+    }
+    public virtual void Crouch(bool isCrouching)
+    {
+        if(isCrouching)
+        {
+            if(MovementStateMachine.IsRunning)
+            {
+                MovementStateMachine.IsRunning = false;
+            }
+        }
+        MovementStateMachine.IsCrouching = isCrouching;
+    }
+    public virtual void Aiming(bool isAiming)
+    {
+        if(isAiming)
+        {
+            if(MovementStateMachine.IsRunning)
+            {
+                MovementStateMachine.IsRunning = false;
+            }
+        }
+        UseWeaponStateMachine.IsAiming = isAiming;
+    }
+    public virtual void Shooting(bool isShooting)
+    {
+        if(isShooting)
+        {
+            Aiming(true);
+        }
+        UseWeaponStateMachine.IsUsingWeapon = isShooting;
+    }
     #endregion
 }

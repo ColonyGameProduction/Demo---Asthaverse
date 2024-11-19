@@ -12,4 +12,5 @@ public interface IHuntPlayable
     float GetMinimalPlayableStealth();
     void GoToEnemyLastSeenPosition(Vector3 enemyCharaLastSeenPosition);
     void IsCheckingEnemyLastPosition();
+    bool IsAlreadyAtMiddleSafeDistance();
 }

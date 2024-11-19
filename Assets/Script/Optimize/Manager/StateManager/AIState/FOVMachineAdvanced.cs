@@ -12,6 +12,7 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
     [SerializeField] protected List<Transform> _otherVisibleTargets = new List<Transform>();
     [SerializeField] protected string _enemyCharaTag;
     protected Transform _closestBreadCrumbs;
+    [SerializeField] private float _middleDistanceBuffer = 2f;
 
     
 
@@ -24,7 +25,11 @@ public class FOVMachineAdvanced : FOVMachine, IFOVMachineState, IHuntPlayable
     
     #endregion
     
-
+    public bool IsAlreadyAtMiddleSafeDistance()
+    {
+        if(_closestDistance > viewRadius - (viewRadius / 3) && _closestDistance <= viewRadius - (viewRadius/3) + _middleDistanceBuffer)return true;
+        return false;
+    }
     #region States Function
     public void FOVStateHandler()
     {

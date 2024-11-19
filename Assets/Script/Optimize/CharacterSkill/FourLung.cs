@@ -5,43 +5,31 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public class FourLung : MonoBehaviour
+public class FourLung : PlayableSkill
 {
-    private PlayerActionInput inputActions;
     private bool isXray;
+    [SerializeField] private float _skillDuration = 3f;
 
     [SerializeField]
     private UniversalRenderPipelineAsset Pipeline;
-
-    private void Awake()
+    #region Getter Setter Variable
+    public override bool IsSkillOnGoing 
     {
-        inputActions = new PlayerActionInput();
+        get
+        {
+            return isXray;
+        }
     }
+    #endregion
+
 
     private void Start()
     {
         isXray = false;
-        inputActions.InputPlayerAction.SkillButton.performed += SkillButton_performed;
+
         SwitchToNormalRenderer();
     }
 
-    private void SkillButton_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        if (!isXray)
-        {
-            StartCoroutine(SkillTime(3f));
-        }
-    }
-
-    private void OnEnable()
-    {
-        inputActions.InputPlayerAction.Enable();
-    }
-
-    private void OnDisable()
-    {
-        inputActions.InputPlayerAction.Disable();
-    }
 
     public void SetRenderer(int index)
     {
@@ -74,5 +62,13 @@ public class FourLung : MonoBehaviour
 
         SwitchToNormalRenderer();
         isXray = false;
+    }
+
+    public override void UseSkill()
+    {
+        if(!isXray)
+        {
+            StartCoroutine(SkillTime(_skillDuration));
+        }
     }
 }
