@@ -44,7 +44,8 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     [Tooltip("Kalo AI isinya FOV, kalo player gausa isi krn ud lsg diisi camera.main")]
     [SerializeField] protected Transform _originShootPoint_AIContainer; 
     protected Transform _currOriginShootPoint, _currDirectionShootPoint;
-    protected Vector3 _originShootPosition, _directionShootPosition;
+    protected Vector3 _originShootPosition, _directionShootPosition, _gunOriginShootPosition;
+    protected bool isGunInsideWall = false;
     protected Transform _FOVPoint;
     [SerializeField]protected Transform _gunOriginShootPoint;
 
@@ -56,6 +57,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     [Header("Saving other component data")]
 
     protected WeaponLogicManager _weaponLogicManager;
+    protected WeaponShootVFX _weaponShootVFX;
 
     public Action OnWasUsinghGun;
 
@@ -112,6 +114,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
     public Transform CurrOriginShootPoint { get{return _currOriginShootPoint;}}
     public Transform CurrDirectionShootPoint { get{return _currDirectionShootPoint;}}
+    public Transform GunOriginShootPoint { get{return _gunOriginShootPoint;}} 
     public int CurrActiveAnimLayer { get {return _currActiveAnimLayer;}}
     public float CurrAnimTime {get {return _currAnimTIme;}set {_currAnimTIme = value;}}
     public LayerMask CharaEnemyMask {get{return _charaEnemyMask;}}
@@ -131,6 +134,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         }
         _FOVPoint = GetComponent<FOVMachine>().GetFOVPoint;
         _states = new UseWeaponStateFactory(this);
+        _weaponShootVFX = GetComponent<WeaponShootVFX>();
     }
     protected virtual void Start() 
     {
@@ -171,7 +175,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         {
             RecoilHandler();
             SetShootPosition();
-            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask, _finalCountRecoil, _gunOriginShootPoint.position, IsAIInput);
+            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask, _finalCountRecoil, _gunOriginShootPosition, IsAIInput, isGunInsideWall, _weaponShootVFX);
             CurrWeapon.currBullet -= 1;
             if(!CurrWeapon.weaponStatSO.allowHoldDownButton)IsUsingWeapon = false;
             StartCoroutine(FireRate(CurrWeapon.weaponStatSO.fireRate));
@@ -197,6 +201,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         // _directionShootPosition = (CurrDirectionShootPoint.position - transform.position).normalized;
 
         _directionShootPosition = (CurrDirectionShootPoint.position - CurrOriginShootPoint.position).normalized;
+        _gunOriginShootPosition = _gunOriginShootPoint.position;
 
         // Debug.Log("Shoot direction " + _directionShootPosition);
     }

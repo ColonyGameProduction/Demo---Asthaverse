@@ -199,6 +199,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         {
             _currWeaponIdx = 0;
         }
+        _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
     }
 
     public override void Death()
