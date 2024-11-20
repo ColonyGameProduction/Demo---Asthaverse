@@ -10,35 +10,32 @@ public class PlayableInteraction : MonoBehaviour
     [SerializeField] private GameObject _charaGameObject;
     [SerializeField] private IInteractable _currInteractable;
     [SerializeField] private ISilentKillAble _currSilentKillAble;
+    [SerializeField] private LayerMask _interactableLayerMask;
     private IInteractable _thisObjInteractable;
     private PlayableCharacterIdentity _playableCharacterIdentity;
+    private Transform _originInteract, _directionInteract;
     public IInteractable CurrInteractable{get{return _currInteractable;}}
     public ISilentKillAble CurrSilentKillAble{get{return _currSilentKillAble;}}
     private void Awake() 
     {
         _thisObjInteractable = GetComponentInParent<IInteractable>();
         _playableCharacterIdentity = GetComponentInParent<PlayableCharacterIdentity>();
+        _originInteract = Camera.main.transform;
+        _directionInteract = Camera.main.transform;
     }
 
     private void Update() 
     {
         if(!_playableCharacterIdentity.IsPlayerInput)return;
         _currInteractable = GetClosestInteractables();
-        if(_currInteractable != null)
-        {
-            // Vector3 playerToInteractableDir = (_currInteractable.InteractableTransform.position - _charaGameObject.transform.forward).normalized;
-
-            // Debug.Log("Interactable is at " + _currInteractable.InteractableTransform.position);
-        }
 
         _currSilentKillAble = GetClosestSilentkillable();
-        // Debug.Log(_currSilentKillAble + " " + _silentKillAbleList.Count);
-        if(_currSilentKillAble != null)
-        {
-
-        }
     }
-    public void Interact()
+    #region  Make Sound
+
+    #endregion
+    #region  Get Interactable Through OnTrigger
+    public void Interact() //interact revive ama item samakan
     {
         if(_currInteractable != null)
         {
@@ -48,6 +45,23 @@ public class PlayableInteraction : MonoBehaviour
             }
             _currInteractable.Interact(_playableCharacterIdentity);
         }
+        else
+        {
+            Debug.DrawRay(_originInteract.position, _directionInteract.forward.normalized * 100f, Color.magenta, 2f);
+            if(Physics.Raycast(_originInteract.position, _directionInteract.forward.normalized, out RaycastHit hit, 100f, _interactableLayerMask))
+            {
+                IInteractable interactable = hit.collider.GetComponent<IInteractable>() ?? hit.collider.GetComponentInParent<IInteractable>();
+                Debug.Log("Interaaaact is here" + interactable + "wooo");
+                if(interactable != null && !_interactablesList.Contains(interactable) && interactable.CanInteract)
+                {
+                    if(interactable == _thisObjInteractable) return;
+                    // Debug.Log(interactable.InteractableTransform.name + " in");
+                    interactable.Interact(_playableCharacterIdentity);
+                }
+            }
+        }
+
+        
     }
     public void SilentKill()
     {
@@ -70,6 +84,7 @@ public class PlayableInteraction : MonoBehaviour
         IInteractable chosenInteractable = null;
         foreach(IInteractable interactable in _interactablesList)
         {
+            if(interactable == null)continue;
             float InteractableToPlayerDistance = Vector3.Distance(interactable.InteractableTransform.position, _thisObjInteractable.InteractableTransform.position);
             
 
@@ -90,6 +105,7 @@ public class PlayableInteraction : MonoBehaviour
         ISilentKillAble chosen = null;
         foreach(ISilentKillAble interactable in _silentKillAbleList)
         {
+            if(interactable == null)continue;
             float InteractableToPlayerDistance = Vector3.Distance(interactable.SilentKillAbleTransform.position, _thisObjInteractable.InteractableTransform.position);
             
             if(closestDistance > InteractableToPlayerDistance)
@@ -177,5 +193,10 @@ public class PlayableInteraction : MonoBehaviour
             }
         }
     }
-
+    public void DeleteKilledEnemyFromList(Transform enemy)
+    {
+        ISilentKillAble silentKillAble = enemy.GetComponent<ISilentKillAble>() ?? enemy.GetComponentInParent<ISilentKillAble>();
+        if(_silentKillAbleList.Contains(silentKillAble))_silentKillAbleList.Remove(silentKillAble);
+    }
+    #endregion
 }

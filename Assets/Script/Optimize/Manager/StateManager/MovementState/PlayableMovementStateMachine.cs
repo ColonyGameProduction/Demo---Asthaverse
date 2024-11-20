@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -17,12 +15,9 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     [Header ("Playable Character Variable")]
 
     [Space(2)]
-    [Header("Move States - Crouch State")]
-    [SerializeField] protected bool _isCrouch;
+    [Header("Move States - Ground State")]
     [SerializeField] protected bool _isCrawl;
-    [SerializeField] protected float _crouchMultiplier;
     [SerializeField] protected float _crawlMultiplier;
-    private float _crouchSpeed;
     private float _crawlSpeed;
 
     [Space(1)]
@@ -47,12 +42,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected IReceiveInputFromPlayer _canReceivePlayerInput;
     protected Vector3 _inputMovement;
     protected PlayableCharacterIdentity _getPlayableCharacterIdentity;
+    protected WorldSoundManager _worldSoundManager;
+    protected FOVMachine _fovMachine;
     #endregion
     
     #region GETTERSETTER Variable
-
-    public float CrouchSpeed {get{return _crouchSpeed;}}
-    public bool IsCrouching { get {return _isCrouch;}set{ _isCrouch = value;} }
     public float CrawlSpeed { get{return _crawlSpeed;}}
     public bool IsCrawling {  get {return _isCrawl;}set{ _isCrawl = value;} }
 
@@ -67,6 +61,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected override void Awake()
     {
         base.Awake();
+        _fovMachine = GetComponent<FOVMachine>();
 
         _canReceivePlayerInput = GetComponent<IReceiveInputFromPlayer>();
         _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
@@ -81,12 +76,22 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
         if(_playableLookTarget == null) _playableLookTarget = GetComponent<PlayableCamera>().GetFollowTarget;
     }
+    protected override void Start()
+    {
+        _worldSoundManager = WorldSoundManager.Instance;
+        base.Start();
+    }
 
     #region Move
     public override void Move()
     {
         if(!IsAIInput) MovePlayableChara(InputMovement);
         else base.Move();
+        if(IsWalking || IsRunning)
+        {
+            Debug.Log(transform.position + " produce walk sound");
+            _worldSoundManager.MakeSound(WorldSoundName.Walk, transform.position, _fovMachine.CharaEnemyMask);
+        }
     }
     /// <summary>
     /// Move yang digunakan untuk kontrol dgn input dari player
@@ -146,7 +151,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     public override void InitializeMovementSpeed(float speed)
     {
         base.InitializeMovementSpeed(speed);
-        _crouchSpeed = _walkSpeed * _crouchMultiplier;
+        
         _crawlSpeed = _walkSpeed * _crawlMultiplier;
     }
     #endregion
