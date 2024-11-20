@@ -10,6 +10,7 @@ using System.Linq;
 using UnityEngine.Rendering;
 using UnityEngine.InputSystem.Android;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 
 /* PERHATIAN!!!
  * Kalo mau akses logic di skrip ini
@@ -182,16 +183,23 @@ public class ExecuteLogic : AILogic
 
         if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Interactable")))
         {
+            PlayerAction playerAction = GetComponent<PlayerAction>();
+
             if (hit.collider.GetComponent<PickableItems>())
             {
                 Debug.Log("Ambil!");
 
-                PlayerAction playerAction = GetComponent<PlayerAction>();
+                GameObject newObject = hit.collider.gameObject;
 
                 if (playerAction.heldObject == null)
                 {
-                    playerAction.heldObject = hit.collider.gameObject;
-
+                    playerAction.heldObject = newObject;
+                    PickupObject(playerAction.heldObject);
+                }
+                else
+                {
+                    SwapObject(playerAction.heldObject, newObject);
+                    playerAction.heldObject = newObject;
                     PickupObject(playerAction.heldObject);
                 }
             }
@@ -230,6 +238,19 @@ public class ExecuteLogic : AILogic
             playerAction.heldObject.transform.SetParent(null);
             playerAction.heldObject = null;
         }
+    }
+
+    private void SwapObject(GameObject heldObject, GameObject newObject)
+    {
+        Rigidbody heldRb = heldObject.GetComponent<Rigidbody>();
+        if (heldRb != null)
+        {
+            heldRb.isKinematic = false;
+        }
+
+        heldObject.transform.SetParent(null);
+        heldObject.transform.position = newObject.transform.position;
+        heldObject.transform.rotation = newObject.transform.rotation;
     }
 
     public void PlayFootstepsSound(AudioSource footstepsSource)
