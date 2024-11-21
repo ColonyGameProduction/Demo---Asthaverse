@@ -60,8 +60,8 @@ public class WeaponLogicManager : MonoBehaviour
         // if(!DebugPart2)if(!isAIInput)origin = gunOriginShootPoint;
 
         // Debug.Log("I hit" + origin + " sesudah berubah");
-        if(DebugDrawBiasa)Debug.DrawRay(gunOriginShootPoint, bulletDirection * weaponStat.range, Color.black, 0.2f, false);
-        if(DebugDrawBiasa)Debug.DrawRay(origin, bulletDirection * weaponStat.range, Color.red, 0.2f, false);
+        // if(DebugDrawBiasa)Debug.DrawRay(gunOriginShootPoint, bulletDirection * weaponStat.range, Color.black, 0.2f, false);
+        // if(DebugDrawBiasa)Debug.DrawRay(origin, bulletDirection * weaponStat.range, Color.red, 0.2f, false);
 
         weaponShootVFX.CallGunFlash(gunOriginShootPoint);
 
@@ -72,35 +72,63 @@ public class WeaponLogicManager : MonoBehaviour
             isHitAnything = true;
             if(!isAIInput)
             {
-                Vector3 newDirBasedOnGunPoint = (hit.point - gunOriginShootPoint).normalized;
-                if (Physics.Raycast(gunOriginShootPoint, newDirBasedOnGunPoint, out hit, weaponStat.range, entityMask))
+                if(!isInsideWall)
                 {
-                    isHitBody = false;
-                    BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
-                    if(body != null)
+                    Vector3 newDirBasedOnGunPoint = (hit.point - gunOriginShootPoint).normalized;
+                    if (Physics.Raycast(gunOriginShootPoint, newDirBasedOnGunPoint, out hit, weaponStat.range, entityMask))
                     {
-                        isHitBody = true;
-                        // float dis = Vector3.Distance(origin, hit.point);
+                        BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
+                        if(body != null)
+                        {
+                            isHitBody = true;
+                            // float dis = Vector3.Distance(origin, hit.point);
 
-                        GameObject entityGameObject = hit.collider.gameObject;
-                        Debug.Log(entityGameObject.name + " di sini " + body);
-                        CalculateDamage(weaponStat, entityGameObject, body.bodyType);
+                            GameObject entityGameObject = hit.collider.gameObject;
+                            Debug.Log(entityGameObject.name + " di sini " + body);
+                            CalculateDamage(weaponStat, entityGameObject, body.bodyType);
+                        }
+                        else
+                        {
+                            isHitBody = false;
+                            Debug.Log("I hit Obstacle");
+                        }
                     }
                     else
                     {
-                        isHitBody = false;
-                        Debug.Log("I hit Obstacle");
+                        isHitAnything = false;
+                        hit.point = origin + bulletDirection * weaponStat.range;
                     }
                 }
                 else
                 {
-                    hit.point = origin + bulletDirection * weaponStat.range;
+                    Vector3 newDirOriginToGunOrigin = (gunOriginShootPoint - origin).normalized;
+                    // Debug.DrawRay(origin, newDirOriginToGunOrigin * 20, Color.red, 2f, false);
+                    if (Physics.Raycast(origin, newDirOriginToGunOrigin, out hit, weaponStat.range, entityMask))
+                    {
+                        Debug.Log("Hit pointnya adalahh" + hit.point + " WAT" + gunOriginShootPoint);
+                        isHitBody = false;
+                        BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
+                        if(body != null)
+                        {
+                            isHitBody = true;
+                            // float dis = Vector3.Distance(origin, hit.point);
+
+                            GameObject entityGameObject = hit.collider.gameObject;
+                            Debug.Log(entityGameObject.name + " di sini " + body);
+                            CalculateDamage(weaponStat, entityGameObject, body.bodyType);
+                        }
+                        else
+                        {
+                            isHitBody = false;
+                            Debug.Log("I hit Obstacle");
+                        }
+                    }
                 }
+
             }
             else
             {
                 Debug.Log("Hit point now" + hit.point);
-                isHitBody = false;
                 BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
                 if(body != null)
                 {
@@ -193,7 +221,7 @@ public class WeaponLogicManager : MonoBehaviour
             particle.transform.rotation = Quaternion.LookRotation(hit.normal);
             StartCoroutine(SpawnParticle(particle, weaponShootVFX));
         }
-        Debug.DrawRay(hit.point, hit.normal * 50, Color.red, 0.2f, false);
+        // Debug.DrawRay(hit.point, hit.normal * 50, Color.red, 0.2f, false);
         // Debug.LogError("Stop");
         // Destroy(trail.gameObject, trail.time);
         weaponShootVFX.SetVFXBackToNormal(trail.transform);
