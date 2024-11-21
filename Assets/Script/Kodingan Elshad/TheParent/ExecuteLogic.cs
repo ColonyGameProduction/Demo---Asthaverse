@@ -10,6 +10,7 @@ using System.Linq;
 using UnityEngine.Rendering;
 using UnityEngine.InputSystem.Android;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 
 /* PERHATIAN!!!
  * Kalo mau akses logic di skrip ini
@@ -182,15 +183,74 @@ public class ExecuteLogic : AILogic
 
         if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Interactable")))
         {
+            PlayerAction playerAction = GetComponent<PlayerAction>();
+
             if (hit.collider.GetComponent<PickableItems>())
             {
                 Debug.Log("Ambil!");
+
+                GameObject newObject = hit.collider.gameObject;
+
+                if (playerAction.heldObject == null)
+                {
+                    playerAction.heldObject = newObject;
+                    PickupObject(playerAction.heldObject);
+                }
+                else
+                {
+                    SwapObject(playerAction.heldObject, newObject);
+                    playerAction.heldObject = newObject;
+                    PickupObject(playerAction.heldObject);
+                }
             }
             else if (hit.collider.GetComponent<OpenableObject>())
             {
                 Debug.Log("Buka!");
             }
         }
+    }
+
+    private void PickupObject(GameObject obj)
+    {
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+        PlayerAction playerAction = GetComponent<PlayerAction>();
+
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+        }
+
+        obj.transform.position = playerAction.holdPoint.position;
+        obj.transform.rotation = playerAction.holdPoint.rotation;
+        obj.transform.SetParent(playerAction.holdPoint);
+    }
+
+    public void ThrowObject()
+    {
+        PlayerAction playerAction = GetComponent<PlayerAction>();
+        Rigidbody rb = playerAction.heldObject.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.AddForce(Camera.main.transform.forward * 10f, ForceMode.VelocityChange);
+
+            playerAction.heldObject.transform.SetParent(null);
+            playerAction.heldObject = null;
+        }
+    }
+
+    private void SwapObject(GameObject heldObject, GameObject newObject)
+    {
+        Rigidbody heldRb = heldObject.GetComponent<Rigidbody>();
+        if (heldRb != null)
+        {
+            heldRb.isKinematic = false;
+        }
+
+        heldObject.transform.SetParent(null);
+        heldObject.transform.position = newObject.transform.position;
+        heldObject.transform.rotation = newObject.transform.rotation;
     }
 
     public void PlayFootstepsSound(AudioSource footstepsSource)

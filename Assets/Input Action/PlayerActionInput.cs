@@ -215,6 +215,33 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Throw"",
+                    ""type"": ""Button"",
+                    ""id"": ""f54134e1-0604-4392-9454-04748a4fe8ad"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TakeCover"",
+                    ""type"": ""Button"",
+                    ""id"": ""ba224239-c706-42d7-9317-8db511320f97"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ExitTakeCover"",
+                    ""type"": ""Button"",
+                    ""id"": ""41725fc0-17fa-4dd8-8e5b-e3ed8a09ac6a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -451,6 +478,17 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""b41fcccb-ab18-4b46-a094-fcf703c12cfc"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""c7959ed7-cc80-4d9e-af2b-02106a9f5926"",
                     ""path"": ""<Keyboard>/2"",
                     ""interactions"": """",
@@ -492,6 +530,28 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""ExitCommand"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""339fb4fc-c0c3-40f3-b1cb-14cbc81307b8"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TakeCover"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c83008a4-750f-443d-ab2f-2e006392b143"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ExitTakeCover"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -521,6 +581,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_SkillButton = m_InputPlayerAction.FindAction("SkillButton", throwIfNotFound: true);
         m_InputPlayerAction_Whistle = m_InputPlayerAction.FindAction("Whistle", throwIfNotFound: true);
         m_InputPlayerAction_NightVision = m_InputPlayerAction.FindAction("NightVision", throwIfNotFound: true);
+        m_InputPlayerAction_Throw = m_InputPlayerAction.FindAction("Throw", throwIfNotFound: true);
+        m_InputPlayerAction_TakeCover = m_InputPlayerAction.FindAction("TakeCover", throwIfNotFound: true);
+        m_InputPlayerAction_ExitTakeCover = m_InputPlayerAction.FindAction("ExitTakeCover", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -603,6 +666,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_SkillButton;
     private readonly InputAction m_InputPlayerAction_Whistle;
     private readonly InputAction m_InputPlayerAction_NightVision;
+    private readonly InputAction m_InputPlayerAction_Throw;
+    private readonly InputAction m_InputPlayerAction_TakeCover;
+    private readonly InputAction m_InputPlayerAction_ExitTakeCover;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -628,6 +694,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @SkillButton => m_Wrapper.m_InputPlayerAction_SkillButton;
         public InputAction @Whistle => m_Wrapper.m_InputPlayerAction_Whistle;
         public InputAction @NightVision => m_Wrapper.m_InputPlayerAction_NightVision;
+        public InputAction @Throw => m_Wrapper.m_InputPlayerAction_Throw;
+        public InputAction @TakeCover => m_Wrapper.m_InputPlayerAction_TakeCover;
+        public InputAction @ExitTakeCover => m_Wrapper.m_InputPlayerAction_ExitTakeCover;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -700,6 +769,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @NightVision.started += instance.OnNightVision;
             @NightVision.performed += instance.OnNightVision;
             @NightVision.canceled += instance.OnNightVision;
+            @Throw.started += instance.OnThrow;
+            @Throw.performed += instance.OnThrow;
+            @Throw.canceled += instance.OnThrow;
+            @TakeCover.started += instance.OnTakeCover;
+            @TakeCover.performed += instance.OnTakeCover;
+            @TakeCover.canceled += instance.OnTakeCover;
+            @ExitTakeCover.started += instance.OnExitTakeCover;
+            @ExitTakeCover.performed += instance.OnExitTakeCover;
+            @ExitTakeCover.canceled += instance.OnExitTakeCover;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -767,6 +845,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @NightVision.started -= instance.OnNightVision;
             @NightVision.performed -= instance.OnNightVision;
             @NightVision.canceled -= instance.OnNightVision;
+            @Throw.started -= instance.OnThrow;
+            @Throw.performed -= instance.OnThrow;
+            @Throw.canceled -= instance.OnThrow;
+            @TakeCover.started -= instance.OnTakeCover;
+            @TakeCover.performed -= instance.OnTakeCover;
+            @TakeCover.canceled -= instance.OnTakeCover;
+            @ExitTakeCover.started -= instance.OnExitTakeCover;
+            @ExitTakeCover.performed -= instance.OnExitTakeCover;
+            @ExitTakeCover.canceled -= instance.OnExitTakeCover;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -807,5 +894,8 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnSkillButton(InputAction.CallbackContext context);
         void OnWhistle(InputAction.CallbackContext context);
         void OnNightVision(InputAction.CallbackContext context);
+        void OnThrow(InputAction.CallbackContext context);
+        void OnTakeCover(InputAction.CallbackContext context);
+        void OnExitTakeCover(InputAction.CallbackContext context);
     }
 }
