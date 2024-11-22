@@ -84,7 +84,7 @@ public class WeaponLogicManager : MonoBehaviour
                             // float dis = Vector3.Distance(origin, hit.point);
 
                             GameObject entityGameObject = hit.collider.gameObject;
-                            Debug.Log(entityGameObject.name + " di sini " + body);
+                            // Debug.Log(entityGameObject.name + " di sini " + body);
                             CalculateDamage(weaponStat, entityGameObject, body.bodyType);
                         }
                         else
@@ -105,7 +105,7 @@ public class WeaponLogicManager : MonoBehaviour
                     // Debug.DrawRay(origin, newDirOriginToGunOrigin * 20, Color.red, 2f, false);
                     if (Physics.Raycast(origin, newDirOriginToGunOrigin, out hit, weaponStat.range, entityMask))
                     {
-                        Debug.Log("Hit pointnya adalahh" + hit.point + " WAT" + gunOriginShootPoint);
+                        // Debug.Log("Hit pointnya adalahh" + hit.point + " WAT" + gunOriginShootPoint);
                         isHitBody = false;
                         BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
                         if(body != null)
@@ -114,7 +114,7 @@ public class WeaponLogicManager : MonoBehaviour
                             // float dis = Vector3.Distance(origin, hit.point);
 
                             GameObject entityGameObject = hit.collider.gameObject;
-                            Debug.Log(entityGameObject.name + " di sini " + body);
+                            // Debug.Log(entityGameObject.name + " di sini " + body);
                             CalculateDamage(weaponStat, entityGameObject, body.bodyType);
                         }
                         else
@@ -128,7 +128,7 @@ public class WeaponLogicManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Hit point now" + hit.point);
+                // Debug.Log("Hit point now" + hit.point);
                 BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
                 if(body != null)
                 {
@@ -136,7 +136,7 @@ public class WeaponLogicManager : MonoBehaviour
                     // float dis = Vector3.Distance(origin, hit.point);
 
                     GameObject entityGameObject = hit.collider.gameObject;
-                    Debug.Log(entityGameObject.name + " di sini " + body);
+                    // Debug.Log(entityGameObject.name + " di sini " + body);
                     CalculateDamage(weaponStat, entityGameObject, body.bodyType);
                 }
                 else
@@ -189,7 +189,7 @@ public class WeaponLogicManager : MonoBehaviour
                 Debug.Log("I hit Leg");
             }
             if(!Debugs)_getHealthFunction.Hurt(totalDamage);
-            Debug.Log(entityGameObject.name + " Hit!" + " HP:" + _getHealthFunction.CurrHealth);
+            // Debug.Log(entityGameObject.name + " Hit!" + " HP:" + _getHealthFunction.CurrHealth);
         }
  
     }

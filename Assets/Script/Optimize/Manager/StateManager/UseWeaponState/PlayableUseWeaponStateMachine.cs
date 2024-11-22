@@ -29,6 +29,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     [Header("Saving other component data")]
     protected IReceiveInputFromPlayer _getCanInputPlayer;
     protected ICanSwitchWeapon _getCanSwitchWeapon;
+    protected Camera _mainCamera;
 
     [Space(1)]
     [Header("More Weapon Logic Data")]
@@ -82,6 +83,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected override void Awake()
     {
         base.Awake();
+        _mainCamera = Camera.main;
         CharaIdentity_OnIsPlayerInputChange(!IsAIInput);
         _getCanSwitchWeapon = GetComponent<ICanSwitchWeapon>();
         _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
@@ -198,8 +200,8 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         _isAIInput = !obj;
         if(!IsAIInput)
         {
-            _currOriginShootPoint = Camera.main.transform;
-            _currDirectionShootPoint = Camera.main.transform;
+            _currOriginShootPoint = _mainCamera.transform;
+            _currDirectionShootPoint = _mainCamera.transform;
 
             var sourceObjectsData =_aimRigConstraintData.data.sourceObjects;
             sourceObjectsData.SetWeight(0, 1f);

@@ -31,7 +31,7 @@ public class FriendAI_TakingCoverState : FriendAIState
 
     public override void UpdateState()
     {
-        Debug.Log("I'm taking cover" + _sm.transform.name);
+        // Debug.Log("I'm taking cover" + _sm.transform.name);
 
         // if(_isHiding)Debug.Log("T-HIDING"+ _sm.transform.name);
         // else 
@@ -54,7 +54,7 @@ public class FriendAI_TakingCoverState : FriendAIState
             Patroling();
             if(_sm.GetFOVMachine.ClosestEnemy != null)
             {
-                Debug.Log("T-NO ONE SEE ME; I SEE SOMEONE" + _sm.transform.name);
+                // Debug.Log("T-NO ONE SEE ME; I SEE SOMEONE" + _sm.transform.name);
                 _sm.IsCheckingLastPosTimer = _sm.IsCheckingLastPosTimerMax;
                 
                 if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
@@ -65,20 +65,20 @@ public class FriendAI_TakingCoverState : FriendAIState
 
                 if(!_sm.GetUseWeaponStateMachine.IsReloading && !_sm.GetUseWeaponStateMachine.HasNoMoreBullets)
                 {
-                    Debug.Log("T-NO ONE SEE ME; I SEE SOMEONE - I'm SHOOTING THIS PERSON" + _sm.transform.name);
+                    // Debug.Log("T-NO ONE SEE ME; I SEE SOMEONE - I'm SHOOTING THIS PERSON" + _sm.transform.name);
                     _sm.StartShooting(_sm.SearchBestBodyPartToShoot(_sm.GetFOVMachine.ClosestEnemy));
                 }
                 if(_sm.GetUseWeaponStateMachine.IsReloading || _sm.GetUseWeaponStateMachine.HasNoMoreBullets)
                 {
                     _sm.StopShooting();
-                    Debug.Log("T-NO ONE SEE ME; I SEE SOMEONE - I'm RELOADING WHILE STILL LOOKING" + _sm.transform.name);
+                    // Debug.Log("T-NO ONE SEE ME; I SEE SOMEONE - I'm RELOADING WHILE STILL LOOKING" + _sm.transform.name);
                     //Diam di tempat sambil ngelihat target
                 }
                 if(changeTimer <= 0)changeTimer = changeTimerMax * 0.5f;
             }
             else
             {
-                Debug.Log("T-NO ONE SEE ME; I SEE NO ONE" + _sm.transform.name + " ");
+                // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE" + _sm.transform.name + " ");
                 ChangeState();
                 _sm.AimAIPointLookAt(null);
                 _sm.StopShooting();
@@ -86,7 +86,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                 {
                     if(_sm.IsAtTakingCoverHidingPlace)
                     {
-                        Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M HIDING AND IDLE AND LOOKING AT TAKE COVER DIR" + _sm.transform.name);
+                        // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M HIDING AND IDLE AND LOOKING AT TAKE COVER DIR" + _sm.transform.name);
                         
                         _sm.GetPlayableCharaIdentity.Aiming(true);
                         _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenTakingCover, true);
@@ -99,12 +99,12 @@ public class FriendAI_TakingCoverState : FriendAIState
                     float dotCharaWithEnemyLastSeen = 0;
                     if(!_sm.isWallTallerThanChara)
                     {
-                        Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS NOT TALLER THAN ME" + _sm.transform.name);
+                        // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS NOT TALLER THAN ME" + _sm.transform.name);
                         _sm.GetMoveStateMachine.IsRunning = false;
 
                         if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
                         {
-                            Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING ENEMYLASTPOS" + _sm.transform.name);
+                            // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING ENEMYLASTPOS" + _sm.transform.name);
                             _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
 
                             Vector3 dirEnemyLastSeenToChara = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
@@ -116,7 +116,7 @@ public class FriendAI_TakingCoverState : FriendAIState
 
                             _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenChecking, true);
                             dotCharaWithEnemyLastSeen = Vector3.Dot(_sm.DirToLookAtWhenChecking, _sm.transform.forward);
-                            Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING NORMALPOS" + _sm.transform.name);
+                            // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING NORMALPOS" + _sm.transform.name);
                         }
 
 
@@ -128,7 +128,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                                 if(_sm.IsCheckingLastPosTimer > 0)_sm.IsCheckingLastPosTimer -= Time.deltaTime;
                                 else
                                 {
-                                    Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M DONE CHECKING POS" + _sm.transform.name);
+                                    // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M DONE CHECKING POS" + _sm.transform.name);
                                     _sm.GetFOVMachine.IsCheckingEnemyLastPosition();
                                 }
                             }
@@ -138,14 +138,14 @@ public class FriendAI_TakingCoverState : FriendAIState
                     }
                     else
                     {
-                        Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME" + _sm.transform.name);
+                        // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME" + _sm.transform.name);
                         if(_sm.IsAtTakingCoverCheckingPlace)
                         {
                             _sm.GetMoveStateMachine.IsRunning = false;
 
                             if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
                             {
-                                Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME - I'M CHECKING ENEMYLASTPOS" + _sm.transform.name);
+                                // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME - I'M CHECKING ENEMYLASTPOS" + _sm.transform.name);
                                 _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
                                 Vector3 dirEnemyLastSeenToCharas = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
                                 dotCharaWithEnemyLastSeen = Vector3.Dot(dirEnemyLastSeenToCharas, _sm.transform.forward);
@@ -153,7 +153,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                             }
                             else
                             {
-                                Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME - I'M CHECKING NORMALPOS" + _sm.transform.name);
+                                // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME - I'M CHECKING NORMALPOS" + _sm.transform.name);
                                 _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenChecking, true);
                                 dotCharaWithEnemyLastSeen = Vector3.Dot(_sm.DirToLookAtWhenChecking, _sm.transform.forward);
 
@@ -169,7 +169,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                                     if(_sm.IsCheckingLastPosTimer > 0)_sm.IsCheckingLastPosTimer -= Time.deltaTime;
                                     else
                                     {
-                                        Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME - I'M DONE CHECKING POS" + _sm.transform.name);
+                                        // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME - I'M DONE CHECKING POS" + _sm.transform.name);
                                         _sm.GetFOVMachine.IsCheckingEnemyLastPosition();
                                     }
                                 }
@@ -190,23 +190,23 @@ public class FriendAI_TakingCoverState : FriendAIState
                 currTarget = _sm.GetFOVMachine.ClosestEnemy;
                 isClosestEnemy = true;
                 _sm.AimAIPointLookAt(_sm.GetFOVMachine.ClosestEnemy);
-                Debug.Log("T-SOMEONE SEE ME; I SEE SOMEONE" + _sm.transform.name);
+                // Debug.Log("T-SOMEONE SEE ME; I SEE SOMEONE" + _sm.transform.name);
             }
             else
             {
                 currTarget = _sm.ClosestEnemyWhoSawAI;
                 _sm.AimAIPointLookAt(null);
-                Debug.Log("T-SOMEONE SEE ME; I SEE NO ONE" + _sm.transform.name);
+                // Debug.Log("T-SOMEONE SEE ME; I SEE NO ONE" + _sm.transform.name);
             }
 
             if(_sm.IsHiding)Patroling();
             if(!_sm.GetPlayableCharaIdentity.IsHalfHealthOrLower)
             {
-                Debug.Log("T-SOMEONE SEE ME - I'M HEALTHY" + _sm.transform.name);
+                // Debug.Log("T-SOMEONE SEE ME - I'M HEALTHY" + _sm.transform.name);
                 if(!_sm.GetUseWeaponStateMachine.IsReloading && !_sm.GetUseWeaponStateMachine.HasNoMoreBullets)
                 {
                     // Debug.Log("is it closest enemy" + isClosestEnemy + _sm.transform.name);
-                    Debug.Log("T-SOMEONE SEE ME - I'M HEALTHY - I KEEP SHOOTING" + _sm.transform.name);
+                    // Debug.Log("T-SOMEONE SEE ME - I'M HEALTHY - I KEEP SHOOTING" + _sm.transform.name);
 
                     if(_sm.IsChecking)if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
 
@@ -228,7 +228,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                             {
                                 _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position - _sm.GetFOVMachine.GetFOVPoint.right);
                             }
-                            Debug.Log("Sometimes they went here" + _sm.transform.name);
+                            // Debug.Log("Sometimes they went here" + _sm.transform.name);
                         }
                     }
                     if(isClosestEnemy)
@@ -247,7 +247,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                     
                     if(_sm.IsChecking)
                     {
-                        Debug.Log("T-SOMEONE SEE ME - I'M HEALTHY - I RELOAD WHEN CHECKING" + _sm.PosToGoWhenCheckingWhenWallIsHigher + " " +_sm.transform.name);
+                        // Debug.Log("T-SOMEONE SEE ME - I'M HEALTHY - I RELOAD WHEN CHECKING" + _sm.PosToGoWhenCheckingWhenWallIsHigher + " " +_sm.transform.name);
                         if(_sm.GetUseWeaponStateMachine.IsReloading || _sm.GetUseWeaponStateMachine.HasNoMoreBullets)
                         {
                             _sm.GetPlayableCharaIdentity.Run(true);
@@ -257,12 +257,12 @@ public class FriendAI_TakingCoverState : FriendAIState
                     }
                     else if(_sm.IsHiding)
                     {
-                        Debug.Log("T-SOMEONE SEE ME - I'M HEALTHY - I RELOAD WHEN I WENT HIDING" + _sm.TakeCoverPosition + " " + _sm.transform.name);
+                        // Debug.Log("T-SOMEONE SEE ME - I'M HEALTHY - I RELOAD WHEN I WENT HIDING" + _sm.TakeCoverPosition + " " + _sm.transform.name);
                         if(changeTimer <= 0)changeTimer = changeTimerMax * 0.5f;
                         
                         if(_sm.IsAtTakingCoverHidingPlace && _sm.EnemyWhoSawAIList.Count > 0 && _sm.HidingCheckDelayTimer <= 0 && ((!_sm.isWallTallerThanChara && _sm.IsCrouchingBehindWall()) || _sm.isWallTallerThanChara))
                         {
-                            Debug.Log("T-SOMEONE SEE ME - I'M HEALTHY - I RELOAD WHEN I HIDE - I NEED TO SEARCH NEW PLACE" + _sm.transform.name);
+                            // Debug.Log("T-SOMEONE SEE ME - I'M HEALTHY - I RELOAD WHEN I HIDE - I NEED TO SEARCH NEW PLACE" + _sm.transform.name);
                             _sm.SwitchState(_factory.AI_EngageState());
                             return;
                         }
@@ -277,18 +277,18 @@ public class FriendAI_TakingCoverState : FriendAIState
                     
                 if(_sm.IsChecking)
                 {
-                    Debug.Log("T-SOMEONE SEE ME - I'M NOT HEALTHY - WHEN CHECKING SO I HIDE WHILE RUNNING" + _sm.PosToGoWhenCheckingWhenWallIsHigher + " "  + _sm.transform.name);
+                    // Debug.Log("T-SOMEONE SEE ME - I'M NOT HEALTHY - WHEN CHECKING SO I HIDE WHILE RUNNING" + _sm.PosToGoWhenCheckingWhenWallIsHigher + " "  + _sm.transform.name);
                     _sm.GetPlayableCharaIdentity.Run(true);
                     ForceChange(true, false);
                 }
                 else if(_sm.IsHiding)
                 {
-                    Debug.Log("T-SOMEONE SEE ME - I'M NOT HEALTHY - WHEN I WENT HIDING" + _sm.TakeCoverPosition + " " +_sm.transform.name);
+                    // Debug.Log("T-SOMEONE SEE ME - I'M NOT HEALTHY - WHEN I WENT HIDING" + _sm.TakeCoverPosition + " " +_sm.transform.name);
                     if(changeTimer <= 0)changeTimer = changeTimerMax * 0.5f;
                     if(_sm.IsAtTakingCoverHidingPlace && _sm.EnemyWhoSawAIList.Count > 0 && _sm.HidingCheckDelayTimer <= 0 && ((!_sm.isWallTallerThanChara && _sm.IsCrouchingBehindWall()) || _sm.isWallTallerThanChara))
                     {
                         _sm.IsAtTakingCoverHidingPlace = false;
-                        Debug.Log("T-SOMEONE SEE ME - I'M NOT HEALTHY - WHEN I HIDE SO I SEARCH NEW PLACE" + _sm.transform.name);
+                        // Debug.Log("T-SOMEONE SEE ME - I'M NOT HEALTHY - WHEN I HIDE SO I SEARCH NEW PLACE" + _sm.transform.name);
                         _sm.SwitchState(_factory.AI_EngageState());
                         return;
                     }
@@ -309,7 +309,7 @@ public class FriendAI_TakingCoverState : FriendAIState
     }
     private void Patroling()
     {
-        Debug.Log(_sm.GetMoveStateMachine.CurrAIDirPos + " " + _sm.TakeCoverPosition + " " + _sm.PosToGoWhenCheckingWhenWallIsHigher + " " + _sm.transform.name);
+        // Debug.Log(_sm.GetMoveStateMachine.CurrAIDirPos + " " + _sm.TakeCoverPosition + " " + _sm.PosToGoWhenCheckingWhenWallIsHigher + " " + _sm.transform.name);
         if(_sm.IsHiding)
         {
             if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.TakeCoverPosition)
@@ -333,7 +333,7 @@ public class FriendAI_TakingCoverState : FriendAIState
     private void ChangeTimerCounter()
     {
         if(changeTimer > 0 && _sm.GetMoveStateMachine.IsIdle)changeTimer -=Time.deltaTime;
-        Debug.Log("Change Timer Now" + changeTimer + " aaaaa" + _sm.name);
+        // Debug.Log("Change Timer Now" + changeTimer + " aaaaa" + _sm.name);
     }
     private void ChangeState()
     {

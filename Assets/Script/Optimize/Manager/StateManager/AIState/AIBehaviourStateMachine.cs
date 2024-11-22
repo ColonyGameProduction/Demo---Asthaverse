@@ -104,6 +104,9 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     public Transform FocusedBodyPartToShootTransform {get {return _focusedBodyPartToShootTransform;}}
     public Transform BodyPartToShootTransform {get {return _bodyPartToShootTransform;}}
     public Collider CurrWall {get {return _currWall;}}
+    public Collider CharaHeadColl {get {return _charaHeadColl;}}
+    public float CharaHeightBuffer {get {return _charaHeightBuffer;}}
+    public float CharaWidth {get {return _charaWidth;}}
     public float IsCheckingLastPosTimer {get {return _isCheckingLastPosTimer; } set {_isCheckingLastPosTimer = value;}}
     public float IsCheckingLastPosTimerMax {get {return _isCheckingLastPosTimerMax;}}
 
