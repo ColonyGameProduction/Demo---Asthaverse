@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    public static AudioManager Instance {get; private set;}
     [Header("TEST")]
     public bool isTest;
     public Vector3 pos;
@@ -11,6 +12,7 @@ public class AudioManager : MonoBehaviour
     private List<Audio> _audioList = new List<Audio>();
     private void Awake() 
     {
+        Instance = this;
         for(int i = 0; i < _audioSFXList.audioSFX.Count ; i++)
         {
             if(_audioSFXList.audioSFX[i].useSpatialBlend)continue;
@@ -60,7 +62,7 @@ public class AudioManager : MonoBehaviour
         AudioSFX audio = GetAudioSFXData(name);
         PlayClipAtPoint(audio, position);
     }
-    private static void PlayClipAtPoint(AudioSFX audioData, Vector3 position)
+    private void PlayClipAtPoint(AudioSFX audioData, Vector3 position)
     {
         GameObject gameObject = new GameObject("One shot audio");
         gameObject.transform.position = position;

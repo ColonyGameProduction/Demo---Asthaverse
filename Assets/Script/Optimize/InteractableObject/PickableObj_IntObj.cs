@@ -25,21 +25,24 @@ public class PickableObj_IntObj : InteractableObject
     }
     private void OnCollisionEnter(Collision other) 
     {
-        // if(!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Weapon"))
-        // {
-        //     Debug.Log("I make sound using" + other.gameObject);
-        //     if(IsBeingThrown)
-        //     {
-        //         Debug.Log("I make sound");
-        //         IsBeingThrown = false;
-        //         WorldSoundManager.Instance.MakeSound(WorldSoundName.Whistle, _playerWhoHeldItem.transform.position, _playerWhoHeldItem.FOVMachine.CharaEnemyMask);
-        //         _playerWhoHeldItem = null;
-        //     }
-        // }
-        // else
-        // {
-        //     // IsBeingThrown = false;
-        // }
+        if(!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Weapon"))
+        {
+            Debug.Log("I make sound using" + other.gameObject);
+            if(IsBeingThrown)
+            {
+                Debug.Log("I make sound");
+                IsBeingThrown = false;
+                WorldSoundManager.Instance.MakeSound(WorldSoundName.Whistle, _playerWhoHeldItem.transform.position, _playerWhoHeldItem.FOVMachine.CharaEnemyMask);
+                AudioManager.Instance.PlayAudioClip(AudioSFXName.Whistle, transform.position);
+                _playerWhoHeldItem = null;
+                Destroy(this.gameObject);
+                // Debug.Log(gameObject + "Object destroy");
+            }
+        }
+        else
+        {
+            // IsBeingThrown = false;
+        }
         
     }
 }
