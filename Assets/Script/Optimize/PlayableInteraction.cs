@@ -11,17 +11,31 @@ public class PlayableInteraction : MonoBehaviour
     [SerializeField] private IInteractable _currInteractable;
     [SerializeField] private ISilentKillAble _currSilentKillAble;
     [SerializeField] private LayerMask _interactableLayerMask;
+
+    [Space(1)]
+    [Header("TakeItem")]
+    [SerializeField]protected Transform _pickableObjPoint;
+    [SerializeField]protected float _throwForceMultiplier = 20f;
+    protected PickableObj_IntObj _heldObject;
+
+
+
     private IInteractable _thisObjInteractable;
     private PlayableCharacterIdentity _playableCharacterIdentity;
     private Transform _originInteract, _directionInteract;
+    protected Camera _mainCamera;
+
+
     public IInteractable CurrInteractable{get{return _currInteractable;}}
     public ISilentKillAble CurrSilentKillAble{get{return _currSilentKillAble;}}
+    public bool IsHeldingObject {get{return _heldObject != null? true : false;}}
     private void Awake() 
     {
         _thisObjInteractable = GetComponentInParent<IInteractable>();
         _playableCharacterIdentity = GetComponentInParent<PlayableCharacterIdentity>();
-        _originInteract = Camera.main.transform;
-        _directionInteract = Camera.main.transform;
+        _mainCamera = Camera.main;
+        _originInteract = _mainCamera.transform;
+        _directionInteract = _mainCamera.transform;
     }
 
     private void Update() 
@@ -47,11 +61,11 @@ public class PlayableInteraction : MonoBehaviour
         }
         else
         {
-            Debug.DrawRay(_originInteract.position, _directionInteract.forward.normalized * 100f, Color.magenta, 2f);
+            // Debug.DrawRay(_originInteract.position, _directionInteract.forward.normalized * 100f, Color.magenta, 2f);
             if(Physics.Raycast(_originInteract.position, _directionInteract.forward.normalized, out RaycastHit hit, 100f, _interactableLayerMask))
             {
                 IInteractable interactable = hit.collider.GetComponent<IInteractable>() ?? hit.collider.GetComponentInParent<IInteractable>();
-                Debug.Log("Interaaaact is here" + interactable + "wooo");
+                // Debug.Log("Interaaaact is here" + interactable + "wooo");
                 if(interactable != null && !_interactablesList.Contains(interactable) && interactable.CanInteract)
                 {
                     if(interactable == _thisObjInteractable) return;
@@ -199,4 +213,54 @@ public class PlayableInteraction : MonoBehaviour
         if(_silentKillAbleList.Contains(silentKillAble))_silentKillAbleList.Remove(silentKillAble);
     }
     #endregion
+
+    #region PickableObj
+    public void PickUpObject(PickableObj_IntObj obj)
+    {
+        if(_heldObject == obj)return;
+        _playableCharacterIdentity.GetPlayableUseWeaponData.TellToTurnOffScope();
+        _playableCharacterIdentity.GetPlayableUseWeaponData.ForceStopUseWeapon();
+        _playableCharacterIdentity.GetPlayableMovementData.IsMustLookForward = false;
+        if(_heldObject != null)
+        {
+            _heldObject.RB.isKinematic = false;
+            _heldObject.transform.position = obj.transform.position;
+            _heldObject.transform.rotation = obj.transform.rotation;
+            _heldObject.transform.SetParent(null);
+        }
+        
+        _heldObject = obj;
+        obj.RB.isKinematic = true;
+        obj.transform.position = _pickableObjPoint.position;
+        obj.transform.rotation = _pickableObjPoint.rotation;
+        obj.transform.SetParent(_pickableObjPoint);
+    }
+    public void RemoveHeldObject()
+    {
+        if(_heldObject == null)return;
+        if(_heldObject != null)
+        {
+            _heldObject.RB.isKinematic = false;
+            _heldObject.transform.SetParent(null);
+            _heldObject = null;
+        }
+    }
+    public void ThrowHeldObject()
+    {
+        if(_heldObject == null)return;
+        if(_heldObject.IsThrowAble)
+        {
+            _heldObject.RB.isKinematic = false;
+            _heldObject.transform.SetParent(null);
+            _heldObject.IsBeingThrown = true;
+            _heldObject.RB.AddForce(_mainCamera.transform.forward.normalized * _throwForceMultiplier, ForceMode.VelocityChange);
+            _heldObject = null;
+        }
+        else
+        {
+            RemoveHeldObject();
+        }
+    }
+    #endregion
+
 }

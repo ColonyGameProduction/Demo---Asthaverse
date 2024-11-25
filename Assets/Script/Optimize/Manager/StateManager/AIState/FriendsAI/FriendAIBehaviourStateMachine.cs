@@ -14,6 +14,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     protected IReceiveInputFromPlayer _getCanInputPlayer;
     private bool isToldHold;
     [SerializeField]private Transform _friendsDefaultDirection;
+    [SerializeField]private PlayableCharacterIdentity _currPlayableIdentity;
     private Transform _friendsCommandDirection;
     private Transform _currPlayable;
     [SerializeField] protected PlayableCharacterIdentity _playableCharaIdentity;
@@ -47,6 +48,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     public bool IsAIInput {get {return _isAIInput;}}
     public Transform FriendsDefaultDirection {get {return _friendsDefaultDirection;}}   
     public Transform FriendsCommandDirection {get {return _friendsCommandDirection;}}    
+    public PlayableCharacterIdentity CurrPlayableIdentity {get {return _currPlayableIdentity;}}
 
 
 
@@ -117,13 +119,13 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     {
         _isAIInput = !obj;
     }
-    public void GiveUpdateFriendDirection(Transform currPlayable, Transform defaultPos, Transform commandPos)
+    public void GiveUpdateFriendDirection(PlayableCharacterIdentity currPlayable, Transform commandPos)
     {   
-        _currPlayable = currPlayable;
-        // _friendsDefaultDirection = defaultPos; // kalo mo balik kek sebelumnya, nyalakan ini :D
+        _currPlayableIdentity = currPlayable;
+        
+        _currPlayable = currPlayable.transform;
+        Debug.Log("Apa error di sini ?>" + _currPlayableIdentity);
         _friendsDefaultDirection = _currPlayable.transform;
-
-
 
         _friendsCommandDirection = commandPos;
     }
@@ -149,7 +151,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
         if(IsTakingCover && !IsAIIdle && IsAIInput)
         {
-            Debug.Log(agentPos + " AAAAAAAAAA POSSS "+transform.position + " " + TakeCoverPosition + " " + PosToGoWhenCheckingWhenWallIsHigher);
+            // Debug.Log(agentPos + " AAAAAAAAAA POSSS "+transform.position + " " + TakeCoverPosition + " " + PosToGoWhenCheckingWhenWallIsHigher);
             if(agentPos == TakeCoverPosition)
             {
                 IsAtTakingCoverHidingPlace = true;

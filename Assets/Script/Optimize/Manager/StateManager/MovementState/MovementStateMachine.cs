@@ -173,7 +173,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         }
         if(!AgentNavMesh.hasPath)
         {
-            Debug.Log("I'm at same pos" + transform.name + " " + AgentNavMesh.destination + " " + CurrAIDirPos);
+            // Debug.Log("I'm at same pos" + transform.name + " " + AgentNavMesh.destination + " " + CurrAIDirPos);
             OnIsTheSamePosition?.Invoke(CurrAIDirPos);
             return true;
         }
@@ -181,7 +181,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentNavMesh.radius)
         {
             AgentNavMesh.ResetPath();
-            Debug.Log("I'm at same pos2" + transform.name + " " + AgentNavMesh.destination + " " + CurrAIDirPos);
+            // Debug.Log("I'm at same pos2" + transform.name + " " + AgentNavMesh.destination + " " + CurrAIDirPos);
             OnIsTheSamePosition?.Invoke(CurrAIDirPos);
 
             return true;
