@@ -15,6 +15,7 @@ public class PlayerAction : ExecuteLogic
     [Header("TRest")]
     [SerializeField]PlayableMovementStateMachine stateMachine;
     GameManager gm;
+    public InGameUIHandler inGameUIHandler;
     private PlayerActionInput inputActions;
     private bool isShooting = false;
     private bool isReloading = false;
@@ -218,6 +219,7 @@ public class PlayerAction : ExecuteLogic
 
         if (gm.canSwitch)
         {
+            inGameUIHandler.SwitchingUICharacter();
             SwitchCharacter();
         }
     }
