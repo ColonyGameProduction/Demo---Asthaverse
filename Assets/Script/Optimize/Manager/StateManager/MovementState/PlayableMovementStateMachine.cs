@@ -428,4 +428,15 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             else if(dotRight >= -1)_isRight = false;
         }
     }
+    
+    public void CharaConDataToNormal() => ChangeCharaConData(_normalHeightCharaCon);
+    public void CharaConDataToCrouch() => ChangeCharaConData(_crouchHeightCharaCon);
+
+    private void ChangeCharaConData(CharaControllerData newData)
+    {
+        Debug.Log("lewat siniii");
+        _cc.center = newData.center;
+        _cc.radius = newData.radius;
+        _cc.height = newData.height;
+    }
 }

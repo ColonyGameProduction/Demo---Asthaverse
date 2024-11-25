@@ -68,10 +68,12 @@ public class IdleState : MovementState
                 _currTargetTime = _sm.IdleAnimCycleTimeTarget[1];
             }
             SetAnimParamActive(ANIMATION_MOVE_PARAMETER_CROUCH);
+            _playableData?.CharaConDataToCrouch();
         }
         else
         {
             SetAnimParamInactive(ANIMATION_MOVE_PARAMETER_CROUCH);
+            _playableData?.CharaConDataToNormal();
         }
     }
     private void StopMovementAnimation()
