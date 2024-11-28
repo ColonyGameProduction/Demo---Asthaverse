@@ -10,7 +10,7 @@ public class RunState : WalkState
     public RunState(MovementStateMachine currStateMachine, MovementStateFactory factory) : base(currStateMachine, factory) =>_activeStateAnimParamName = "Run";
     public override void EnterState()
     {
-        base.EnterState(); 
+        SetAnimParamActive(_activeStateAnimParamName);
 
         _sm.ChangeCurrSpeed(_sm.RunSpeed);
     }
@@ -25,7 +25,7 @@ public class RunState : WalkState
     {
         if(!_standData.IsRunning)
         {
-            if(_groundData != null && _groundData.IsCrouching) _sm.SwitchState(_factory.CrouchState());
+            if(_standData.IsCrouching) _sm.SwitchState(_factory.CrouchState());
             else _sm.SwitchState(_factory.WalkState());
         }
     }

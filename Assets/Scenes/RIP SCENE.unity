@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &2227551
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1757,7 +1757,7 @@ Transform:
   m_GameObject: {fileID: 277967138}
   serializedVersion: 2
   m_LocalRotation: {x: -0.013806879, y: -0.017899975, z: 0.00024724886, w: -0.9997444}
-  m_LocalPosition: {x: 0.71599996, y: 0.482, z: -1.7}
+  m_LocalPosition: {x: 0.71599996, y: 0.482, z: -1.6999998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2271,7 +2271,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &310354389
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2477,7 +2477,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!195 &324495346
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -5030,6 +5030,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647556476}
   m_CullTransparentMesh: 1
+--- !u!1 &647558987
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 647558988}
+  m_Layer: 0
+  m_Name: Right Cover Detector Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &647558988
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647558987}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.4, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1430594416}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &650134204 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5426160052957338141, guid: 1a5a0a53e005dcf47996549a946c019e, type: 3}
@@ -6143,6 +6174,18 @@ MonoBehaviour:
   command: {fileID: 1543354274}
   isCommandActive: 0
   isHoldPosition: 0
+  holdPoint: {fileID: 0}
+  heldObject: {fileID: 0}
+  highCoverDetection: {fileID: 0}
+  rightCoverDetection: {fileID: 0}
+  leftCoverDetection: {fileID: 0}
+  autoMoverTargetPos: {x: 0, y: 0, z: 0}
+  isHighCover: 0
+  autoMoverActive: 0
+  coverMoveSpeed: 3
+  playerComponentParent: {fileID: 0}
+  playerObjParent: {fileID: 0}
+  coverRaycastTransformParent: {fileID: 0}
 --- !u!114 &743586303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9127,7 +9170,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.71599996, y: 1.482, z: -1.7}
+  m_LocalPosition: {x: 0.71599996, y: 1.482, z: 8.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9454,6 +9497,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1023814759}
   m_CullTransparentMesh: 1
+--- !u!1 &1026152831
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1026152832}
+  m_Layer: 0
+  m_Name: Left Cover Detector Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1026152832
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026152831}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.4, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1430594416}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1029948332
 GameObject:
   m_ObjectHideFlags: 0
@@ -9700,6 +9774,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1035781459}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1036867335
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1036867336}
+  m_Layer: 0
+  m_Name: Hold Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1036867336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1036867335}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2047355711}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1038150454
 GameObject:
   m_ObjectHideFlags: 0
@@ -10336,6 +10441,18 @@ MonoBehaviour:
   command: {fileID: 138660905}
   isCommandActive: 0
   isHoldPosition: 0
+  holdPoint: {fileID: 0}
+  heldObject: {fileID: 0}
+  highCoverDetection: {fileID: 0}
+  rightCoverDetection: {fileID: 0}
+  leftCoverDetection: {fileID: 0}
+  autoMoverTargetPos: {x: 0, y: 0, z: 0}
+  isHighCover: 0
+  autoMoverActive: 0
+  coverMoveSpeed: 3
+  playerComponentParent: {fileID: 0}
+  playerObjParent: {fileID: 0}
+  coverRaycastTransformParent: {fileID: 0}
 --- !u!114 &1156905597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11056,6 +11173,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1258254034}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1265814231
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1265814232}
+  m_Layer: 0
+  m_Name: High Cover Detector Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1265814232
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265814231}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.567, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1430594416}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1268347119
 GameObject:
   m_ObjectHideFlags: 0
@@ -12244,6 +12392,40 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1429569330}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1430594415
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1430594416}
+  m_Layer: 0
+  m_Name: Cover Raycast Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1430594416
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1430594415}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1265814232}
+  - {fileID: 647558988}
+  - {fileID: 1026152832}
+  m_Father: {fileID: 2047355711}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1431042984
 GameObject:
   m_ObjectHideFlags: 0
@@ -13455,6 +13637,7 @@ GameObject:
   - component: {fileID: 1622287583}
   - component: {fileID: 1622287582}
   - component: {fileID: 1622287581}
+  - component: {fileID: 1622287584}
   - component: {fileID: 1622287580}
   - component: {fileID: 1622287579}
   m_Layer: 10
@@ -13556,12 +13739,39 @@ Transform:
   m_GameObject: {fileID: 1622287578}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.75, y: 0.25, z: 2.5}
+  m_LocalPosition: {x: -0.75, y: 0.5, z: 2.5}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1622287584
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622287578}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1623618749
 GameObject:
   m_ObjectHideFlags: 3
@@ -15727,6 +15937,8 @@ Transform:
   - {fileID: 918077073}
   - {fileID: 961320780}
   - {fileID: 1031462395}
+  - {fileID: 1036867336}
+  - {fileID: 1430594416}
   m_Father: {fileID: 1999881233}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2047355713
@@ -15973,7 +16185,7 @@ Transform:
   m_GameObject: {fileID: 2066745654}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 10.22}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -16022,6 +16234,18 @@ MonoBehaviour:
   command: {fileID: 486741365}
   isCommandActive: 0
   isHoldPosition: 0
+  holdPoint: {fileID: 1036867336}
+  heldObject: {fileID: 0}
+  highCoverDetection: {fileID: 1265814232}
+  rightCoverDetection: {fileID: 647558988}
+  leftCoverDetection: {fileID: 1026152832}
+  autoMoverTargetPos: {x: 0, y: 0, z: 0}
+  isHighCover: 0
+  autoMoverActive: 0
+  coverMoveSpeed: 3
+  playerComponentParent: {fileID: 1999881233}
+  playerObjParent: {fileID: 2047355711}
+  coverRaycastTransformParent: {fileID: 1430594416}
 --- !u!114 &2066745661
 MonoBehaviour:
   m_ObjectHideFlags: 0

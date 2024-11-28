@@ -20,9 +20,10 @@ public class EnemyAIManager : MonoBehaviour
     public Action<EnemyAIBehaviourStateMachine> OnCaptainsStartHunting;
     public Action<EnemyAIBehaviourStateMachine> OnCaptainsStartEngaging;
     public Action<EnemyAIBehaviourStateMachine> OnFoundLastCharaSeenPos;
-    public Action OnGoToClosestPOI;
+    public Action<Vector3> OnGoToClosestPOI;
     public Action OnEnemyisEngaging;
     public Action OnEnemyStopEngaging;
+    public Action<Transform> OnEnemyDead;
 
     [Header("Engage timer for telling")]
     [SerializeField] protected float _isEngageTimer;
@@ -70,7 +71,7 @@ public class EnemyAIManager : MonoBehaviour
             }
         }
         
-        OnGoToClosestPOI?.Invoke();
+        OnGoToClosestPOI?.Invoke(enemy.GetFOVAdvancedData.EnemyCharalastSeenPosition);
     }
 
     public void EditEnemyCaptainList(EnemyAIBehaviourStateMachine enemy, bool isAdding)

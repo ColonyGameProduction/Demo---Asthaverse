@@ -24,7 +24,7 @@ public class PlayerAction : ExecuteLogic
 
 
     [Header("TRest")]
-    [SerializeField]PlayableMovementStateMachine stateMachine;
+    [SerializeField] PlayableMovementStateMachine stateMachine;
     GameManager gm;
     public DamageCanvasHandler damageCanvasHandler;
     public InGameUIHandler inGameUIHandler;
@@ -71,7 +71,7 @@ public class PlayerAction : ExecuteLogic
     private float maxPlayerHP;
 
     private AnimationTestScript testAnimation;
-    
+
     private int curWeapon;
 
     [SerializeField]
@@ -85,6 +85,10 @@ public class PlayerAction : ExecuteLogic
 
     private int currBreadCrumbs;
 
+    [Header("Object Interaction")]
+    public Transform holdPoint;
+    public GameObject heldObject;
+
     private float curRecoil = 0;
     private float curRecoilMod = 0;
     private float maxRecoil = 0;
@@ -95,6 +99,35 @@ public class PlayerAction : ExecuteLogic
     public List<ArrowData> arrowList = new List<ArrowData>();
     public List<ArrowData> tempArrowList = new List<ArrowData>();
 
+    // Take Cover by raden
+    [SerializeField]
+    private Transform highCoverDetection;
+    [SerializeField]
+    private Transform rightCoverDetection;
+    [SerializeField]
+    private Transform leftCoverDetection;
+
+    private Vector3 coverHitPoint;
+    public Vector3 autoMoverTargetPos;
+
+    public bool isHighCover;
+    public bool autoMoverActive;
+
+    private Vector3 coverSurfaceDirection;
+
+    [SerializeField]
+    private float coverMoveSpeed = 2f;
+
+    private bool isCover;
+    public Vector3 inCoverMoveDirection;
+    public Vector3 inCoverProhibitedDirection;
+
+    private Transform coverTransform;
+    private Vector3 coverDirection;
+
+    public Transform playerComponentParent;
+    public Transform playerObjParent;
+    public Transform coverRaycastTransformParent;
 
     //supaya input action bisa digunakan
     private void Awake()
@@ -126,6 +159,7 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
         inputActions.InputPlayerAction.Reload.performed += Reload_performed;
         inputActions.InputPlayerAction.Interact.performed += Interact_performed;
+        inputActions.InputPlayerAction.Throw.performed += Throw_performed;
         inputActions.InputPlayerAction.NightVision.performed += NightVision_performed;
 
         inputActions.InputPlayerAction.Command.performed += Command_performed;
@@ -134,6 +168,10 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.UnHoldPosition.performed += UnHoldPosition_performed;
         inputActions.InputPlayerAction.Whistle.performed += Whistle_Performed;
 
+
+        inputActions.InputPlayerAction.TakeCover.performed += TakeCover_performed;
+        inputActions.InputPlayerAction.ExitTakeCover.performed += ExitCover_performed;
+
         CC = GetComponent<CharacterController>();
 
         weaponStat = character.weaponStat;
@@ -141,10 +179,175 @@ public class PlayerAction : ExecuteLogic
         StartingSetup();
     }
 
+    private void TakeCover_performed(InputAction.CallbackContext context)
+    {
+        if (IsNearWall())
+        {
+            SetCoverType();
+            MoveCharacterToCover();
+        }
+    }
+
+    private void ExitCover_performed(InputAction.CallbackContext context)
+    {
+        if (isCover)
+        {
+            isCover = false;
+            coverRaycastTransformParent.eulerAngles = Vector3.zero;
+        }
+    }
+
+    private bool IsNearWall()
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, playerGameObject.forward, out hit, 2f, LayerMask.GetMask("WallTakeCover")))
+        {
+            // lakukan sesuatu pada hit
+            coverHitPoint = hit.point;
+
+            coverTransform = hit.transform;
+            coverDirection = coverTransform.right;
+
+            coverSurfaceDirection = GetCoverSurfaceDirection(hit.normal);
+
+            Vector3 toPlayer = (transform.position - hit.point).normalized;
+            if (Vector3.Dot(toPlayer, coverTransform.forward) > 0)
+            {
+                coverDirection = -coverDirection; // Balik arah jika di sisi belakang
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void SetCoverType()
+    {
+        if (Physics.Raycast(highCoverDetection.position, highCoverDetection.forward, 2f, LayerMask.GetMask("WallTakeCover")))
+        {
+            Debug.Log("High Cover!");
+            isHighCover = true;
+        }
+        else
+        {
+            Debug.Log("Low Cover!");
+            isHighCover = false;
+        }
+    }
+
+    private void MoveCharacterToCover()
+    {
+        isCover = true;
+        BeginMoveToCover(coverHitPoint);
+    }
+
+    private void MoveToCover()
+    {
+        Vector3 moveDirection = (autoMoverTargetPos - transform.position).normalized;
+
+        if (Vector3.Distance(transform.position, autoMoverTargetPos) > 0.5f)
+        {
+            GetComponent<CharacterController>().Move(moveDirection * 2f * Time.deltaTime);
+        }
+        else
+        {
+            autoMoverActive = false;
+            autoMoverTargetPos = Vector3.zero;
+
+            EnableControls();
+        }
+    }
+
+    public void BeginMoveToCover(Vector3 targetPos)
+    {
+        DisableControls();
+
+        isCover = true;
+        autoMoverActive = true;
+        autoMoverTargetPos = targetPos;
+    }
+
+    public void DisableControls()
+    {
+        inputActions.Disable();
+    }
+
+    public void EnableControls()
+    {
+        inputActions.Enable();
+    }
+    private void OnDrawGizmos()
+    {
+        if (rightCoverDetection != null && leftCoverDetection != null)
+        {
+            Gizmos.color = Color.red;
+
+            // Gambar raycast dari rightCoverDetection
+            Gizmos.DrawLine(rightCoverDetection.position, rightCoverDetection.position + rightCoverDetection.forward * 2f);
+
+            // Gambar raycast dari leftCoverDetection
+            Gizmos.DrawLine(leftCoverDetection.position, leftCoverDetection.position + leftCoverDetection.forward * 2f);
+
+            // Deteksi hit dengan LayerMask WallTakeCover
+            bool didRightCoverDetectorHit = Physics.Raycast(rightCoverDetection.position, rightCoverDetection.forward, 2f, LayerMask.GetMask("WallTakeCover"));
+            bool didLeftCoverDetectorHit = Physics.Raycast(leftCoverDetection.position, leftCoverDetection.forward, 2f, LayerMask.GetMask("WallTakeCover"));
+
+            // Gambar titik hit
+            if (didRightCoverDetectorHit)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(rightCoverDetection.position + rightCoverDetection.forward * 2f, 0.1f);
+            }
+            if (didLeftCoverDetectorHit)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(leftCoverDetection.position + leftCoverDetection.forward * 2f, 0.1f);
+            }
+        }
+    }
+
+    private void InCoverMovementRestrictor()
+    {
+        bool didRightCoverDetectorHit = Physics.Raycast(rightCoverDetection.position, rightCoverDetection.forward, 2f, LayerMask.GetMask("WallTakeCover"));
+        bool didLeftCoverDetectorHit = Physics.Raycast(leftCoverDetection.position, leftCoverDetection.forward, 2f, LayerMask.GetMask("WallTakeCover"));
+
+        if (!didLeftCoverDetectorHit || !didRightCoverDetectorHit)
+        {
+            if (!didLeftCoverDetectorHit)
+            {
+                SetCharacterMoverCoverDirection(coverSurfaceDirection, -coverSurfaceDirection);
+            }
+            else
+            {
+                SetCharacterMoverCoverDirection(coverSurfaceDirection, coverSurfaceDirection);
+            }
+        }
+        else
+        {
+            SetCharacterMoverCoverDirection(coverSurfaceDirection, Vector3.up);
+        }
+    }
+
+    private void SetCharacterMoverCoverDirection(Vector3 moveDirection, Vector3 directionToProhibit)
+    {
+        inCoverMoveDirection = moveDirection;
+        inCoverProhibitedDirection = directionToProhibit;
+    }
+
+    private Vector3 GetCoverSurfaceDirection(Vector3 hitNormal)
+    {
+        return Vector3.Cross(hitNormal, Vector3.up).normalized;
+    }
+
+
     private void NightVision_performed(InputAction.CallbackContext context)
     {
         Volume nightVision = Camera.main.GetComponent<Volume>();
-        if(nightVision.enabled)
+        if (nightVision.enabled)
         {
             nightVision.enabled = false;
         }
@@ -161,7 +364,7 @@ public class PlayerAction : ExecuteLogic
 
     private void Crouch_performed(InputAction.CallbackContext context)
     {
-        if(isRun)isRun = false;
+        if (isRun) isRun = false;
         IsCrouching = true;
     }
 
@@ -172,7 +375,7 @@ public class PlayerAction : ExecuteLogic
 
     private void Run_performed(InputAction.CallbackContext context)
     {
-        if(IsCrouching)IsCrouching = false;
+        if (IsCrouching) IsCrouching = false;
         isRun = true;
     }
 
@@ -191,7 +394,7 @@ public class PlayerAction : ExecuteLogic
     private void Scope_performed(InputAction.CallbackContext context)
     {
         Scope();
-        if(gm.scope)
+        if (gm.scope)
         {
             testAnimation?.animator.SetBool("Scope", true);
         }
@@ -231,7 +434,7 @@ public class PlayerAction : ExecuteLogic
 
     private void ChangePlayer_performed(InputAction.CallbackContext context)
     {
-        GameManager gm = GameManager.instance;        
+        GameManager gm = GameManager.instance;
 
         if (gm.canSwitch)
         {
@@ -243,6 +446,14 @@ public class PlayerAction : ExecuteLogic
     private void Interact_performed(InputAction.CallbackContext context)
     {
         Interact();
+    }
+
+    private void Throw_performed(InputAction.CallbackContext context)
+    {
+        if (heldObject != null)
+        {
+            ThrowObject();
+        }
     }
 
 
@@ -313,7 +524,7 @@ public class PlayerAction : ExecuteLogic
     //event ketika selesai shoot
     private void Shooting_canceled(InputAction.CallbackContext obj)
     {
-        if(!gm.scope)
+        if (!gm.scope)
         {
             testAnimation?.animator.SetBool("Scope", false);
 
@@ -359,6 +570,27 @@ public class PlayerAction : ExecuteLogic
 
 
         // Input yang ini itu sementara aja
+        Debug.DrawRay(transform.position, playerGameObject.forward.normalized * 2f, Color.red);
+
+        if (isCover && autoMoverActive)
+        {
+            MoveToCover();
+        }
+
+        if (isCover)
+        {
+            SetCoverType();
+            InCoverMovementRestrictor();
+
+            coverRaycastTransformParent.SetParent(playerComponentParent);
+        }
+        else
+        {
+            coverRaycastTransformParent.SetParent(playerObjParent);
+            coverRaycastTransformParent.localPosition = Vector3.zero;
+            coverRaycastTransformParent.localRotation = Quaternion.identity;
+            coverRaycastTransformParent.localScale = Vector3.one;
+        }
 
         // ketika player move maka sound footsteps bakal aktif
         if (isMoving)
@@ -398,7 +630,7 @@ public class PlayerAction : ExecuteLogic
             {
                 GoToTargetPosition[selectedFriendID - 1].transform.position = hit.point;
             }
-            else if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hithit, 100f, LayerMask.GetMask("Wall")))
+            else if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hithit, 100f, LayerMask.GetMask("WallTakeCover")))
             {
                 Debug.Log(hithit.point);
                 Vector3 movePos = hithit.point;
@@ -423,11 +655,11 @@ public class PlayerAction : ExecuteLogic
         //continous Shoot
         if (isShooting && activeWeapon.allowHoldDownButton && activeWeapon.currBullet > 0 && !isReloading && !fireRateOn && !isRun)
         {
-            if(activeWeapon != null)
+            if (activeWeapon != null)
             {
                 if (isMoving)
                 {
-                    if(gm.scope)
+                    if (gm.scope)
                     {
                         movingMaxRecoil = activeWeapon.recoil + activeWeapon.recoil * .5f;
                         curRecoilMod = activeWeapon.recoil * .25f;
@@ -442,7 +674,7 @@ public class PlayerAction : ExecuteLogic
                 }
                 else if (IsCrouching)
                 {
-                    if(gm.scope)
+                    if (gm.scope)
                     {
                         movingMaxRecoil = activeWeapon.recoil;
                         curRecoilMod = activeWeapon.recoil;
@@ -472,12 +704,19 @@ public class PlayerAction : ExecuteLogic
                 }
             }
         }
-        Movement();
+        if (isCover)
+        {
+            HandleCoverMovement();
+        }
+        else
+        {
+            Movement();
+        }
     }
 
     //movement
     private void Movement()
-    {       
+    {
         Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
         Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
 
@@ -508,20 +747,68 @@ public class PlayerAction : ExecuteLogic
             CC.SimpleMove(direction * moveSpeed);
         }
 
-        
+
 
         testAnimation?.WalkAnimation(move);
         if (!isShooting && !gm.scope)
         {
-            
+
             Rotation(direction);
         }
-        else if(isShooting || gm.scope)
+        else if (isShooting || gm.scope)
         {
             testAnimation?.animator.SetBool("Move", false);
             Rotation(flatForward);
         }
     }
+
+    void HandleCoverMovement()
+    {
+        InCoverMovementRestrictor();
+
+        Vector2 move = new Vector2(inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().x, inputActions.InputPlayerAction.Movement.ReadValue<Vector2>().y);
+        Vector3 movement = new Vector3(move.x, 0, move.y).normalized;
+
+        Vector3 flatForward = new Vector3(followTarget.forward.x, 0, followTarget.forward.z).normalized;
+        Vector3 direction = flatForward * movement.z + followTarget.right * movement.x;
+
+        Vector3 cameraRight = Camera.main.transform.right;
+        Vector3 cameraForward = Vector3.Cross(Vector3.up, -cameraRight);
+
+        Vector3 inputDirection = (move.x * coverDirection) + (move.y * cameraForward);
+        inputDirection = Vector3.Project(inputDirection, inCoverMoveDirection);
+
+        if (Vector3.Dot(inputDirection, inCoverProhibitedDirection) > 0)
+        {
+            inputDirection = Vector3.zero; // Tidak boleh bergerak ke arah yang dilarang
+        }
+
+        transform.position += inputDirection.normalized * coverMoveSpeed * Time.fixedDeltaTime;
+
+        if (move == Vector2.zero)
+        {
+            testAnimation?.animator.SetBool("Move", false);
+            isMoving = false;
+        }
+        else
+        {
+            testAnimation?.animator.SetBool("Move", true);
+            isMoving = true;
+        }
+
+        testAnimation?.WalkAnimation(move);
+        if (!isShooting && !gm.scope)
+        {
+
+            Rotation(direction);
+        }
+        else if (isShooting || gm.scope)
+        {
+            testAnimation?.animator.SetBool("Move", false);
+            Rotation(flatForward);
+        }
+    }
+
 
     private void RecoilHandler()
     {
@@ -536,7 +823,7 @@ public class PlayerAction : ExecuteLogic
             recoilCooldown -= Time.deltaTime * activeWeapon.fireRate;
             if (curRecoil <= maxRecoil)
             {
-                if(recoilAddMultiplier != 0)
+                if (recoilAddMultiplier != 0)
                 {
                     curRecoil += Time.deltaTime * activeWeapon.recoil * recoilAddMultiplier;
                 }
@@ -550,7 +837,7 @@ public class PlayerAction : ExecuteLogic
                 curRecoil = maxRecoil;
             }
         }
-        else if(recoilCooldown <= 0)
+        else if (recoilCooldown <= 0)
         {
             curRecoil = 0;
         }
@@ -590,7 +877,7 @@ public class PlayerAction : ExecuteLogic
 
     private void Rotation(Vector3 direction)
     {
-        if(direction != Vector3.zero)
+        if (direction != Vector3.zero)
         {
             playerGameObject.forward = Vector3.Slerp(playerGameObject.forward, direction.normalized, Time.deltaTime * rotateSpeed);
         }

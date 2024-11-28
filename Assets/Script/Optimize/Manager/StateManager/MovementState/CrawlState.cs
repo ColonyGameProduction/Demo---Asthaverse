@@ -34,7 +34,7 @@ public class CrawlState : MovementState
     public override void ExitState()
     {
         // if(!_crouch.IsCrouching) //Matikan state animasi crouch
-        Debug.Log(_sm.IsCharacterDead);
+        // Debug.Log(_sm.IsCharacterDead);
         if(!_sm.IsCharacterDead)_groundData.IsCrawling = false;
         
         base.ExitState();
