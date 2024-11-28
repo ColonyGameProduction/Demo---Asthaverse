@@ -35,6 +35,7 @@ public class PlayableMakeSFX : MonoBehaviour
             source.maxDistance = _playerSFXList.audioSFX[i].maxDistance;
 
         }
+
     }
     public void PlayStopSFX(AudioSFXName name, bool playSound)
     {
