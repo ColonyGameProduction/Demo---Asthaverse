@@ -5,10 +5,10 @@ using UnityEngine.UI;
 
 public class DamageCanvasHandler : MonoBehaviour
 {
-    [Range(0f, 1f)]
-    public float testHP;
+    [Header ("Damage Visual Phase")]
 
-    public float maxHP = 1f;
+    public float currHP;
+    public float maxHP;
     public float currentValue;
 
     public float tempPhase2Value;
@@ -19,18 +19,34 @@ public class DamageCanvasHandler : MonoBehaviour
     public Image phase3;
     public Image phase4;
 
+    [Header("Damage Direction Indicator")]
+
+    public GameObject damageCanvas;
+    public GameObject ArrowIndicator;
+    public GameObject upBloodDamage;
+    public GameObject rightBloodDamage;
+    public GameObject leftBloodDamage;
+    public GameObject bottomBloodDamage;
+
+    public Transform player;
+
+    public float stayTime;
+    public float fadeTime;
+
     private void Update()
     {
         DamageVisual();
+        //DamageDirectionArrowIndicator();
     }
 
     public void DamageVisual()
     {
-        currentValue = maxHP - testHP;
+
+        currentValue = maxHP - currHP;
 
         if(currentValue <= maxHP/2 && currentValue >= maxHP/4)
         {
-            tempPhase2Value = (currentValue - 0.25f) / 0.25f;
+            tempPhase2Value = (currentValue - (maxHP/4)) / (maxHP / 4);
 
             Color color = phase2.color;
             color.a = tempPhase2Value;
@@ -39,7 +55,7 @@ public class DamageCanvasHandler : MonoBehaviour
         }
         else if(currentValue >= maxHP/2 && currentValue <= (maxHP/4) * 3)
         {
-            tempPhase3Value = (currentValue - 0.5f) / 0.25f;
+            tempPhase3Value = (currentValue - (maxHP / 2)) / (maxHP / 4);
             tempPhase2Value = 1;
 
             Color colorPhase2 = phase2.color;
@@ -53,7 +69,7 @@ public class DamageCanvasHandler : MonoBehaviour
         }
         else if(currentValue >= (maxHP/4) * 3)
         {
-            tempPhase4Value = (currentValue - 0.75f) / 0.25f;
+            tempPhase4Value = (currentValue - ((maxHP / 4) * 3)) / (maxHP / 4);
             tempPhase3Value = 1;
 
             Color colorPhase3 = phase3.color;
@@ -86,10 +102,69 @@ public class DamageCanvasHandler : MonoBehaviour
         
     }
 
-    public void DamageDirectionIndicator()
+    public void DamageDirectionArrowIndicator(ArrowData arrow)
     {
+        arrow.stayTime = stayTime;
+        arrow.fadeTime = fadeTime;
+        Vector3 damageLocation = arrow.whoShootMe.transform.position;
 
+        damageLocation.y = player.position.y;
+        Vector3 flatForward = player.forward;
+        flatForward.y = 0;
+        flatForward.Normalize();
+
+        Vector3 direction = (damageLocation - player.position).normalized;
+
+        float angle = (Vector3.SignedAngle(direction, flatForward, Vector3.up));
+        arrow.arrow.transform.localEulerAngles = new Vector3(0, 0, angle);
+
+        if(angle >= -45 && angle <= 45)
+        {
+            upBloodDamage.GetComponent<CanvasGroup>().alpha = 1;
+            LeanTween.delayedCall(stayTime, () =>
+            {
+                LeanTween.alphaCanvas(upBloodDamage.GetComponent<CanvasGroup>(), 0, fadeTime);
+            });
+        }
+        else if(angle >= 45 && angle <= 135)
+        {
+            leftBloodDamage.GetComponent<CanvasGroup>().alpha = 1;
+            LeanTween.delayedCall(stayTime, () =>
+            {
+                LeanTween.alphaCanvas(leftBloodDamage.GetComponent<CanvasGroup>(), 0, fadeTime);
+            });
+        }
+        else if(angle >= 135 || angle <= -135)
+        {
+            bottomBloodDamage.GetComponent<CanvasGroup>().alpha = 1;
+            LeanTween.delayedCall(stayTime, () =>
+            {
+                LeanTween.alphaCanvas(bottomBloodDamage.GetComponent<CanvasGroup>(), 0, fadeTime);
+            });
+        }
+        else if(angle <= -45 && angle >= -135)
+        {
+            rightBloodDamage.GetComponent<CanvasGroup>().alpha = 1;
+            LeanTween.delayedCall(stayTime, () =>
+            {
+                LeanTween.alphaCanvas(rightBloodDamage.GetComponent<CanvasGroup>(), 0, fadeTime);
+            });
+        }
     }
 
+    public void DamageArrow(ArrowData arrow)
+    {
+        Vector3 damageLocation = arrow.whoShootMe.transform.position;
 
+        damageLocation.y = player.position.y;
+
+        Vector3 flatForward = player.forward;
+        flatForward.y = 0;
+        flatForward.Normalize();
+
+        Vector3 direction = (damageLocation - player.position).normalized;
+
+        float angle = (Vector3.SignedAngle(direction, flatForward, Vector3.up));
+        arrow.arrow.transform.localEulerAngles = new Vector3(0, 0, angle);
+    }
 }

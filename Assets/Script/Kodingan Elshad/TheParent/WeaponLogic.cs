@@ -1,31 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.UI.Image;
 
 public class WeaponLogicHandler
 {    
-
+    
     //Logic Shooting
-    public void ShootingPerformed(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask, float recoil)
+    public void ShootingPerformed(GameObject whoShoot, Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask, float recoil)
     {       
         weaponStat.currBullet -= weaponStat.bulletPerTap;
         if (weaponStat.bulletPerTap > 1)
         {
             for(int i = 0; i < weaponStat.bulletPerTap; i++)
             {
-                BulletShoot(origin, direction, entityStat, weaponStat, entityMask, recoil);
+                BulletShoot(whoShoot, origin, direction, entityStat, weaponStat, entityMask, recoil);
             }
 
         }   
         else
         {
-            BulletShoot(origin, direction, entityStat, weaponStat, entityMask, recoil);
+            BulletShoot(whoShoot, origin, direction, entityStat, weaponStat, entityMask, recoil);
         }
 
     }
     
-    public void BulletShoot(Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask, float recoil)
+    public void BulletShoot(GameObject whoShoot, Vector3 origin, Vector3 direction, EntityStatSO entityStat, WeaponStatSO weaponStat, LayerMask entityMask, float recoil)
     {
         float maxRecoilMod = recoil + ((100 - entityStat.acuracy) * recoil / 100);
 
@@ -51,7 +52,7 @@ public class WeaponLogicHandler
             {
                 BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
 
-                ElshadCalculateDamage(weaponStat, entityStat, entityGameObject, body.bodyType);
+                ElshadCalculateDamage(whoShoot, origin, weaponStat, entityStat, entityGameObject, body.bodyType);
             }
             
             // Debug.Log(hit.point);
@@ -65,7 +66,7 @@ public class WeaponLogicHandler
         }
     }
 
-    public void ElshadCalculateDamage(WeaponStatSO weapon, EntityStatSO entityStat, GameObject entityGameObject, bodyParts parts)
+    public void ElshadCalculateDamage(GameObject whoShoot, Vector3 origin, WeaponStatSO weapon, EntityStatSO entityStat, GameObject entityGameObject, bodyParts parts)
     {
          if(entityGameObject.CompareTag("Enemy"))
          {
@@ -98,6 +99,8 @@ public class WeaponLogicHandler
             {
                 PlayerAction player = entityGameObject.GetComponentInParent<PlayerAction>();
                 float playerHP = player.GetPlayerHP();
+
+                player.InstantiateArrowDamage(whoShoot);
 
                 if (parts == bodyParts.head)
                 {

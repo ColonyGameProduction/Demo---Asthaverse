@@ -4,17 +4,29 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
 using Unity.VisualScripting;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 using System;
 using UnityEngine.Rendering;
+using static UnityEngine.Rendering.DebugUI;
 
 //kelas untuk player action seperti attacking, scope, dan Silent kill
 
+public class ArrowData
+{
+    public GameObject arrow;
+    public GameObject whoShootMe;
+    public float stayTime;
+    public float fadeTime;
+}
+
 public class PlayerAction : ExecuteLogic
 {
+
+
     [Header("TRest")]
     [SerializeField]PlayableMovementStateMachine stateMachine;
     GameManager gm;
+    public DamageCanvasHandler damageCanvasHandler;
     public InGameUIHandler inGameUIHandler;
     private PlayerActionInput inputActions;
     private bool isShooting = false;
@@ -56,6 +68,7 @@ public class PlayerAction : ExecuteLogic
     [SerializeField]
     private EntityStatSO character;
     private float playerHP;
+    private float maxPlayerHP;
 
     private AnimationTestScript testAnimation;
     
@@ -79,6 +92,10 @@ public class PlayerAction : ExecuteLogic
     private float recoilCooldown = 0;
     private float recoilAddMultiplier = 0;
 
+    public List<ArrowData> arrowList = new List<ArrowData>();
+    public List<ArrowData> tempArrowList = new List<ArrowData>();
+
+
     //supaya input action bisa digunakan
     private void Awake()
     {
@@ -92,7 +109,6 @@ public class PlayerAction : ExecuteLogic
 
         gm = GameManager.instance;
         testAnimation = GetComponent<AnimationTestScript>();
-        playerHP = character.health;
 
         //membuat event untuk menjalankan aksi yang dipakai oleh player
         inputActions.InputPlayerAction.Run.performed += Run_performed;
@@ -282,7 +298,7 @@ public class PlayerAction : ExecuteLogic
             }
 
             RecoilHandler();
-            Shoot(Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask, curRecoil + curRecoilMod);
+            Shoot(this.gameObject, Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask, curRecoil + curRecoilMod);
             StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
             isShooting = false;
             if (activeWeapon.currBullet == 0 && activeWeapon.totalBullet > 0)
@@ -313,6 +329,35 @@ public class PlayerAction : ExecuteLogic
 
     private void Update()
     {
+        tempArrowList = arrowList;
+        foreach(ArrowData arrow in tempArrowList)
+        {
+            damageCanvasHandler.DamageArrow(arrow);
+            if(arrow.stayTime > 0)
+            {
+                arrow.stayTime -= Time.deltaTime;
+            }
+            else
+            {
+                
+                if(arrow.fadeTime > 0)
+                {
+                    arrow.fadeTime -= Time.deltaTime;
+
+                    Color color = arrow.arrow.GetComponentInChildren<Image>().color;
+                    color.a = arrow.fadeTime / damageCanvasHandler.fadeTime;
+                    arrow.arrow.GetComponentInChildren<Image>().color = color;
+
+                }
+                else
+                {                    
+                    Destroy(arrow.arrow); 
+                    arrowList.Remove(arrow);
+                }
+            }
+        }
+
+
         // Input yang ini itu sementara aja
 
         // ketika player move maka sound footsteps bakal aktif
@@ -417,7 +462,7 @@ public class PlayerAction : ExecuteLogic
                     recoilAddMultiplier = 0;
                 }
                 RecoilHandler();
-                Shoot(Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask, curRecoil + curRecoilMod);
+                Shoot(this.gameObject, Camera.main.transform.position, Camera.main.transform.forward, character, activeWeapon, enemyMask, curRecoil + curRecoilMod);
                 StartCoroutine(FireRate(FireRateFlag, activeWeapon.fireRate));
                 if (activeWeapon.currBullet == 0)
                 {
@@ -511,6 +556,38 @@ public class PlayerAction : ExecuteLogic
         }
     }
 
+    public void InstantiateArrowDamage(GameObject whoShoot)
+    {
+        GameObject arrowGameObject = null;
+        ArrowData currArrowData = null;
+
+        foreach(ArrowData arrowData in arrowList)
+        {
+            if(arrowData.whoShootMe == whoShoot)
+            {
+                arrowGameObject = arrowData.arrow;
+                currArrowData = arrowData;
+                break;
+            }
+        }
+
+        if (arrowGameObject == null)
+        {
+            arrowGameObject = Instantiate(damageCanvasHandler.ArrowIndicator, damageCanvasHandler.damageCanvas.transform);
+            currArrowData = new ArrowData();
+            currArrowData.arrow = arrowGameObject;
+            currArrowData.whoShootMe = whoShoot;
+            arrowList.Add(currArrowData);
+        }
+        if(currArrowData != null)
+        {
+            Color color = currArrowData.arrow.GetComponentInChildren<Image>().color;
+            color.a = 1f;
+            currArrowData.arrow.GetComponentInChildren<Image>().color = color;
+            damageCanvasHandler.DamageDirectionArrowIndicator(currArrowData);
+        }
+    }
+
     private void Rotation(Vector3 direction)
     {
         if(direction != Vector3.zero)
@@ -547,9 +624,13 @@ public class PlayerAction : ExecuteLogic
 
     private void OnEnable()
     {
+        playerHP = character.health + character.armor;
+        maxPlayerHP = playerHP;
         curWeapon = 0;
         activeWeapon = weaponStat[curWeapon];
         inputActions.InputPlayerAction.Enable();
+        damageCanvasHandler.maxHP = maxPlayerHP;
+        damageCanvasHandler.currHP = playerHP;
     }
 
     private void OnDisable()
@@ -569,12 +650,13 @@ public class PlayerAction : ExecuteLogic
 
     public float GetPlayerHP()
     {
-        return playerHP + character.armor;
+        return playerHP;
     }
 
     public void SetPlayerHP(float HP)
     {
         playerHP = HP;
+        damageCanvasHandler.currHP = playerHP;
     }
 
     private IEnumerator BreadCrumbsDrop(float delay)

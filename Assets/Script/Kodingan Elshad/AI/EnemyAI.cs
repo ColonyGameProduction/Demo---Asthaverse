@@ -554,6 +554,7 @@ public class EnemyAI : ExecuteLogic
                         {
                             bodyIsFound = true;
                             enemyBodyToShoot = enemyBodyParts.bodyParts[i].gameObject.transform;
+
                             break;
                         }
                     }
@@ -591,7 +592,7 @@ public class EnemyAI : ExecuteLogic
             dir = curEnemy.transform.position - FOVPoint.transform.position;
         }
         // Debug.Log("Shoot direction " + dis + " " + FOVPoint.position + " " + visibleTargets[0].transform.position);
-        if (visibleTargets.Count > 0)Shoot(FOVPoint.position, dir.normalized, enemyStat , weapon, isItEnemy, curRecoil);
+        if (visibleTargets.Count > 0)Shoot(this.gameObject, FOVPoint.position, dir.normalized, enemyStat , weapon, isItEnemy, curRecoil);
     }
 
     public IEnumerator FindTargetWithDelay(float delay)
