@@ -18,6 +18,15 @@ public class AimWeaponState : UseWeaponState
     }
     public override void UpdateState()
     {
+        if(_sm.IsAIInput && _sm.CurrWeapon.currBullet == 0)
+        {
+            if(_sm.CurrWeapon.totalBullet > 0)
+            {
+                if(!_sm.CanReload)_sm.CanReload = true;
+                _sm.IsReloading = true;
+            }
+            
+        }
         if(_normalUse.IsAiming && _normalUse.IsUsingWeapon)
         {
             if(_sm.IsAIInput)

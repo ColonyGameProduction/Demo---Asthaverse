@@ -37,6 +37,7 @@ public enum bodyParts
     head,
     body,
     leg,
+    None
 }
 public enum FOVDistState
 {

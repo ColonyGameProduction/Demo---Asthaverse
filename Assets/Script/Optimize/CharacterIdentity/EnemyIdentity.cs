@@ -26,6 +26,7 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
         base.Death();
         EnemyAIManager.Instance.EditEnemyCaptainList(_enemyAIStateMachine, false);
         EnemyAIManager.Instance.EditEnemyHearAnnouncementList(_enemyAIStateMachine, false);
+        EnemyAIManager.Instance.OnEnemyDead?.Invoke(this.transform);
         _enemyAIStateMachine.enabled = false;
     }
     public override void AfterFinishDeathAnimation()

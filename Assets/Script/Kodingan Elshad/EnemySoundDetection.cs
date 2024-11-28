@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class EnemySoundDetection : MonoBehaviour
 {
-    public float hearingRange = 5f; // jarak denger dari si enemy
-    public float whistleHearingMultiplier = 2f; // ini multiplier jarak whistle, biar enemy tuh bisa dengan whistle dari jauh
+    public float _hearingRange = 5f; // jarak denger dari si enemy
+    public float _whistleHearingMultiplier = 2f; // ini multiplier jarak whistle, biar enemy tuh bisa dengan whistle dari jauh
 
     // ini buat handle deteksi sound
     public void HearSound(GameObject player, AudioSource playerAudio)
@@ -13,14 +13,14 @@ public class EnemySoundDetection : MonoBehaviour
 
         if (playerAudio.clip.name == "Whistle") // enemy ngedenger whistle kalo bukan whistle yaaaaa footsteps
         {
-            if (distance <= hearingRange * volume * whistleHearingMultiplier)
+            if (distance <= _hearingRange * volume * _whistleHearingMultiplier)
             {
                 Debug.Log("Enemy hears the whistle");
             }
         }
         else
         {
-            if (distance <= hearingRange * volume)
+            if (distance <= _hearingRange * volume)
             {
                 Debug.Log("Enemy hears footsteps");
             }
@@ -31,9 +31,9 @@ public class EnemySoundDetection : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, hearingRange);
+        Gizmos.DrawWireSphere(transform.position, _hearingRange);
 
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, hearingRange * whistleHearingMultiplier);
+        Gizmos.DrawWireSphere(transform.position, _hearingRange * _whistleHearingMultiplier);
     }
 }

@@ -47,6 +47,9 @@ public class PlayableCharacterManager : MonoBehaviour
     //Get Standmovement bool -> isIdle, isWalking, isRunning
     private PlayableCamera _currPlayableCamera;
     private PlayableInteraction _currPlayableInteraction;
+    private PlayableSkill _currPlayableSkill;
+    private PlayableMakeSFX _currPlayableMakeSFX;
+    private WorldSoundManager _worldSoundManager;
 
 
     [Header("Events")]
@@ -72,6 +75,7 @@ public class PlayableCharacterManager : MonoBehaviour
     void Start()
     {
         _gm = GameManager.instance;
+        _worldSoundManager = WorldSoundManager.Instance;
 
         foreach(GameObject player in _gm.playerGameObject)
         {
@@ -135,12 +139,14 @@ public class PlayableCharacterManager : MonoBehaviour
         _isFirstTimeSwitch = false;
         _isSwitchingCharacter = true;
         //Matikan semua pergerakan dan aim dan lainnya - in state machine and player identities
-
+        
         ForceStopAllCharacterState();
+        if(_currPlayableInteraction.IsHeldingObject)_currPlayableInteraction.RemoveHeldObject();
         CurrPlayableChara.OnPlayableDeath -= PlayableChara_OnPlayableDeath;
         _currPlayableUseWeaponStateMachine.OnTurningOffScope -= UseWeaponData_OnTurningOffScope;
 
         CurrPlayableChara.IsPlayerInput = false;
+        if(_currPlayableMoveStateMachine.IsTakingCoverAtWall)_currPlayableMoveStateMachine.ExitTakeCover();
         
         //Kategori kamera
         _playableCharacterCameraManager.ResetCameraHeight();
@@ -193,7 +199,8 @@ public class PlayableCharacterManager : MonoBehaviour
             
             _charaIdentities[nextCharaidx].FriendID = i;
             //Di sini nanti jg taro di AI controllernya, posisi update mereka yang biasa
-            _charaIdentities[nextCharaidx].FriendAIStateMachine.GiveUpdateFriendDirection(CurrPlayableChara.transform, CurrPlayableChara.GetFriendsNormalPosition[i-1].transform, _friendsCommandPosition[i-1].transform);
+            Debug.Log(CurrPlayableChara + " AAAAAA" + _currCharaidx);
+            _charaIdentities[nextCharaidx].FriendAIStateMachine.GiveUpdateFriendDirection(CurrPlayableChara, _friendsCommandPosition[i-1].transform);
             _charaIdentities[nextCharaidx].ResetHealth();
             if(_charaIdentities[nextCharaidx].FriendAIStateMachine.IsToldHold)
             {
@@ -230,6 +237,9 @@ public class PlayableCharacterManager : MonoBehaviour
         _currPlayableInteraction = CurrPlayableChara.GetPlayableInteraction;
         _currPlayableCamera = CurrPlayableChara.GetPlayableCamera;
         _playableCharacterCameraManager.SetCurrPlayableCamera(_currPlayableCamera);
+
+        _currPlayableSkill = CurrPlayableChara.GetPlayableSkill;
+        _currPlayableMakeSFX = CurrPlayableChara.GetPlayableMakeSFX;
 
     }
     #endregion
@@ -281,7 +291,7 @@ public class PlayableCharacterManager : MonoBehaviour
             
             _charaIdentities[nextCharaidx].FriendID = i;
             //Di sini nanti jg taro di AI controllernya, posisi update mereka yang biasa
-            _charaIdentities[nextCharaidx].FriendAIStateMachine.GiveUpdateFriendDirection(CurrPlayableChara.transform, CurrPlayableChara.GetFriendsNormalPosition[i-1].transform, _friendsCommandPosition[i-1].transform);
+            _charaIdentities[nextCharaidx].FriendAIStateMachine.GiveUpdateFriendDirection(CurrPlayableChara, _friendsCommandPosition[i-1].transform);
 
             if(_charaIdentities[nextCharaidx].FriendAIStateMachine.IsToldHold)
             {
@@ -384,18 +394,68 @@ public class PlayableCharacterManager : MonoBehaviour
 
         _gameInputManager.OnInteractPerformed += GameInput_OnInteractPerformed;
         _gameInputManager.OnNightVisionPerformed += GameInput_OnNightVisionPerformed;
+        _gameInputManager.OnSkillPerformed += GameInput_OnSkillPerformed;
+        _gameInputManager.OnWhistlePerformed += GameInput_OnWhistlePerformed;
+        _gameInputManager.OnThrowPerformed += GameInput_OnThrowPerformed;
+        _gameInputManager.OnTakeCoverPerformed += GameInput_OnTakeCoverPerformed;
+        _gameInputManager.OnExitTakeCoverPerformed += GameInput_OnExitTakeCoverPerformed;
+    }
+
+    private void GameInput_OnTakeCoverPerformed()
+    {
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && _currPlayableMoveStateMachine.IsNearWall())
+        {
+            if(_currPlayableInteraction.IsHeldingObject)_currPlayableInteraction.RemoveHeldObject();
+            if(_playableCharacterCameraManager.IsScope)_playableCharacterCameraManager.ResetScope();
+            CurrPlayableChara.ForceStopAllStateMachine();
+            _currPlayableMoveStateMachine.TakeCoverAtWall();
+            
+        }
+    }
+    private void GameInput_OnExitTakeCoverPerformed()
+    {
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && _currPlayableMoveStateMachine.IsTakingCoverAtWall)
+        {
+            _currPlayableMoveStateMachine.ExitTakeCover();
+        }   
+    }
+
+
+    private void GameInput_OnThrowPerformed()
+    {
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && _currPlayableInteraction.IsHeldingObject)
+        {
+            _currPlayableInteraction.ThrowHeldObject();
+        }
+    }
+
+    private void GameInput_OnWhistlePerformed()
+    {
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
+        {
+            _worldSoundManager.MakeSound(WorldSoundName.Whistle, CurrPlayableChara.transform.position, CurrPlayableChara.FOVMachine.CharaEnemyMask);
+            _currPlayableMakeSFX.PlaySFXOnce(AudioSFXName.Whistle);
+        }
+    }
+
+    private void GameInput_OnInteractPerformed()
+    {
+        //Ntr kasi syarat lain
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)_currPlayableInteraction.Interact();
     }
 
     private void GameInput_OnNightVisionPerformed()
     {
         _playableCharacterCameraManager.NightVision();
     }
-
-    private void GameInput_OnInteractPerformed()
+    private void GameInput_OnSkillPerformed()
     {
-        //Ntr kasi syarat lain
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)_currPlayableInteraction.Interact();
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && _currPlayableSkill != null && !_currPlayableSkill.IsSkillOnGoing)
+        {
+            _currPlayableSkill.UseSkill();
+        }   
     }
+
 
     private void GameInput_Movement()
     {
@@ -403,29 +463,17 @@ public class PlayableCharacterManager : MonoBehaviour
     }
     private void GameInput_OnRunPerformed()
     {
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {
-            foreach(PlayableCharacterIdentity chara in _charaIdentities)
-            {
-                chara.UseWeaponStateMachine.ForceStopUseWeapon();
-            }
 
-            // _currUseWeaponFunction.ForceStopUseWeapon();
-            if(_currPlayableMoveStateMachine.IsMustLookForward)_currPlayableMoveStateMachine.IsMustLookForward = false;
-
+            if(_currPlayableMoveStateMachine.IsCrouching)_playableCharacterCameraManager.ResetCameraHeight();
             if(_playableCharacterCameraManager.IsScope)_playableCharacterCameraManager.ResetScope();
-            if(_currPlayableMoveStateMachine.IsCrouching)
-            {
-                _currPlayableMoveStateMachine.IsCrouching = false;
-                _playableCharacterCameraManager.ResetCameraHeight();
-            }
-            _currPlayableMoveStateMachine.IsRunning = true;
-
+            CurrPlayableChara.Run(true);
             foreach(PlayableCharacterIdentity chara in _charaIdentities)
             {
                 if(chara == CurrPlayableChara)continue;
-                if(!chara.FriendAIStateMachine.IsAIEngage)if(chara.GetPlayableMovementData.IsCrouching)chara.GetPlayableMovementData.IsCrouching = false;
-                if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)chara.MovementStateMachine.IsRunning = true;
+                if(chara.FriendAIStateMachine.IsAIEngage || chara.FriendAIStateMachine.GotDetectedbyEnemy)continue;
+                chara.Run(true);
             }
             
         }
@@ -433,11 +481,11 @@ public class PlayableCharacterManager : MonoBehaviour
 
     private void GameInput_OnRunCanceled()
     {
-         _currPlayableMoveStateMachine.IsRunning = false;
+        CurrPlayableChara.Run(false);
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
             if(chara == CurrPlayableChara)continue;
-            if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)chara.MovementStateMachine.IsRunning = false;
+            if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)chara.Run(false);
         }
     }
 
@@ -445,27 +493,39 @@ public class PlayableCharacterManager : MonoBehaviour
     {
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
         {
-            if(_currPlayableMoveStateMachine.IsRunning)_currPlayableMoveStateMachine.IsRunning = false;
-            _currPlayableMoveStateMachine.IsCrouching = true;
-            _playableCharacterCameraManager.SetCameraCrouchHeight();
 
+            CurrPlayableChara.Crouch(true);
+            _playableCharacterCameraManager.SetCameraCrouchHeight();
             foreach(PlayableCharacterIdentity chara in _charaIdentities)
             {
                 if(chara == CurrPlayableChara)continue;
-                if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)if(chara.MovementStateMachine.IsRunning)chara.MovementStateMachine.IsRunning = false;
-                if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)chara.GetPlayableMovementData.IsCrouching = true;
+                if(chara.FriendAIStateMachine.IsAIEngage || chara.FriendAIStateMachine.GotDetectedbyEnemy)continue;
+                chara.Crouch(true);
             }
+
         }
     }
 
     private void GameInput_OnCrouchCanceled()
     {
-        _currPlayableMoveStateMachine.IsCrouching = false;
-        _playableCharacterCameraManager.ResetCameraHeight();
+        if(!_currPlayableMoveStateMachine.IsTakingCoverAtWall)
+        {
+            CurrPlayableChara.Crouch(false);
+            _playableCharacterCameraManager.ResetCameraHeight();
+        }
+        else
+        {
+            if(_currPlayableMoveStateMachine.IsWallTallerThanChara)
+            {
+                CurrPlayableChara.Crouch(false);
+                _playableCharacterCameraManager.ResetCameraHeight();
+            }
+        }
+        
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
             if(chara == CurrPlayableChara)continue;
-            if(!chara.FriendAIStateMachine.IsAIEngage)chara.GetPlayableMovementData.IsCrouching = false;
+            if(!chara.FriendAIStateMachine.IsAIEngage)chara.Crouch(false);
         }
     }
 
@@ -477,8 +537,9 @@ public class PlayableCharacterManager : MonoBehaviour
     private void GameInput_OnChangeWeaponPerformed()
     {
 
-        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
+        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {
+            if(_currPlayableInteraction.IsHeldingObject)_currPlayableInteraction.RemoveHeldObject();
             _currPlayableUseWeaponStateMachine.IsSwitchingWeapon = true;
         }
     }
@@ -486,26 +547,28 @@ public class PlayableCharacterManager : MonoBehaviour
     private void GameInput_OnCommandPerformed(int friendID)
     {
         if(EnemyAIManager.Instance.IsEnemyEngaging)return;
-        if(IsCommandingFriend)OnCommandingBoolChange?.Invoke(true, friendID);
-
-        if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead || CurrPlayableChara.IsReviving || _currPlayableUseWeaponStateMachine.IsSilentKill)return;
-        _currPlayableMoveStateMachine.ForceStopMoving();
-        _currPlayableUseWeaponStateMachine.ForceStopUseWeapon();
-        Time.timeScale = 0.2f;
-
+        PlayableCharacterIdentity chosenFriend = null;
         for(int i=0;i < _charaIdentities.Count;i++)
         {
             if(_charaIdentities[i] == CurrPlayableChara)continue;
             if(_charaIdentities[i].FriendID == friendID)
             {
-                if(!_charaIdentities[i].FriendAIStateMachine.IsToldHold)
-                {
-                    _friendsCommandPosition[friendID - 1].transform.position = CurrPlayableChara.GetFriendsNormalPosition[friendID - 1].transform.position;
-                }
+                chosenFriend = _charaIdentities[i];
                 break;
-            }
-            
-            // _friendsCommandPosition[i].transform.position = CurrPlayableChara.GetFriendsNormalPosition[i].transform.position;
+            }  
+        }
+        if(chosenFriend.IsDead)return;
+
+        if(IsCommandingFriend)OnCommandingBoolChange?.Invoke(true, friendID);
+
+        if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead || CurrPlayableChara.IsReviving || _currPlayableUseWeaponStateMachine.IsSilentKill || _currPlayableUseWeaponStateMachine.IsReloading || _currPlayableUseWeaponStateMachine.IsSwitchingWeapon || _currPlayableMoveStateMachine.IsTakingCoverAtWall)return;
+        _currPlayableMoveStateMachine.ForceStopMoving();
+        _currPlayableUseWeaponStateMachine.ForceStopUseWeapon();
+        Time.timeScale = 0.2f;
+
+        if(chosenFriend.FriendAIStateMachine.IsToldHold)
+        {
+            _friendsCommandPosition[friendID - 1].transform.position = CurrPlayableChara.GetFriendsNormalPosition[friendID - 1].transform.position;
         }
 
         _isCommandingFriend = true;
@@ -534,50 +597,51 @@ public class PlayableCharacterManager : MonoBehaviour
 
     private void GameInput_OnSilentKillPerformed()
     {
-        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving)
+        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {
             _currPlayableInteraction.SilentKill();
         }
     }
     private void GameInput_OnShootingPerformed()
     {
-        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving)
+        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {   
-            if(!_currPlayableUseWeaponStateMachine.IsAiming)_currPlayableUseWeaponStateMachine.IsAiming = true;
-            _currPlayableUseWeaponStateMachine.IsUsingWeapon = true;
-            if(!_currPlayableMoveStateMachine.IsMustLookForward)_currPlayableMoveStateMachine.IsMustLookForward = true;
+            CurrPlayableChara.Shooting(true);
+            // if(!_currPlayableUseWeaponStateMachine.IsAiming)_currPlayableUseWeaponStateMachine.IsAiming = true;
+            // _currPlayableUseWeaponStateMachine.IsUsingWeapon = true;
+            // if(!_currPlayableMoveStateMachine.IsMustLookForward)_currPlayableMoveStateMachine.IsMustLookForward = true;
         }
     }
     private void GameInput_OnShootingCanceled()
     {
         if(CanDoThisFunction())
         {
+            CurrPlayableChara.Shooting(false);
             _currPlayableUseWeaponStateMachine.IsUsingWeapon = false;
             if(!_playableCharacterCameraManager.IsScope)
             {
-                _currPlayableMoveStateMachine.IsMustLookForward = false;
-                _currPlayableUseWeaponStateMachine.IsAiming = false;
+                // _currPlayableMoveStateMachine.IsMustLookForward = false;
+                // _currPlayableUseWeaponStateMachine.IsAiming = false;
+                CurrPlayableChara.Aiming(false);
             }
 
         }
     }
     private void GameInput_OnScopePerformed()
     {
-        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving)
+        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {
             //KALO LAGI mo ngescope, tp blm aim, lsg aim nya nyalain jg
 
             //tp kalo unscope, dan
             if(!_playableCharacterCameraManager.IsScope)
             {
-                _currPlayableUseWeaponStateMachine.IsAiming = true;
-                _currPlayableMoveStateMachine.IsMustLookForward = true;
+                CurrPlayableChara.Aiming(true);
                 _playableCharacterCameraManager.ScopeCamera();
             }
             else
             {
-                _currPlayableUseWeaponStateMachine.IsAiming = false;
-                _currPlayableMoveStateMachine.IsMustLookForward = false;
+                CurrPlayableChara.Aiming(false);
                 _playableCharacterCameraManager.ResetScope();
             }
 
@@ -585,8 +649,9 @@ public class PlayableCharacterManager : MonoBehaviour
     }
     private void GameInput_OnReloadPerformed()
     {
-        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving)
+        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {
+            if(_currPlayableInteraction.IsHeldingObject)_currPlayableInteraction.RemoveHeldObject();
             _currPlayableUseWeaponStateMachine.IsReloading = true;
         }
     }

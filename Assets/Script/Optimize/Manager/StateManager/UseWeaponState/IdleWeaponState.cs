@@ -23,6 +23,16 @@ public class IdleWeaponState : UseWeaponState
     {
         if((_advancedUse != null && (PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter|| _playableData.GetPlayableCharacterIdentity.IsReviving)) || _sm.IsCharacterDead )return;
 
+        if(_sm.IsAIInput && _sm.CurrWeapon.currBullet == 0)
+        {
+            if(_sm.CurrWeapon.totalBullet > 0)
+            {
+                if(!_sm.CanReload)_sm.CanReload = true;
+                _sm.IsReloading = true;
+            }
+            
+        }
+
         if(_normalUse.IsAiming)
         {
             _sm.SwitchState(_factory.AimWeaponState());

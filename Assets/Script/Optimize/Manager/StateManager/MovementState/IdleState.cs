@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -20,6 +21,7 @@ public class IdleState : MovementState
     
     public override void EnterState()
     {   
+        if(_playableData != null)_playableData.GetPlayableMakeSFX.PlayStopSFX(AudioSFXName.NormalWalk, false);
         ResetIdleAnimCycle();
         
         _standData.IsIdle = true;
@@ -33,7 +35,7 @@ public class IdleState : MovementState
         if((!_sm.IsAIInput && _playableData.InputMovement != Vector3.zero) || (_sm.IsAIInput && !_sm.IsAIAtDirPos()))
         {
             if(_groundData != null && _groundData.IsCrawling)_sm.SwitchState(_factory.CrawlState());
-            else if(_groundData != null && _groundData.IsCrouching)_sm.SwitchState(_factory.CrouchState());
+            else if(_standData.IsCrouching)_sm.SwitchState(_factory.CrouchState());
             else if(_standData.IsRunning)_sm.SwitchState(_factory.RunState());
             else _sm.SwitchState(_factory.WalkState());
         }
@@ -41,7 +43,7 @@ public class IdleState : MovementState
         CheckMustRotateWhileIdle();
 
         CheckingIdleAnimationCycle();
-        if(_groundData != null) CheckIsCrouchWhileIdle();
+        CheckIsCrouchWhileIdle();
     }
     public override void ExitState()
     {
@@ -53,11 +55,11 @@ public class IdleState : MovementState
     private void CheckMustRotateWhileIdle()
     {
         if(!_sm.IsAIInput && _playableData.IsMustLookForward)_playableData.RotateToAim_Idle();
-        if(_sm.IsAIInput && _sm.IsAIAtDirPos())if(_sm.AllowLookTargetWhileIdle)_sm.RotateAIToTarget_Idle();
+        if(_sm.IsAIInput && _sm.IsAIAtDirPos())if(_sm.AllowLookTarget)_sm.RotateAIToTarget_Idle();
     }
     private void CheckIsCrouchWhileIdle()
     {
-        if(_groundData.IsCrouching)
+        if(_standData.IsCrouching)
         {
             if(_sm.IdleAnimCycleIdx > 1) 
             {
@@ -66,10 +68,12 @@ public class IdleState : MovementState
                 _currTargetTime = _sm.IdleAnimCycleTimeTarget[1];
             }
             SetAnimParamActive(ANIMATION_MOVE_PARAMETER_CROUCH);
+            _playableData?.CharaConDataToCrouch();
         }
         else
         {
             SetAnimParamInactive(ANIMATION_MOVE_PARAMETER_CROUCH);
+            _playableData?.CharaConDataToNormal();
         }
     }
     private void StopMovementAnimation()
@@ -82,16 +86,24 @@ public class IdleState : MovementState
     #region Idle Anim Cycle
     private void CheckingIdleAnimationCycle()
     {
-        if(!_isIdleAnimChanging) IdleAnimCycleTimerUpdate();
-        else if(_isIdleAnimChanging) ChangingIdleAnimation();
-        if(_sm.WasCharacterAiming)
+        if(_sm.IsMustStayAlert)
         {
-            _isIdleAnimChanging = false;
-            _sm.WasCharacterAiming = false;
-            _sm.SetIdleAnimAfterAim();
-            _timeCounter = 0;
-            _currTargetTime = _sm.IdleAnimCycleTimeTarget[0];
+            if(_sm.IdleAnimCycleIdx != 0)SetIdleAnimToAlert();
         }
+        else
+        {
+            if(!_isIdleAnimChanging) IdleAnimCycleTimerUpdate();
+            else if(_isIdleAnimChanging) ChangingIdleAnimation();
+            if(_sm.WasCharacterAiming)
+            {
+                _isIdleAnimChanging = false;
+                _sm.WasCharacterAiming = false;
+                _sm.SetIdleAnimAfterAim();
+                _timeCounter = 0;
+                _currTargetTime = _sm.IdleAnimCycleTimeTarget[0];
+            }
+        }
+
     }
     private void IdleAnimCycleTimerUpdate()
     {
@@ -101,7 +113,7 @@ public class IdleState : MovementState
         {
             if(_sm.IdleAnimCycleIdx >= 0)
             {
-                if(_sm.IdleAnimCycleIdx == 0 || _groundData == null || (_groundData != null && !_groundData.IsCrouching))
+                if(_sm.IdleAnimCycleIdx == 0 || !_standData.IsCrouching)
                 {
                     if(_sm.IdleAnimCycleIdx < STAND_IDLE_ANIM_CYCLE_TOTAL)
                     {
@@ -147,6 +159,13 @@ public class IdleState : MovementState
             _timeCounter = _sm.IdleAnimCycleTimeTarget[0];
             _currTargetTime = _sm.IdleAnimCycleTimeTarget[1];
         }
+    }
+    private void SetIdleAnimToAlert()
+    {
+        _isIdleAnimChanging = false;
+        _sm.SetIdleAnimAfterAim();
+        _timeCounter = 0;
+        _currTargetTime = _sm.IdleAnimCycleTimeTarget[0];
     }
     #endregion
         
