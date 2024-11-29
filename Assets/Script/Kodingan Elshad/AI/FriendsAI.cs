@@ -283,7 +283,7 @@ public class FriendsAI : ExecuteLogic
             dir = curEnemy.transform.position - FOVPoint.transform.position;
         }
         // Debug.Log("Shoot direction " + dis + " " + FOVPoint.position + " " + visibleTargets[0].transform.position);
-        if (visibleTargets.Count > 0) Shoot(FOVPoint.position, dir.normalized, friendsStat, currentWeapon, isItFriend, curRecoil);
+        if (visibleTargets.Count > 0) Shoot(this.gameObject, FOVPoint.position, dir.normalized, friendsStat, currentWeapon, isItFriend, curRecoil);
     }
 
     private void RecoilHandler()
