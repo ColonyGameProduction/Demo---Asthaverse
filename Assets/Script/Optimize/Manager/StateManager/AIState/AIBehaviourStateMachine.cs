@@ -640,11 +640,11 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         if(NavMesh.CalculatePath(origin, target, _agent.areaMask, path))
         {
             Debug.Log(path.status + " PATH STATUS NOW" + target);
-            // if(path.status != NavMeshPathStatus.PathComplete)return Mathf.Infinity;
             _tempFirstPathPos = path.corners[0];
             float distance = Vector3.Distance(origin, path.corners[0]);
             for(int j = 1; j < path.corners.Length; j++)
             {
+                if(path.status != NavMeshPathStatus.PathComplete)return Mathf.Infinity;
                 distance += Vector3.Distance(path.corners[j-1], path.corners[j]);
             }
             return distance;

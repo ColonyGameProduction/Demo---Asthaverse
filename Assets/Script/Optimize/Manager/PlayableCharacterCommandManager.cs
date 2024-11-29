@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayableCharacterCommandManager : MonoBehaviour
 {
     [SerializeField] private PlayableCharacterManager _playableCharaManager;
-    [SerializeField] private LayerMask _groundMask;
+    [SerializeField] private LayerMask _groundMask, _wallMask;
     [SerializeField] private float _maxCommandDistance = 100f;
     private static int _selectedFriendID = -1;
 

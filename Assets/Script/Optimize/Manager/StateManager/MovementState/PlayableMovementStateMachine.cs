@@ -419,8 +419,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         _chosenWallToTakeCover = hit.collider;
         _takeCoverPosition = hit.point;
         _takeCoverDirection = hit.normal;
-        _wallWidth = _chosenWallToTakeCover.transform.localScale.x;
-        _wallLength = _chosenWallToTakeCover.transform.localScale.z;
+        _wallWidth = _chosenWallToTakeCover.transform.lossyScale.x;
+        _wallLength = _chosenWallToTakeCover.transform.lossyScale.z;
 
         Debug.Log("Dot Forward Wall" + Vector3.Dot(_takeCoverDirection, _chosenWallToTakeCover.transform.forward) + "Dot Right" + Vector3.Dot(_takeCoverDirection, _chosenWallToTakeCover.transform.right));
         float dotForward = Vector3.Dot(_takeCoverDirection, _chosenWallToTakeCover.transform.forward);
