@@ -173,6 +173,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         Debug.Log(" Input " +direction + " Wallsurfacedir" + wallSurfaceDir + " TakeCover muvment" + wallMovementDir );
         Debug.DrawRay(transform.position, wallMovementDir * 100f, Color.red, 1f, false);
         Debug.DrawRay(transform.position, wallSurfaceDir * 100f, Color.blue, 1f, false);
+        Debug.DrawRay(transform.position, wallSurfaceDir * 100f, Color.blue, 1f, false);
 
         
         bool isGoingToLeft = false;
@@ -211,7 +212,16 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         
 
         RaycastHit hit;
-        if(Physics.Raycast(transform.position + wallMovementDir * 0.1f, -_takeCoverDirection, out hit, _playerToWallMinDistance, _wallLayerMask))
+        
+        if(Physics.Raycast(transform.position, wallMovementDir, out hit, _playerToWallMinDistance/2, _wallLayerMask))
+        {
+            if(hit.collider != _chosenWallToTakeCover)
+            {
+                SetTakeCoverWallData(hit);
+                TakeCoverAtWall();
+            }
+        }
+        else if(Physics.Raycast(transform.position + wallMovementDir * 0.1f, -_takeCoverDirection, out hit, _playerToWallMinDistance, _wallLayerMask))
         {
             Debug.Log(hit.collider + " collider skrg adalahh");
             if(hit.collider != _chosenWallToTakeCover)
@@ -221,6 +231,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             }
             else
             {
+                // 
                 if(hit.normal != _takeCoverDirection) //inikalo dinding di kanannya itu msh sambungan wall ini dan collider sama
                 {
                     SetTakeCoverWallData(hit);
@@ -325,7 +336,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         Debug.DrawRay(transform.position, _charaGameObject.forward.normalized * 100f, Color.red, 2f, false);
         if(Physics.Raycast(transform.position, _charaGameObject.forward.normalized, out hit, _playerToWallMinDistance, _wallLayerMask))
         {
-            _isWallTallerThanChara = hit.collider.bounds.max.y > _charaHeadColl.bounds.max.y + _charaHeightBuffer;
+            
             // if(hit.collider.bounds.max.y <= _charaHeadColl.bounds.max.y + _charaHeightBuffer - 0.6f)return false;
 
             SetTakeCoverWallData(hit);
@@ -404,6 +415,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     }
     private void SetTakeCoverWallData(RaycastHit hit)
     {
+        _isWallTallerThanChara = hit.collider.bounds.max.y > _charaHeadColl.bounds.max.y + _charaHeightBuffer;
         _chosenWallToTakeCover = hit.collider;
         _takeCoverPosition = hit.point;
         _takeCoverDirection = hit.normal;
