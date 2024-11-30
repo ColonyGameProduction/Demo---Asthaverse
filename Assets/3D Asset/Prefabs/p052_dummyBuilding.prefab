@@ -1,5 +1,111 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &452941002360246043
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1417681319605262432}
+  - component: {fileID: 7825828755745139669}
+  m_Layer: 12
+  m_Name: Collider (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1417681319605262432
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 452941002360246043}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 65.49, y: 110.32, z: 81.6}
+  m_LocalScale: {x: 7.9586854, y: 4.833428, z: 7.187508}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8921401214498636487}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7825828755745139669
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 452941002360246043}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &6113122603235347908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4150757997876012802}
+  - component: {fileID: 8612533287756067297}
+  m_Layer: 12
+  m_Name: Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4150757997876012802
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6113122603235347908}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 71.74, y: 110.53, z: 73.46}
+  m_LocalScale: {x: 20.78221, y: 4.431992, z: 9.01759}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8921401214498636487}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8612533287756067297
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6113122603235347908}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6573595354477316757
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,9 +115,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8921401214498636487}
-  - component: {fileID: 5305155142870970925}
-  - component: {fileID: 7785942620393955478}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: p052_dummyBuilding
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,6 +135,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4150757997876012802}
+  - {fileID: 1417681319605262432}
   - {fileID: 7297438601565029979}
   - {fileID: 2518484534305543523}
   - {fileID: 7989457279060608850}
@@ -82,48 +188,6 @@ Transform:
   - {fileID: 4313862723705244437}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5305155142870970925
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6573595354477316757}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 20.782211, y: 4.4319916, z: 9.24881}
-  m_Center: {x: 71.758484, y: 110.570564, z: 73.45599}
---- !u!65 &7785942620393955478
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6573595354477316757}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 8.372055, y: 4.113556, z: 7.1875076}
-  m_Center: {x: 65.49488, y: 110.6835, z: 81.708145}
 --- !u!1001 &150405725819770637
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -179,6 +243,10 @@ PrefabInstance:
     - target: {fileID: 3605571686686822398, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
       propertyPath: m_Name
       value: Balaustrade_03 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3605571686686822398, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -6125200709369186851, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
@@ -247,6 +315,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_03 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3605571686686822398, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -6125200709369186851, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
     m_RemovedGameObjects: []
@@ -310,6 +382,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_Corner (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8006197988953596966, guid: 1382fcfb8d6f9b04f8c2aa8947c636db, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4783483369150847924, guid: 1382fcfb8d6f9b04f8c2aa8947c636db, type: 3}
     m_RemovedGameObjects: []
@@ -332,6 +408,18 @@ PrefabInstance:
     - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
       propertyPath: m_Name
       value: Corner_01 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8675300194118116083, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -437,6 +525,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_Corner (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 8006197988953596966, guid: 1382fcfb8d6f9b04f8c2aa8947c636db, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4783483369150847924, guid: 1382fcfb8d6f9b04f8c2aa8947c636db, type: 3}
     m_RemovedGameObjects: []
@@ -504,6 +596,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_03 (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 3605571686686822398, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -6125200709369186851, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
     m_RemovedGameObjects: []
@@ -526,6 +622,14 @@ PrefabInstance:
     - target: {fileID: 174986801257713865, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
       propertyPath: m_Name
       value: SM_Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 174986801257713865, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 174986801257713865, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3762463135211971290, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
       propertyPath: m_LocalPosition.x
@@ -567,6 +671,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4173935021663625394, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4173935021663625394, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6257992549022227913, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6257992549022227913, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 636440216257726378, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
     - {fileID: 6012797236307810979, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
@@ -590,6 +710,18 @@ PrefabInstance:
     - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
       propertyPath: m_Name
       value: Corner_01 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8675300194118116083, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -699,6 +831,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_03
       objectReference: {fileID: 0}
+    - target: {fileID: 3605571686686822398, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -6125200709369186851, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
     m_RemovedGameObjects: []
@@ -766,6 +902,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall25 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8998533311935453866, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8998533311935453866, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8998533311935453866, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3389503088744469693, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
     m_RemovedGameObjects: []
@@ -828,6 +976,10 @@ PrefabInstance:
     - target: {fileID: 8006197988953596966, guid: 1382fcfb8d6f9b04f8c2aa8947c636db, type: 3}
       propertyPath: m_Name
       value: Balaustrade_Corner (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8006197988953596966, guid: 1382fcfb8d6f9b04f8c2aa8947c636db, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4783483369150847924, guid: 1382fcfb8d6f9b04f8c2aa8947c636db, type: 3}
@@ -892,6 +1044,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_01 (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -3577033751215652584, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
     m_RemovedGameObjects: []
@@ -914,6 +1070,14 @@ PrefabInstance:
     - target: {fileID: 174986801257713865, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
       propertyPath: m_Name
       value: SM_Door (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 174986801257713865, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 174986801257713865, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3762463135211971290, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
       propertyPath: m_LocalPosition.x
@@ -954,6 +1118,22 @@ PrefabInstance:
     - target: {fileID: 3762463135211971290, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4173935021663625394, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4173935021663625394, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6257992549022227913, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6257992549022227913, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 636440216257726378, guid: 5ae782d0ca2e0d148af8dbc2cd04beab, type: 3}
@@ -1023,6 +1203,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_01 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -3577033751215652584, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
     m_RemovedGameObjects: []
@@ -1089,6 +1273,18 @@ PrefabInstance:
     - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Name
       value: Wall18 (28)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 9035516030541713007, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Materials.Array.data[2]
@@ -1157,6 +1353,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_Corner (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8006197988953596966, guid: 1382fcfb8d6f9b04f8c2aa8947c636db, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4783483369150847924, guid: 1382fcfb8d6f9b04f8c2aa8947c636db, type: 3}
     m_RemovedGameObjects: []
@@ -1179,6 +1379,18 @@ PrefabInstance:
     - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
       propertyPath: m_Name
       value: Corner_01 (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8675300194118116083, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1288,6 +1500,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall18 (38)
       objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 9035516030541713007, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Materials.Array.data[2]
       value: 
@@ -1355,6 +1579,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_01 (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -3577033751215652584, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
     m_RemovedGameObjects: []
@@ -1417,6 +1645,10 @@ PrefabInstance:
     - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
       propertyPath: m_Name
       value: Balaustrade_01 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -3577033751215652584, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
@@ -1481,6 +1713,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_01 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -3577033751215652584, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
     m_RemovedGameObjects: []
@@ -1543,6 +1779,10 @@ PrefabInstance:
     - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
       propertyPath: m_Name
       value: Balaustrade_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -3577033751215652584, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
@@ -1611,6 +1851,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blind2
       objectReference: {fileID: 0}
+    - target: {fileID: 3794942952631623559, guid: 0795c73fb689b1c47b1a1b7a1df7aee6, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3794942952631623559, guid: 0795c73fb689b1c47b1a1b7a1df7aee6, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3794942952631623559, guid: 0795c73fb689b1c47b1a1b7a1df7aee6, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3779037669208329982, guid: 0795c73fb689b1c47b1a1b7a1df7aee6, type: 3}
     m_RemovedGameObjects: []
@@ -1673,6 +1925,18 @@ PrefabInstance:
     - target: {fileID: 6999016027138807313, guid: 21037a5ecb3957b4bb98e9f9c1bdece6, type: 3}
       propertyPath: m_Name
       value: Corner_02
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999016027138807313, guid: 21037a5ecb3957b4bb98e9f9c1bdece6, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999016027138807313, guid: 21037a5ecb3957b4bb98e9f9c1bdece6, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999016027138807313, guid: 21037a5ecb3957b4bb98e9f9c1bdece6, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7416963762768640945, guid: 21037a5ecb3957b4bb98e9f9c1bdece6, type: 3}
@@ -1740,6 +2004,18 @@ PrefabInstance:
     - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Name
       value: Wall18 (40)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 9035516030541713007, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Materials.Array.data[2]
@@ -1812,6 +2088,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_03 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 3605571686686822398, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -6125200709369186851, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
     m_RemovedGameObjects: []
@@ -1883,6 +2163,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Floor12x12
       objectReference: {fileID: 0}
+    - target: {fileID: 8259278700403314426, guid: e0f524676819e0645b29cce1a3f22eb7, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1944,6 +2228,10 @@ PrefabInstance:
     - target: {fileID: 4386761639077663972, guid: 10aeec37b95d95748929c2cad947068e, type: 3}
       propertyPath: m_Name
       value: Balaustrade_Column
+      objectReference: {fileID: 0}
+    - target: {fileID: 4386761639077663972, guid: 10aeec37b95d95748929c2cad947068e, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -626630378635462731, guid: 10aeec37b95d95748929c2cad947068e, type: 3}
@@ -2020,6 +2308,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall35 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 9183479727883543402, guid: 8b8c1403199653243b3c46ffcb7dc639, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183479727883543402, guid: 8b8c1403199653243b3c46ffcb7dc639, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183479727883543402, guid: 8b8c1403199653243b3c46ffcb7dc639, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4848073383306879802, guid: 8b8c1403199653243b3c46ffcb7dc639, type: 3}
     m_RemovedGameObjects: []
@@ -2086,6 +2386,18 @@ PrefabInstance:
     - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Name
       value: Wall18 (25)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 9035516030541713007, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Materials.Array.data[2]
@@ -2158,6 +2470,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall25 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8998533311935453866, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8998533311935453866, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8998533311935453866, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3389503088744469693, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
     m_RemovedGameObjects: []
@@ -2225,6 +2549,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_03 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3605571686686822398, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -6125200709369186851, guid: c6a624fd65f22094eb84ae61b9ca8bd1, type: 3}
     m_RemovedGameObjects: []
@@ -2247,6 +2575,18 @@ PrefabInstance:
     - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
       propertyPath: m_Name
       value: Corner_01 (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8675300194118116083, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2352,6 +2692,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall2
       objectReference: {fileID: 0}
+    - target: {fileID: 8413297230306988043, guid: 65e3e8c4c5ff987428d0c76d34f30d57, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8413297230306988043, guid: 65e3e8c4c5ff987428d0c76d34f30d57, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8413297230306988043, guid: 65e3e8c4c5ff987428d0c76d34f30d57, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2822296841878724124, guid: 65e3e8c4c5ff987428d0c76d34f30d57, type: 3}
     m_RemovedGameObjects: []
@@ -2419,6 +2771,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blind2 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3794942952631623559, guid: 0795c73fb689b1c47b1a1b7a1df7aee6, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3794942952631623559, guid: 0795c73fb689b1c47b1a1b7a1df7aee6, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3794942952631623559, guid: 0795c73fb689b1c47b1a1b7a1df7aee6, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3779037669208329982, guid: 0795c73fb689b1c47b1a1b7a1df7aee6, type: 3}
     m_RemovedGameObjects: []
@@ -2481,6 +2845,10 @@ PrefabInstance:
     - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
       propertyPath: m_Name
       value: Balaustrade_01 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -3577033751215652584, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
@@ -2545,6 +2913,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_Corner
       objectReference: {fileID: 0}
+    - target: {fileID: 8006197988953596966, guid: 1382fcfb8d6f9b04f8c2aa8947c636db, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4783483369150847924, guid: 1382fcfb8d6f9b04f8c2aa8947c636db, type: 3}
     m_RemovedGameObjects: []
@@ -2608,6 +2980,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_01 (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -3577033751215652584, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
     m_RemovedGameObjects: []
@@ -2630,6 +3006,18 @@ PrefabInstance:
     - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
       propertyPath: m_Name
       value: Corner_01 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5638368508432568544, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8675300194118116083, guid: ec9d714022d3fde458ca700f5c59aebc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2735,6 +3123,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Balaustrade_01 (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -3577033751215652584, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
     m_RemovedGameObjects: []
@@ -2801,6 +3193,18 @@ PrefabInstance:
     - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Name
       value: Wall18 (26)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 9035516030541713007, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Materials.Array.data[2]
@@ -2873,6 +3277,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall2 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8413297230306988043, guid: 65e3e8c4c5ff987428d0c76d34f30d57, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8413297230306988043, guid: 65e3e8c4c5ff987428d0c76d34f30d57, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8413297230306988043, guid: 65e3e8c4c5ff987428d0c76d34f30d57, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2938,6 +3354,18 @@ PrefabInstance:
     - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Name
       value: Wall18 (43)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 9035516030541713007, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Materials.Array.data[2]
@@ -3010,6 +3438,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall18 (39)
       objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 9035516030541713007, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Materials.Array.data[2]
       value: 
@@ -3076,6 +3516,18 @@ PrefabInstance:
     - target: {fileID: 8998533311935453866, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
       propertyPath: m_Name
       value: Wall25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8998533311935453866, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8998533311935453866, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8998533311935453866, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3389503088744469693, guid: e64ad86b89d490040acbf7b60a383579, type: 3}
@@ -3152,6 +3604,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall35 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 9183479727883543402, guid: 8b8c1403199653243b3c46ffcb7dc639, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183479727883543402, guid: 8b8c1403199653243b3c46ffcb7dc639, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183479727883543402, guid: 8b8c1403199653243b3c46ffcb7dc639, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4848073383306879802, guid: 8b8c1403199653243b3c46ffcb7dc639, type: 3}
     m_RemovedGameObjects: []
@@ -3214,6 +3678,10 @@ PrefabInstance:
     - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
       propertyPath: m_Name
       value: Balaustrade_01 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7539686117345488137, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -3577033751215652584, guid: 1daa950e7ebc0704fbd9aca258384ef8, type: 3}
@@ -3281,6 +3749,18 @@ PrefabInstance:
     - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Name
       value: Wall18 (27)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7302674729186065075, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 9035516030541713007, guid: 0075912bb01dd6c4aac6b8bf1685fd89, type: 3}
       propertyPath: m_Materials.Array.data[2]
@@ -3356,6 +3836,10 @@ PrefabInstance:
     - target: {fileID: 8259278700403314426, guid: e0f524676819e0645b29cce1a3f22eb7, type: 3}
       propertyPath: m_Name
       value: Floor12x12 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8259278700403314426, guid: e0f524676819e0645b29cce1a3f22eb7, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
