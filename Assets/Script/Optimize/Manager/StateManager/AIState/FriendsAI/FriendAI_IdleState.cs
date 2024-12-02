@@ -56,7 +56,11 @@ public class FriendAI_IdleState : FriendAIState
                 {
                     if(!_sm.IsFriendAlreadyAtDefaultDistance())
                     {
-                        _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
+                        if(!_sm.CurrPlayableIdentity.GetPlayableMovementData.IsTakingCoverAtWall)_sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
+                        else
+                        {
+                            _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position + _sm.CurrPlayableIdentity.GetPlayableMovementData.GetCharaGameObjectFaceDir() * 1.5f);
+                        }
                     }
                     else
                     {

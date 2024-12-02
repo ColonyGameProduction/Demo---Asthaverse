@@ -29,12 +29,14 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     [Header("Saving other component data")]
     protected IReceiveInputFromPlayer _getCanInputPlayer;
     protected ICanSwitchWeapon _getCanSwitchWeapon;
+    protected Camera _mainCamera;
 
     [Space(1)]
     [Header("More Weapon Logic Data")]
     protected float _charaFriendAimAccuracy;
 
     protected PlayableCharacterIdentity _getPlayableCharacterIdentity;
+    protected PlayerGunCollide _getPlayerGunCollide;
     [Header("Recoil Data Advanced")]
     protected float _movingMaxRecoil, _currRecoilMod, _recoilAddMultiplier;
 
@@ -81,9 +83,11 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected override void Awake()
     {
         base.Awake();
+        _mainCamera = Camera.main;
         CharaIdentity_OnIsPlayerInputChange(!IsAIInput);
         _getCanSwitchWeapon = GetComponent<ICanSwitchWeapon>();
         _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
+        _getPlayerGunCollide = GetComponentInChildren<PlayerGunCollide>();
         _getCanInputPlayer = GetComponent<IReceiveInputFromPlayer>();
         _isAIInput = !_getCanInputPlayer.IsPlayerInput;
         _getCanInputPlayer.OnIsPlayerInputChange += CharaIdentity_OnIsPlayerInputChange; // Ditaro di sini biar ga ketinggalan sebelah, krn sebelah diubah di start
@@ -178,10 +182,13 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         {
             _originShootPosition = CurrOriginShootPoint.position;
             _directionShootPosition = CurrDirectionShootPoint.forward.normalized;
+            _gunOriginShootPosition = _gunOriginShootPoint.position;
+            isGunInsideWall = _getPlayerGunCollide.IsInsideWall();
         }
         else
         {
             base.SetShootPosition();
+            isGunInsideWall = false;
         }
         
     }
@@ -193,8 +200,8 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         _isAIInput = !obj;
         if(!IsAIInput)
         {
-            _currOriginShootPoint = Camera.main.transform;
-            _currDirectionShootPoint = Camera.main.transform;
+            _currOriginShootPoint = _mainCamera.transform;
+            _currDirectionShootPoint = _mainCamera.transform;
 
             var sourceObjectsData =_aimRigConstraintData.data.sourceObjects;
             sourceObjectsData.SetWeight(0, 1f);

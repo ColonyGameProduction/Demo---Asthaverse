@@ -20,6 +20,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     //Untuk ambil bool
     [SerializeField] protected MovementStateMachine _moveStateMachine;
     [SerializeField] protected UseWeaponStateMachine _useWeaponStateMachine;
+    protected WeaponShootVFX _weaponShootVFX;
     protected FOVMachine _fovMachine;
     protected GameManager _gm;
     [SerializeField]protected Animator _animator;
@@ -78,6 +79,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         if(_useWeaponStateMachine == null) _useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
         // Debug.Log(_useWeaponStateMachine + " tidak null");
         if(_useWeaponStateMachine != null)_useWeaponStateMachine.OnWasUsinghGun += UseWeapon_OnWasUsinghGun;
+        _weaponShootVFX = GetComponent<WeaponShootVFX>();
         _fovMachine = GetComponent<FOVMachine>();
 
         InitializeCharacter();
@@ -174,7 +176,11 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         {
             WeaponData newWeapData = new WeaponData(weaponStat);
             _weaponLists.Add(newWeapData);
+            // Debug.Log(weaponStat.gunShootPoint + " AAAAAAAAAA"+ weaponStat.gunShootPoint.position);
+            _weaponShootVFX.SpawnTrail((int)(weaponStat.magSize * weaponStat.bulletPerTap), _useWeaponStateMachine.GunOriginShootPoint.position, weaponStat.bulletTrailPrefab, weaponStat.gunFlashPrefab);
+            // _weaponShootVFX.SpawnTrail((int)(weaponStat.magSize * weaponStat.bulletPerTap * 2), weaponStat.gunShootPoint.position, weaponStat.bulletTrailPrefab, weaponStat.gunFlashPrefab);
         }
+        
     }
 
     #endregion
@@ -186,8 +192,10 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         {
             weapon.totalBullet = weapon.weaponStatSO.magSize * weapon.weaponStatSO.magSpare;
             weapon.currBullet = weapon.weaponStatSO.magSize;
+            
         }
         _currWeaponIdx = 0;
+        _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
 
     }
     public abstract void ReloadWeapon();

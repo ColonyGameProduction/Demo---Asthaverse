@@ -32,7 +32,7 @@ public class PlayableCharacterCommandManager : MonoBehaviour
                 Vector3 rayOrigin = Camera.main.transform.position;
                 Vector3 rayDirection = Camera.main.transform.forward.normalized;
 
-                Debug.DrawRay(rayOrigin, rayDirection * _maxCommandDistance, Color.red, 2f);
+                // Debug.DrawRay(rayOrigin, rayDirection * _maxCommandDistance, Color.red, 2f);
                 
 
                 if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, _maxCommandDistance, _groundMask))

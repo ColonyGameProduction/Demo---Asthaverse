@@ -219,7 +219,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Throw"",
                     ""type"": ""Button"",
-                    ""id"": ""f54134e1-0604-4392-9454-04748a4fe8ad"",
+                    ""id"": ""ff3ff4b7-33b9-4dd5-989c-c1729097b8bd"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -228,7 +228,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""TakeCover"",
                     ""type"": ""Button"",
-                    ""id"": ""ba224239-c706-42d7-9317-8db511320f97"",
+                    ""id"": ""07abd21f-c337-4390-832b-23c447f04485"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -237,7 +237,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""ExitTakeCover"",
                     ""type"": ""Button"",
-                    ""id"": ""41725fc0-17fa-4dd8-8e5b-e3ed8a09ac6a"",
+                    ""id"": ""c8be7bf7-959d-4f29-b4be-8ba47fe853b1"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -478,17 +478,6 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""b41fcccb-ab18-4b46-a094-fcf703c12cfc"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Throw"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""c7959ed7-cc80-4d9e-af2b-02106a9f5926"",
                     ""path"": ""<Keyboard>/2"",
                     ""interactions"": """",
@@ -533,8 +522,19 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""339fb4fc-c0c3-40f3-b1cb-14cbc81307b8"",
-                    ""path"": ""<Keyboard>/k"",
+                    ""id"": ""b13c8174-9a92-4d4c-8c20-61c224a43a95"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b2ba94b7-a3a2-433b-bf65-8834cf5aae40"",
+                    ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -544,8 +544,8 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c83008a4-750f-443d-ab2f-2e006392b143"",
-                    ""path"": ""<Keyboard>/l"",
+                    ""id"": ""340da7be-b49a-4347-a6dc-80b37a0d7819"",
+                    ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

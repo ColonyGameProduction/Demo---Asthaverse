@@ -3,20 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum WorldSoundName
-{
-    None, Walk, Whistle, Bottle
-}
-[Serializable]
-public class WorldSound
-{
-    public WorldSoundName Name;
-    public float SoundRange;
-}
+
 public class WorldSoundManager : MonoBehaviour
 {
     public static WorldSoundManager Instance {get; private set;}
-    [SerializeField] private List<WorldSound> _worldSounds;
+    [SerializeField] private SOWorldSoundList worldSoundList;
     private Collider[] _heardSounds;
     private void Awake() 
     {
@@ -25,7 +16,7 @@ public class WorldSoundManager : MonoBehaviour
     public void MakeSound(WorldSoundName soundName, Vector3 originPos, LayerMask _charaEnemyMask)
     {
         WorldSound chosenSound = null;
-        foreach(WorldSound sound in _worldSounds)
+        foreach(WorldSound sound in worldSoundList.worldSounds)
         {
             if(soundName == sound.Name)
             {

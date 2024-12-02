@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper, IReceiveInputFromPlayer, ICanSwitchWeapon, IInteractable
 {
@@ -35,6 +37,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected float _stealthStatsFriend;
         #endregion
     
+
     [Space(5)]
     [Header("No Inspector Variable")]
     //Thing needed to getcomponent
@@ -43,8 +46,10 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected PlayableCamera _getPlayableCamera;
     protected PlayableInteraction _getPlayableInteraction;
     protected PlayableSkill _getPlayableSkill;
+    protected PlayableMakeSFX _getPlayableMakeSFX;
 
     protected FriendAIBehaviourStateMachine _friendAIStateMachine;
+    
     
     protected IEnumerator _revCoroutine;
     [Header("Death Animation Component")]
@@ -111,6 +116,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public PlayableCamera GetPlayableCamera {get {return _getPlayableCamera;}}
     public PlayableInteraction GetPlayableInteraction {get {return _getPlayableInteraction;}}
     public PlayableSkill GetPlayableSkill {get {return _getPlayableSkill;}}
+    public PlayableMakeSFX GetPlayableMakeSFX {get {return _getPlayableMakeSFX;}}
 
     public FriendAIBehaviourStateMachine FriendAIStateMachine {get { return _friendAIStateMachine;}}
     public FOVMachine FOVMachine{get { return _fovMachine;}}
@@ -121,17 +127,20 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public bool CanInteract {get{return IsDead && !IsAnimatingOtherAnimation;}}
     public bool IsReviving {get {return _isReviving;} set { _isReviving = value;}}
     public bool IsSilentKilling {get {return _getPlayableUseWeaponStateData.IsSilentKill;} set { _getPlayableUseWeaponStateData.IsSilentKill = value;}}
+    
 
     #endregion
     protected override void Awake()
     {
         base.Awake();
+        
         if(_deadColl.activeSelf)_deadColl.gameObject.SetActive(false);
         _getPlayableMovementStateData = MovementStateMachine as PlayableMovementStateMachine;
         _getPlayableUseWeaponStateData = UseWeaponStateMachine as PlayableUseWeaponStateMachine;
         _getPlayableCamera = GetComponent<PlayableCamera>();
         _getPlayableInteraction = GetComponentInChildren<PlayableInteraction>();
         _getPlayableSkill = GetComponent<PlayableSkill>();
+        _getPlayableMakeSFX = GetComponentInChildren<PlayableMakeSFX>();
         InitializeFriend();
 
 
@@ -196,6 +205,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         {
             _currWeaponIdx = 0;
         }
+        _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
     }
 
     public override void Death()
@@ -280,14 +290,19 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public void Interact(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
         if(_revCoroutine != null)return;
+        if(characterIdentityWhoReviving.GetPlayableInteraction.IsHeldingObject)
+        {
+            characterIdentityWhoReviving.GetPlayableInteraction.RemoveHeldObject();
+        }
         characterIdentityWhoReviving.IsReviving = true;
+        characterIdentityWhoReviving.GetPlayableUseWeaponData.TellToTurnOffScope();
         characterIdentityWhoReviving.ForceStopAllStateMachine();
         Revive(characterIdentityWhoReviving);
     }
     public void ForceStopAllStateMachine()
     {
-        _useWeaponStateMachine.ForceStopUseWeapon();
-        _moveStateMachine.ForceStopMoving();
+        GetPlayableUseWeaponData.ForceStopUseWeapon();
+        GetPlayableMovementData.ForceStopMoving();
     }
 
     #region StateMachine Command
@@ -334,4 +349,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         if(_fovMachine.VisibleTargets.Contains(transform))_fovMachine.VisibleTargets.Remove(transform);
         _friendAIStateMachine.DeleteKilledEnemyFromList(transform);
     }
+
+
+
 }
