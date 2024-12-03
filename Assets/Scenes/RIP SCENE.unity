@@ -3128,6 +3128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 369446415}
+  - component: {fileID: 369446416}
   m_Layer: 0
   m_Name: Minimap
   m_TagString: Untagged
@@ -3152,6 +3153,20 @@ Transform:
   - {fileID: 266719085}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &369446416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 369446414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32ca1afe48cefaf4b82e5296cc709793, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetToFollow: {fileID: 2047355711}
+  rotateWithTheTarget: 1
 --- !u!136 &373026356
 CapsuleCollider:
   m_ObjectHideFlags: 0
