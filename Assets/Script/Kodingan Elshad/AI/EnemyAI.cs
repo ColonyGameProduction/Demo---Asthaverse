@@ -11,6 +11,8 @@ public class EnemyAI : ExecuteLogic
 {
     EnemyManager EM;
 
+    private StealthBar stealth;
+
     public bool stopMoving;
     private float timer;
     //hal yang diperlukan untuk pathfinding
@@ -91,6 +93,8 @@ public class EnemyAI : ExecuteLogic
         EM.closestPOI += ClosestPOI;
         EM.enemyEngage += CombatStateEngage;
 
+        stealth = GetComponentInChildren<StealthBar>();
+
         distance = 0;
         currPath = 0;
         patrolPath[0] = transform.position;
@@ -122,6 +126,7 @@ public class EnemyAI : ExecuteLogic
                 {
                     enemyNavmesh.speed = enemyStat.speed;
                     enemyNavmesh.isStopped = false;
+                    lastSeenPosition = Vector3.zero;
                     Patrol();
                 }
                 else
@@ -432,7 +437,12 @@ public class EnemyAI : ExecuteLogic
             }
         }
 
-        if(enemyState == alertState.Idle)
+        if(stealth != null)
+        {
+            stealth.FillingTheImage(alertValue, maxAlertValue);
+        }
+
+        if (enemyState == alertState.Idle)
         {
             FOVStateHandler();
         }
