@@ -58,6 +58,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected PlayableMakeSFX _getPlayableMakeSFX;
     protected FOVMachine _fovMachine;
     #endregion
+    public const string ANIMATION_MOVE_PARAMETER_TAKECOVERPOS = "TakeCoverPos";
+    public const string ANIMATION_MOVE_PARAMETER_TAKECOVER = "TakeCover";
     
     #region GETTERSETTER Variable
     public float CrawlSpeed { get{return _crawlSpeed;}}
@@ -209,6 +211,12 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             }
             Debug.Log(dotRight + "dottt right TakeCover muvment" + isGoingToLeft);
         }
+        if(direction != Vector3.zero)
+        {
+            if(isGoingToLeft)CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_TAKECOVERPOS, 1);
+            else CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_TAKECOVERPOS, -1);
+            
+        }
         
 
         RaycastHit hit;
@@ -283,6 +291,25 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         Vector3 flatForward = new Vector3(_playableLookTarget.forward.x, 0, _playableLookTarget.forward.z).normalized;
         RotatePlayableChara(flatForward);
     }
+    public void RotateWhileReviving()
+    {
+        if(!_getPlayableCharacterIdentity.IsReviving)return;
+        Vector3 dir = (_getPlayableCharacterIdentity.FriendBeingRevivedPos.position - _charaGameObject.position).normalized;
+        Vector3 newDir = Quaternion.Euler (0, 45,0) * dir;
+
+        Vector3 flatForward = new Vector3(_playableLookTarget.forward.x, 0, _playableLookTarget.forward.z).normalized;
+        if(!IsAIInput)
+        {
+            
+            RotatePlayableChara(newDir);
+
+            
+        }
+        else
+        {
+            transform.rotation = Quaternion.LookRotation(newDir);
+        }
+    }
 
     private void ForceStopPlayable()
     {
@@ -315,6 +342,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             {
                 AgentNavMesh.ResetPath();
                 IsTakingCoverAtWall = false;
+                CharaAnimator?.SetBool(ANIMATION_MOVE_PARAMETER_TAKECOVER, false);
                 _isAtTakingCoverPos = false;
                 _isGoingToTakeCover = false;
                 AllowLookTarget = false;
@@ -378,6 +406,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         AgentNavMesh.ResetPath();
         _isAIInput = false;
         IsTakingCoverAtWall = false;
+        CharaAnimator?.SetBool(ANIMATION_MOVE_PARAMETER_TAKECOVER, false);
         _isAtTakingCoverPos = false;
         _isGoingToTakeCover = false;
         AllowLookTarget = false;
@@ -391,6 +420,12 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             if(dot >= 0.99f && _isAtTakingCoverPos)
             {
                 AgentNavMesh.ResetPath();
+                if(CharaAnimator?.GetBool(ANIMATION_MOVE_PARAMETER_TAKECOVER) == false)
+                {
+                    CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_TAKECOVERPOS, 0);
+                    Debug.Log("eh ? ga masuk sini?");
+                    CharaAnimator?.SetBool(ANIMATION_MOVE_PARAMETER_TAKECOVER, true);
+                }
                 AllowLookTarget = false;
                 _isGoingToTakeCover = false;
                 _isAtTakingCoverPos = false;

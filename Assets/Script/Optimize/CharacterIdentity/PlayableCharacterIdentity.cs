@@ -52,6 +52,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     
     
     protected IEnumerator _revCoroutine;
+    protected bool _isBeingRevived;
+    protected PlayableCharacterIdentity _characterIdentityWhoReviving, _characterIdentityWhoBeingRevived;
     [Header("Death Animation Component")]
     private bool _isAnimatingOtherAnimation;
     #region GETTERSETTER Variable
@@ -127,6 +129,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public bool CanInteract {get{return IsDead && !IsAnimatingOtherAnimation;}}
     public bool IsReviving {get {return _isReviving;} set { _isReviving = value;}}
     public bool IsSilentKilling {get {return _getPlayableUseWeaponStateData.IsSilentKill;} set { _getPlayableUseWeaponStateData.IsSilentKill = value;}}
+
+    public Transform FriendBeingRevivedPos {get {return _characterIdentityWhoBeingRevived.transform;}}
     
 
     #endregion
@@ -158,11 +162,30 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected override void Update() 
     {
         base.Update();
-        // if(reviv)
-        // {
-        //     reviv = false;
-        //     Revive();
-        // }
+        
+
+        if(_isBeingRevived)
+        {
+            AnimatorTransitionInfo currentState = _animator.GetAnimatorTransitionInfo(0);
+            if(_animator.IsInTransition(0))
+            {
+                
+                Debug.Log(currentState.normalizedTime + " waktunya animasi");
+                if (currentState.normalizedTime < 0.9f)
+                {
+                    Debug.Log("Animasi masih otw2");
+                }
+                else
+                {
+                    Debug.Log("Animasi done");
+                    AfterFinishReviveAnimation();
+                }
+            }
+            else
+            {
+                Debug.Log(currentState.normalizedTime + " waktunya animasi2");
+            }
+        }
     }
 
     public void InitializeFriend()
@@ -210,9 +233,20 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     public override void Death()
     {
-        if(_revCoroutine != null)
+        // if(_revCoroutine != null)
+        // {
+        //     StopCoroutine(_revCoroutine);
+        // }
+        // if(_isBeingRevived)
+        // {
+        //     _isBeingRevived = false;
+        //     _animator.Play("Rifle_Knock_Out");
+        // }
+
+        if(IsReviving)
         {
-            StopCoroutine(_revCoroutine);
+            if(_characterIdentityWhoBeingRevived)_characterIdentityWhoBeingRevived.CutOutFromBeingRevived();
+            StopRevivingFriend();
         }
         base.Death();
         _isAnimatingOtherAnimation = true;
@@ -222,6 +256,13 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         if(IsPlayerInput)OnPlayableDeath?.Invoke();
         _getPlayableMovementStateData.SetCharaGameObjRotationToNormal();
+        
+        
+        _animator.SetTrigger("KnockTrigger");
+        
+    }
+    public void AfterFinishKnockOutAnimation()
+    {
         _isAnimatingOtherAnimation = false;
         _deadColl.SetActive(true);
         if(!_getPlayableMovementStateData.IsCrawling)
@@ -229,14 +270,21 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             _getPlayableMovementStateData.IsCrawling = true;
         }
     }
+    
 
     public void Revive(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
         ForceStopAllStateMachine();
         _deadColl.SetActive(false);
         _isAnimatingOtherAnimation = true;
-        _revCoroutine = Reviving(characterIdentityWhoReviving);
-        StartCoroutine(_revCoroutine);
+
+        _animator.SetTrigger("ReviveTrigger");
+
+        _characterIdentityWhoReviving = characterIdentityWhoReviving;
+        _isBeingRevived = true;
+        // _revCoroutine = Reviving(characterIdentityWhoReviving);
+        // StartCoroutine(_revCoroutine);
+        // AfterFinishReviveAnimation();
     }
     private IEnumerator Reviving(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
@@ -258,6 +306,28 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         yield return new WaitForSeconds(0.1f);
         _animator.SetBool("Death", false);
     }
+    public void AfterFinishReviveAnimation()
+    {
+        // _animator.GetAnimatorTransitionInfo().
+        _isBeingRevived = false;
+        _fovMachine.enabled = true;
+
+        if(_getPlayableMovementStateData.IsCrawling)_getPlayableMovementStateData.IsCrawling = false;
+        ResetHealth();
+        _characterIdentityWhoReviving.StopRevivingFriend();
+        _characterIdentityWhoReviving = null;
+        _isDead = false;
+        _isAnimatingOtherAnimation = false;
+        _animator.SetBool("Death", false);
+    }
+    public void CutOutFromBeingRevived()
+    {
+        if(!_isBeingRevived)return;
+        _isBeingRevived = false;
+        _isAnimatingOtherAnimation = false;
+        _animator.Play("Rifle_Knock_Out");
+    }
+    
     
     public void TurnOnOffFriendAI(bool isTurnOn)
     {
@@ -289,14 +359,14 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     public void Interact(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
-        if(_revCoroutine != null)return;
+        if(_revCoroutine != null || _isBeingRevived)return;
         if(characterIdentityWhoReviving.GetPlayableInteraction.IsHeldingObject)
         {
             characterIdentityWhoReviving.GetPlayableInteraction.RemoveHeldObject();
         }
-        characterIdentityWhoReviving.IsReviving = true;
-        characterIdentityWhoReviving.GetPlayableUseWeaponData.TellToTurnOffScope();
-        characterIdentityWhoReviving.ForceStopAllStateMachine();
+
+        characterIdentityWhoReviving.RevivingFriend(this);
+
         Revive(characterIdentityWhoReviving);
     }
     public void ForceStopAllStateMachine()
@@ -351,5 +421,23 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     }
 
 
+    public void RevivingFriend(PlayableCharacterIdentity characterIdentityWhoBeingRevived)
+    {
+        if(GetPlayableInteraction.IsHeldingObject)
+        {
+            GetPlayableInteraction.RemoveHeldObject();
+        }
+        IsReviving = true;
+        _characterIdentityWhoBeingRevived = characterIdentityWhoBeingRevived;
+        _animator.SetBool("Reviving", true);
+        GetPlayableUseWeaponData.TellToTurnOffScope();
+        ForceStopAllStateMachine();
+    }
+    public void StopRevivingFriend()
+    {
+        IsReviving = false;
+        _characterIdentityWhoBeingRevived = null;
+        _animator.SetBool("Reviving", false);
+    }
 
 }

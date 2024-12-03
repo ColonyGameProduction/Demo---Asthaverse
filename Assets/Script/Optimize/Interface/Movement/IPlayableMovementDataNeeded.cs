@@ -12,5 +12,6 @@ public interface IPlayableMovementDataNeeded
     public PlayableMakeSFX GetPlayableMakeSFX {get ;}
     public void CharaConDataToNormal();
     public void CharaConDataToCrouch();
+    public void RotateWhileReviving();
     
 }

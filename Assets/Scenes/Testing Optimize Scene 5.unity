@@ -2586,6 +2586,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
   _characterIdentity: {fileID: 0}
+  _playableCharaIdentity: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _distanceToGround: 0.12
   _placeToWalkLayer:
@@ -6697,8 +6698,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.25, z: 1.75}
-  m_Center: {x: 0, y: -0.87, z: -1.33}
+  m_Size: {x: 1, y: 0.80578727, z: 1.75}
+  m_Center: {x: 0, y: -0.59210634, z: 0}
 --- !u!1 &551947457
 GameObject:
   m_ObjectHideFlags: 0
@@ -7995,8 +7996,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.25, z: 1.75}
-  m_Center: {x: 0, y: -0.87, z: -1.33}
+  m_Size: {x: 1, y: 0.80578727, z: 1.75}
+  m_Center: {x: 0, y: -0.59210634, z: 0}
 --- !u!1 &634505571 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3175177007007015706, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
@@ -11237,6 +11238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
   _characterIdentity: {fileID: 0}
+  _playableCharaIdentity: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _distanceToGround: 0.12
   _placeToWalkLayer:
@@ -11715,6 +11717,9 @@ MonoBehaviour:
   _groundMask:
     serializedVersion: 2
     m_Bits: 12352
+  _wallMask:
+    serializedVersion: 2
+    m_Bits: 0
   _maxCommandDistance: 100
   _commandUIContainer: {fileID: 1192563506}
 --- !u!114 &849947681
@@ -12865,6 +12870,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
   _characterIdentity: {fileID: 0}
+  _playableCharaIdentity: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _distanceToGround: 0.12
   _placeToWalkLayer:
@@ -15164,6 +15170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
   _characterIdentity: {fileID: 0}
+  _playableCharaIdentity: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _distanceToGround: 0.12
   _placeToWalkLayer:
@@ -15468,6 +15475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
   _characterIdentity: {fileID: 0}
+  _playableCharaIdentity: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _distanceToGround: 0.12
   _placeToWalkLayer:
@@ -16451,8 +16459,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.25, z: 1.75}
-  m_Center: {x: 0, y: -0.87, z: -1.33}
+  m_Size: {x: 1, y: 0.80578727, z: 1.75}
+  m_Center: {x: 0, y: -0.59210634, z: 0}
 --- !u!4 &1162947789 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6921783095139584837, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
@@ -18575,6 +18583,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
   _characterIdentity: {fileID: 0}
+  _playableCharaIdentity: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _distanceToGround: 0.12
   _placeToWalkLayer:
@@ -26519,6 +26528,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1887388950}
+  - component: {fileID: 1887388951}
   m_Layer: 0
   m_Name: ManagerHolder
   m_TagString: Untagged
@@ -26542,6 +26552,20 @@ Transform:
   - {fileID: 1077971747}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1887388951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887388949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67892e798c6017346aaaf6ab005371a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  identity: {fileID: 0}
+  Ded: 0
 --- !u!4 &1889058872 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1479333296116823138, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
@@ -27954,7 +27978,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!195 &2017098523
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -28011,7 +28035,7 @@ Transform:
   m_GameObject: {fileID: 2017098522}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 24.3, y: 0, z: -6.8}
+  m_LocalPosition: {x: 24.3, y: 0, z: -14.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -29259,6 +29283,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
   _characterIdentity: {fileID: 0}
+  _playableCharaIdentity: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _distanceToGround: 0.12
   _placeToWalkLayer:
@@ -29497,6 +29522,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
   _characterIdentity: {fileID: 0}
+  _playableCharaIdentity: {fileID: 0}
   _useWeaponStateMachine: {fileID: 0}
   _distanceToGround: 0.12
   _placeToWalkLayer:

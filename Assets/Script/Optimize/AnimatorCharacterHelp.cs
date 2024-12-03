@@ -6,15 +6,18 @@ public class AnimatorCharacterHelp : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
     [SerializeField] private CharacterIdentity _characterIdentity;
+    [SerializeField] private PlayableCharacterIdentity _playableCharaIdentity;
     [SerializeField] private UseWeaponStateMachine _useWeaponStateMachine;
     [Header("Foot")]
     [SerializeField][Range(0, 1f)] private float _distanceToGround;
     [SerializeField] private LayerMask _placeToWalkLayer;
+    private bool wasDeath;
     private void Awake() 
     {
         _animator = GetComponent<Animator>();
         _useWeaponStateMachine = GetComponentInParent<UseWeaponStateMachine>();
         _characterIdentity = GetComponentInParent<CharacterIdentity>();
+        _playableCharaIdentity = _characterIdentity as PlayableCharacterIdentity;
     }
 
     public void ReloadWeaponFinish()
@@ -23,7 +26,16 @@ public class AnimatorCharacterHelp : MonoBehaviour
     }
     public void AfterDeathAnim()
     {
+        wasDeath = true;
         _characterIdentity.AfterFinishDeathAnimation();
+    }
+    public void StartKnockOutAnim()
+    {
+        if(wasDeath)
+        {
+            wasDeath = false;
+            _playableCharaIdentity.AfterFinishKnockOutAnimation();
+        }
     }
     public void OnAnimatorIK(int layerIndex) 
     {

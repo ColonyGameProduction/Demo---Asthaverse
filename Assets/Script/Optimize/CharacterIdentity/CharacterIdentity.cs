@@ -137,6 +137,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 
     public virtual void Death()
     {
+        if(_isDead)return;
         _regenCDTimer = 0f;
         _animator.SetBool("Death", true);
         _animator.SetTrigger("DeathTrigger");
