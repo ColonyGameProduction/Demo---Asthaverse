@@ -10,8 +10,7 @@ public interface IPlayableMovementDataNeeded
     void RotateToAim_Idle();
     public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get ;}
     public PlayableMakeSFX GetPlayableMakeSFX {get ;}
-    public void CharaConDataToNormal();
-    public void CharaConDataToCrouch();
+    public void CharaConDataToCrawl();
     public void RotateWhileReviving();
     
 }

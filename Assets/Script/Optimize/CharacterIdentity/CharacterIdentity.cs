@@ -90,10 +90,10 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         _gm = GameManager.instance;
     }
 
-    protected virtual void Update()
-    {
-        RegenerationTimer();
-    }
+    // protected virtual void Update()
+    // {
+        
+    // }
     private void UseWeapon_OnWasUsinghGun()
     {
         _moveStateMachine.WasCharacterAiming = true;
@@ -118,32 +118,19 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         CurrHealth += Healing;
         if(CurrHealth >= TotalHealth) CurrHealth = TotalHealth;
     }
-    protected virtual void Regeneration()
-    {
-        Heal(TotalHealth * _regenScale * Time.deltaTime);
-    }
-    protected void RegenerationTimer()
-    {
-        if(CurrHealth <= TotalHealth && !IsDead)
-        {
-            if(_regenCDTimer > 0)_regenCDTimer -= Time.deltaTime;
-            else
-            {
-                _regenCDTimer = 0;
-                Regeneration();
-            }
-        }
-    }
+    
+    
 
     public virtual void Death()
     {
         if(_isDead)return;
+        _isDead = true;
         _regenCDTimer = 0f;
         _animator.SetBool("Death", true);
         _animator.SetTrigger("DeathTrigger");
-        _isDead = true;
         _useWeaponStateMachine.ForceStopUseWeapon();
         _moveStateMachine.ForceStopMoving();
+        
         if(_fovMachine.enabled)_fovMachine.StopFOVMachine();
         _fovMachine.enabled = false;
     }

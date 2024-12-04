@@ -2,6 +2,14 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
+
+[Serializable]
+public struct CharaControllerData
+{
+    public Vector3 center;
+    public float radius;
+    public float height;
+}
 public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMovementData
 {
     #region Normal Variable
@@ -45,6 +53,11 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     protected bool _allowLookTarget;
     [SerializeField]protected float _faceDirCount = 0.9f;
 
+    [Space(1)]
+    [Header("CharaCon Data")]
+    protected CharaControllerData _normalHeightCharaCon;
+    [SerializeField] protected CharaControllerData _crouchHeightCharaCon;
+
     public Action<Vector3> OnIsTheSamePosition;
 
     #endregion
@@ -86,6 +99,9 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         _states = new MovementStateFactory(this);
 
         if(AgentNavMesh == null)_agentNavMesh = GetComponent<NavMeshAgent>();
+        _normalHeightCharaCon.center = Vector3.zero;
+        _normalHeightCharaCon.radius = _agentNavMesh.radius;
+        _normalHeightCharaCon.height = _agentNavMesh.height;
     }
     protected virtual void Start() 
     {        
@@ -250,6 +266,14 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     }
 
     #endregion
+    public virtual void CharaConDataToNormal() => ChangeNavMeshData(_normalHeightCharaCon);
+    public virtual void CharaConDataToCrouch() => ChangeNavMeshData(_crouchHeightCharaCon);
+    protected void ChangeNavMeshData(CharaControllerData newData)
+    {
+        // Debug.Log("lewat siniii");
+        _agentNavMesh.radius = newData.radius;
+        _agentNavMesh.height = newData.height;
+    }
 
 
 }

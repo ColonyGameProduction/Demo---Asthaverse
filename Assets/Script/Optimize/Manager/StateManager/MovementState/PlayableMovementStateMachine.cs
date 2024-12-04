@@ -2,13 +2,7 @@ using System;
 using UnityEngine;
 
 
-[Serializable]
-public struct CharaControllerData
-{
-    public Vector3 center;
-    public float radius;
-    public float height;
-}
+
 public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovementData, IPlayableMovementDataNeeded
 {
     #region Normal Variable
@@ -26,6 +20,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     [SerializeField] protected Transform _originToLookAtWall;
     [SerializeField] protected LayerMask _wallLayerMask;
     [SerializeField] protected float _playerToWallMinDistance = 2f;
+    [SerializeField] protected Transform _animateCharaTransform;
     protected Collider _chosenWallToTakeCover, _charaHeadColl;
     protected float _charaHeightBuffer, _charaWidth, _wallLength, _wallWidth;
     protected Vector3 _takeCoverPosition, _takeCoverDirection;
@@ -33,9 +28,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected bool _isWallTallerThanChara;
 
     [Space(1)]
-    [Header("CharaCon Data")]
-    private CharaControllerData _normalHeightCharaCon;
-    [SerializeField] private CharaControllerData _crouchHeightCharaCon;
+    [Header("CharaCon Data - advanced")]
+    [SerializeField] private CharaControllerData _crawlHeightCharaCon;
 
 
     [Space(1)]
@@ -63,7 +57,14 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     
     #region GETTERSETTER Variable
     public float CrawlSpeed { get{return _crawlSpeed;}}
-    public bool IsCrawling {  get {return _isCrawl;}set{ _isCrawl = value;} }
+    public bool IsCrawling {  get {return _isCrawl;}
+    set
+        { 
+        
+            if(_isCrawl != value)OnIsCrawlingChange?.Invoke(value);
+            _isCrawl = value;
+        } 
+    }
 
     public bool IsMustLookForward { get{return _isMustLookForward;} set{_isMustLookForward = value;} } // Kan kalo nembak gitu hrs liat ke depan selalu, jd is true
     public bool IsTakingCoverAtWall { get{return _isTakeCoverAtWall;} set{_isTakeCoverAtWall = value;} } 
@@ -73,7 +74,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     public Vector3 InputMovement { get{ return _inputMovement;} set{_inputMovement = value;}} // Getting Input Movement from playercontroller
     public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get {return _getPlayableCharacterIdentity;}}
     public PlayableMakeSFX GetPlayableMakeSFX {get {return _getPlayableMakeSFX;}}
-
+    public Action<bool> OnIsCrawlingChange;
 
     #endregion
     protected override void Awake()
@@ -252,9 +253,9 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             Vector3 wallOtherSideDir = Vector3.zero;
             if(!isGoingToLeft)wallOtherSideDir = Quaternion.Euler (0, -45,0) * -_takeCoverDirection;
             else wallOtherSideDir = Quaternion.Euler (0, 45,0) * -_takeCoverDirection;
-            Debug.DrawRay(transform.position + wallMovementDir, wallOtherSideDir * _playerToWallMinDistance, Color.black, 1f, false);
+            Debug.DrawRay(transform.position + wallMovementDir * 1.2f, wallOtherSideDir * _playerToWallMinDistance, Color.black, 1f, false);
             RaycastHit otherSideWall;
-            if(Physics.Raycast(transform.position + wallMovementDir, wallOtherSideDir, out otherSideWall, _playerToWallMinDistance, _wallLayerMask))
+            if(Physics.Raycast(transform.position + wallMovementDir * 1.2f, wallOtherSideDir, out otherSideWall, _playerToWallMinDistance, _wallLayerMask))
             {
                 if(otherSideWall.normal != _takeCoverDirection) //inikalo dinding di kanannya itu msh sambungan wall ini dan collider sama
                 {
@@ -294,10 +295,14 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     public void RotateWhileReviving()
     {
         if(!_getPlayableCharacterIdentity.IsReviving)return;
+        // Vector3 flatForward = new Vector3(_playableLookTarget.forward.x, 0, _playableLookTarget.forward.z).normalized;
         Vector3 dir = (_getPlayableCharacterIdentity.FriendBeingRevivedPos.position - _charaGameObject.position).normalized;
+        dir = new Vector3(dir.x, 0, dir.z);
         Vector3 newDir = Quaternion.Euler (0, 45,0) * dir;
 
-        Vector3 flatForward = new Vector3(_playableLookTarget.forward.x, 0, _playableLookTarget.forward.z).normalized;
+        Debug.DrawRay(transform.position, dir, Color.red, 2f, false);
+        Debug.DrawRay(transform.position, newDir, Color.black, 2f, false);
+
         if(!IsAIInput)
         {
             
@@ -340,12 +345,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         {
             if(IsTakingCoverAtWall)
             {
-                AgentNavMesh.ResetPath();
-                IsTakingCoverAtWall = false;
-                CharaAnimator?.SetBool(ANIMATION_MOVE_PARAMETER_TAKECOVER, false);
-                _isAtTakingCoverPos = false;
-                _isGoingToTakeCover = false;
-                AllowLookTarget = false;
+                ExitTakeCover();
             }
         }
     }
@@ -410,6 +410,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         _isAtTakingCoverPos = false;
         _isGoingToTakeCover = false;
         AllowLookTarget = false;
+        _animateCharaTransform.localPosition = new Vector3(0, _animateCharaTransform.localPosition.y, 0);
     }
     private void GoingToTakeCover()
     {
@@ -417,8 +418,28 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         {
             _charaGameObject.forward = Vector3.Slerp(_charaGameObject.forward, _takeCoverDirection.normalized, Time.deltaTime * _rotateSpeed);
             float dot = Vector3.Dot(_charaGameObject.forward, _takeCoverDirection.normalized);
+            if(dot >= 0.99f)
+            {
+                // if(_animateCharaTransform.localPosition.z != 0 || _animateCharaTransform.localPosition.x != 0)
+                // {
+                //     _animateCharaTransform.localPosition = new Vector3(0, _animateCharaTransform.localPosition.y, 0);
+                // }
+
+                Vector3 newPos = _animateCharaTransform.localPosition;
+                Vector3 newTakeCoverPos = _animateCharaTransform.InverseTransformPoint(_takeCoverPosition);
+
+                Vector3 offSetDirection = (newTakeCoverPos - newPos).normalized * 0.1f;
+                newTakeCoverPos -= offSetDirection;
+
+                newPos.x = newTakeCoverPos.x;
+                newPos.z = newTakeCoverPos.z;
+
+                _animateCharaTransform.localPosition = newPos;
+                
+            }
             if(dot >= 0.99f && _isAtTakingCoverPos)
             {
+
                 AgentNavMesh.ResetPath();
                 if(CharaAnimator?.GetBool(ANIMATION_MOVE_PARAMETER_TAKECOVER) == false)
                 {
@@ -476,12 +497,25 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         }
     }
     
-    public void CharaConDataToNormal() => ChangeCharaConData(_normalHeightCharaCon);
-    public void CharaConDataToCrouch() => ChangeCharaConData(_crouchHeightCharaCon);
+    public override void CharaConDataToNormal()
+    {
+        base.CharaConDataToNormal();
+        ChangeCharaConData(_normalHeightCharaCon);
+    }
+    public override void CharaConDataToCrouch()
+    {
+        base.CharaConDataToCrouch();
+        ChangeCharaConData(_crouchHeightCharaCon);
+    }
+    public void CharaConDataToCrawl()
+    {
+        ChangeNavMeshData(_crawlHeightCharaCon);
+        ChangeCharaConData(_crawlHeightCharaCon);
+    }
 
     private void ChangeCharaConData(CharaControllerData newData)
     {
-        Debug.Log("lewat siniii");
+        // Debug.Log("lewat siniii");
         _cc.center = newData.center;
         _cc.radius = newData.radius;
         _cc.height = newData.height;

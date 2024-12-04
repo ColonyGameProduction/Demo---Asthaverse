@@ -45,6 +45,19 @@ public class IdleState : MovementState
 
         CheckingIdleAnimationCycle();
         CheckIsCrouchWhileIdle();
+
+        if(_groundData != null && _groundData.IsCrawling)
+        {
+            if(_groundData.IsCrawling)
+            {
+                _playableData?.CharaConDataToCrawl();
+            }
+        }
+        else if(!_standData.IsCrouching && ((_groundData == null) || (_groundData != null && !_groundData.IsCrawling)))
+        {
+            Debug.Log("ini ga lewat sinikah?");
+            _sm.CharaConDataToNormal();
+        }
     }
     public override void ExitState()
     {
@@ -69,12 +82,11 @@ public class IdleState : MovementState
                 _currTargetTime = _sm.IdleAnimCycleTimeTarget[1];
             }
             SetAnimParamActive(ANIMATION_MOVE_PARAMETER_CROUCH);
-            _playableData?.CharaConDataToCrouch();
+            _sm.CharaConDataToCrouch();
         }
         else
         {
             SetAnimParamInactive(ANIMATION_MOVE_PARAMETER_CROUCH);
-            _playableData?.CharaConDataToNormal();
         }
     }
     private void StopMovementAnimation()

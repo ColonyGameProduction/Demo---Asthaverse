@@ -199,9 +199,9 @@ public class PlayableCharacterManager : MonoBehaviour
             
             _charaIdentities[nextCharaidx].FriendID = i;
             //Di sini nanti jg taro di AI controllernya, posisi update mereka yang biasa
-            Debug.Log(CurrPlayableChara + " AAAAAA" + _currCharaidx);
+            // Debug.Log(CurrPlayableChara + " AAAAAA" + _currCharaidx);
             _charaIdentities[nextCharaidx].FriendAIStateMachine.GiveUpdateFriendDirection(CurrPlayableChara, _friendsCommandPosition[i-1].transform);
-            _charaIdentities[nextCharaidx].ResetHealth();
+            if(!_charaIdentities[nextCharaidx].IsDead)_charaIdentities[nextCharaidx].ResetHealth();
             if(_charaIdentities[nextCharaidx].FriendAIStateMachine.IsToldHold)
             {
                 _friendsCommandPosition[i-1].transform.position = _charaIdentities[nextCharaidx].transform.position;

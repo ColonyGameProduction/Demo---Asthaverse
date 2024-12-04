@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
+
 
 public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper, IReceiveInputFromPlayer, ICanSwitchWeapon, IInteractable
 {
@@ -56,6 +54,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected PlayableCharacterIdentity _characterIdentityWhoReviving, _characterIdentityWhoBeingRevived;
     [Header("Death Animation Component")]
     private bool _isAnimatingOtherAnimation;
+
+    public Action OnIsCrawlingChange;
     #region GETTERSETTER Variable
 
     public override float StealthStat 
@@ -159,9 +159,9 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
 
 
-    protected override void Update() 
+    protected void Update() 
     {
-        base.Update();
+        RegenerationTimer();
         
 
         if(_isBeingRevived)
@@ -230,6 +230,29 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         }
         _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
     }
+    protected void Regeneration()
+    {
+        Heal(TotalHealth * _regenScale * Time.deltaTime);
+    }
+    protected void RegenerationTimer()
+    {
+        if(CurrHealth <= TotalHealth && !IsDead)
+        {
+            if(_friendAIStateMachine.EnemyWhoSawAIList.Count > 0)
+            {
+                _regenCDTimer = _regenTimerMax;
+            }
+            else
+            {
+                if(_regenCDTimer > 0)_regenCDTimer -= Time.deltaTime;
+                else
+                {
+                    _regenCDTimer = 0;
+                    Regeneration();
+                }
+            }
+        }
+    }
 
     public override void Death()
     {
@@ -256,8 +279,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         if(IsPlayerInput)OnPlayableDeath?.Invoke();
         _getPlayableMovementStateData.SetCharaGameObjRotationToNormal();
-        
-        
+        _moveStateMachine.IsCrouching = false;
         _animator.SetTrigger("KnockTrigger");
         
     }
@@ -278,7 +300,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _deadColl.SetActive(false);
         _isAnimatingOtherAnimation = true;
 
-        _animator.SetTrigger("ReviveTrigger");
+        _animator.SetBool("BeingRevived", true);
 
         _characterIdentityWhoReviving = characterIdentityWhoReviving;
         _isBeingRevived = true;
@@ -318,6 +340,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _characterIdentityWhoReviving = null;
         _isDead = false;
         _isAnimatingOtherAnimation = false;
+        _animator.SetBool("BeingRevived", false);
         _animator.SetBool("Death", false);
     }
     public void CutOutFromBeingRevived()
@@ -325,7 +348,18 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         if(!_isBeingRevived)return;
         _isBeingRevived = false;
         _isAnimatingOtherAnimation = false;
+        _animator.SetBool("BeingRevived", false);
         _animator.Play("Rifle_Knock_Out");
+        _isDead = true;
+        _fovMachine.enabled = false;
+        _animator.SetBool("Death", true);
+        
+        _deadColl.SetActive(true);
+        if(!_getPlayableMovementStateData.IsCrawling)
+        {
+            _getPlayableMovementStateData.IsCrawling = true;
+        }
+
     }
     
     
