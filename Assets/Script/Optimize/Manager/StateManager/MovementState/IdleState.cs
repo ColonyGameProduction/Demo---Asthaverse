@@ -75,6 +75,7 @@ public class IdleState : MovementState
     {
         if(_standData.IsCrouching)
         {
+            
             if(_sm.IdleAnimCycleIdx > 1) 
             {
                 _sm.SetIdleAnimToNormal();
@@ -83,6 +84,16 @@ public class IdleState : MovementState
             }
             SetAnimParamActive(ANIMATION_MOVE_PARAMETER_CROUCH);
             _sm.CharaConDataToCrouch();
+
+            if(_sm.IsAtCrouchPlatform && _sm.IsAIInput)
+            {
+                if(!_sm.IsHeadHitWhenUnCrouch())
+                {
+                    _sm.IsAtCrouchPlatform = false;
+                    _sm.IsCrouching = false;
+                }
+
+            }
         }
         else
         {

@@ -1108,6 +1108,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4059730125171812819, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
   m_PrefabInstance: {fileID: 560934120}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &99832973
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 99832974}
+  m_Layer: 7
+  m_Name: FeetCrouchChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &99832974
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99832973}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2047355711}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &101732809 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -1407623021618417711, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
@@ -5624,6 +5655,7 @@ Transform:
   m_Children:
   - {fileID: 1109155659}
   - {fileID: 1242949133}
+  - {fileID: 2085573098}
   - {fileID: 851079992}
   - {fileID: 1033324313}
   - {fileID: 1017652371}
@@ -5836,6 +5868,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1947801305}
   - {fileID: 785097526}
   - {fileID: 1321566081}
   - {fileID: 544341713}
@@ -6283,6 +6316,10 @@ MonoBehaviour:
     center: {x: 0, y: 0.625, z: 0}
     radius: 0.5
     height: 1.25
+  _feetTransformPoint: {fileID: 1975619739}
+  _crouchPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 131072
 --- !u!114 &500153887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9591,6 +9628,10 @@ MonoBehaviour:
     center: {x: 0, y: 0.625, z: 0}
     radius: 0.5
     height: 1.25
+  _feetTransformPoint: {fileID: 2085573098}
+  _crouchPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 131072
   _isCrawl: 0
   _crawlMultiplier: 0.4
   _isTakeCoverAtWall: 0
@@ -9599,7 +9640,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 12288
   _playerToWallMinDistance: 2
-  _animateCharaTransform: {fileID: 0}
+  _animateCharaTransform: {fileID: 851079992}
   _crawlHeightCharaCon:
     center: {x: 0, y: 0.375, z: 0}
     radius: 0.4
@@ -16088,6 +16129,10 @@ MonoBehaviour:
     center: {x: 0, y: 0.625, z: 0}
     radius: 0.5
     height: 1.25
+  _feetTransformPoint: {fileID: 2056408381}
+  _crouchPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 131072
   _isCrawl: 0
   _crawlMultiplier: 0.4
   _isTakeCoverAtWall: 0
@@ -16096,7 +16141,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 12288
   _playerToWallMinDistance: 2
-  _animateCharaTransform: {fileID: 0}
+  _animateCharaTransform: {fileID: 128607772}
   _crawlHeightCharaCon:
     center: {x: 0, y: 0.375, z: 0}
     radius: 0.4
@@ -16647,6 +16692,147 @@ MonoBehaviour:
       x: 1
       y: 1
       z: 1
+--- !u!1 &1178385605
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1178385606}
+  - component: {fileID: 1178385610}
+  - component: {fileID: 1178385609}
+  - component: {fileID: 1178385608}
+  - component: {fileID: 1178385607}
+  - component: {fileID: 1178385611}
+  m_Layer: 17
+  m_Name: Crouch Platform Template
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1178385606
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178385605}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.054445267, y: -1.502, z: -2.3576736}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1360397990}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1178385607
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178385605}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.2, y: 0.75, z: 3.75}
+  m_Center: {x: 6.95, y: 0, z: 0}
+--- !u!65 &1178385608
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178385605}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.2, y: 0.75, z: 3.75}
+  m_Center: {x: -6.95, y: 0, z: 0}
+--- !u!65 &1178385609
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178385605}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 14.1, y: 0.75, z: 0.2}
+  m_Center: {x: 0, y: 0, z: -1.9}
+--- !u!65 &1178385610
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178385605}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 14.1, y: 0.75, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 1.9}
+--- !u!65 &1178385611
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178385605}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 14.1, y: 0.05, z: 3.75}
+  m_Center: {x: 0, y: 1.52, z: 0}
 --- !u!1 &1180068928
 GameObject:
   m_ObjectHideFlags: 0
@@ -17416,6 +17602,10 @@ MonoBehaviour:
     center: {x: 0, y: 0.625, z: 0}
     radius: 0.5
     height: 1.25
+  _feetTransformPoint: {fileID: 1604241058}
+  _crouchPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 131072
 --- !u!114 &1252209725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18223,6 +18413,10 @@ MonoBehaviour:
     center: {x: 0, y: 0.625, z: 0}
     radius: 0.5
     height: 1.25
+  _feetTransformPoint: {fileID: 1868816130}
+  _crouchPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 131072
 --- !u!114 &1297871094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19221,6 +19415,7 @@ Transform:
   - {fileID: 1752528964}
   - {fileID: 592481685}
   - {fileID: 353427911}
+  - {fileID: 1178385606}
   - {fileID: 990395144}
   - {fileID: 1690379724}
   - {fileID: 1440651258}
@@ -21037,6 +21232,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1604241058}
   - {fileID: 150551746}
   - {fileID: 260558933}
   - {fileID: 213081361}
@@ -21427,6 +21623,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1975619739}
   - {fileID: 2074651397}
   - {fileID: 1395053347}
   - {fileID: 578481968}
@@ -21503,6 +21700,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -295204397076766997, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
   m_PrefabInstance: {fileID: 1486166693}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1570469892
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1570469893}
+  m_Layer: 7
+  m_Name: FeetCrouchChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1570469893
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1570469892}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1987662519}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1577418136 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -109009404412102082, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
@@ -21751,6 +21979,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bodyType: 1
   bodyPartsColider: {fileID: 1602979399}
+--- !u!1 &1604241057
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1604241058}
+  m_Layer: 7
+  m_Name: FeetCrouchChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1604241058
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604241057}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1498576157}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1608697925
 GameObject:
   m_ObjectHideFlags: 0
@@ -24231,6 +24490,10 @@ MonoBehaviour:
     center: {x: 0, y: 0.625, z: 0}
     radius: 0.5
     height: 1.25
+  _feetTransformPoint: {fileID: 1570469893}
+  _crouchPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 131072
 --- !u!114 &1769942164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26336,6 +26599,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1479333296116823138, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
   m_PrefabInstance: {fileID: 1486166693}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1868816129
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1868816130}
+  m_Layer: 7
+  m_Name: FeetCrouchChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1868816130
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1868816129}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2081483652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1868833918
 GameObject:
   m_ObjectHideFlags: 0
@@ -26898,6 +27192,7 @@ Transform:
   m_Children:
   - {fileID: 155064225}
   - {fileID: 2094983564}
+  - {fileID: 2056408381}
   - {fileID: 128607772}
   - {fileID: 600901324}
   - {fileID: 1917693514}
@@ -27139,6 +27434,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6699272985189926697, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
   m_PrefabInstance: {fileID: 1657913732}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1947801304
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1947801305}
+  m_Layer: 7
+  m_Name: FeetCrouchChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1947801305
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947801304}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 459745301}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1955977778
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -27496,6 +27822,37 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &1975619738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1975619739}
+  m_Layer: 7
+  m_Name: FeetCrouchChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1975619739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1975619738}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1547031559}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &1979640765
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -27676,6 +28033,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1570469893}
   - {fileID: 1804682309}
   - {fileID: 1044742151}
   - {fileID: 2028267986}
@@ -27981,6 +28339,10 @@ MonoBehaviour:
     center: {x: 0, y: 0.625, z: 0}
     radius: 0.5
     height: 1.25
+  _feetTransformPoint: {fileID: 1947801305}
+  _crouchPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 131072
 --- !u!4 &2017098525
 Transform:
   m_ObjectHideFlags: 0
@@ -28404,6 +28766,7 @@ Transform:
   m_Children:
   - {fileID: 1715774230}
   - {fileID: 918077073}
+  - {fileID: 99832974}
   - {fileID: 2092093416}
   - {fileID: 1165588769}
   - {fileID: 1300998150}
@@ -28472,6 +28835,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6025068566154630944, guid: c949544090af3f44a861b4f2ca9cc925, type: 3}
   m_PrefabInstance: {fileID: 560934120}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2056408380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2056408381}
+  m_Layer: 7
+  m_Name: FeetCrouchChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2056408381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056408380}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1911957387}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &2059391613
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -28798,6 +29192,10 @@ MonoBehaviour:
     center: {x: 0, y: 0.625, z: 0}
     radius: 0.5
     height: 1.25
+  _feetTransformPoint: {fileID: 99832974}
+  _crouchPlatformLayer:
+    serializedVersion: 2
+    m_Bits: 131072
   _isCrawl: 0
   _crawlMultiplier: 0.2
   _isTakeCoverAtWall: 0
@@ -29260,6 +29658,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1868816130}
   - {fileID: 1305765189}
   - {fileID: 840531563}
   - {fileID: 2045212724}
@@ -29303,6 +29702,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bodyType: 2
   bodyPartsColider: {fileID: 2082541409}
+--- !u!1 &2085573097
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2085573098}
+  m_Layer: 7
+  m_Name: FeetCrouchChecker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2085573098
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085573097}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 439030860}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2085741374
 GameObject:
   m_ObjectHideFlags: 0

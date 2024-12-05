@@ -57,6 +57,11 @@ public class AnimatorCharacterHelp : MonoBehaviour
         wasDeath = true;
         _characterIdentity.AfterFinishDeathAnimation();
     }
+    public void AfterFinishReviveAnim()
+    {
+        Debug.Log("Halooo ??? revive???");
+        _playableCharaIdentity.AfterFinishReviveAnimation();
+    }
     public void StartKnockOutAnim()
     {
         if(wasDeath)

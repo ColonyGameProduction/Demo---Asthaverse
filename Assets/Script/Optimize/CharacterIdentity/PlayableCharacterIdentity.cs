@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
@@ -148,7 +149,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         InitializeFriend();
 
 
-        _friendAIStateMachine = GetComponent<FriendAIBehaviourStateMachine>();
+        _friendAIStateMachine = _aiStateMachine as FriendAIBehaviourStateMachine;
         
     }
     protected override void Start() 
@@ -163,29 +164,38 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         RegenerationTimer();
         
-
-        if(_isBeingRevived)
+        if(!IsPlayerInput)
         {
-            AnimatorTransitionInfo currentState = _animator.GetAnimatorTransitionInfo(0);
-            if(_animator.IsInTransition(0))
+            if(!_moveStateMachine.IsAtCrouchPlatform && !FriendAIStateMachine.IsAIEngage && !FriendAIStateMachine.GotDetectedbyEnemy)
             {
-                
-                Debug.Log(currentState.normalizedTime + " waktunya animasi");
-                if (currentState.normalizedTime < 0.9f)
-                {
-                    Debug.Log("Animasi masih otw2");
-                }
-                else
-                {
-                    Debug.Log("Animasi done");
-                    AfterFinishReviveAnimation();
-                }
-            }
-            else
-            {
-                Debug.Log(currentState.normalizedTime + " waktunya animasi2");
+                if(_getPlayableMovementStateData.IsAskedToCrouchByPlayable && !_getPlayableMovementStateData.IsCrouching)Crouch(true);
+                else if(_getPlayableMovementStateData.IsAskedToRunByPlayable && !_getPlayableMovementStateData.IsRunning)Run(true);
             }
         }
+
+
+        // if(_isBeingRevived)
+        // {
+        //     AnimatorTransitionInfo currentState = _animator.GetAnimatorTransitionInfo(0);
+        //     if(_animator.IsInTransition(0))
+        //     {
+                
+        //         Debug.Log(currentState.normalizedTime + " waktunya animasi");
+        //         if (currentState.normalizedTime < 0.9f)
+        //         {
+        //             Debug.Log("Animasi masih otw2");
+        //         }
+        //         else
+        //         {
+        //             Debug.Log("Animasi done");
+        //             AfterFinishReviveAnimation();
+        //         }
+        //     }
+        //     else
+        //     {
+        //         Debug.Log(currentState.normalizedTime + " waktunya animasi2");
+        //     }
+        // }
     }
 
     public void InitializeFriend()
@@ -429,9 +439,39 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         }
         else
         {
+            
             base.Run(isRunning);
         }
         
+    }
+    public override void Crouch(bool isCrouching)
+    {
+        if(IsPlayerInput)
+        {
+            if(isCrouching)
+            {
+                if(MovementStateMachine.IsRunning)
+                {
+                    MovementStateMachine.IsRunning = false;
+                }
+            }
+            MovementStateMachine.IsCrouching = isCrouching;
+        }
+        else
+        {
+           if(isCrouching)
+            {
+                if(MovementStateMachine.IsRunning)
+                {
+                    MovementStateMachine.IsRunning = false;
+                }
+                MovementStateMachine.IsCrouching = isCrouching;
+            }
+            else
+            {
+                if(!MovementStateMachine.IsAtCrouchPlatform)MovementStateMachine.IsCrouching = isCrouching;
+            }
+        }
     }
     public override void Aiming(bool isAiming)
     {

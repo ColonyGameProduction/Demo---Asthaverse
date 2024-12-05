@@ -19,6 +19,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [SerializeField] protected bool _isWalking;
     [SerializeField] protected bool _isRun;
     [SerializeField] protected bool _isCrouch;
+    
     protected bool _isMustStayAlert;
     
     protected MovementStateFactory _states;
@@ -58,6 +59,13 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     protected CharaControllerData _normalHeightCharaCon;
     [SerializeField] protected CharaControllerData _crouchHeightCharaCon;
 
+    [Space(1)]
+    [Header("AI Crouch Head Checker")]
+    [SerializeField] protected Transform _feetTransformPoint;
+    private bool _isAtCrouchPlatform;
+    
+    [SerializeField] protected LayerMask _crouchPlatformLayer;
+
     public Action<Vector3> OnIsTheSamePosition;
 
     #endregion
@@ -73,8 +81,8 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     public bool IsIdle {get {return _isIdle;} set{ _isIdle = value;} }
     public bool IsWalking {get {return _isWalking;}set{ _isWalking = value;} }
-    public bool IsRunning { get {return _isRun;}set{ _isRun = value;} }
-    public bool IsCrouching { get {return _isCrouch;}set{ _isCrouch = value;} }
+    public virtual bool IsRunning { get {return _isRun;}set{ _isRun = value;} }
+    public virtual bool IsCrouching { get {return _isCrouch;}set{ _isCrouch = value;} }
 
     public float IdleAnimCycleIdx {get {return _idleAnimCycleIdx;}}
     public float[] IdleAnimCycleTimeTarget {get {return _idleAnimCycleTimeTarget;}}
@@ -89,6 +97,8 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
     public bool AllowLookTarget {get {return _allowLookTarget;} set{_allowLookTarget = value;}}
     public bool IsMustStayAlert { get {return _isMustStayAlert;}set{ _isMustStayAlert = value;} }
+
+    public bool IsAtCrouchPlatform {get {return _isAtCrouchPlatform;} set{_isAtCrouchPlatform = value;}}
     
     #endregion
 
@@ -104,7 +114,8 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         _normalHeightCharaCon.height = _agentNavMesh.height;
     }
     protected virtual void Start() 
-    {        
+    {   
+        // _headMaxHeightTransform.position = new Vector3(_headMaxHeightTransform.position.x, _headMaxHeightTransform.position.y + _charaHeightBuffer, _headMaxHeightTransform.position.z);
         SetIdleAnimToNormal();
         SwitchState(_states.IdleState());
     }
@@ -149,6 +160,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         bool isFacingTheDirection = true;
         float checkFaceDir = 0;
         Vector3 facedir = (AgentNavMesh.steeringTarget - transform.position).normalized;
+        CrouchAIBrain(facedir);
         // Debug.Log("Dot Move" + Vector3.Dot(facedir, transform.forward));
         // bool isFacingMoveDirection = Vector3.Dot(facedir, transform.forward) > .5f;
         Vector3 animatedFaceDir = transform.InverseTransformDirection(facedir);
@@ -275,5 +287,80 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         _agentNavMesh.height = newData.height;
     }
 
+    public virtual bool IsHeadHitWhenUnCrouch()
+    {
+        Vector3 facedir = (AgentNavMesh.steeringTarget - transform.position).normalized;
+        Debug.DrawRay(_feetTransformPoint.position, _feetTransformPoint.up * _normalHeightCharaCon.height, Color.black, 0.5f);
+        if(Physics.Raycast(_feetTransformPoint.position, _feetTransformPoint.up, out RaycastHit hitHead, _normalHeightCharaCon.height, _crouchPlatformLayer))
+        {
+            return true;
+        }
+        else
+        {
+
+            Vector3 crossProduct = Vector3.Cross(_feetTransformPoint.up, facedir).normalized;
+            Quaternion rotation = Quaternion.AngleAxis(15, crossProduct);
+            
+            Vector3 newDir = rotation * _feetTransformPoint.up;
+            Debug.DrawRay(_feetTransformPoint.position, crossProduct * _normalHeightCharaCon.height, Color.red, 0.5f);
+            Debug.DrawRay(_feetTransformPoint.position, newDir * _normalHeightCharaCon.height, Color.black, 0.5f);
+            if(Physics.Raycast(_feetTransformPoint.position, newDir, out RaycastHit hitHead2, _normalHeightCharaCon.height, _crouchPlatformLayer))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+    }
+
+    public void CrouchAIBrain(Vector3 agentGoalDir)
+    {
+
+        if(!IsCrouching)
+        {
+            
+            Debug.DrawRay(_feetTransformPoint.position, agentGoalDir * (_agentNavMesh.radius * 1.1f), Color.red);
+            if(Physics.Raycast(_feetTransformPoint.position, agentGoalDir, out RaycastHit hit, _agentNavMesh.radius * 1.1f, _crouchPlatformLayer))
+            {
+                Debug.Log(transform.name + "I hit something I must crouch");
+                IsAtCrouchPlatform = true;
+                if(IsRunning)IsRunning = false;
+                IsCrouching = true;
+            }
+        }
+        else
+        {
+            float distanceToagentGoal = Vector3.Distance(transform.position, _agentNavMesh.steeringTarget);
+            Debug.DrawRay(_feetTransformPoint.position, agentGoalDir * distanceToagentGoal, Color.red);
+            if(Physics.Raycast(_feetTransformPoint.position, agentGoalDir, out RaycastHit hit, distanceToagentGoal, _crouchPlatformLayer))
+            {
+                Debug.Log(transform.name + "I still hit something I must crouch");
+                IsAtCrouchPlatform = true;
+                if(IsRunning)IsRunning = false;
+                IsCrouching = true;
+            }
+            else
+            {
+                if(IsAtCrouchPlatform)
+                {
+                    if(IsHeadHitWhenUnCrouch())
+                    {
+                        Debug.Log(transform.name + "I still hit something I must crouch");
+                        IsAtCrouchPlatform = true;
+                        if(IsRunning)IsRunning = false;
+                        IsCrouching = true;
+                    }
+                    else
+                    {
+                        IsCrouching = false;
+                        IsAtCrouchPlatform = false;
+                    }
+                }
+            }
+        }
+    }
 
 }

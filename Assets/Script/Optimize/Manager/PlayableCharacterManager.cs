@@ -466,12 +466,26 @@ public class PlayableCharacterManager : MonoBehaviour
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {
 
-            if(_currPlayableMoveStateMachine.IsCrouching)_playableCharacterCameraManager.ResetCameraHeight();
-            if(_playableCharacterCameraManager.IsScope)_playableCharacterCameraManager.ResetScope();
-            CurrPlayableChara.Run(true);
+            
+            if(_currPlayableMoveStateMachine.IsCrouching)
+            {
+                if(!_currPlayableMoveStateMachine.IsHeadHitWhenUnCrouch())
+                {
+                    if(_playableCharacterCameraManager.IsScope)_playableCharacterCameraManager.ResetScope();
+                    _playableCharacterCameraManager.ResetCameraHeight();
+                    CurrPlayableChara.Run(true);
+                }
+            }
+            else
+            {
+                if(_playableCharacterCameraManager.IsScope)_playableCharacterCameraManager.ResetScope();
+                CurrPlayableChara.Run(true);
+            }
             foreach(PlayableCharacterIdentity chara in _charaIdentities)
             {
                 if(chara == CurrPlayableChara)continue;
+                chara.GetPlayableMovementData.IsAskedToRunByPlayable = true;
+                chara.GetPlayableMovementData.IsAskedToCrouchByPlayable = false;
                 if(chara.FriendAIStateMachine.IsAIEngage || chara.FriendAIStateMachine.GotDetectedbyEnemy)continue;
                 chara.Run(true);
             }
@@ -485,6 +499,7 @@ public class PlayableCharacterManager : MonoBehaviour
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
             if(chara == CurrPlayableChara)continue;
+            chara.GetPlayableMovementData.IsAskedToRunByPlayable = false;
             if(!chara.FriendAIStateMachine.GotDetectedbyEnemy && !chara.FriendAIStateMachine.IsAIEngage)chara.Run(false);
         }
     }
@@ -499,6 +514,8 @@ public class PlayableCharacterManager : MonoBehaviour
             foreach(PlayableCharacterIdentity chara in _charaIdentities)
             {
                 if(chara == CurrPlayableChara)continue;
+                chara.GetPlayableMovementData.IsAskedToRunByPlayable = false;
+                chara.GetPlayableMovementData.IsAskedToCrouchByPlayable = true;
                 if(chara.FriendAIStateMachine.IsAIEngage || chara.FriendAIStateMachine.GotDetectedbyEnemy)continue;
                 chara.Crouch(true);
             }
@@ -510,8 +527,12 @@ public class PlayableCharacterManager : MonoBehaviour
     {
         if(!_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {
-            CurrPlayableChara.Crouch(false);
-            _playableCharacterCameraManager.ResetCameraHeight();
+            if(!_currPlayableMoveStateMachine.IsHeadHitWhenUnCrouch())
+            {
+                CurrPlayableChara.Crouch(false);
+                _playableCharacterCameraManager.ResetCameraHeight();
+            }
+            
         }
         else
         {
@@ -525,6 +546,7 @@ public class PlayableCharacterManager : MonoBehaviour
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
             if(chara == CurrPlayableChara)continue;
+            chara.GetPlayableMovementData.IsAskedToCrouchByPlayable = false;
             if(!chara.FriendAIStateMachine.IsAIEngage)chara.Crouch(false);
         }
     }

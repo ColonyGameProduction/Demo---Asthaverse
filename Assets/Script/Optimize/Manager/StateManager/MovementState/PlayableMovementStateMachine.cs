@@ -7,6 +7,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 {
     #region Normal Variable
     [Header ("Playable Character Variable")]
+    protected bool _isAskedToCrouchByPlayable, _isAskedToRunByPlayable;
 
     [Space(2)]
     [Header("Move States - Ground State")]
@@ -21,6 +22,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     [SerializeField] protected LayerMask _wallLayerMask;
     [SerializeField] protected float _playerToWallMinDistance = 2f;
     [SerializeField] protected Transform _animateCharaTransform;
+    protected Transform _tempAnimateCharaTransform;
     protected Collider _chosenWallToTakeCover, _charaHeadColl;
     protected float _charaHeightBuffer, _charaWidth, _wallLength, _wallWidth;
     protected Vector3 _takeCoverPosition, _takeCoverDirection;
@@ -56,6 +58,55 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     public const string ANIMATION_MOVE_PARAMETER_TAKECOVER = "TakeCover";
     
     #region GETTERSETTER Variable
+    public bool IsAskedToCrouchByPlayable{get {return _isAskedToCrouchByPlayable;} set{_isAskedToCrouchByPlayable = value;}}
+    public bool IsAskedToRunByPlayable{get {return _isAskedToRunByPlayable;} set{_isAskedToRunByPlayable = value;}}
+
+    public override bool IsRunning
+    {
+        get
+        {
+            return _isRun;
+        }
+        set
+        {
+            if(!IsAIInput)_isRun = value;
+            else
+            {
+                if(!value)
+                {
+                    if(IsAskedToRunByPlayable && !_getPlayableCharacterIdentity.FriendAIStateMachine.IsAIEngage && !_getPlayableCharacterIdentity.FriendAIStateMachine.GotDetectedbyEnemy && !IsAtCrouchPlatform)_isRun = IsAskedToCrouchByPlayable;
+                    else _isRun = value;
+                }
+                else
+                {
+                    _isRun = value;
+                }
+            }
+        }
+    }
+    public override bool IsCrouching
+    {
+        get
+        {
+            return _isCrouch;
+        }
+        set
+        {
+            if(!IsAIInput)_isCrouch = value;
+            else
+            {
+                if(!value)
+                {
+                    if(IsAskedToCrouchByPlayable && !_getPlayableCharacterIdentity.FriendAIStateMachine.IsAIEngage && !_getPlayableCharacterIdentity.FriendAIStateMachine.GotDetectedbyEnemy)_isCrouch = IsAskedToCrouchByPlayable;
+                    else _isCrouch = value;
+                }
+                else
+                {
+                    _isCrouch = value;
+                }
+            }
+        }
+    }
     public float CrawlSpeed { get{return _crawlSpeed;}}
     public bool IsCrawling {  get {return _isCrawl;}
     set
@@ -101,6 +152,12 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     }
     protected override void Start()
     {
+        GameObject go = new GameObject("tempCharaTransform");
+        
+        _tempAnimateCharaTransform = go.transform;
+        _tempAnimateCharaTransform.parent = _charaGameObject;
+        _tempAnimateCharaTransform.localPosition = _animateCharaTransform.transform.localPosition;
+
         _worldSoundManager = WorldSoundManager.Instance;
         _charaHeadColl = _getPlayableCharacterIdentity.FriendAIStateMachine.CharaHeadColl;
         _charaHeightBuffer = _getPlayableCharacterIdentity.FriendAIStateMachine.CharaHeightBuffer;
@@ -114,6 +171,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     protected override void Update()
     {
+        
         base.Update();
         GoingToTakeCover();
     }
@@ -147,7 +205,12 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         if(!IsAIInput)ForceStopPlayable(); 
         else base.ForceStopMoving();
 
-        if(PlayableCharacterManager.IsSwitchingCharacter)SetCharaGameObjRotationToNormal();
+        if(PlayableCharacterManager.IsSwitchingCharacter)
+        {
+            SetCharaGameObjRotationToNormal();
+            IsAskedToCrouchByPlayable = false;
+            IsAskedToRunByPlayable = false;
+        }
         if(IsMustLookForward)IsMustLookForward = false;
     }
     #endregion
@@ -253,9 +316,9 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             Vector3 wallOtherSideDir = Vector3.zero;
             if(!isGoingToLeft)wallOtherSideDir = Quaternion.Euler (0, -45,0) * -_takeCoverDirection;
             else wallOtherSideDir = Quaternion.Euler (0, 45,0) * -_takeCoverDirection;
-            Debug.DrawRay(transform.position + wallMovementDir * 1.2f, wallOtherSideDir * _playerToWallMinDistance, Color.black, 1f, false);
+            Debug.DrawRay(transform.position + wallMovementDir * 1.1f, wallOtherSideDir * _playerToWallMinDistance, Color.black, 1f, false);
             RaycastHit otherSideWall;
-            if(Physics.Raycast(transform.position + wallMovementDir * 1.2f, wallOtherSideDir, out otherSideWall, _playerToWallMinDistance, _wallLayerMask))
+            if(Physics.Raycast(transform.position + wallMovementDir * 1.1f, wallOtherSideDir, out otherSideWall, _playerToWallMinDistance, _wallLayerMask))
             {
                 if(otherSideWall.normal != _takeCoverDirection) //inikalo dinding di kanannya itu msh sambungan wall ini dan collider sama
                 {
@@ -396,7 +459,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             PlayableCharacterCameraManager.Instance.SetCameraCrouchHeight();
         }
         
-
+        // _animateCharaTransform.localPosition = new Vector3(0, _animateCharaTransform.localPosition.y, 0);
         SetAITargetToLook(-_takeCoverDirection, true);
         AllowLookTarget = true;
         SetAIDirection(_takeCoverPosition);
@@ -418,27 +481,63 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         {
             _charaGameObject.forward = Vector3.Slerp(_charaGameObject.forward, _takeCoverDirection.normalized, Time.deltaTime * _rotateSpeed);
             float dot = Vector3.Dot(_charaGameObject.forward, _takeCoverDirection.normalized);
-            if(dot >= 0.99f)
-            {
-                // if(_animateCharaTransform.localPosition.z != 0 || _animateCharaTransform.localPosition.x != 0)
-                // {
-                //     _animateCharaTransform.localPosition = new Vector3(0, _animateCharaTransform.localPosition.y, 0);
-                // }
 
-                Vector3 newPos = _animateCharaTransform.localPosition;
-                Vector3 newTakeCoverPos = _animateCharaTransform.InverseTransformPoint(_takeCoverPosition);
-
-                Vector3 offSetDirection = (newTakeCoverPos - newPos).normalized * 0.1f;
-                newTakeCoverPos -= offSetDirection;
-
-                newPos.x = newTakeCoverPos.x;
-                newPos.z = newTakeCoverPos.z;
-
-                _animateCharaTransform.localPosition = newPos;
-                
-            }
             if(dot >= 0.99f && _isAtTakingCoverPos)
             {
+                // Vector3 newPos = _animateCharaTransform.localPosition;
+                // Vector3 newTakeCoverPos = _tempAnimateCharaTransform.InverseTransformPoint(_takeCoverPosition);
+
+                // Vector3 offSetDirection = (newTakeCoverPos - newPos).normalized * 0.2f;
+                // newTakeCoverPos -= offSetDirection;
+
+                // newPos.x = newTakeCoverPos.x;
+                // newPos.z = newTakeCoverPos.z;
+
+                // _animateCharaTransform.localPosition = newPos;
+
+                // Vector3 newPos = _animateCharaTransform.localPosition;
+
+                // Vector3 newTakeCoverPos = _takeCoverPosition;
+                // Vector3 offSetDir = _takeCoverDirection * 0.2f;
+                // newTakeCoverPos -= offSetDir;
+                // newTakeCoverPos = _tempAnimateCharaTransform.InverseTransformPoint(newTakeCoverPos);
+
+                // if(_isFrontBehind)
+                // {
+                //     newTakeCoverPos = new Vector3
+                //     (
+                //         newTakeCoverPos.x * _chosenWallToTakeCover.transform.forward.x,
+                //         newTakeCoverPos.y * _chosenWallToTakeCover.transform.forward.y,
+                //         newTakeCoverPos.z * _chosenWallToTakeCover.transform.forward.z
+                //     );
+                // }
+                // else
+                // {
+                //     newTakeCoverPos = new Vector3
+                //     (
+                //         newTakeCoverPos.x * _chosenWallToTakeCover.transform.right.x,
+                //         newTakeCoverPos.y * _chosenWallToTakeCover.transform.right.y,
+                //         newTakeCoverPos.z * _chosenWallToTakeCover.transform.right.z
+                //     );
+                // }
+
+
+                // newPos.x = newTakeCoverPos.x;
+                // newPos.z = newTakeCoverPos.z;
+
+
+                Debug.Log("takecoverdirnya adalah" + _takeCoverDirection + " dan " + _tempAnimateCharaTransform.InverseTransformDirection(_takeCoverDirection));
+
+                _animateCharaTransform.localPosition = new Vector3(0, _animateCharaTransform.localPosition.y, 0);
+                _animateCharaTransform.localPosition -= _tempAnimateCharaTransform.InverseTransformDirection(_takeCoverDirection) * 0.5f;
+                // Vector3 newPos = _animateCharaTransform.position + _takeCoverDirection * 0.5f;
+                // newPos = _tempAnimateCharaTransform.InverseTransformPoint(newPos);
+                // _animateCharaTransform.localPosition = new Vector3(newPos.x, _animateCharaTransform.localPosition.y, newPos.z);
+                
+
+
+
+
 
                 AgentNavMesh.ResetPath();
                 if(CharaAnimator?.GetBool(ANIMATION_MOVE_PARAMETER_TAKECOVER) == false)
@@ -519,5 +618,23 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         _cc.center = newData.center;
         _cc.radius = newData.radius;
         _cc.height = newData.height;
+    }
+
+
+    public override bool IsHeadHitWhenUnCrouch()
+    {
+        if(!IsAIInput)
+        {
+            Debug.DrawRay(_feetTransformPoint.position, _feetTransformPoint.up * _normalHeightCharaCon.height, Color.black, 0.5f);
+            if(Physics.Raycast(_feetTransformPoint.position, _feetTransformPoint.up, out RaycastHit hitHead, _normalHeightCharaCon.height, _crouchPlatformLayer))
+            {
+                return true;
+            }
+            return false;
+        }
+        else
+        {
+            return base.IsHeadHitWhenUnCrouch();
+        }
     }
 }
