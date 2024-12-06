@@ -116,9 +116,9 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         //Dari Chara Identity bisa akses ke semua yg berhubungan dgn characteridentity
         base.Awake();
         
-        _charaWidth = GetComponent<CharacterController>().radius * 2 + _charaWidthBuffer;
         
         if(_agent == null)_agent = GetComponent<NavMeshAgent>();
+        _charaWidth = _agent.radius * 2 + _charaWidthBuffer;
         if(_fovMachine == null)_fovMachine = GetComponent<FOVMachine>();
         
     }
@@ -678,7 +678,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             foreach(Transform target in GetFOVMachine.VisibleTargets)
             {
                 AIBehaviourStateMachine targetAI = target.GetComponent<AIBehaviourStateMachine>();
-                if(targetAI != null && targetAI._isAIInput)targetAI.EnemyDetectedChara(transform);
+                if(targetAI != null)targetAI.EnemyDetectedChara(transform);
             }
         }
     }
@@ -691,7 +691,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 if(!_fovMachine.VisibleTargets.Contains(_pastVisibleTargets[i]))
                 {
                     AIBehaviourStateMachine _pastVisibleTargetsAI = _pastVisibleTargets[i].GetComponent<AIBehaviourStateMachine>();
-                    if(_pastVisibleTargetsAI != null && _pastVisibleTargetsAI._isAIInput)_pastVisibleTargetsAI.EnemyNotDetectCharaAnymore(transform);
+                    if(_pastVisibleTargetsAI != null)_pastVisibleTargetsAI.EnemyNotDetectCharaAnymore(transform);
                 }
 
             }

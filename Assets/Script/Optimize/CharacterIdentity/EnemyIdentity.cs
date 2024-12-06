@@ -15,7 +15,7 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
 
     protected override void Awake() {
         base.Awake();
-        _enemyAIStateMachine = GetComponent<EnemyAIBehaviourStateMachine>();
+        _enemyAIStateMachine = _aiStateMachine as EnemyAIBehaviourStateMachine;
     }
     public override void ReloadWeapon()
     {

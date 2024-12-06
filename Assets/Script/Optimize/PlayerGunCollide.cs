@@ -6,14 +6,22 @@ public class PlayerGunCollide : MonoBehaviour
 {
     private Collider _wallCollide;
     public Transform example;
-    private void OnCollisionEnter(Collision other) 
+    private void OnTriggerEnter(Collider other) 
     {
-        _wallCollide = other.collider;
+        _wallCollide = other;
     }
-    private void OnCollisionExit(Collision other) 
+    private void OnTriggerExit(Collider other) 
     {
         _wallCollide = null;
     }
+    // private void OnCollisionEnter(Collision other) 
+    // {
+        
+    // }
+    // private void OnCollisionExit(Collision other) 
+    // {
+        
+    // }
     public Vector3 GetClosestPosFromInsideWall(Vector3 originShootPos)
     {
         Debug.Log(originShootPos + " LAMANYA POS ADALA");
