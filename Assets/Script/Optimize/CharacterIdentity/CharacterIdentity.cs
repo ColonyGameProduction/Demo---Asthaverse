@@ -20,6 +20,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     //Untuk ambil bool
     [SerializeField] protected MovementStateMachine _moveStateMachine;
     [SerializeField] protected UseWeaponStateMachine _useWeaponStateMachine;
+    protected AIBehaviourStateMachine _aiStateMachine;
     protected WeaponShootVFX _weaponShootVFX;
     protected FOVMachine _fovMachine;
     protected GameManager _gm;
@@ -70,6 +71,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
     public MovementStateMachine MovementStateMachine {get { return _moveStateMachine;}}
     public UseWeaponStateMachine UseWeaponStateMachine {get { return _useWeaponStateMachine;}}
+    public AIBehaviourStateMachine AIStateMachine {get { return _aiStateMachine;}}
 
     #endregion
     protected virtual void Awake()
@@ -79,6 +81,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         if(_useWeaponStateMachine == null) _useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
         // Debug.Log(_useWeaponStateMachine + " tidak null");
         if(_useWeaponStateMachine != null)_useWeaponStateMachine.OnWasUsinghGun += UseWeapon_OnWasUsinghGun;
+        if(_aiStateMachine == null) _aiStateMachine = GetComponent<AIBehaviourStateMachine>();
         _weaponShootVFX = GetComponent<WeaponShootVFX>();
         _fovMachine = GetComponent<FOVMachine>();
 
@@ -90,10 +93,10 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         _gm = GameManager.instance;
     }
 
-    protected virtual void Update()
-    {
-        RegenerationTimer();
-    }
+    // protected virtual void Update()
+    // {
+        
+    // }
     private void UseWeapon_OnWasUsinghGun()
     {
         _moveStateMachine.WasCharacterAiming = true;
@@ -118,31 +121,19 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         CurrHealth += Healing;
         if(CurrHealth >= TotalHealth) CurrHealth = TotalHealth;
     }
-    protected virtual void Regeneration()
-    {
-        Heal(TotalHealth * _regenScale * Time.deltaTime);
-    }
-    protected void RegenerationTimer()
-    {
-        if(CurrHealth <= TotalHealth && !IsDead)
-        {
-            if(_regenCDTimer > 0)_regenCDTimer -= Time.deltaTime;
-            else
-            {
-                _regenCDTimer = 0;
-                Regeneration();
-            }
-        }
-    }
+    
+    
 
     public virtual void Death()
     {
+        if(_isDead)return;
+        _isDead = true;
         _regenCDTimer = 0f;
         _animator.SetBool("Death", true);
         _animator.SetTrigger("DeathTrigger");
-        _isDead = true;
         _useWeaponStateMachine.ForceStopUseWeapon();
         _moveStateMachine.ForceStopMoving();
+        
         if(_fovMachine.enabled)_fovMachine.StopFOVMachine();
         _fovMachine.enabled = false;
     }
@@ -206,14 +197,28 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     {
         if(isRunning)
         {
-            if(MovementStateMachine.AllowLookTarget)MovementStateMachine.AllowLookTarget = false;
-            UseWeaponStateMachine.ForceStopUseWeapon();
+            
             if(MovementStateMachine.IsCrouching)
+            {   
+                if(!MovementStateMachine.IsAtCrouchPlatform)
+                {
+                    if(MovementStateMachine.AllowLookTarget)MovementStateMachine.AllowLookTarget = false;
+                    UseWeaponStateMachine.ForceStopUseWeapon();
+                    MovementStateMachine.IsCrouching = false;
+                    MovementStateMachine.IsRunning = isRunning;
+                }
+            }
+            else
             {
-                MovementStateMachine.IsCrouching = false;
+                if(MovementStateMachine.AllowLookTarget)MovementStateMachine.AllowLookTarget = false;
+                UseWeaponStateMachine.ForceStopUseWeapon();
+                MovementStateMachine.IsRunning = isRunning;
             }
         }
-        MovementStateMachine.IsRunning = isRunning;
+        else
+        {
+            MovementStateMachine.IsRunning = isRunning;
+        }
     }
     public virtual void Crouch(bool isCrouching)
     {
@@ -223,8 +228,13 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
             {
                 MovementStateMachine.IsRunning = false;
             }
+            MovementStateMachine.IsCrouching = isCrouching;
         }
-        MovementStateMachine.IsCrouching = isCrouching;
+        else
+        {
+            if(!MovementStateMachine.IsAtCrouchPlatform)MovementStateMachine.IsCrouching = isCrouching;
+        }
+        
     }
     public virtual void Aiming(bool isAiming)
     {

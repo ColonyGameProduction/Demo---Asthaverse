@@ -112,6 +112,7 @@ public class FriendAI_IdleState : FriendAIState
     public override void ExitState()
     {
         _sm.IsAIIdle = false;
+        _sm.GetPlayableCharaIdentity.Crouch(false);
     }
     
 
