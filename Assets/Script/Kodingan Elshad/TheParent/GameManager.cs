@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     public Action<EnemyAI> enemy;
 
+    public bool gameIsPaused;
     #region GETTER SETTER VARIABLE
     public GameState GetCurrState { get { return _currState; } }
     #endregion
