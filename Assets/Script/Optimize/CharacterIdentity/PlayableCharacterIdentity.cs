@@ -13,7 +13,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public event Action<bool> OnIsPlayerInputChange;
 
     [Header("Friend Data Helper")]
-    [SerializeField] protected GameObject[] _friendsNormalPosition;
+    // [SerializeField] protected GameObject[] _friendsNormalPosition;
     protected int _friendID;
     [SerializeField] private EntityStatSO _friendStatSO;
         #region Friend STATS
@@ -112,7 +112,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         } 
     }
     public int FriendID {get { return _friendID;} set { _friendID = value; }}
-    public GameObject[] GetFriendsNormalPosition { get {return _friendsNormalPosition;}}
+    // public GameObject[] GetFriendsNormalPosition { get {return _friendsNormalPosition;}}
 
     public PlayableMovementStateMachine GetPlayableMovementData {get { return _getPlayableMovementStateData;}}
     public PlayableUseWeaponStateMachine GetPlayableUseWeaponData {get { return _getPlayableUseWeaponStateData;}}

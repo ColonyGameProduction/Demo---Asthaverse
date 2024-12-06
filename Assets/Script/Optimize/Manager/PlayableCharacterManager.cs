@@ -345,7 +345,7 @@ public class PlayableCharacterManager : MonoBehaviour
                 if(chara.FriendAIStateMachine.IsToldHold != change)chara.FriendAIStateMachine.IsToldHold = change;
                 if(change == false)
                 {
-                    _friendsCommandPosition[friendID - 1].transform.position = CurrPlayableChara.GetFriendsNormalPosition[friendID - 1].transform.position;
+                    _friendsCommandPosition[friendID - 1].transform.position = CurrPlayableChara.transform.position;
                 }
                 break;
             }
@@ -590,7 +590,7 @@ public class PlayableCharacterManager : MonoBehaviour
 
         if(chosenFriend.FriendAIStateMachine.IsToldHold)
         {
-            _friendsCommandPosition[friendID - 1].transform.position = CurrPlayableChara.GetFriendsNormalPosition[friendID - 1].transform.position;
+            _friendsCommandPosition[friendID - 1].transform.position = chosenFriend.transform.position;
         }
 
         _isCommandingFriend = true;
@@ -613,7 +613,8 @@ public class PlayableCharacterManager : MonoBehaviour
         }
         else
         {
-            if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead)return;RegroupAllFriendFromCommandHold();
+            if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead)return;
+            RegroupAllFriendFromCommandHold();
         }
     }
 
