@@ -46,7 +46,22 @@ public class IdleState : MovementState
         CheckingIdleAnimationCycle();
         CheckIsCrouchWhileIdle();
 
-        if(_groundData != null && _groundData.IsCrawling)
+        CheckCharaCon();
+        
+    }
+    public override void ExitState()
+    {
+        if((!_sm.IsAIInput && _playableData.InputMovement != Vector3.zero) || (_sm.IsAIInput && !_sm.IsAIAtDirPos())) _standData.IsIdle = false; //kyk gini krn bs aja keluar krn crouch state di atas
+        // base.EnterState(); //Stop Idle Anim
+        SetAnimParamActive(ANIMATION_MOVE_PARAMETER_ISMOVING);
+        if(_sm.IdleAnimCycleIdx > 1)_sm.SetIdleAnimToNormal();
+    }
+    private void CheckCharaCon()
+    {   if(_standData.IsCrouching)
+        {
+            _sm.CharaConDataToCrouch();
+        }
+        else if(_groundData != null && _groundData.IsCrawling)
         {
             if(_groundData.IsCrawling)
             {
@@ -55,16 +70,8 @@ public class IdleState : MovementState
         }
         else if(!_standData.IsCrouching && ((_groundData == null) || (_groundData != null && !_groundData.IsCrawling)))
         {
-            Debug.Log("ini ga lewat sinikah?");
             _sm.CharaConDataToNormal();
         }
-    }
-    public override void ExitState()
-    {
-        if((!_sm.IsAIInput && _playableData.InputMovement != Vector3.zero) || (_sm.IsAIInput && !_sm.IsAIAtDirPos())) _standData.IsIdle = false; //kyk gini krn bs aja keluar krn crouch state di atas
-        // base.EnterState(); //Stop Idle Anim
-        SetAnimParamActive(ANIMATION_MOVE_PARAMETER_ISMOVING);
-        if(_sm.IdleAnimCycleIdx > 1)_sm.SetIdleAnimToNormal();
     }
     private void CheckMustRotateWhileIdle()
     {
@@ -83,7 +90,7 @@ public class IdleState : MovementState
                 _currTargetTime = _sm.IdleAnimCycleTimeTarget[1];
             }
             SetAnimParamActive(ANIMATION_MOVE_PARAMETER_CROUCH);
-            _sm.CharaConDataToCrouch();
+            
 
             if(_sm.IsAtCrouchPlatform && _sm.IsAIInput)
             {
@@ -110,7 +117,7 @@ public class IdleState : MovementState
     #region Idle Anim Cycle
     private void CheckingIdleAnimationCycle()
     {
-        if(_sm.IsMustStayAlert)
+        if(_sm.IsIdleMustStayAlert)
         {
             if(_sm.IdleAnimCycleIdx != 0)SetIdleAnimToAlert();
         }

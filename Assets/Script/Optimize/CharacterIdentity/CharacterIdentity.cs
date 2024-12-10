@@ -46,6 +46,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     [Header("   Weapon")]
     [SerializeField] protected List<WeaponData> _weaponLists = new List<WeaponData>();
     [SerializeField] protected int _currWeaponIdx;
+    protected WeaponGameObjectDataContainer _weaponGameObjectDataContainer;
 
 
     [Space(1)]
@@ -72,6 +73,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     public MovementStateMachine MovementStateMachine {get { return _moveStateMachine;}}
     public UseWeaponStateMachine UseWeaponStateMachine {get { return _useWeaponStateMachine;}}
     public AIBehaviourStateMachine AIStateMachine {get { return _aiStateMachine;}}
+    public WeaponGameObjectDataContainer WeaponGameObjectDataContainer {get{return _weaponGameObjectDataContainer;}}
 
     #endregion
     protected virtual void Awake()
@@ -84,6 +86,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         if(_aiStateMachine == null) _aiStateMachine = GetComponent<AIBehaviourStateMachine>();
         _weaponShootVFX = GetComponent<WeaponShootVFX>();
         _fovMachine = GetComponent<FOVMachine>();
+        _weaponGameObjectDataContainer = GetComponentInChildren<WeaponGameObjectDataContainer>();
 
         InitializeCharacter();
         InitializeWeapon();
@@ -186,6 +189,8 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
             
         }
         _currWeaponIdx = 0;
+        _weaponGameObjectDataContainer.GetCurrWeaponGameObjectData(_currWeaponIdx);
+        _useWeaponStateMachine.GunOriginShootPoint = _weaponGameObjectDataContainer.GetCurrShootPlacement();
         _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
 
     }

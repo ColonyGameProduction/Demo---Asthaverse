@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Cinemachine.Utility;
+
 using UnityEngine;
 
 public class AnimatorCharacterHelp : MonoBehaviour
@@ -31,6 +29,15 @@ public class AnimatorCharacterHelp : MonoBehaviour
     // private Vector3 _rightFootPos, _leftFootPos, _leftFootIKPos, _rightFootIKPos;
     // private Quaternion _leftFootIKRotation, _rightFootIKRotation;
     // private float _lastPelvisPositionY, _lastRightFootPosY, _lastLeftFootPosY;
+    #endregion
+
+    #region  Reload Weapon Variable
+    [Header("Reload Weapon")]
+    private Transform _magCurrGunTransform;
+    private Transform _magGunParent;
+    [SerializeField] private Transform _handReloadParent;
+    private Vector3 _magOriginalLocalPos, _magOriginalLocalEulerAngles;
+    [SerializeField] private Vector3 _magHandLocalPos, _magHandLocalEulerAngles;
     #endregion
 
     private void Awake() 
@@ -262,4 +269,45 @@ public class AnimatorCharacterHelp : MonoBehaviour
     //     feetPos.y = transform.position.y + _distanceToGround;
     // }
     #endregion
+
+    #region Reload Weapon Methods
+
+    public void ChangeMagParentToNormal()
+    {
+        
+        ChangeMagParent(_magGunParent, _magOriginalLocalPos, _magOriginalLocalEulerAngles);
+    }
+    public void ChangeMagParentToHand()
+    {
+        _magCurrGunTransform = _characterIdentity.WeaponGameObjectDataContainer.GetCurrWeaponMagTransform();
+        if(_magCurrGunTransform == null)return;
+        
+        _magOriginalLocalPos = _magCurrGunTransform.localPosition;
+        _magOriginalLocalEulerAngles = _magCurrGunTransform.localEulerAngles;
+        _magGunParent = _magCurrGunTransform.parent;
+        ChangeMagParent(_handReloadParent, _magHandLocalPos, _magHandLocalEulerAngles);
+    }
+    private void ChangeMagParent(Transform parent, Vector3 newLocalPos, Vector3 newLocalEulerAngles)
+    {
+        if(_magCurrGunTransform == null || parent == null)return;
+        _magCurrGunTransform.parent = parent;
+        _magCurrGunTransform.localPosition = newLocalPos;
+        _magCurrGunTransform.localEulerAngles = newLocalEulerAngles;
+    }
+
+    public void HideMag()
+    {
+        if(_magCurrGunTransform == null)return;
+        // Debug.Log("Hide Mag");
+        _magCurrGunTransform.gameObject.SetActive(false);
+    } 
+    public void ShowMag()
+    {
+        if(_magCurrGunTransform == null)return;
+        // Debug.Log("Show Mag");
+        _magCurrGunTransform.gameObject.SetActive(true);
+    } 
+    #endregion
+
 }
+

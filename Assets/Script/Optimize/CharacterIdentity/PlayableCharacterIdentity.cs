@@ -238,6 +238,9 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         {
             _currWeaponIdx = 0;
         }
+        _weaponGameObjectDataContainer.GetCurrWeaponGameObjectData(_currWeaponIdx);
+        _useWeaponStateMachine.GunOriginShootPoint = _weaponGameObjectDataContainer.GetCurrShootPlacement();
+        
         _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
     }
     protected void Regeneration()

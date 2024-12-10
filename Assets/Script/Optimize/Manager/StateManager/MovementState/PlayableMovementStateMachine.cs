@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 
@@ -11,17 +12,21 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     [Space(2)]
     [Header("Move States - Ground State")]
-    [SerializeField] protected bool _isCrawl;
-    [SerializeField] protected float _crawlMultiplier;
+    [ReadOnly(true), SerializeField] protected bool _isCrawl;
+    [SerializeField] protected float _crawlSpeedMultiplier;
     private float _crawlSpeed;
 
     [Space(1)]
     [Header("Taking Cover At Wall Data")]
-    [SerializeField] protected bool _isTakeCoverAtWall;
-    [SerializeField] protected Transform _originToLookAtWall;
+    [ReadOnly(false), SerializeField] protected bool _isTakeCoverAtWall;
     [SerializeField] protected LayerMask _wallLayerMask;
-    [SerializeField] protected float _playerToWallMinDistance = 2f;
-    [SerializeField] protected Transform _animateCharaTransform;
+    [SerializeField][Range(0,3f)] protected float _playerToWallMinDistance = 2f;
+    [SerializeField] protected float _takeCoverWallCheckerAngleBuffer = 45;
+    [SerializeField] protected float _takeCoverWallCheckerMultiplierBuffer = 0.1f;
+    [SerializeField] protected float _takeCoverAnimateCharaPosMultiplierBuffer = 0.5f;
+
+    protected Transform _animateCharaTransform;
+    protected Transform _originToLookAtWall;
     protected Transform _tempAnimateCharaTransform;
     protected Collider _chosenWallToTakeCover, _charaHeadColl;
     protected float _charaHeightBuffer, _charaWidth, _wallLength, _wallWidth;
@@ -42,7 +47,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     [Space(1)]
     [Header("Movement - Camera")]
     private Transform _playableLookTarget;
-    [SerializeField] protected bool _isMustLookForward;
+    [ReadOnly(true),SerializeField] protected bool _isMustLookForward;
 
     [Space(1)]
     [Header("Saving other component data")]
@@ -131,6 +136,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected override void Awake()
     {
         base.Awake();
+        _animateCharaTransform = _animator.transform;
         _fovMachine = GetComponent<FOVMachine>();
         _originToLookAtWall = _fovMachine.GetFOVPoint;
         _getPlayableMakeSFX = GetComponentInChildren<PlayableMakeSFX>();
@@ -188,7 +194,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         else base.Move();
         if(IsRunning)
         {
-            Debug.Log(transform.position + " produce walk sound");
+            // Debug.Log(transform.position + " produce walk sound");
             _worldSoundManager.MakeSound(WorldSoundName.Walk, transform.position, _fovMachine.CharaEnemyMask);
             _getPlayableMakeSFX.PlayStopSFX(AudioSFXName.NormalWalk, true);
         }
@@ -236,10 +242,10 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         Vector3 wallSurfaceDir = Vector3.Cross(_takeCoverDirection, Vector3.up).normalized;
         Vector3 wallMovementDir = Vector3.Project(Facedir, wallSurfaceDir);
 
-        Debug.Log(" Input " +direction + " Wallsurfacedir" + wallSurfaceDir + " TakeCover muvment" + wallMovementDir );
-        Debug.DrawRay(transform.position, wallMovementDir * 100f, Color.red, 1f, false);
-        Debug.DrawRay(transform.position, wallSurfaceDir * 100f, Color.blue, 1f, false);
-        Debug.DrawRay(transform.position, wallSurfaceDir * 100f, Color.blue, 1f, false);
+        // Debug.Log(" Input " +direction + " Wallsurfacedir" + wallSurfaceDir + " TakeCover muvment" + wallMovementDir );
+        // Debug.DrawRay(transform.position, wallMovementDir * 100f, Color.red, 1f, false);
+        // Debug.DrawRay(transform.position, wallSurfaceDir * 100f, Color.blue, 1f, false);
+        // Debug.DrawRay(transform.position, wallSurfaceDir * 100f, Color.blue, 1f, false);
 
         
         bool isGoingToLeft = false;
@@ -258,7 +264,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
                 if(dotFwd >= 0)isGoingToLeft = false;
                 else isGoingToLeft = true;
             }
-            Debug.Log(dotFwd + "dottt forward TakeCover muvment"+ isGoingToLeft);
+            // Debug.Log(dotFwd + "dottt forward TakeCover muvment"+ isGoingToLeft);
         }
         else
         {
@@ -273,7 +279,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
                 if(dotRight >= 0)isGoingToLeft = false;
                 else isGoingToLeft = true;
             }
-            Debug.Log(dotRight + "dottt right TakeCover muvment" + isGoingToLeft);
+            // Debug.Log(dotRight + "dottt right TakeCover muvment" + isGoingToLeft);
         }
         if(direction != Vector3.zero)
         {
@@ -293,9 +299,9 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
                 TakeCoverAtWall();
             }
         }
-        else if(Physics.Raycast(transform.position + wallMovementDir * 0.1f, -_takeCoverDirection, out hit, _playerToWallMinDistance, _wallLayerMask))
+        else if(Physics.Raycast(transform.position + wallMovementDir * _takeCoverWallCheckerMultiplierBuffer, -_takeCoverDirection, out hit, _playerToWallMinDistance, _wallLayerMask))
         {
-            Debug.Log(hit.collider + " collider skrg adalahh");
+            // Debug.Log(hit.collider + " collider skrg adalahh");
             if(hit.collider != _chosenWallToTakeCover)
             {
                 SetTakeCoverWallData(hit);
@@ -314,11 +320,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         else
         {
             Vector3 wallOtherSideDir = Vector3.zero;
-            if(!isGoingToLeft)wallOtherSideDir = Quaternion.Euler (0, -45,0) * -_takeCoverDirection;
-            else wallOtherSideDir = Quaternion.Euler (0, 45,0) * -_takeCoverDirection;
-            Debug.DrawRay(transform.position + wallMovementDir * 1.1f, wallOtherSideDir * _playerToWallMinDistance, Color.black, 1f, false);
+            if(!isGoingToLeft)wallOtherSideDir = Quaternion.Euler (0, -_takeCoverWallCheckerAngleBuffer,0) * -_takeCoverDirection;
+            else wallOtherSideDir = Quaternion.Euler (0, _takeCoverWallCheckerAngleBuffer,0) * -_takeCoverDirection;
+            // Debug.DrawRay(transform.position + wallMovementDir * 1.1f, wallOtherSideDir * _playerToWallMinDistance, Color.black, 1f, false);
             RaycastHit otherSideWall;
-            if(Physics.Raycast(transform.position + wallMovementDir * 1.1f, wallOtherSideDir, out otherSideWall, _playerToWallMinDistance, _wallLayerMask))
+            if(Physics.Raycast(transform.position + wallMovementDir * (1+_takeCoverWallCheckerMultiplierBuffer), wallOtherSideDir, out otherSideWall, _playerToWallMinDistance, _wallLayerMask))
             {
                 if(otherSideWall.normal != _takeCoverDirection) //inikalo dinding di kanannya itu msh sambungan wall ini dan collider sama
                 {
@@ -361,10 +367,10 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         // Vector3 flatForward = new Vector3(_playableLookTarget.forward.x, 0, _playableLookTarget.forward.z).normalized;
         Vector3 dir = (_getPlayableCharacterIdentity.FriendBeingRevivedPos.position - _charaGameObject.position).normalized;
         dir = new Vector3(dir.x, 0, dir.z);
-        Vector3 newDir = Quaternion.Euler (0, 45,0) * dir;
+        Vector3 newDir = Quaternion.Euler (0, _takeCoverWallCheckerAngleBuffer,0) * dir;
 
-        Debug.DrawRay(transform.position, dir, Color.red, 2f, false);
-        Debug.DrawRay(transform.position, newDir, Color.black, 2f, false);
+        // Debug.DrawRay(transform.position, dir, Color.red, 2f, false);
+        // Debug.DrawRay(transform.position, newDir, Color.black, 2f, false);
 
         if(!IsAIInput)
         {
@@ -398,7 +404,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     {
         base.InitializeMovementSpeed(speed);
         
-        _crawlSpeed = _walkSpeed * _crawlMultiplier;
+        _crawlSpeed = _walkSpeed * _crawlSpeedMultiplier;
     }
     #endregion
     private void CharaIdentity_OnIsPlayerInputChange(bool isPlayerInput)
@@ -424,21 +430,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     public bool IsNearWall()
     {
         RaycastHit hit;
-        Debug.DrawRay(transform.position, _charaGameObject.forward.normalized * 100f, Color.red, 2f, false);
+        // Debug.DrawRay(transform.position, _charaGameObject.forward.normalized * 100f, Color.red, 2f, false);
         if(Physics.Raycast(transform.position, _charaGameObject.forward.normalized, out hit, _playerToWallMinDistance, _wallLayerMask))
         {
-            
-            // if(hit.collider.bounds.max.y <= _charaHeadColl.bounds.max.y + _charaHeightBuffer - 0.6f)return false;
 
             SetTakeCoverWallData(hit);
-            // if(_isFrontBehind)
-            // {
-            //     if(_wallWidth <= _charaWidth)return false;
-            // }
-            // else
-            // {
-            //     if(_wallLength <= _charaWidth)return false;
-            // }
             
             return true;
         }
@@ -459,7 +455,6 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             PlayableCharacterCameraManager.Instance.SetCameraCrouchHeight();
         }
         
-        // _animateCharaTransform.localPosition = new Vector3(0, _animateCharaTransform.localPosition.y, 0);
         SetAITargetToLook(-_takeCoverDirection, true);
         AllowLookTarget = true;
         SetAIDirection(_takeCoverPosition);
@@ -484,66 +479,15 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
             if(dot >= 0.99f && _isAtTakingCoverPos)
             {
-                // Vector3 newPos = _animateCharaTransform.localPosition;
-                // Vector3 newTakeCoverPos = _tempAnimateCharaTransform.InverseTransformPoint(_takeCoverPosition);
-
-                // Vector3 offSetDirection = (newTakeCoverPos - newPos).normalized * 0.2f;
-                // newTakeCoverPos -= offSetDirection;
-
-                // newPos.x = newTakeCoverPos.x;
-                // newPos.z = newTakeCoverPos.z;
-
-                // _animateCharaTransform.localPosition = newPos;
-
-                // Vector3 newPos = _animateCharaTransform.localPosition;
-
-                // Vector3 newTakeCoverPos = _takeCoverPosition;
-                // Vector3 offSetDir = _takeCoverDirection * 0.2f;
-                // newTakeCoverPos -= offSetDir;
-                // newTakeCoverPos = _tempAnimateCharaTransform.InverseTransformPoint(newTakeCoverPos);
-
-                // if(_isFrontBehind)
-                // {
-                //     newTakeCoverPos = new Vector3
-                //     (
-                //         newTakeCoverPos.x * _chosenWallToTakeCover.transform.forward.x,
-                //         newTakeCoverPos.y * _chosenWallToTakeCover.transform.forward.y,
-                //         newTakeCoverPos.z * _chosenWallToTakeCover.transform.forward.z
-                //     );
-                // }
-                // else
-                // {
-                //     newTakeCoverPos = new Vector3
-                //     (
-                //         newTakeCoverPos.x * _chosenWallToTakeCover.transform.right.x,
-                //         newTakeCoverPos.y * _chosenWallToTakeCover.transform.right.y,
-                //         newTakeCoverPos.z * _chosenWallToTakeCover.transform.right.z
-                //     );
-                // }
-
-
-                // newPos.x = newTakeCoverPos.x;
-                // newPos.z = newTakeCoverPos.z;
-
-
-                Debug.Log("takecoverdirnya adalah" + _takeCoverDirection + " dan " + _tempAnimateCharaTransform.InverseTransformDirection(_takeCoverDirection));
 
                 _animateCharaTransform.localPosition = new Vector3(0, _animateCharaTransform.localPosition.y, 0);
-                _animateCharaTransform.localPosition -= _tempAnimateCharaTransform.InverseTransformDirection(_takeCoverDirection) * 0.5f;
-                // Vector3 newPos = _animateCharaTransform.position + _takeCoverDirection * 0.5f;
-                // newPos = _tempAnimateCharaTransform.InverseTransformPoint(newPos);
-                // _animateCharaTransform.localPosition = new Vector3(newPos.x, _animateCharaTransform.localPosition.y, newPos.z);
+                _animateCharaTransform.localPosition -= _tempAnimateCharaTransform.InverseTransformDirection(_takeCoverDirection) * _takeCoverAnimateCharaPosMultiplierBuffer;
                 
-
-
-
-
-
                 AgentNavMesh.ResetPath();
                 if(CharaAnimator?.GetBool(ANIMATION_MOVE_PARAMETER_TAKECOVER) == false)
                 {
                     CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_TAKECOVERPOS, 0);
-                    Debug.Log("eh ? ga masuk sini?");
+                    // Debug.Log("eh ? ga masuk sini?");
                     CharaAnimator?.SetBool(ANIMATION_MOVE_PARAMETER_TAKECOVER, true);
                 }
                 AllowLookTarget = false;
@@ -577,7 +521,6 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         _wallWidth = _chosenWallToTakeCover.transform.lossyScale.x;
         _wallLength = _chosenWallToTakeCover.transform.lossyScale.z;
 
-        Debug.Log("Dot Forward Wall" + Vector3.Dot(_takeCoverDirection, _chosenWallToTakeCover.transform.forward) + "Dot Right" + Vector3.Dot(_takeCoverDirection, _chosenWallToTakeCover.transform.right));
         float dotForward = Vector3.Dot(_takeCoverDirection, _chosenWallToTakeCover.transform.forward);
         if(Mathf.Abs(dotForward) >= 1)
         {
@@ -625,8 +568,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     {
         if(!IsAIInput)
         {
-            Debug.DrawRay(_feetTransformPoint.position, _feetTransformPoint.up * _normalHeightCharaCon.height, Color.black, 0.5f);
-            if(Physics.Raycast(_feetTransformPoint.position, _feetTransformPoint.up, out RaycastHit hitHead, _normalHeightCharaCon.height, _crouchPlatformLayer))
+            // Debug.DrawRay(_feetBasePoint.position, _feetBasePoint.up * _normalHeightCharaCon.height, Color.black, 0.5f);
+            if(Physics.Raycast(_feetBasePoint.position, _feetBasePoint.up, out RaycastHit hitHead, _normalHeightCharaCon.height, _crouchPlatformLayer))
             {
                 return true;
             }
