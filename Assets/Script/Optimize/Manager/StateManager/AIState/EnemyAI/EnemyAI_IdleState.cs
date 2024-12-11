@@ -35,11 +35,11 @@ public class EnemyAI_IdleState : EnemyAIState
             
             if(_sm.GetFOVState.CurrState == FOVDistState.middle)
             {
-                _sm.AlertValue = _sm.MaxAlertValue*0.5f + 10;
+                _sm.AlertValue = _sm.MaxAlertValue / 2 + _sm.AlertValueCountMultiplier;
             }
             else if(_sm.GetFOVState.CurrState == FOVDistState.close)
             {
-                _sm.AlertValue = _sm.MaxAlertValue + 10;
+                _sm.AlertValue = _sm.MaxAlertValue + _sm.AlertValueCountMultiplier;
             }
         }
 

@@ -55,7 +55,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     protected WeaponLogicManager _weaponLogicManager;
     protected WeaponShootVFX _weaponShootVFX;
 
-    public Action OnWasUsinghGun;
+    public Action OnWasUsingGun;
 
     [Header("Recoil Data")]
     [SerializeField]protected float _recoilCoolDownBuffer = 0.1f;
@@ -131,10 +131,10 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
             _currDirectionShootPoint = _currChosenTarget;
         }
         _states = new UseWeaponStateFactory(this);
-        _weaponShootVFX = GetComponent<WeaponShootVFX>();
     }
     protected virtual void Start() 
     {
+        _weaponShootVFX = _charaIdentity.GetWeaponShootVFX;
         _weaponLogicManager = WeaponLogicManager.Instance;
 
         SetCurrWeapon();
@@ -285,7 +285,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         }
         else
         {
-            _currRecoil = 0;
+            _currRecoil = _currWeapon.weaponStatSO.recoil;
         }
     }
     #endregion

@@ -242,7 +242,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
 
     protected void MovingRecoilCount()
     {
-        if(!_getPlayableCharacterIdentity.GetPlayableMovementData.IsIdle)
+        if(!_getPlayableCharacterIdentity.GetPlayableMovementStateMachine.IsIdle)
         {
             if(_charaCameraManager.IsScope)
             {
@@ -259,7 +259,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         }
         else
         {
-            if(_getPlayableCharacterIdentity.GetPlayableMovementData.IsCrouching)
+            if(_getPlayableCharacterIdentity.GetPlayableMovementStateMachine.IsCrouching)
             {
                 if(_charaCameraManager.IsScope)
                 {
@@ -317,7 +317,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
             }
             else
             {
-                _currRecoil = 0;
+                _currRecoil = _currWeapon.weaponStatSO.recoil;;
             }
 
         }

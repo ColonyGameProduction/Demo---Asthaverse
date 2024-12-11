@@ -32,7 +32,7 @@ public class PickableObj_IntObj : InteractableObject
             {
                 Debug.Log("I make sound");
                 IsBeingThrown = false;
-                WorldSoundManager.Instance.MakeSound(WorldSoundName.Whistle, _playerWhoHeldItem.transform.position, _playerWhoHeldItem.FOVMachine.CharaEnemyMask);
+                WorldSoundManager.Instance.MakeSound(WorldSoundName.Whistle, _playerWhoHeldItem.transform.position, _playerWhoHeldItem.GetFOVMachine.CharaEnemyMask);
                 AudioManager.Instance.PlayAudioClip(AudioSFXName.Whistle, transform.position);
                 _playerWhoHeldItem = null;
                 Destroy(this.gameObject);

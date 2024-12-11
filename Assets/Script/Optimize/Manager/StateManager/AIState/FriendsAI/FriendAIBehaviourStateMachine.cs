@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBehaviourStateData, IUnsubscribeEvent
+public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBehaviourStateData
 {
     #region  Normal Variable
     [Space(2)]
     [Header("Other Component Variable")]
-    [SerializeField] private EnemyAIManager _enemyAIManager;
     
     protected IReceiveInputFromPlayer _getCanInputPlayer;
     private bool isToldHold;
@@ -50,12 +49,9 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     public Transform FriendsCommandDirection {get {return _friendsCommandDirection;}}    
     public PlayableCharacterIdentity CurrPlayableIdentity {get {return _currPlayableIdentity;}}
 
-
-
-
     public PlayableCharacterIdentity GetPlayableCharaIdentity { get { return _playableCharaIdentity; } }    
-    public PlayableMovementStateMachine GetMoveStateMachine { get { return _playableMoveStateMachine; } }
-    public PlayableUseWeaponStateMachine GetUseWeaponStateMachine { get {return _playableUseWeaponStateMachine;}}
+    public PlayableMovementStateMachine GetPlayableMoveStateMachine { get { return _playableMoveStateMachine; } }
+    public PlayableUseWeaponStateMachine GetPlayableUseWeaponStateMachine { get {return _playableUseWeaponStateMachine;}}
     #endregion
     protected override void Awake()
     {
@@ -71,15 +67,13 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     protected override void Start()
     {
         base.Start();
-        _enemyAIManager = EnemyAIManager.Instance;
+        
         _enemyAIManager.OnEnemyisEngaging += OnEnemyStartedEngaging;
         _enemyAIManager.OnEnemyStopEngaging += OnEnemyStopEngaging;
 
+        _playableMoveStateMachine = _playableCharaIdentity.GetPlayableMovementStateMachine;
+        _playableUseWeaponStateMachine = _playableCharaIdentity.GetPlayableUseWeaponStateMachine;
         
-        _playableMoveStateMachine = _playableCharaIdentity.GetPlayableMovementData;
-        _playableUseWeaponStateMachine = _playableCharaIdentity.GetPlayableUseWeaponData;
-        _bodyPartMask = _playableUseWeaponStateMachine.CharaEnemyMask;
-        _playableMoveStateMachine.OnIsTheSamePosition += MoveStateMachine_OnIsTheSamePosition;
 
         SwitchState(_states.AI_IdleState());
     }
@@ -90,6 +84,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, _wallScannerDistance);
     }
+
     void Update()
     {
         _fovMachine.FOVJob();
@@ -97,15 +92,11 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         DetectEnemy();
         if(IsAIInput)
         {
-            GotDetectedTimerCounter();
-            if(_gotDetectedByEnemy)
-            {   
-                _leaveDirection = GetTotalDirectionTargetPosAndEnemy(transform, false);
-            }
+            HandleGotDetected();
             _currState?.UpdateState();
         }
-
     }
+    
     public override void SwitchState(BaseState newState)
     {
         if(_currState != null)
@@ -115,16 +106,19 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         _currState = newState as FriendAIState;
         _currState?.EnterState();
     }
+
     private void CharaIdentity_OnIsPlayerInputChange(bool obj)
     {
         _isAIInput = !obj;
     }
+
+    #region Friend Function
     public void GiveUpdateFriendDirection(PlayableCharacterIdentity currPlayable, Transform commandPos)
     {   
         _currPlayableIdentity = currPlayable;
         
         _currPlayable = currPlayable.transform;
-        Debug.Log("Apa error di sini ?>" + _currPlayableIdentity);
+        // Debug.Log("Apa error di sini ?>" + _currPlayableIdentity);
         _friendsDefaultDirection = _currPlayable.transform;
 
         _friendsCommandDirection = commandPos;
@@ -132,7 +126,6 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     public bool IsFriendTooFarFromPlayerWhenIdle()
     {
-        // Debug.Log(transform.position + " " + _currPlayable.position + " " + Vector3.Distance(transform.position, _currPlayable.position));
         if(Vector3.Distance(transform.position, _currPlayable.position) <= _mainPlayableMaxDistance) return false;
         return true;
     }
@@ -141,12 +134,13 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         if(Vector3.Distance(transform.position, _currPlayable.position) <= _friendsDefaultMaxDistanceFromPlayer) return true;
         return false;
     }
+    #endregion
 
-    private void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos)
+    protected override void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos)
     {
         if(IsAIIdle && GotDetectedbyEnemy && LeaveDirection != Vector3.zero && agentPos == _runAwayPos && IsAIInput)
         {
-            GetMoveStateMachine.IsRunning = false;
+            _moveStateMachine.IsRunning = false;
         }
 
         if(IsTakingCover && !IsAIIdle && IsAIInput)
@@ -172,23 +166,22 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
         }
     }
-
-
+    
     private void OnEnemyStartedEngaging()
     {
-        if(IsAIInput)IsAIEngage = true;
+        if(IsAIInput) IsAIEngage = true;
     }
     private void OnEnemyStopEngaging()
     {
-        if(IsAIInput)IsAIEngage = false;
+        if(IsAIInput) IsAIEngage = false;
     }
 
-    public void UnsubscribeEvent()
+    public override void UnsubscribeEvent()
     {
         _getCanInputPlayer.OnIsPlayerInputChange -= CharaIdentity_OnIsPlayerInputChange;
         _enemyAIManager.OnEnemyisEngaging -= OnEnemyStartedEngaging;
         _enemyAIManager.OnEnemyStopEngaging -= OnEnemyStopEngaging;
-        _playableMoveStateMachine.OnIsTheSamePosition -= MoveStateMachine_OnIsTheSamePosition;
+        base.UnsubscribeEvent();
     }
 
     
@@ -196,24 +189,24 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     {
         _charaIdentity.Run(true);
         base.RunAway();
-        GetMoveStateMachine.SetAIDirection(RunAwayPos);
+        _moveStateMachine.SetAIDirection(RunAwayPos);
     }
     public bool IsCurrTakeCoverAlreadyOccupied()
     {
         return _takeCoverManager.IsTakeCoverPosOccupied(TakeCoverPosition, this);
     }
 
-    public void StartShooting(Transform chosenTarget)
-    {
-        AimAIPointLookAt(chosenTarget);
-        GetUseWeaponStateMachine.GiveChosenTarget(chosenTarget);
-        _charaIdentity.Shooting(true);
-    }
-    public void StopShooting()
-    {
-        GetUseWeaponStateMachine.GiveChosenTarget(null);
-        _charaIdentity.Shooting(false);
-    }
+    // public void StartShooting(Transform chosenTarget)
+    // {
+    //     AimAIPointLookAt(chosenTarget);
+    //     _useWeaponStateMachine.GiveChosenTarget(chosenTarget);
+    //     _charaIdentity.Shooting(true);
+    // }
+    // public void StopShooting()
+    // {
+    //     _useWeaponStateMachine.GiveChosenTarget(null);
+    //     _charaIdentity.Shooting(false);
+    // }
     public void DeleteKilledEnemyFromList(Transform enemy)
     {
         if(_enemyWhoSawAIList.Contains(enemy))_enemyWhoSawAIList.Remove(enemy);

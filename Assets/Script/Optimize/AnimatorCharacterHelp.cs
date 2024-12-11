@@ -49,7 +49,7 @@ public class AnimatorCharacterHelp : MonoBehaviour
     }
     private void Start() 
     {
-        if(_playableCharaIdentity != null)_playableCharaIdentity.GetPlayableMovementData.OnIsCrawlingChange += ChangeIsCrawling;
+        if(_playableCharaIdentity != null)_playableCharaIdentity.GetPlayableMovementStateMachine.OnIsCrawlingChange += ChangeIsCrawling;
     }
 
     public void ChangeIsCrawling(bool value) => _isCrawl = value;
@@ -279,7 +279,7 @@ public class AnimatorCharacterHelp : MonoBehaviour
     }
     public void ChangeMagParentToHand()
     {
-        _magCurrGunTransform = _characterIdentity.WeaponGameObjectDataContainer.GetCurrWeaponMagTransform();
+        _magCurrGunTransform = _characterIdentity.GetWeaponGameObjectDataContainer.GetCurrWeaponMagTransform();
         if(_magCurrGunTransform == null)return;
         
         _magOriginalLocalPos = _magCurrGunTransform.localPosition;

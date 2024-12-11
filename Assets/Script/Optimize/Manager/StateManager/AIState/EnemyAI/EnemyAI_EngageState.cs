@@ -47,7 +47,7 @@ public class EnemyAI_EngageState : EnemyAIState
             // _sm.IsCheckingLastPosTimer = _sm.IsCheckingLastPosTimerMax;
             _sm.AimAIPointLookAt(_sm.GetFOVMachine.ClosestEnemy);
             _sm.EnemyIdentity.Aiming(true);
-            _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.ClosestEnemy.position, false);
+            _sm.SetAllowLookTarget(true, _sm.GetFOVMachine.ClosestEnemy.position, false);
             if(_sm.GetFOVState.CurrState == FOVDistState.far)
             {
                 if(_sm.GotDetectedbyEnemy && _sm.IsThePersonImLookingAlsoSeeMe(_sm.GetFOVMachine.ClosestEnemy))
@@ -104,7 +104,7 @@ public class EnemyAI_EngageState : EnemyAIState
                     {
                         if(_sm.LeaveDirection != Vector3.zero)
                         {
-                            RunAwayOption();
+                            _sm.RunAwayOption();
                         }
                         else
                         {
@@ -140,7 +140,7 @@ public class EnemyAI_EngageState : EnemyAIState
             {
                 _sm.EnemyIdentity.Aiming(true);
                 Vector3 facedir = (_sm.Agent.steeringTarget - _sm.transform.position).normalized;
-                _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, -facedir, true);
+                _sm.SetAllowLookTarget(true, -facedir, true);
                 _sm.GetMoveStateMachine.SetAIDirection(_sm.TakeCoverPosition);
             }
             else
@@ -173,10 +173,4 @@ public class EnemyAI_EngageState : EnemyAIState
         _sm.RunningToEnemyLastPosition();
     }
 
-    private void RunAwayOption()
-    {
-        _sm.IsTakingCover = false;
-        
-        _sm.RunAway();
-    }
 }

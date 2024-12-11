@@ -4,23 +4,22 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscribeEvent, IHearSound
+public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
 {
     [Header("Manager")]
-    private EnemyAIManager _enemyAIManager;
+    
     [Header("State Machine")]
-    [SerializeField] private MovementStateMachine _moveStateMachine;
-    [SerializeField] private UseWeaponStateMachine _useWeaponStateMachine;
     private EnemyIdentity _enemyIdentity;
     
 
     [Header("Enemy Alert Value")]
-    [SerializeField] private float _alertValue;
-    [SerializeField] private float _maxAlertValue;
+    [ReadOnly(false), SerializeField] private float _alertValue;
+    [ReadOnly(false), SerializeField] private float _maxAlertValue;
     [SerializeField] private float _alertValueCountMultiplier = 10f;
 
     [Header("Enemy AI States")]
-    [SerializeField] private bool _isAIIdle, _isAIHunted, _isAIEngage, _isCheckingEnemyInHunt, _isGoingToLastPos;
+    [ReadOnly(false), SerializeField] private bool _isAIIdle;
+    [ReadOnly(false), SerializeField] private bool _isAIHunted, _isAIEngage, _isCheckingEnemyInHunt, _isGoingToLastPos;
     private IFOVMachineState _getFOVState;
     private IHuntPlayable _getFOVAdvancedData;
     private EnemyAIState _currState;
@@ -43,10 +42,11 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
 
     public float AlertValue {get {return _alertValue;} set { _alertValue = value;}}
     public float MaxAlertValue {get {return _maxAlertValue;} set { _maxAlertValue = value;}}
+    public float AlertValueCountMultiplier {get {return _alertValueCountMultiplier;}}
 
 
-    public MovementStateMachine GetMoveStateMachine { get { return _moveStateMachine; } }
-    public UseWeaponStateMachine GetUseWeaponStateMachine { get {return _useWeaponStateMachine;}}
+    // public MovementStateMachine GetMoveStateMachine { get { return _moveStateMachine; } }
+    // public UseWeaponStateMachine GetUseWeaponStateMachine { get {return _useWeaponStateMachine;}}
     public IFOVMachineState GetFOVState { get { return _getFOVState;}}
     public IHuntPlayable GetFOVAdvancedData { get { return _getFOVAdvancedData;}}
 
@@ -70,11 +70,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         _enemyAIManager.OnCaptainsStartHunting += EnemyAIManager_OnCaptainsStartHunting;
         _enemyAIManager.OnCaptainsStartEngaging += EnemyAIManager_OnCaptainsStartEngaging;
         _enemyAIManager.OnGoToClosestPOI += EnemyAIManager_OnGoToClosestPOI;
-
-        if(_moveStateMachine == null) _moveStateMachine = _charaIdentity.MovementStateMachine;
-        if(_useWeaponStateMachine == null) _useWeaponStateMachine = _charaIdentity.UseWeaponStateMachine;
-        _bodyPartMask = _useWeaponStateMachine.CharaEnemyMask;
-        _moveStateMachine.OnIsTheSamePosition += MoveStateMachine_OnIsTheSamePosition;
+        
         SwitchState(_states.AI_IdleState());
     }
 
@@ -87,17 +83,12 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         CheckPastVisibleTargets();
         DetectEnemy();
 
-        GotDetectedTimerCounter();
-        if(_gotDetectedByEnemy)
-        {   
-            _leaveDirection = GetTotalDirectionTargetPosAndEnemy(transform, false);
-        }
+        HandleGotDetected();
         
         _currState?.UpdateState();
     }
     public void CalculateAlertValue()
     {
-        // if(_charaIdentity.IsDead || _enemyIdentity.IsSilentKilled) return;
         if(_fovMachine.VisibleTargets.Count > 0)
         {
             float oldmaxAlert = _maxAlertValue;
@@ -178,7 +169,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         }
     }
 
-    private void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos)
+    protected override void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos)
     {
         if(IsAIIdle && GetFOVState.CurrState == FOVDistState.none && _patrolPath.Length > 0 && agentPos == _patrolPath[_currPath].position)
         {
@@ -208,7 +199,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
             if(agentPos == GetFOVAdvancedData.EnemyCharalastSeenPosition && IsGoingToLastPos) 
             {
                 IsGoingToLastPos = false;
-                if(IsAIEngage)_alertValue = MaxAlertValue/2 + 10f;
+                if(IsAIEngage)_alertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
                 if(EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
                 {
                     // Debug.Log("TEsstt??");
@@ -222,7 +213,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
                 {
                     _currPOI = EnemyAIManager.GetClosestPOI(this);
                     _getFOVAdvancedData.IsCheckingEnemyLastPosition();
-                    _alertValue = MaxAlertValue/2 + 10f;
+                    _alertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
                     _isCheckingEnemyInHunt = true;
                 }
                 else
@@ -278,7 +269,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
             }
             if(MaxAlertValue == 0)MaxAlertValue = enemy.MaxAlertValue;
 
-            if(!IsAIEngage)_alertValue = MaxAlertValue/2 + 10f;
+            if(!IsAIEngage)_alertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
             Vector3 closestLastSeenPos = Vector3.zero;
             if(EnemyAIManager.EnemyCaptainList.Count == 0)closestLastSeenPos = enemy.GetFOVAdvancedData.EnemyCharalastSeenPosition;
             else closestLastSeenPos = EnemyAIManager.GetClosestLastSeenPosInfoFromCaptain(transform);
@@ -307,7 +298,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         if(Vector3.Distance(enemy.transform.position, transform.position) <= EnemyAIManager.EnemyAnnouncementMaxRange || EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
         {
             if(MaxAlertValue == 0)MaxAlertValue = enemy.MaxAlertValue;
-            _alertValue = MaxAlertValue + 10f;
+            _alertValue = MaxAlertValue + _alertValueCountMultiplier;
 
             Vector3 closestLastSeenPos = Vector3.zero;
             if(EnemyAIManager.EnemyCaptainList.Count == 0)closestLastSeenPos = enemy.GetFOVAdvancedData.EnemyCharalastSeenPosition;
@@ -329,12 +320,12 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         _alertValue = MaxAlertValue/2 + 10f;
     }
 
-    public void UnsubscribeEvent()
+    public override void UnsubscribeEvent()
     {
         _enemyAIManager.OnCaptainsStartHunting -= EnemyAIManager_OnCaptainsStartHunting;
         _enemyAIManager.OnCaptainsStartEngaging -= EnemyAIManager_OnCaptainsStartEngaging;
         _enemyAIManager.OnGoToClosestPOI -= EnemyAIManager_OnGoToClosestPOI;
-        _moveStateMachine.OnIsTheSamePosition -= MoveStateMachine_OnIsTheSamePosition;
+        base.UnsubscribeEvent();
     }
 
     public bool IsThePersonImLookingAlsoSeeMe(Transform enemyISaw)
@@ -360,10 +351,10 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         {
             Vector3 wallToChara = (_wallArrayNearChara[i].transform.position - transform.position).normalized;
             float dotWallChara = Vector3.Dot(wallToChara, transform.forward);
-            // Debug.DrawRay(transform.position, wallToChara * 100f, Color.black, 2f);
+
             if(dotWallChara <= 0 && CurrWall != _wallArrayNearChara[i]) //currwallada biar kalo misalnya wall yg sebelumnya dh diambil dan lg otw, titiknya ada d belakang, dia ga merasa titiknya ada d belakang gitu
             {
-                Debug.Log(_wallArrayNearChara[i].transform.name + "  aaa " + " dotwallChara" + dotWallChara + " " + wallToChara + " " + transform.forward + " " + transform.name);
+                // Debug.Log(_wallArrayNearChara[i].transform.name + "  aaa " + " dotwallChara" + dotWallChara + " " + wallToChara + " " + transform.forward + " " + transform.name);
                 _wallTotal--;
                 _wallArrayNearChara[i] = null;
                 continue;
@@ -407,18 +398,18 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
             
         }
     }
-    public void StartShooting(Transform chosenTarget)
-    {
-        // Debug.Log("shoot di 2" + _sm.GetFOVMachine.ClosestEnemy.position);
-        AimAIPointLookAt(chosenTarget);
-        GetUseWeaponStateMachine.GiveChosenTarget(chosenTarget);
-        EnemyIdentity.Shooting(true);
-    }
-    public void StopShooting()
-    {
-        if(GetUseWeaponStateMachine.ChosenTarget != null)GetUseWeaponStateMachine.GiveChosenTarget(null);
-        EnemyIdentity.Shooting(false);
-    }
+    // public void StartShooting(Transform chosenTarget)
+    // {
+    //     // Debug.Log("shoot di 2" + _sm.GetFOVMachine.ClosestEnemy.position);
+    //     AimAIPointLookAt(chosenTarget);
+    //     GetUseWeaponStateMachine.GiveChosenTarget(chosenTarget);
+    //     EnemyIdentity.Shooting(true);
+    // }
+    // public void StopShooting()
+    // {
+    //     if(GetUseWeaponStateMachine.ChosenTarget != null)GetUseWeaponStateMachine.GiveChosenTarget(null);
+    //     EnemyIdentity.Shooting(false);
+    // }
     protected override bool IsThisASafePathToGo(Vector3 tempNewPos)
     {
         Vector3 firstPathNewPosToPlayer = (_tempFirstPathPos - transform.position).normalized;
@@ -426,7 +417,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         // if(dotForwardWithNewPosDir >= 0.95f && _fovMachine.VisibleTargets.Count > 0)return false;
         return true;
     }
-    public void SearchForWallToHide()
+    public void SearchForNextWallToHideWhileTakingCover()
     {
         _wallArrayNearChara = Physics.OverlapSphere(transform.position, _wallScannerDistance, _wallTakeCoverLayer);
         _wallTotal = _wallArrayNearChara.Length;
@@ -633,7 +624,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IUnsubscrib
         }
 
         if(MaxAlertValue == 0)MaxAlertValue = 25f;
-        if(!IsAIEngage)_alertValue = MaxAlertValue/2 + 10f;
+        if(!IsAIEngage)_alertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
 
         GetFOVAdvancedData.GoToEnemyLastSeenPosition(soundOriginPos);
         if(CurrPOI != null)CurrPOI = null;

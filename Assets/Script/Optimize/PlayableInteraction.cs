@@ -7,7 +7,6 @@ public class PlayableInteraction : MonoBehaviour
 
     [SerializeField] private List<IInteractable> _interactablesList = new List<IInteractable>();
     [SerializeField] private List<ISilentKillAble> _silentKillAbleList = new List<ISilentKillAble>();
-    [SerializeField] private GameObject _charaGameObject;
     [SerializeField] private IInteractable _currInteractable;
     [SerializeField] private ISilentKillAble _currSilentKillAble;
     [SerializeField] private LayerMask _interactableLayerMask;
@@ -64,12 +63,12 @@ public class PlayableInteraction : MonoBehaviour
             // Debug.DrawRay(_originInteract.position, _directionInteract.forward.normalized * 100f, Color.magenta, 2f);
             if(Physics.Raycast(_originInteract.position, _directionInteract.forward.normalized, out RaycastHit hit, 100f, _interactableLayerMask))
             {
-                IInteractable interactable = hit.collider.GetComponent<IInteractable>() ?? hit.collider.GetComponentInParent<IInteractable>();
-                // Debug.Log("Interaaaact is here" + interactable + "wooo");
+                IInteractable temp = hit.collider.GetComponent<IInteractable>();
+                IInteractable interactable =  temp != null ? temp : hit.collider.GetComponentInParent<IInteractable>();
+                
                 if(interactable != null && !_interactablesList.Contains(interactable) && interactable.CanInteract)
                 {
                     if(interactable == _thisObjInteractable) return;
-                    // Debug.Log(interactable.InteractableTransform.name + " in");
                     interactable.Interact(_playableCharacterIdentity);
                 }
             }
@@ -99,7 +98,7 @@ public class PlayableInteraction : MonoBehaviour
         foreach(IInteractable interactable in _interactablesList)
         {
             if(interactable == null)continue;
-            float InteractableToPlayerDistance = Vector3.Distance(interactable.InteractableTransform.position, _thisObjInteractable.InteractableTransform.position);
+            float InteractableToPlayerDistance = Vector3.Distance(interactable.GetInteractableTransform.position, _thisObjInteractable.GetInteractableTransform.position);
             
 
             if(closestDistance > InteractableToPlayerDistance)
@@ -120,7 +119,7 @@ public class PlayableInteraction : MonoBehaviour
         foreach(ISilentKillAble interactable in _silentKillAbleList)
         {
             if(interactable == null)continue;
-            float InteractableToPlayerDistance = Vector3.Distance(interactable.SilentKillAbleTransform.position, _thisObjInteractable.InteractableTransform.position);
+            float InteractableToPlayerDistance = Vector3.Distance(interactable.GetSilentKillAbleTransform.position, _thisObjInteractable.GetInteractableTransform.position);
             
             if(closestDistance > InteractableToPlayerDistance)
             {
@@ -136,7 +135,9 @@ public class PlayableInteraction : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Interactable"))
         {
-            IInteractable interactable = other.gameObject.GetComponent<IInteractable>() ?? other.gameObject.GetComponentInParent<IInteractable>();
+            IInteractable temp = other.gameObject.GetComponent<IInteractable>();
+            IInteractable interactable =  temp != null ? temp : other.gameObject.GetComponentInParent<IInteractable>();
+
             // if(interactable != null)Debug.Log(interactable.InteractableTransform.name + " in1");
             if(interactable != null && !_interactablesList.Contains(interactable) && interactable.CanInteract)
             {
@@ -149,8 +150,9 @@ public class PlayableInteraction : MonoBehaviour
         }
         if(other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("Hellooo");
-            ISilentKillAble silentKillAble = other.gameObject.GetComponent<ISilentKillAble>() ?? other.gameObject.GetComponentInParent<ISilentKillAble>();
+            ISilentKillAble temp = other.gameObject.GetComponent<ISilentKillAble>();
+            ISilentKillAble silentKillAble =  temp != null ? temp : other.gameObject.GetComponentInParent<ISilentKillAble>();
+
             // if(silentKillAble != null)Debug.Log(silentKillAble.SilentKillAbleTransform.name + " in1");
             if(silentKillAble != null && !_silentKillAbleList.Contains(silentKillAble) && silentKillAble.CanBeKill)
             {
@@ -164,7 +166,9 @@ public class PlayableInteraction : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Interactable"))
         {
-            IInteractable interactable = other.gameObject.GetComponent<IInteractable>() ?? other.gameObject.GetComponentInParent<IInteractable>();
+            IInteractable temp = other.gameObject.GetComponent<IInteractable>();
+            IInteractable interactable =  temp != null ? temp : other.gameObject.GetComponentInParent<IInteractable>();
+
             // if(interactable != null)Debug.Log(interactable.InteractableTransform.name + " out1");
             if(interactable != null && _interactablesList.Contains(interactable))
             {
@@ -176,7 +180,8 @@ public class PlayableInteraction : MonoBehaviour
         }
         if(other.gameObject.CompareTag("Enemy"))
         {
-            ISilentKillAble silentKillAble = other.gameObject.GetComponent<ISilentKillAble>() ?? other.gameObject.GetComponentInParent<ISilentKillAble>();
+            ISilentKillAble temp = other.gameObject.GetComponent<ISilentKillAble>();
+            ISilentKillAble silentKillAble =  temp != null ? temp : other.gameObject.GetComponentInParent<ISilentKillAble>();
             if(silentKillAble != null && _silentKillAbleList.Contains(silentKillAble))
             {
                 if(!silentKillAble.CanBeKill)_silentKillAbleList.Remove(silentKillAble);
@@ -187,8 +192,9 @@ public class PlayableInteraction : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Interactable"))
         {
-            IInteractable interactable = other.gameObject.GetComponent<IInteractable>() ?? other.gameObject.GetComponentInParent<IInteractable>();
-            // if(interactable != null)Debug.Log(interactable.InteractableTransform.name + " out1");
+            IInteractable temp = other.gameObject.GetComponent<IInteractable>();
+            IInteractable interactable =  temp != null ? temp : other.gameObject.GetComponentInParent<IInteractable>();
+            
             if(interactable != null && _interactablesList.Contains(interactable))
             {
                 // Debug.Log(interactable.InteractableTransform.name + " out");
@@ -198,7 +204,8 @@ public class PlayableInteraction : MonoBehaviour
         }
         if(other.gameObject.CompareTag("Enemy"))
         {
-            ISilentKillAble silentKillAble = other.gameObject.GetComponent<ISilentKillAble>() ?? other.gameObject.GetComponentInParent<ISilentKillAble>();
+            ISilentKillAble temp = other.gameObject.GetComponent<ISilentKillAble>();
+            ISilentKillAble silentKillAble =  temp != null ? temp : other.gameObject.GetComponentInParent<ISilentKillAble>();
             // if(silentKillAble != null)Debug.Log(silentKillAble.SilentKillAbleTransform.name + " out1");
             if(silentKillAble != null && _silentKillAbleList.Contains(silentKillAble))
             {
@@ -209,7 +216,9 @@ public class PlayableInteraction : MonoBehaviour
     }
     public void DeleteKilledEnemyFromList(Transform enemy)
     {
-        ISilentKillAble silentKillAble = enemy.GetComponent<ISilentKillAble>() ?? enemy.GetComponentInParent<ISilentKillAble>();
+        ISilentKillAble temp = enemy.GetComponent<ISilentKillAble>();
+        ISilentKillAble silentKillAble =  temp != null ? temp : enemy.GetComponentInParent<ISilentKillAble>();
+        
         if(_silentKillAbleList.Contains(silentKillAble))_silentKillAbleList.Remove(silentKillAble);
     }
     #endregion
@@ -218,9 +227,9 @@ public class PlayableInteraction : MonoBehaviour
     public void PickUpObject(PickableObj_IntObj obj)
     {
         if(_heldObject == obj)return;
-        _playableCharacterIdentity.GetPlayableUseWeaponData.TellToTurnOffScope();
-        _playableCharacterIdentity.GetPlayableUseWeaponData.ForceStopUseWeapon();
-        _playableCharacterIdentity.GetPlayableMovementData.IsMustLookForward = false;
+        _playableCharacterIdentity.GetPlayableUseWeaponStateMachine.TellToTurnOffScope();
+        _playableCharacterIdentity.GetPlayableUseWeaponStateMachine.ForceStopUseWeapon();
+        _playableCharacterIdentity.GetPlayableMovementStateMachine.IsMustLookForward = false; //ini digantiu
         if(_heldObject != null)
         {
             _heldObject.RB.isKinematic = false;

@@ -1965,8 +1965,8 @@ GameObject:
   - component: {fileID: 2175846577638294248}
   - component: {fileID: 487325877852549761}
   - component: {fileID: 4628450095651512891}
-  - component: {fileID: 9156701189675697134}
   - component: {fileID: 2401869571015996941}
+  - component: {fileID: 9156701189675697134}
   - component: {fileID: 6329494293171065761}
   - component: {fileID: 4625941301074475279}
   - component: {fileID: 4818893464818231861}
@@ -2007,11 +2007,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   immortalized: 0
   _characterStatSO: {fileID: 11400000, guid: 39b2e1a08d768ac44afd216a51e00f2f, type: 2}
-  _moveStateMachine: {fileID: 487325877852549761}
-  _useWeaponStateMachine: {fileID: 4628450095651512891}
-  _animator: {fileID: 7846517375386514048}
   _charaName: 
   _totalHealth: 100
+  _currHealth: 0
+  _isDead: 0
   _weaponLists:
   - weaponStatSO: {fileID: 11400000, guid: a9d97bbad63f47d4a92e1eb934894ae8, type: 2}
     totalBullet: 0
@@ -2022,6 +2021,7 @@ MonoBehaviour:
   _currWeaponIdx: 0
   _regenScale: 0
   _regenTimerMax: 0.5
+  _regenCDTimer: 0
 --- !u!114 &487325877852549761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2034,13 +2034,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21922f4cdffb24e419d952e158ef2774, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 7846517375386514048}
   _isIdle: 1
   _isWalking: 0
   _isRun: 0
   _isCrouch: 0
   _runSpeedMultiplier: 2
   _crouchSpeedMultiplier: 0.5
+  _rotationSpeedAI: 180
   _idleAnimCycleTimeTarget:
   - 2
   - 6
@@ -2055,6 +2055,8 @@ MonoBehaviour:
   _crouchPlatformLayer:
     serializedVersion: 2
     m_Bits: 131072
+  _crouchRayBuffer: 1.1
+  _crouchHeadHitAngleBuffer: 15
 --- !u!114 &4628450095651512891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2067,21 +2069,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98324d2f92aea754a815fb482ebcc3f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 7846517375386514048}
-  isGo: 0
-  isStop: 0
-  target: {fileID: 0}
   _isIdle: 1
   _isAiming: 0
   _isUsingWeapon: 0
   _isReloading: 0
   _rigController: {fileID: 2609315150327809839}
   _notAimSpamClickDelayTime: 0.1
-  _originShootPoint_AIContainer: {fileID: 8294635841845981970}
-  _gunOriginShootPoint: {fileID: 3016683631597398430}
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 12480
+  _recoilCoolDownBuffer: 0.1
+--- !u!114 &2401869571015996941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8108311428643618268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8977702fd2d5e64f9b037b2fe9c8f90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _aimAIPoint: {fileID: 6427091712931664188}
+  _isTakingCover: 0
+  _isHiding: 0
+  _isChecking: 0
+  _isAtTakingCoverHidingPlace: 0
+  _isAtTakingCoverCheckingPlace: 0
+  _wallArrayNearChara: []
+  _wallTotal: 0
+  _wallScannerDistance: 20
+  _wallTakeCoverLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  _HideDotMin: 0
+  _charaMaxTakeCoverDistance: 100
+  _wallTakeCoverPosBuffer: -1.5
+  _charaHeadColl: {fileID: 6030350185680177975}
+  _charaHeightBuffer: 0.15
+  _charaWidthBuffer: 0.2
+  _currWall: {fileID: 0}
+  _currWallHeight: 0
+  _isWallTallerThanChara: 0
+  _takeCoverPosition: {x: 0, y: 0, z: 0}
+  _canTakeCoverInThePosition: 0
+  _leaveDirection: {x: 0, y: 0, z: 0}
+  _enemyWhoSawAIList: []
+  _enemyWhoSawAIListContainer: []
+  _pastVisibleTargets: []
+  _minEnemyMakeCharaFeelOverwhelmed: 3
+  _enemyMaxDistanceFromWalls: 10
+  _gotDetectedByEnemy: 0
+  _gotDetectedTimer: 0
+  _gotDetectedTimerMax: 0.3
+  _runAwayObstacleMask:
+    serializedVersion: 2
+    m_Bits: 77824
+  _focusedBodyPartsToShoot: 1
+  _isCheckingLastPosTimer: 0
+  _isCheckingLastPosTimerMax: 1
+  _alertValue: 0
+  _maxAlertValue: 0
+  _alertValueCountMultiplier: 10
+  _isAIIdle: 1
+  _isAIHunted: 0
+  _isAIEngage: 0
+  _isCheckingEnemyInHunt: 0
+  _isGoingToLastPos: 0
+  _patrolPath: []
 --- !u!114 &9156701189675697134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2118,65 +2174,6 @@ MonoBehaviour:
   _otherVisibleTargets: []
   _enemyCharaTag: Player
   _middleDistanceBuffer: 2
---- !u!114 &2401869571015996941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8108311428643618268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8977702fd2d5e64f9b037b2fe9c8f90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _takeCoverManager: {fileID: 0}
-  _fovMachine: {fileID: 0}
-  _aimAIPoint: {fileID: 6427091712931664188}
-  _noEnemyToPointObj: {fileID: 0}
-  _leaveDirection: {x: 0, y: 0, z: 0}
-  _isTakingCover: 0
-  _isHiding: 0
-  _isChecking: 0
-  _isAtTakingCoverHidingPlace: 0
-  _isAtTakingCoverCheckingPlace: 0
-  _wallArrayNearChara: []
-  _wallScannerDistance: 20
-  _wallTakeCoverLayer:
-    serializedVersion: 2
-    m_Bits: 4096
-  _agent: {fileID: 0}
-  _HideDotMin: 0
-  _charaMaxTakeCoverDistance: 100
-  _charaHeadColl: {fileID: 6030350185680177975}
-  _charaHeightBuffer: 0.15
-  _charaWidthBuffer: 0.2
-  _buffer: -1.5
-  _enemyWhoSawAIList: []
-  _enemyWhoSawAIListContainer: []
-  _pastVisibleTargets: []
-  _minEnemyMakeCharaFeelOverwhelmed: 3
-  _gotDetectedByEnemy: 0
-  _gotDetectedTimer: 0
-  _gotDetectedTimerMax: 0.3
-  _enemyMaxDistanceFromWalls: 10
-  _runAwayObstacleMask:
-    serializedVersion: 2
-    m_Bits: 12288
-  _focusedBodyPartsToShoot: 1
-  _isCheckingLastPosTimer: 0
-  _isCheckingLastPosTimerMax: 1
-  _moveStateMachine: {fileID: 0}
-  _useWeaponStateMachine: {fileID: 0}
-  _alertValue: 0
-  _maxAlertValue: 0
-  _alertValueCountMultiplier: 10
-  _isAIIdle: 1
-  _isAIHunted: 0
-  _isAIEngage: 0
-  _isCheckingEnemyInHunt: 0
-  _isGoingToLastPos: 0
-  _patrolPath: []
 --- !u!195 &6329494293171065761
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3546,11 +3543,6 @@ Transform:
 --- !u!4 &7756453191530717540 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -3014441668679733643, guid: b5ce160343d351e46a91c38bd537c7c8, type: 3}
-  m_PrefabInstance: {fileID: 4435755718508236561}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &7846517375386514048 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: b5ce160343d351e46a91c38bd537c7c8, type: 3}
   m_PrefabInstance: {fileID: 4435755718508236561}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &7931876484838561841 stripped

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    public Transform InteractableTransform{get;}
+    public Transform GetInteractableTransform{get;}
     public bool CanInteract{get;}
     void Interact(PlayableCharacterIdentity characterIdentity);
 }

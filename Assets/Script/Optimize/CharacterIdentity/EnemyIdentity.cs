@@ -5,11 +5,11 @@ using UnityEngine;
 public class EnemyIdentity : CharacterIdentity, ISilentKillAble
 {
     protected EnemyAIBehaviourStateMachine _enemyAIStateMachine;
+
     private bool _canBeKill = true;
     private bool _isSilentKilled;
 
-    public Transform SilentKillAbleTransform {get{return transform;}}
-
+    public Transform GetSilentKillAbleTransform {get{return transform;}}
     public bool CanBeKill {get{return _canBeKill;}}
     public bool IsSilentKilled {get{return _isSilentKilled;}}
 
@@ -37,8 +37,8 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
 
     public void GotSilentKill(PlayableCharacterIdentity characterIdentityWhoKilling)
     {
-        characterIdentityWhoKilling.GetPlayableMovementData.ForceStopMoving();
-        characterIdentityWhoKilling.GetPlayableUseWeaponData.SetSilentKilledEnemy(this);
+        characterIdentityWhoKilling.GetPlayableMovementStateMachine.ForceStopMoving();
+        characterIdentityWhoKilling.GetPlayableUseWeaponStateMachine.SetSilentKilledEnemy(this);
         characterIdentityWhoKilling.IsSilentKilling = true;
         _isSilentKilled = true;
         _moveStateMachine.ForceStopMoving();

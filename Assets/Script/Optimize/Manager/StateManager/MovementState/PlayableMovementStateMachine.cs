@@ -79,7 +79,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             {
                 if(!value)
                 {
-                    if(IsAskedToRunByPlayable && !_getPlayableCharacterIdentity.FriendAIStateMachine.IsAIEngage && !_getPlayableCharacterIdentity.FriendAIStateMachine.GotDetectedbyEnemy && !IsAtCrouchPlatform)_isRun = IsAskedToCrouchByPlayable;
+                    if(IsAskedToRunByPlayable && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.IsAIEngage && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.GotDetectedbyEnemy && !IsAtCrouchPlatform)_isRun = IsAskedToCrouchByPlayable;
                     else _isRun = value;
                 }
                 else
@@ -102,7 +102,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             {
                 if(!value)
                 {
-                    if(IsAskedToCrouchByPlayable && !_getPlayableCharacterIdentity.FriendAIStateMachine.IsAIEngage && !_getPlayableCharacterIdentity.FriendAIStateMachine.GotDetectedbyEnemy)_isCrouch = IsAskedToCrouchByPlayable;
+                    if(IsAskedToCrouchByPlayable && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.IsAIEngage && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.GotDetectedbyEnemy)_isCrouch = IsAskedToCrouchByPlayable;
                     else _isCrouch = value;
                 }
                 else
@@ -165,9 +165,9 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         _tempAnimateCharaTransform.localPosition = _animateCharaTransform.transform.localPosition;
 
         _worldSoundManager = WorldSoundManager.Instance;
-        _charaHeadColl = _getPlayableCharacterIdentity.FriendAIStateMachine.CharaHeadColl;
-        _charaHeightBuffer = _getPlayableCharacterIdentity.FriendAIStateMachine.CharaHeightBuffer;
-        _charaWidth = _getPlayableCharacterIdentity.FriendAIStateMachine.CharaWidth;
+        _charaHeadColl = _getPlayableCharacterIdentity.GetFriendAIStateMachine.CharaHeadColl;
+        _charaHeightBuffer = _getPlayableCharacterIdentity.GetFriendAIStateMachine.CharaHeightBuffer;
+        _charaWidth = _getPlayableCharacterIdentity.GetFriendAIStateMachine.CharaWidth;
 
         OnIsTheSamePosition += OnIsTheSamePositionTakeCover;
         base.Start();
@@ -365,7 +365,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     {
         if(!_getPlayableCharacterIdentity.IsReviving)return;
         // Vector3 flatForward = new Vector3(_playableLookTarget.forward.x, 0, _playableLookTarget.forward.z).normalized;
-        Vector3 dir = (_getPlayableCharacterIdentity.FriendBeingRevivedPos.position - _charaGameObject.position).normalized;
+        Vector3 dir = (_getPlayableCharacterIdentity.GetFriendBeingRevivedPos.position - _charaGameObject.position).normalized;
         dir = new Vector3(dir.x, 0, dir.z);
         Vector3 newDir = Quaternion.Euler (0, _takeCoverWallCheckerAngleBuffer,0) * dir;
 
