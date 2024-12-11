@@ -14,7 +14,7 @@ public class IdleWeaponState : UseWeaponState
         if(!_sm.IsIdle)
         {
             // Debug.Log("what");
-            _sm.OnWasUsinghGun?.Invoke();
+            _sm.OnWasUsingGun?.Invoke();
         }
 
         _sm.IsIdle = true;

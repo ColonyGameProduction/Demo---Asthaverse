@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
-using System.Diagnostics.CodeAnalysis;
 using System;
 
 public class GameManager : MonoBehaviour
@@ -50,13 +47,14 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        _currState = GameState.Play;
-
+        
         playableCharacterNum = 0;
         FollowCamerasRefrence();
         CreatingBreadcrumbs();
         canSwitch = true;
         scope = false;
+
+        SetGameState(GameState.Play);
     }
 
     public void FollowCamerasRefrence()
@@ -87,13 +85,16 @@ public class GameManager : MonoBehaviour
         
         if(_isPause)
         {
-            _currState = GameState.Pause;
+            Time.timeScale = 0f;
+            SetGameState(GameState.Pause);
         }
         else
         {
-            _currState = GameState.Play;
+            Time.timeScale = 1f;
+            SetGameState(GameState.Play);
         }
     }
+    private void SetGameState(GameState newState) => _currState = newState;
 
-    
+
 }

@@ -18,13 +18,14 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 
     [Header("Manager/Machine")]
     //Untuk ambil bool
-    [SerializeField] protected MovementStateMachine _moveStateMachine;
-    [SerializeField] protected UseWeaponStateMachine _useWeaponStateMachine;
+    protected MovementStateMachine _moveStateMachine;
+    protected UseWeaponStateMachine _useWeaponStateMachine;
     protected AIBehaviourStateMachine _aiStateMachine;
     protected WeaponShootVFX _weaponShootVFX;
+    protected WeaponGameObjectDataContainer _weaponGameObjectDataContainer;
     protected FOVMachine _fovMachine;
     protected GameManager _gm;
-    [SerializeField]protected Animator _animator;
+    protected Animator _animator;
 
     #region CHARACTER STATS
     [Space(1)]
@@ -33,9 +34,9 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 
     [Space(1)]
     [Header("   Health")]
-    [SerializeField] protected float _totalHealth;
-    protected float _currHealth;
-    protected bool _isDead;
+    [ReadOnly(false), SerializeField] protected float _totalHealth;
+    [ReadOnly(true), SerializeField] protected float _currHealth;
+    [ReadOnly(false), SerializeField] protected bool _isDead;
 
     [Space(1)]
     [Header("   Armour")]
@@ -44,7 +45,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 
     [Space(1)]
     [Header("   Weapon")]
-    [SerializeField] protected List<WeaponData> _weaponLists = new List<WeaponData>();
+    [ReadOnly(true), SerializeField] protected List<WeaponData> _weaponLists = new List<WeaponData>();
     [SerializeField] protected int _currWeaponIdx;
 
 
@@ -54,36 +55,44 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     #endregion
     [Header("Regen Stats")]
     [SerializeField] protected float _regenScale = 0.7f;
-    protected float _regenCDTimer;
-    [SerializeField]protected float _regenTimerMax = 0.5f;
+    [SerializeField] protected float _regenTimerMax = 0.5f;
+    [ReadOnly(false), SerializeField] protected float _regenCDTimer;
+
     #endregion
 
     #region GETTERSETTER Variable
     [HideInInspector]
-    //getter setter
-    public virtual float StealthStat { get{ return _stealthStats; }}
+
+    public MovementStateMachine GetMovementStateMachine {get { return _moveStateMachine;}}
+    public UseWeaponStateMachine GetUseWeaponStateMachine {get { return _useWeaponStateMachine;}}
+    public AIBehaviourStateMachine GetAIStateMachine {get { return _aiStateMachine;}}
+    public WeaponShootVFX GetWeaponShootVFX {get {return _weaponShootVFX;}}
+    public WeaponGameObjectDataContainer GetWeaponGameObjectDataContainer {get{return _weaponGameObjectDataContainer;}}
+
     public virtual float TotalHealth {get { return _totalHealth; } }
     public virtual float CurrHealth {get {return _currHealth; } set { _currHealth = value; } }
     public virtual bool IsHalfHealthOrLower {get {return _currHealth <= _totalHealth/2; }} 
-    public armourType GetCharaArmourType {get {return _armourType;}}
     public bool IsDead {get { return _isDead;}}
+
+    public armourType GetCharaArmourType {get {return _armourType;}}
+    public virtual float StealthStat { get{ return _stealthStats; }}
+
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
-    public MovementStateMachine MovementStateMachine {get { return _moveStateMachine;}}
-    public UseWeaponStateMachine UseWeaponStateMachine {get { return _useWeaponStateMachine;}}
-    public AIBehaviourStateMachine AIStateMachine {get { return _aiStateMachine;}}
 
     #endregion
     protected virtual void Awake()
     {
-        if(_animator == null)_animator = GetComponent<Animator>();
-        if(_moveStateMachine == null) _moveStateMachine = GetComponent<MovementStateMachine>();
-        if(_useWeaponStateMachine == null) _useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
-        // Debug.Log(_useWeaponStateMachine + " tidak null");
-        if(_useWeaponStateMachine != null)_useWeaponStateMachine.OnWasUsinghGun += UseWeapon_OnWasUsinghGun;
-        if(_aiStateMachine == null) _aiStateMachine = GetComponent<AIBehaviourStateMachine>();
+        _animator = GetComponentInChildren<Animator>();
+
+        _moveStateMachine = GetComponent<MovementStateMachine>();
+        _useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
+        _useWeaponStateMachine.OnWasUsingGun += UseWeapon_OnWasUsingGun;
+
+        _aiStateMachine = GetComponent<AIBehaviourStateMachine>();
         _weaponShootVFX = GetComponent<WeaponShootVFX>();
         _fovMachine = GetComponent<FOVMachine>();
+        _weaponGameObjectDataContainer = GetComponentInChildren<WeaponGameObjectDataContainer>();
 
         InitializeCharacter();
         InitializeWeapon();
@@ -93,14 +102,11 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         _gm = GameManager.instance;
     }
 
-    // protected virtual void Update()
-    // {
-        
-    // }
-    private void UseWeapon_OnWasUsinghGun()
+    private void UseWeapon_OnWasUsingGun()
     {
         _moveStateMachine.WasCharacterAiming = true;
     }
+
     #region Health
     public virtual void Hurt(float Damage)
     {
@@ -111,22 +117,21 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         if(CurrHealth <= 0)
         {
             CurrHealth = 0;
-            if(!immortalized)Death();
+            if(!immortalized) Death();
         }
     }
     public virtual void Heal(float Healing)
     {
-        if(CurrHealth == TotalHealth)return;
+        if(CurrHealth == TotalHealth) return;
 
         CurrHealth += Healing;
         if(CurrHealth >= TotalHealth) CurrHealth = TotalHealth;
     }
-    
-    
 
     public virtual void Death()
     {
         if(_isDead)return;
+
         _isDead = true;
         _regenCDTimer = 0f;
         _animator.SetBool("Death", true);
@@ -134,12 +139,11 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         _useWeaponStateMachine.ForceStopUseWeapon();
         _moveStateMachine.ForceStopMoving();
         
-        if(_fovMachine.enabled)_fovMachine.StopFOVMachine();
+        if(_fovMachine.enabled) _fovMachine.StopFOVMachine();
         _fovMachine.enabled = false;
     }
-    public virtual void AfterFinishDeathAnimation(){}
+    public abstract void AfterFinishDeathAnimation();
     
-
     public virtual void InitializeCharacter()
     {
         if(_characterStatSO == null) 
@@ -147,12 +151,13 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
             _currHealth = TotalHealth;
             return;
         }
+
         _charaName = _characterStatSO.entityName;
 
         _totalHealth = _characterStatSO.health;
         _currHealth = _totalHealth;
 
-        MovementStateMachine.InitializeMovementSpeed(_characterStatSO.speed);
+        _moveStateMachine.InitializeMovementSpeed(_characterStatSO.speed);
 
         _armourType = _characterStatSO.armourType;
         _armour = _characterStatSO.armor;
@@ -162,14 +167,11 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
 
         _fovMachine.viewRadius = _characterStatSO.FOVRadius;
         
-        if(_weaponLists.Count > 0)_weaponLists.Clear();
+        if(_weaponLists.Count > 0) _weaponLists.Clear();
         foreach(WeaponStatSO weaponStat in _characterStatSO.weaponStat)
         {
             WeaponData newWeapData = new WeaponData(weaponStat);
             _weaponLists.Add(newWeapData);
-            // Debug.Log(weaponStat.gunShootPoint + " AAAAAAAAAA"+ weaponStat.gunShootPoint.position);
-            _weaponShootVFX.SpawnTrail((int)(weaponStat.magSize * weaponStat.bulletPerTap), _useWeaponStateMachine.GunOriginShootPoint.position, weaponStat.bulletTrailPrefab, weaponStat.gunFlashPrefab);
-            // _weaponShootVFX.SpawnTrail((int)(weaponStat.magSize * weaponStat.bulletPerTap * 2), weaponStat.gunShootPoint.position, weaponStat.bulletTrailPrefab, weaponStat.gunFlashPrefab);
         }
         
     }
@@ -183,10 +185,18 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         {
             weapon.totalBullet = weapon.weaponStatSO.magSize * weapon.weaponStatSO.magSpare;
             weapon.currBullet = weapon.weaponStatSO.magSize;
-            
         }
+
         _currWeaponIdx = 0;
+        _weaponGameObjectDataContainer.GetCurrWeaponGameObjectData(_currWeaponIdx);
+        _useWeaponStateMachine.GunOriginShootPoint = _weaponGameObjectDataContainer.GetCurrShootPlacement();
+
         _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
+
+        foreach(WeaponStatSO weaponStat in _characterStatSO.weaponStat)
+        {
+            _weaponShootVFX.SpawnTrail((int)(weaponStat.magSize * weaponStat.bulletPerTap), _useWeaponStateMachine.GunOriginShootPoint.position, weaponStat.bulletTrailPrefab, weaponStat.gunFlashPrefab);
+        }
 
     }
     public abstract void ReloadWeapon();
@@ -198,41 +208,41 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         if(isRunning)
         {
             
-            if(MovementStateMachine.IsCrouching)
+            if(_moveStateMachine.IsCrouching)
             {   
-                if(!MovementStateMachine.IsAtCrouchPlatform)
+                if(!_moveStateMachine.IsAtCrouchPlatform)
                 {
-                    if(MovementStateMachine.AllowLookTarget)MovementStateMachine.AllowLookTarget = false;
-                    UseWeaponStateMachine.ForceStopUseWeapon();
-                    MovementStateMachine.IsCrouching = false;
-                    MovementStateMachine.IsRunning = isRunning;
+                    if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
+                    _useWeaponStateMachine.ForceStopUseWeapon();
+                    _moveStateMachine.IsCrouching = false;
+                    _moveStateMachine.IsRunning = isRunning;
                 }
             }
             else
             {
-                if(MovementStateMachine.AllowLookTarget)MovementStateMachine.AllowLookTarget = false;
-                UseWeaponStateMachine.ForceStopUseWeapon();
-                MovementStateMachine.IsRunning = isRunning;
+                if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
+                _useWeaponStateMachine.ForceStopUseWeapon();
+                _moveStateMachine.IsRunning = isRunning;
             }
         }
         else
         {
-            MovementStateMachine.IsRunning = isRunning;
+            _moveStateMachine.IsRunning = isRunning;
         }
     }
     public virtual void Crouch(bool isCrouching)
     {
         if(isCrouching)
         {
-            if(MovementStateMachine.IsRunning)
+            if(_moveStateMachine.IsRunning)
             {
-                MovementStateMachine.IsRunning = false;
+                _moveStateMachine.IsRunning = false;
             }
-            MovementStateMachine.IsCrouching = isCrouching;
+            _moveStateMachine.IsCrouching = isCrouching;
         }
         else
         {
-            if(!MovementStateMachine.IsAtCrouchPlatform)MovementStateMachine.IsCrouching = isCrouching;
+            if(!_moveStateMachine.IsAtCrouchPlatform) _moveStateMachine.IsCrouching = isCrouching;
         }
         
     }
@@ -240,12 +250,12 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
     {
         if(isAiming)
         {
-            if(MovementStateMachine.IsRunning)
+            if(_moveStateMachine.IsRunning)
             {
-                MovementStateMachine.IsRunning = false;
+                _moveStateMachine.IsRunning = false;
             }
         }
-        UseWeaponStateMachine.IsAiming = isAiming;
+        _useWeaponStateMachine.IsAiming = isAiming;
     }
     public virtual void Shooting(bool isShooting)
     {
@@ -253,7 +263,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         {
             Aiming(true);
         }
-        UseWeaponStateMachine.IsUsingWeapon = isShooting;
+        _useWeaponStateMachine.IsUsingWeapon = isShooting;
     }
     #endregion
 }

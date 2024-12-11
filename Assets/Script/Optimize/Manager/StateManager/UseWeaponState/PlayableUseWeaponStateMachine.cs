@@ -12,10 +12,10 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected PlayableCharacterCameraManager _charaCameraManager;
     [Space(2)]
     [Header("State Bool - Advanced use")]
-    [SerializeField] protected bool _isSwitchingWeapon;
+    [ReadOnly(true), SerializeField] protected bool _isSwitchingWeapon;
     protected bool _canSwitchWeapon = true;
     [SerializeField] protected float _switchWeaponDuration; // ini sementara ampe ada animasi
-    [SerializeField] protected bool _isSilentKill;
+    [ReadOnly(true), SerializeField] protected bool _isSilentKill;
     protected bool _canSilentKill = true;
     [SerializeField] protected float _silentKillDuration; // ini sementara ampe ada animasi
     private EnemyIdentity _silentKilledEnemy;
@@ -39,6 +39,9 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected PlayerGunCollide _getPlayerGunCollide;
     [Header("Recoil Data Advanced")]
     protected float _movingMaxRecoil, _currRecoilMod, _recoilAddMultiplier;
+    [SerializeField] protected float _movingMaxRecoilOnScopeNotIdleBuffer = 0.5f, _movingMaxRecoilNotOnScopeIdleCrouch = 0.5f;
+    [SerializeField] protected float _currRecoilModBufferOnScopeNotIdle = 0.25f, _currRecoilModBufferNotOnScopeNotIdle = 0.5f, _currRecoildModNotOnScopeIdleCrouch = 0.25f;
+    [SerializeField] protected float _recoildAddMultiplierOnScopeNotIdle = 1.5f, _recoildAddMultiplierNotOnScopeNotIdle = 3f, _recoilAddMultiplierNotOnScopeIdleCrouch = 1.5f;
 
     #endregion
     #region GETTERSETTER Variable
@@ -236,26 +239,27 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         _silentKilledEnemy = enemy;
     }
     #region Recoil
+
     protected void MovingRecoilCount()
     {
-        if(!_getPlayableCharacterIdentity.GetPlayableMovementData.IsIdle)
+        if(!_getPlayableCharacterIdentity.GetPlayableMovementStateMachine.IsIdle)
         {
             if(_charaCameraManager.IsScope)
             {
-                _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil * 0.5f;
-                _currRecoilMod = _currWeapon.weaponStatSO.recoil * 0.25f;
-                _recoilAddMultiplier = 1.5f;
+                _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil * _movingMaxRecoilOnScopeNotIdleBuffer;
+                _currRecoilMod = _currWeapon.weaponStatSO.recoil * _currRecoilModBufferOnScopeNotIdle;
+                _recoilAddMultiplier = _recoildAddMultiplierOnScopeNotIdle;
             }
             else
             {
                 _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil;
-                _currRecoilMod = _currWeapon.weaponStatSO.recoil * 0.5f;
-                _recoilAddMultiplier = 3f;
+                _currRecoilMod = _currWeapon.weaponStatSO.recoil * _currRecoilModBufferNotOnScopeNotIdle;
+                _recoilAddMultiplier = _recoildAddMultiplierNotOnScopeNotIdle;
             }
         }
         else
         {
-            if(_getPlayableCharacterIdentity.GetPlayableMovementData.IsCrouching)
+            if(_getPlayableCharacterIdentity.GetPlayableMovementStateMachine.IsCrouching)
             {
                 if(_charaCameraManager.IsScope)
                 {
@@ -265,9 +269,9 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
                 }
                 else
                 {
-                    _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil * 0.5f;
-                    _currRecoilMod = _currWeapon.weaponStatSO.recoil * 0.25f;
-                    _recoilAddMultiplier = 1.5f;
+                    _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil * _movingMaxRecoilNotOnScopeIdleCrouch;
+                    _currRecoilMod = _currWeapon.weaponStatSO.recoil * _currRecoildModNotOnScopeIdleCrouch;
+                    _recoilAddMultiplier = _recoilAddMultiplierNotOnScopeIdleCrouch;
                 }
             }
             else
@@ -278,12 +282,13 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
             }
         }
     }
+    
     protected override void RecoilHandler()
     {
         if(!IsAIInput)
         {   
             MovingRecoilCount();
-            _recoilCoolDown = _currWeapon.weaponStatSO.fireRate + (_currWeapon.weaponStatSO.fireRate * 0.1f);
+            _recoilCoolDown = _currWeapon.weaponStatSO.fireRate + (_currWeapon.weaponStatSO.fireRate * _recoilCoolDownBuffer);
             _maxRecoil = _currWeapon.weaponStatSO.recoil + _movingMaxRecoil;
             _finalCountRecoil = _currRecoil + _currRecoilMod;
         }
@@ -312,7 +317,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
             }
             else
             {
-                _currRecoil = 0;
+                _currRecoil = _currWeapon.weaponStatSO.recoil;;
             }
 
         }

@@ -8,74 +8,92 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class AIBehaviourStateMachine : BaseStateMachine
+public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEvent
 {
     #region Normal Variable
     protected bool _isAIInput = true;
-    [SerializeField] protected TakeCoverManager _takeCoverManager;
+    protected EnemyAIManager _enemyAIManager;
+    protected TakeCoverManager _takeCoverManager;
+    protected FOVMachine _fovMachine;
+    protected NavMeshAgent _agent;
+    protected MovementStateMachine _moveStateMachine;
+    protected UseWeaponStateMachine _useWeaponStateMachine;
+
     [Header("Other Important Variable")]
-    [SerializeField] protected FOVMachine _fovMachine;
     [SerializeField] protected Transform _aimAIPoint;
-    [SerializeField] protected Transform _noEnemyToPointObj;
+
+    #region  Take Cover Component
     [Header("Take Cover Component")]
-    [SerializeField] protected Vector3 _leaveDirection;
-    [SerializeField] protected bool _isTakingCover;
-    [SerializeField] protected bool _isHiding, _isChecking;
-    [SerializeField] protected bool _isAtTakingCoverHidingPlace;
-    [SerializeField] protected bool _isAtTakingCoverCheckingPlace;
-    [SerializeField] protected Collider[] _wallArrayNearChara;
-    protected float _wallTotal;
-    protected Collider _currWall;
+    [ReadOnly(false), SerializeField] protected bool _isTakingCover;
+    [ReadOnly(false), SerializeField] protected bool _isHiding, _isChecking;
+    [ReadOnly(false), SerializeField] protected bool _isAtTakingCoverHidingPlace;
+    [ReadOnly(false), SerializeField] protected bool _isAtTakingCoverCheckingPlace;
+
+    [Space(1)]
+    [ReadOnly(false), SerializeField] protected Collider[] _wallArrayNearChara;
+    [ReadOnly(false), SerializeField] protected float _wallTotal;
     [SerializeField] protected float _wallScannerDistance;
     [SerializeField] protected LayerMask _wallTakeCoverLayer;
-    [SerializeField] protected NavMeshAgent _agent;
     [SerializeField][Range(-1, 1f)] protected float _HideDotMin = 0f;
     [SerializeField] protected float _charaMaxTakeCoverDistance = 100f;
-    protected float _charaWidth;
-    protected float _currWallHeight;
+    [SerializeField] protected float _wallTakeCoverPosBuffer = -1.5f;
+
+    [Space(1)]
     [SerializeField] protected Collider _charaHeadColl;
     [SerializeField] protected float _charaHeightBuffer = 0.15f;
+    protected float _charaWidth;
     [SerializeField] protected float _charaWidthBuffer = 0.2f;
-    [SerializeField] protected float _buffer = -1.5f;
-    protected Vector3 _takeCoverPosition;
-    protected bool _canTakeCoverInThePosition;
-    protected bool _isWallTallerThanChara;
+
+    [Space(1)]
+    [ReadOnly(false), SerializeField] protected Collider _currWall;
+    [ReadOnly(false), SerializeField] protected float _currWallHeight;
+    [ReadOnly(false), SerializeField] protected bool _isWallTallerThanChara;
+    [ReadOnly(false), SerializeField] protected Vector3 _takeCoverPosition;
+    [ReadOnly(false), SerializeField] protected bool _canTakeCoverInThePosition;
+    [ReadOnly(false), SerializeField] protected Vector3 _leaveDirection;
     protected Vector3 _dirToLookAtWhenTakingCover;
     protected Vector3 _dirToLookAtWhenChecking;
     protected Vector3 _posToGoWhenCheckingWhenWallIsHigher;
     protected bool _isAtTheLeftSideOfTheWall;
     protected bool _isMovingOnXPos;
+    #endregion
 
+    [Space(1)]
     [Header("Component to Save Enemy Who sees us")]
-    [SerializeField] protected List<Transform> _enemyWhoSawAIList = new List<Transform>();
-    [SerializeField] protected List<Transform> _enemyWhoSawAIListContainer = new List<Transform>();
-    [SerializeField] protected List<Transform> _pastVisibleTargets = new List<Transform>();
+    [ReadOnly(false), SerializeField] protected List<Transform> _enemyWhoSawAIList = new List<Transform>();
+    [ReadOnly(false), SerializeField] protected List<Transform> _enemyWhoSawAIListContainer = new List<Transform>();
+    [ReadOnly(false), SerializeField] protected List<Transform> _pastVisibleTargets = new List<Transform>();
     protected Transform _closestEnemyWhoSawAI;
     [SerializeField] protected int _minEnemyMakeCharaFeelOverwhelmed = 3;
-    [SerializeField] protected bool _gotDetectedByEnemy;
-    [SerializeField] protected float _gotDetectedTimer;
-    [SerializeField] protected float _gotDetectedTimerMax = 0.3f;
     [SerializeField] protected float _enemyMaxDistanceFromWalls = 10f;
+    [ReadOnly(false), SerializeField] protected bool _gotDetectedByEnemy;
+    [ReadOnly(false), SerializeField] protected float _gotDetectedTimer;
+    [SerializeField] protected float _gotDetectedTimerMax = 0.3f;
     protected NavMeshPath path;
+
+    [Space(1)]
     [Header("Running Away Component")]
     [SerializeField]protected LayerMask _runAwayObstacleMask;
     protected RaycastHit _runAwayObstacleHit;
     protected bool _isThereNoPathInRunAwayDirection;
     protected Vector3 _runAwayPos;
 
+    [Space(1)]
     [Header("Advanced Shooting AI")]
-    [SerializeField]protected bodyParts _focusedBodyPartsToShoot;
+    [SerializeField] protected bodyParts _focusedBodyPartsToShoot;
     protected Transform _focusedBodyPartToShootTransform;
     protected Transform _bodyPartToShootTransform;
     protected LayerMask _bodyPartMask;
 
     protected Vector3 _tempFirstPathPos;
     protected float _hidingCheckDelayTimer;
-    [SerializeField] protected float _isCheckingLastPosTimer;
+    [ReadOnly(false), SerializeField] protected float _isCheckingLastPosTimer;
     [SerializeField] protected float _isCheckingLastPosTimerMax = 1f;
 
     #endregion
     #region  GETTER SETTER VARIABLE
+    public MovementStateMachine GetMoveStateMachine { get { return _moveStateMachine; } }
+    public UseWeaponStateMachine GetUseWeaponStateMachine { get {return _useWeaponStateMachine;}}
     public NavMeshAgent Agent {get {return _agent;}}
     public FOVMachine GetFOVMachine { get { return _fovMachine; } }
     public bool GotDetectedbyEnemy {get { return _gotDetectedByEnemy;}}
@@ -95,7 +113,6 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     public Vector3 DirToLookAtWhenTakingCover {get { return _dirToLookAtWhenTakingCover;}}
     public Vector3 DirToLookAtWhenChecking {get { return _dirToLookAtWhenChecking;}}
     public Vector3 PosToGoWhenCheckingWhenWallIsHigher {get { return _posToGoWhenCheckingWhenWallIsHigher;}}
-    public Transform NoEnemyToPointObj {get { return _noEnemyToPointObj;}}
     public LayerMask RunAwayObstacleMask {get {return _runAwayObstacleMask;}}
     public Vector3 RunAwayPos {get {return _runAwayPos;} }
     public int MinEnemyMakeCharaFeelOverwhelmed {get {return _minEnemyMakeCharaFeelOverwhelmed;}}
@@ -119,27 +136,41 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         
         if(_agent == null)_agent = GetComponent<NavMeshAgent>();
         _charaWidth = _agent.radius * 2 + _charaWidthBuffer;
+
         if(_fovMachine == null)_fovMachine = GetComponent<FOVMachine>();
         
     }
     protected virtual void Start()
     {
+        _enemyAIManager = EnemyAIManager.Instance;
         _takeCoverManager = TakeCoverManager.Instance;
+        _moveStateMachine = _charaIdentity.GetMovementStateMachine;
+        _moveStateMachine.OnIsTheSamePosition += MoveStateMachine_OnIsTheSamePosition;
+
+        _useWeaponStateMachine = _charaIdentity.GetUseWeaponStateMachine;
+        _bodyPartMask = _useWeaponStateMachine.CharaEnemyMask;
     }
     public void AimAIPointLookAt(Transform lookAt)
     {
         if(lookAt != null) _aimAIPoint.LookAt(lookAt);
         else
         {
-            if(_aimAIPoint.localRotation != Quaternion.identity)_aimAIPoint.localRotation = Quaternion.Euler(0, 0, 0);
+            if(_aimAIPoint.localRotation != Quaternion.identity) _aimAIPoint.localRotation = Quaternion.Euler(0, 0, 0);
         }
     }
-    public void SetAllowLookTarget(bool isAllowed, MovementStateMachine machine, Vector3 target, bool isReceivePosADirection)
+    public void SetAllowLookTarget(bool isAllowed, Vector3 target, bool isReceivePosADirection)
     {
-        if(isAllowed)machine.SetAITargetToLook(target, isReceivePosADirection);
-        machine.AllowLookTarget = isAllowed;
+        if(isAllowed) _moveStateMachine.SetAITargetToLook(target, isReceivePosADirection);
+        _moveStateMachine.AllowLookTarget = isAllowed;
     }
-
+    public virtual void HandleGotDetected()
+    {
+        GotDetectedTimerCounter();
+        if(_gotDetectedByEnemy)
+        {   
+            _leaveDirection = GetTotalDirectionTargetPosAndEnemy(transform, false);
+        }
+    }
 
     #region TakeCover
     public void TakingCover()
@@ -158,7 +189,6 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
         System.Array.Sort(_wallArrayNearChara,SortWallBasedOnClosestDistance);
 
-        //distance
 
         for(int i = 0; i < _wallTotal; i++)
         {
@@ -166,8 +196,6 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             _currWallHeight = currColl.bounds.max.y;
             _isWallTallerThanChara = currColl.bounds.max.y > _charaHeadColl.bounds.max.y + _charaHeightBuffer;
             if(!IsPassedWallHeightChecker(currColl.bounds.max.y))continue;
-            
-            
 
             Transform currWall = currColl.transform;
 
@@ -184,15 +212,9 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             if(halfWallWidth * 2 <= _charaWidth)canCheckFrontBehind = false;
             if(halfWallLength * 2 <= _charaWidth)canCheckLeftRightSide = false;
 
-            // Debug.Log("Wallsss1" + i + " " + _wallTotal + " " + _wallArrayNearChara[i].name + " " + transform.name + " " + canCheckFrontBehind + " " + canCheckLeftRightSide);
-            // Debug.Log(halfWallWidth * 2 + " " + halfWallLength * 2 + " " + _charaWidth + " aa" + canCheckFrontBehind + canCheckLeftRightSide);
             if(!canCheckLeftRightSide && !canCheckFrontBehind) continue;
             Vector3 directionTotalEnemyToWall = GetTotalDirectionTargetPosAndEnemy(currWall, true);
             // Debug.DrawRay(_wallArrayNearChara[i].transform.position, directionTotalEnemyToWall * 100f, Color.black, 2f);
-
-            // Debug.Log("Tolong ini enemy ga masuk sini ato apa maksudnya "+ i + " " + transform.name);
-
-
 
             float closestDistance = Mathf.Infinity; // ini cari jarak terdekat dr player 
             
@@ -204,7 +226,6 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
                 if(forwardWithEnemy < _HideDotMin)
                 {
-                    // Debug.Log("Dot fwd normal " + forwardWithEnemy);
                     // Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallForward * 100f, Color.blue, 2f);
 
                     GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, wallRight, directionTotalEnemyToWall);
@@ -216,8 +237,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     forwardWithEnemy = Vector3.Dot(directionTotalEnemyToWall, -wallForward);
                     if(forwardWithEnemy < _HideDotMin)
                     {
-                        // Debug.Log("Dot fwd balik " + forwardWithEnemy);
-                        // Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallForward * 100f, Color.red, 2f);
+                      // Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallForward * 100f, Color.red, 2f);
 
                         GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, -wallForward, wallRight,directionTotalEnemyToWall);
                     } 
@@ -231,7 +251,6 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 float rightWithEnemy = Vector3.Dot(directionTotalEnemyToWall, wallRight);
                 if(rightWithEnemy < _HideDotMin)
                 {
-                    // Debug.Log("Dot right normal " + rightWithEnemy);
                     // Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallRight * 100f, Color.grey, 2f);
                     GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, wallRight, directionTotalEnemyToWall);
                 }
@@ -240,7 +259,6 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     rightWithEnemy = Vector3.Dot(directionTotalEnemyToWall, -wallRight);
                     if(rightWithEnemy < _HideDotMin)
                     {
-                        // Debug.Log("Dot right balik " + rightWithEnemy);
                         // Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallRight * 100f, Color.magenta, 2f);
                         GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, _isWallTallerThanChara, wallCenter, wallForward, -wallRight, directionTotalEnemyToWall);
                     }
@@ -248,9 +266,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 }
             }
 
-            // Debug.Log("Wallsss2" + i + " " + _wallTotal + " " + _wallArrayNearChara[i].name + " " + closestDistance + " " + transform.name);
-
-            // Vector3 dotEnemyWallFwd = Vector3.Dot()
+            
             if(closestDistance != Mathf.Infinity)
             {
                 _canTakeCoverInThePosition = true;
@@ -300,9 +316,6 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         }
                         _dirToLookAtWhenTakingCover = -wallRight;
                     }
-                    // Debug.Log(_dirToLookAtWhenChecking + " " + transform.name);
-                    // if(isWallTallerThanChara) _dirToLookAtWhenChecking = new Vector3(_posToGoWhenCheckingWhenWallIsHigher.x, 0, _dirToLookAtWhenChecking.z);
-                    // else _dirToLookAtWhenChecking = new Vector3(newPos.x, 0, _dirToLookAtWhenChecking.z);
                 }
                 else
                 {
@@ -338,9 +351,6 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         }
                         _dirToLookAtWhenTakingCover = -wallForward;
                     }
-                    // Debug.Log(_dirToLookAtWhenChecking + " " + transform.name);
-                    // if(isWallTallerThanChara) _dirToLookAtWhenChecking = new Vector3(_dirToLookAtWhenChecking.x, 0, _posToGoWhenCheckingWhenWallIsHigher.z);
-                    // else _dirToLookAtWhenChecking = new Vector3(_dirToLookAtWhenChecking.x, 0, newPos.z);
                 }
 
                 
@@ -387,11 +397,11 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         
         if(isFrontBehind)
         {
-            newHalfWallLength = halfWallLength - _buffer;
+            newHalfWallLength = halfWallLength - _wallTakeCoverPosBuffer;
             
             if(isWallTallerThanChara)
             {
-                newHalfWallWidth = halfWallWidth + _buffer;
+                newHalfWallWidth = halfWallWidth + _wallTakeCoverPosBuffer;
                 for(int x = 0; x < 2; x++)
                 {
                     tempNewPos = wallCenter;
@@ -405,23 +415,20 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
                     if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                     {
-                        Debug.Log(x + " " + distanceCharaToWall + "beforefb");
                         
-                        
-
                         //ini dicek biar tau apakah masi keliatan ama enemy ga di posisi wall itu; wallcenter = transform wall
                         Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                         float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                         if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                         {
-                            Debug.Log(x + " " + distanceCharaToWall + "afterfb");
+                        
                             closestDistance = distanceCharaToWall;
                             newPos = tempNewPos;
                             _isMovingOnXPos = isFrontBehind;
 
                             _posToGoWhenCheckingWhenWallIsHigher = wallCenter;
-                            if(x == 0) _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * (halfWallWidth - _buffer);
-                            if(x == 1) _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * -(halfWallWidth - _buffer);
+                            if(x == 0) _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * (halfWallWidth - _wallTakeCoverPosBuffer);
+                            if(x == 1) _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * -(halfWallWidth - _wallTakeCoverPosBuffer);
                             _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * newHalfWallLength;
                         }
                         
@@ -438,10 +445,9 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         tempNewPos = wallCenter;
                         newHalfWallWidth = (halfWallWidth * halfWallWidth * x)/ (halfWallWidth * (halfWallWidth - 1));
 
-                        if(newHalfWallWidth == halfWallWidth) newHalfWallWidth = halfWallWidth + _buffer;
-                        else if(newHalfWallWidth == -halfWallWidth) newHalfWallWidth = -(halfWallWidth + _buffer);
+                        if(newHalfWallWidth == halfWallWidth) newHalfWallWidth = halfWallWidth + _wallTakeCoverPosBuffer;
+                        else if(newHalfWallWidth == -halfWallWidth) newHalfWallWidth = -(halfWallWidth + _wallTakeCoverPosBuffer);
 
-                        // Debug.Log(x + " " + newHalfWallWidth + " " + halfWallWidth + " " + wallRightDir * newHalfWallWidth + " FrontBehindx");
                         tempNewPos += wallRightDir * newHalfWallWidth;
                         tempNewPos += wallForwardDir * newHalfWallLength;
 
@@ -451,13 +457,13 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
 
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
-                            Debug.Log(x + " " + distanceCharaToWall + "beforefb");
+                            
 
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                             if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                             {
-                                Debug.Log(x + " " + distanceCharaToWall + "afterfb");
+                                
                                 closestDistance = distanceCharaToWall;
                                 newPos = tempNewPos;
                                 _isMovingOnXPos = isFrontBehind;
@@ -480,13 +486,13 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
-                            Debug.Log(x + " " + distanceCharaToWall + "beforefb");
+
 
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                             if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                             {
-                                Debug.Log(x + " " + distanceCharaToWall + "afterfb");
+
                                 closestDistance = distanceCharaToWall;
                                 newPos = tempNewPos;
                                 _isMovingOnXPos = isFrontBehind;
@@ -498,10 +504,10 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         }
         else
         {
-            newHalfWallWidth = halfWallWidth - _buffer;
+            newHalfWallWidth = halfWallWidth - _wallTakeCoverPosBuffer;
             if(isWallTallerThanChara)
             {
-                newHalfWallLength = halfWallLength + _buffer;
+                newHalfWallLength = halfWallLength + _wallTakeCoverPosBuffer;
                 for(int x = 0; x < 2; x++)
                 {
                     tempNewPos = wallCenter;
@@ -514,20 +520,20 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                     float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
                     if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                     {
-                        Debug.Log(x + " " + distanceCharaToWall + "beforelr");
+                        
 
                         Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                         float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                         
                         if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                         {
-                            Debug.Log(x + " " + distanceCharaToWall + "afterlr");
+                            
                             closestDistance = distanceCharaToWall;
                             newPos = tempNewPos;
 
                             _posToGoWhenCheckingWhenWallIsHigher = wallCenter;
-                            if(x == 0) _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * (halfWallLength - _buffer);
-                            if(x == 1) _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * -(halfWallLength - _buffer);
+                            if(x == 0) _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * (halfWallLength - _wallTakeCoverPosBuffer);
+                            if(x == 1) _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * -(halfWallLength - _wallTakeCoverPosBuffer);
                             _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * newHalfWallWidth;
 
                             _isMovingOnXPos = isFrontBehind;
@@ -544,8 +550,8 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         tempNewPos = wallCenter;
                         newHalfWallLength = (halfWallLength * halfWallLength * x)/ (halfWallLength * (halfWallLength - 1));
 
-                        if(newHalfWallLength == halfWallLength) newHalfWallLength = halfWallLength + _buffer;
-                        else if(newHalfWallLength == -halfWallLength) newHalfWallLength = -(halfWallLength + _buffer);
+                        if(newHalfWallLength == halfWallLength) newHalfWallLength = halfWallLength + _wallTakeCoverPosBuffer;
+                        else if(newHalfWallLength == -halfWallLength) newHalfWallLength = -(halfWallLength + _wallTakeCoverPosBuffer);
 
                         // Debug.Log(x + " " + newHalfWallLength + " " + halfWallLength + " " + wallForwardDir * newHalfWallLength + " LeftRightx");
                         tempNewPos += wallForwardDir * newHalfWallLength;
@@ -556,14 +562,14 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
-                            Debug.Log(x + " " + distanceCharaToWall + "beforelr");
+                            
 
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                             
                             if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                             {
-                                Debug.Log(x + " " + distanceCharaToWall + "afterlr");
+                                
                                 closestDistance = distanceCharaToWall;
                                 newPos = tempNewPos;
 
@@ -575,7 +581,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                 }
                 else
                 {
-                    newHalfWallLength = halfWallLength + _buffer;
+                    newHalfWallLength = halfWallLength + _wallTakeCoverPosBuffer;
                     for(int x = 0; x < 2; x++)
                     {
                         tempNewPos = wallCenter;
@@ -588,14 +594,14 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
                         float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
                         if(closestDistance > distanceCharaToWall && distanceCharaToWall <= _charaMaxTakeCoverDistance)
                         {
-                            Debug.Log(x + " " + distanceCharaToWall + "beforelr");
+                            
 
                             Vector3 dirNewPosToWall = (tempNewPos - wallCenter).normalized;
                             float dotEnemyVSNewPOs = Vector3.Dot(dirNewPosToWall, dirEnemyToWall);
                             
                             if(IsThisASafePathToGo(tempNewPos) && dotEnemyVSNewPOs < _HideDotMin)
                             {
-                                Debug.Log(x + " " + distanceCharaToWall + "afterlr");
+                                
                                 closestDistance = distanceCharaToWall;
                                 newPos = tempNewPos;
 
@@ -614,7 +620,6 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         {
             foreach(Transform enemy in _enemyWhoSawAIListContainer)
             {
-                // Debug.Log(_wallArrayNearChara[i].name + " " + Vector3.Distance(_wallArrayNearChara[i].transform.position, enemy.transform.position));
                 if(Vector3.Distance(_wallArrayNearChara[i].transform.position, enemy.transform.position) <= _enemyMaxDistanceFromWalls)
                 {
                     _wallTotal -= 1;
@@ -624,6 +629,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
             }
         }
     }
+
     protected int SortWallBasedOnClosestDistance(Collider A, Collider B)
     {
         if(A != null && B == null) return -1;
@@ -652,6 +658,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         Debug.Log("no path");
         return Mathf.Infinity;
     }
+
     public Vector3 GetTotalDirectionTargetPosAndEnemy(Transform targetPos, bool isFromTarget)
     {
         Vector3 directionTotal = Vector3.zero;
@@ -749,6 +756,12 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
     {
         RunAwayDirCalculation();
     }
+    public virtual void RunAwayOption()
+    {
+        IsTakingCover = false;
+        
+        RunAway();
+    }
     #endregion
 
     public virtual void GetClosestEnemyWhoSawAI()
@@ -811,5 +824,23 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine
         }
     }
     #endregion
+
+    protected abstract void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos);
+    public virtual void UnsubscribeEvent()
+    {
+        _moveStateMachine.OnIsTheSamePosition -= MoveStateMachine_OnIsTheSamePosition;
+    }
+
+    public virtual void StartShooting(Transform chosenTarget)
+    {
+        AimAIPointLookAt(chosenTarget);
+        _useWeaponStateMachine.GiveChosenTarget(chosenTarget);
+        _charaIdentity.Shooting(true);
+    }
+    public virtual void StopShooting()
+    {
+        if(_useWeaponStateMachine.ChosenTarget != null) _useWeaponStateMachine.GiveChosenTarget(null);
+        _charaIdentity.Shooting(false);
+    }
 
 }

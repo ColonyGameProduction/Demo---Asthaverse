@@ -6,6 +6,7 @@ public class DebuggingCommand : MonoBehaviour
 {
     public CharacterIdentity identity;
     public bool Ded;
+
     private void Update() {
         if(Ded)
         {
