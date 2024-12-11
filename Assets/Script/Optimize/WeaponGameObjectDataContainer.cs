@@ -7,19 +7,36 @@ using UnityEngine;
 public class WeaponGameObjectData
 {
     public string weaponName;
-    public Transform _shootPlacement;
+    public GameObject gunGameObject;
+    public Transform shootPlacement;
+    public Transform weaponMagTransform;
 }
 public class WeaponGameObjectDataContainer : MonoBehaviour
 {
     [SerializeField] private List<WeaponGameObjectData> _weaponGameObjectDataList;
+    private WeaponGameObjectData _currWeaponGameObjectData;
 
-    public Transform GetShootPlacement(string weaponName)
+    public Transform GetCurrShootPlacement()
     {
+        return _currWeaponGameObjectData.shootPlacement;
+    }
+    public Transform GetCurrWeaponMagTransform()
+    {
+        return _currWeaponGameObjectData.weaponMagTransform;
+    }
+
+
+    //Nanti ini diganti berdasarkan nama kalo uda bener
+    public void GetCurrWeaponGameObjectData(int idx)
+    {
+        if(idx >= _weaponGameObjectDataList.Count) return;
+
+        _currWeaponGameObjectData = _weaponGameObjectDataList[idx];
         foreach(WeaponGameObjectData weaponData in _weaponGameObjectDataList)
         {
-            if(weaponName == weaponData.weaponName)return weaponData._shootPlacement;
+            if(_currWeaponGameObjectData == weaponData)weaponData.gunGameObject.SetActive(true);
+            else weaponData.gunGameObject.SetActive(false);
         }
-        return null;
     }
 }
 

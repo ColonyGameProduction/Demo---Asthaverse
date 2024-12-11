@@ -22,7 +22,7 @@ public class FriendAI_TakingCoverState : FriendAIState
         _sm.EnemyWhoSawAIList.Clear();
 
         _sm.GetPlayableCharaIdentity.Aiming(true);
-        _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenTakingCover, true);
+        _sm.SetAllowLookTarget(true, _sm.DirToLookAtWhenTakingCover, true);
 
         // if(!_sm.isWallTallerThanChara && !_sm.GetMoveStateMachine.IsCrouching && _sm.GetMoveStateMachine.IsIdle)_sm.GetPlayableCharaIdentity.Crouch(true);
         if(!_sm.isWallTallerThanChara && !_sm.GetMoveStateMachine.IsCrouching )_sm.GetPlayableCharaIdentity.Crouch(true);
@@ -31,13 +31,7 @@ public class FriendAI_TakingCoverState : FriendAIState
 
     public override void UpdateState()
     {
-        // Debug.Log("I'm taking cover" + _sm.transform.name);
-
-        // if(_isHiding)Debug.Log("T-HIDING"+ _sm.transform.name);
-        // else 
-        // {
-        //     _sm.IsAtTakingCoverHidingPlace = false;
-        // }
+        
         if(!_sm.IsAIEngage || PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || !_sm.IsAIInput || _sm.GetPlayableCharaIdentity.IsAnimatingOtherAnimation || _sm.GetPlayableCharaIdentity.IsReviving || _sm.GetPlayableCharaIdentity.IsSilentKilling || _sm.IsCharacterDead || _sm.IsCurrTakeCoverAlreadyOccupied())
         {
             _sm.SwitchState(_factory.AI_EngageState());
@@ -61,7 +55,7 @@ public class FriendAI_TakingCoverState : FriendAIState
 
                 _sm.GetPlayableCharaIdentity.Aiming(true);
                 _sm.AimAIPointLookAt(_sm.GetFOVMachine.ClosestEnemy);
-                _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.ClosestEnemy.position, false);
+                _sm.SetAllowLookTarget(true, _sm.GetFOVMachine.ClosestEnemy.position, false);
 
                 if(!_sm.GetUseWeaponStateMachine.IsReloading && !_sm.GetUseWeaponStateMachine.HasNoMoreBullets)
                 {
@@ -89,7 +83,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                         // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M HIDING AND IDLE AND LOOKING AT TAKE COVER DIR" + _sm.transform.name);
                         
                         _sm.GetPlayableCharaIdentity.Aiming(true);
-                        _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenTakingCover, true);
+                        _sm.SetAllowLookTarget(true, _sm.DirToLookAtWhenTakingCover, true);
 
                         if(!_sm.isWallTallerThanChara && !_sm.GetMoveStateMachine.IsCrouching)_sm.GetPlayableCharaIdentity.Crouch(true);
                     }
@@ -105,7 +99,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                         if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
                         {
                             // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING ENEMYLASTPOS" + _sm.transform.name);
-                            _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
+                            _sm.SetAllowLookTarget(true, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
 
                             Vector3 dirEnemyLastSeenToChara = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
                             dotCharaWithEnemyLastSeen = Vector3.Dot(dirEnemyLastSeenToChara, _sm.transform.forward);
@@ -114,7 +108,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                         else
                         {
 
-                            _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenChecking, true);
+                            _sm.SetAllowLookTarget(true, _sm.DirToLookAtWhenChecking, true);
                             dotCharaWithEnemyLastSeen = Vector3.Dot(_sm.DirToLookAtWhenChecking, _sm.transform.forward);
                             // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING NORMALPOS" + _sm.transform.name);
                         }
@@ -146,7 +140,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                             if(_sm.GetFOVMachine.HasToCheckEnemyLastSeenPosition)
                             {
                                 // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME - I'M CHECKING ENEMYLASTPOS" + _sm.transform.name);
-                                _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
+                                _sm.SetAllowLookTarget(true, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
                                 Vector3 dirEnemyLastSeenToCharas = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
                                 dotCharaWithEnemyLastSeen = Vector3.Dot(dirEnemyLastSeenToCharas, _sm.transform.forward);
 
@@ -154,7 +148,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                             else
                             {
                                 // Debug.Log("T-NO ONE SEE ME; I SEE NO ONE - I'M CHECKING WALL IS TALLER THAN ME - I'M CHECKING NORMALPOS" + _sm.transform.name);
-                                _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenChecking, true);
+                                _sm.SetAllowLookTarget(true, _sm.DirToLookAtWhenChecking, true);
                                 dotCharaWithEnemyLastSeen = Vector3.Dot(_sm.DirToLookAtWhenChecking, _sm.transform.forward);
 
                             }
@@ -211,7 +205,7 @@ public class FriendAI_TakingCoverState : FriendAIState
                     if(_sm.IsChecking)if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
 
                     _sm.GetPlayableCharaIdentity.Aiming(true);
-                    _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine,currTarget.position, false);
+                    _sm.SetAllowLookTarget(true, currTarget.position, false);
 
                     if(!isClosestEnemy && _sm.GetMoveStateMachine.IsIdle)
                     {
@@ -309,11 +303,11 @@ public class FriendAI_TakingCoverState : FriendAIState
     }
     private void Patroling()
     {
-        // Debug.Log(_sm.GetMoveStateMachine.CurrAIDirPos + " " + _sm.TakeCoverPosition + " " + _sm.PosToGoWhenCheckingWhenWallIsHigher + " " + _sm.transform.name);
         if(_sm.IsHiding)
         {
             if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.TakeCoverPosition)
             {
+                
                 _sm.GetMoveStateMachine.SetAIDirection(_sm.TakeCoverPosition);
             }
             
@@ -371,7 +365,7 @@ public class FriendAI_TakingCoverState : FriendAIState
         if(_sm.IsHiding && !_sm.isWallTallerThanChara)
         {
             _sm.GetPlayableCharaIdentity.Aiming(true);
-        _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.DirToLookAtWhenTakingCover, true);
+        _sm.SetAllowLookTarget(true, _sm.DirToLookAtWhenTakingCover, true);
 
             if(!_sm.isWallTallerThanChara && !_sm.GetMoveStateMachine.IsCrouching)_sm.GetPlayableCharaIdentity.Crouch(true);
         }

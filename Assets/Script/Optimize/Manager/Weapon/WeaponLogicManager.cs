@@ -43,7 +43,7 @@ public class WeaponLogicManager : MonoBehaviour
     {
         float recoilMod = shootRecoil + ((100 - aimAccuracy) * shootRecoil / 100);
 
-        float x = Random.Range(-recoilMod/2, recoilMod/2);
+        float x = Random.Range(-recoilMod*0.9F, recoilMod*0.9F);
         float y = Random.Range(-recoilMod, recoilMod);
 
         Vector3 recoil = new Vector3(x, y, 0);

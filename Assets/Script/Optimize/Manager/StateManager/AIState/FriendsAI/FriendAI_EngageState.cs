@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class FriendAI_EngageState : FriendAIState
 {
-    private bool isFacingToWallWhenCrouching = false;
+    // private bool isFacingToWallWhenCrouching = false;
     public FriendAI_EngageState(FriendAIBehaviourStateMachine currStateMachine, FriendAIStateFactory factory) : base(currStateMachine, factory)
     {
     }
@@ -48,7 +48,7 @@ public class FriendAI_EngageState : FriendAIState
 
                 _sm.GetPlayableCharaIdentity.Aiming(true);
                 _sm.AimAIPointLookAt(_sm.GetFOVMachine.ClosestEnemy);
-                _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.ClosestEnemy.position, false);
+                _sm.SetAllowLookTarget(true, _sm.GetFOVMachine.ClosestEnemy.position, false);
                 // if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
                 if(!_sm.GetUseWeaponStateMachine.IsReloading && !_sm.GetUseWeaponStateMachine.HasNoMoreBullets)
                 {
@@ -80,7 +80,7 @@ public class FriendAI_EngageState : FriendAIState
                             Vector3 facedir = (_sm.Agent.steeringTarget - _sm.transform.position).normalized;
 
                             _sm.GetPlayableCharaIdentity.Aiming(true);
-                            _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, -facedir, true);
+                            _sm.SetAllowLookTarget(true, -facedir, true);
                         }  
                         Debug.Log("E-NO ONE SEE ME; I SEE NO ONE - IM JUST RUNNING AWAY" + _sm.transform.name);
                     }
@@ -98,7 +98,7 @@ public class FriendAI_EngageState : FriendAIState
                             {
                                 if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
                             }
-                            _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
+                            _sm.SetAllowLookTarget(true, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
                         }
                     }
                 }
@@ -113,7 +113,7 @@ public class FriendAI_EngageState : FriendAIState
                         {
                             _sm.GetMoveStateMachine.SetAIDirection(_sm.GetFOVMachine.EnemyCharalastSeenPosition);
                         }
-                        _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
+                        _sm.SetAllowLookTarget(true, _sm.GetFOVMachine.EnemyCharalastSeenPosition, false);
                         
 
                         Vector3 dirEnemyLastSeenToChara = (_sm.GetFOVMachine.EnemyCharalastSeenPosition - _sm.transform.position).normalized;
@@ -134,7 +134,7 @@ public class FriendAI_EngageState : FriendAIState
                     else
                     {
                         Debug.Log("E-NO ONE SEE ME; I SEE NO ONE - I JUST IDLE" + _sm.transform.name);
-                        _sm.SetAllowLookTarget(false, _sm.GetMoveStateMachine, Vector3.zero, false);
+                        _sm.SetAllowLookTarget(false, Vector3.zero, false);
                     }
                     
                 }
@@ -173,7 +173,7 @@ public class FriendAI_EngageState : FriendAIState
                         if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
 
                         _sm.GetPlayableCharaIdentity.Aiming(true);
-                        _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine,currTarget.position, false);
+                        _sm.SetAllowLookTarget(true, currTarget.position, false);
 
                         if(!isClosestEnemy && _sm.GetMoveStateMachine.IsIdle)
                         {
@@ -224,7 +224,7 @@ public class FriendAI_EngageState : FriendAIState
                             else if(_sm.LeaveDirection != Vector3.zero)
                             {
                                 Debug.Log("E-SOMEONE SEE ME - I'M HEALTHY - I CAN HANDLE THIS - I'M RUNNING AWAY WHILE RUN" + _sm.LeaveDirection + " "+ _sm.transform.name);
-                                RunAwayOption();
+                                _sm.RunAwayOption();
                             }
                             
                         }
@@ -234,7 +234,7 @@ public class FriendAI_EngageState : FriendAIState
                             if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
 
                             _sm.GetPlayableCharaIdentity.Aiming(true);
-                            _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine,currTarget.position, false);
+                            _sm.SetAllowLookTarget(true, currTarget.position, false);
                             
                         }
                     }
@@ -248,7 +248,7 @@ public class FriendAI_EngageState : FriendAIState
                         Debug.Log("E-SOMEONE SEE ME - I'M HEALTHY - I CANT HANDLE THIS - STILL TRYING TO SHOOT" + _sm.transform.name);
 
                         _sm.GetPlayableCharaIdentity.Aiming(true);
-                        _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine,currTarget.position, false);
+                        _sm.SetAllowLookTarget(true, currTarget.position, false);
                         if(isClosestEnemy)_sm.StartShooting(_sm.SearchBestBodyPartToShoot(currTarget));
                         else
                         {
@@ -261,7 +261,7 @@ public class FriendAI_EngageState : FriendAIState
                         Debug.Log("E-SOMEONE SEE ME - I'M HEALTHY - I CANT HANDLE THIS - RELOADING BUT LOOKING AT THE PERSON" + _sm.transform.name);
                         _sm.StopShooting();
                         _sm.GetPlayableCharaIdentity.Aiming(true);
-                        _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine,currTarget.position, false);
+                        _sm.SetAllowLookTarget(true, currTarget.position, false);
                     }
                     _sm.TakingCover();
                     if(_sm.CanTakeCoverInThePosition || _sm.LeaveDirection != Vector3.zero)
@@ -275,7 +275,7 @@ public class FriendAI_EngageState : FriendAIState
                         else if(_sm.LeaveDirection != Vector3.zero)
                         {
                             Debug.Log("E-SOMEONE SEE ME - I'M HEALTHY - I CANT HANDLE THIS - IM RUNNING AWAY WHILE LOOKING FRONT" + _sm.LeaveDirection + " " + _sm.transform.name);
-                            RunAwayOption();
+                            _sm.RunAwayOption();
                         }
                     }
                     else if(!_sm.CanTakeCoverInThePosition && _sm.LeaveDirection == Vector3.zero)
@@ -301,7 +301,7 @@ public class FriendAI_EngageState : FriendAIState
                     else if(_sm.LeaveDirection != Vector3.zero)
                     {
                         Debug.Log("E-SOMEONE SEE ME - I'M NOT HEALTHY - I'M RUNNING AWAY WHILE RUN" + _sm.LeaveDirection + " "+ _sm.transform.name);
-                        RunAwayOption();
+                        _sm.RunAwayOption();
                     }
                     
                 }
@@ -312,7 +312,7 @@ public class FriendAI_EngageState : FriendAIState
                     _sm.GetPlayableCharaIdentity.Aiming(true);
                     
                     Debug.Log("E-SOMEONE SEE ME - I'M NOT HEALTHY - SHOOTING BACK" + _sm.transform.name);
-                    _sm.SetAllowLookTarget(true, _sm.GetMoveStateMachine,currTarget.position, false);
+                    _sm.SetAllowLookTarget(true, currTarget.position, false);
                     if(!_sm.GetUseWeaponStateMachine.IsReloading && !_sm.GetUseWeaponStateMachine.HasNoMoreBullets)
                     {
                         
@@ -343,12 +343,6 @@ public class FriendAI_EngageState : FriendAIState
         
     }
 
-    private void RunAwayOption()
-    {
-        _sm.IsTakingCover = false;
-        
-        _sm.RunAway();
-    }
 
 
 }
