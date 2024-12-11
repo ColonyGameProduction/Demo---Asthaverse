@@ -29,44 +29,148 @@ public class InGameUIHandler : MonoBehaviour
         for (int i = 0; i < gm.playerGameObject.Length; i++)
         {
             characterUI[i].SetActive(true);
+            gm.playerGameObject[i].GetComponent<PlayerAction>().enabled = true;
+            characterUI[i].GetComponent<InGameUICharHandler>().AssigningCharUI(gm.playerGameObject[i]);
+            if (i != 0)
+            {
+                gm.playerGameObject[i].GetComponent<PlayerAction>().enabled = false;
+            }
         }
     }
 
     public void SwitchingUICharacter()
     {
-        switch (gm.playableCharacterNum)
+
+        if(gm.playerGameObject.Length < 3)
         {
-            case 0:
-                LeanTween.scale(characterUI[0], characterUI[2].GetComponent<RectTransform>().localScale, 1f);
-                LeanTween.scale(characterUI[1], characterUI[0].GetComponent<RectTransform>().localScale, 1f);
-                LeanTween.scale(characterUI[2], characterUI[1].GetComponent<RectTransform>().localScale, 1f);
+            switch (gm.playableCharacterNum)
+            {
+                case 0:
+                    LeanTween.scale(characterUI[0], characterUI[1].GetComponent<RectTransform>().localScale, .2f);
+                    LeanTween.scale(characterUI[1], characterUI[0].GetComponent<RectTransform>().localScale, .2f);
 
-                LeanTween.move(characterUI[0], characterUI[0].transform.position + new Vector3(44, 200, 0), 1f);
-                LeanTween.move(characterUI[1], characterUI[1].transform.position + new Vector3(-22, -100, 0), 1f);
-                LeanTween.move(characterUI[2], characterUI[2].transform.position + new Vector3(-22, -100, 0), 1f);
+                    LeanTween.move(characterUI[0], characterUI[0].transform.position + new Vector3(160, 80, 0), .2f);
+                    LeanTween.move(characterUI[1], characterUI[1].transform.position + new Vector3(-160, -80, 0), .2f);
 
-                break;
-            case 1:
-                LeanTween.scale(characterUI[1], characterUI[0].GetComponent<RectTransform>().localScale, 1f);
-                LeanTween.scale(characterUI[2], characterUI[1].GetComponent<RectTransform>().localScale, 1f);
-                LeanTween.scale(characterUI[0], characterUI[2].GetComponent<RectTransform>().localScale, 1f);
+                    LeanTween.moveLocal(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(80, 30, 0), .2f);
+                    LeanTween.scale(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1.5f, 1.5f, 1.5f), .2f);
 
-                LeanTween.move(characterUI[1], characterUI[1].transform.position + new Vector3(44, 200, 0), 1f);
-                LeanTween.move(characterUI[2], characterUI[2].transform.position + new Vector3(-22, -100, 0), 1f);
-                LeanTween.move(characterUI[0], characterUI[0].transform.position + new Vector3(-22, -100, 0), 1f);
+                    LeanTween.moveLocal(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(-80, -30, 0), .2f);
+                    LeanTween.scale(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1f, 1f, 1f), .2f);
 
-                break;
-            case 2:
-                LeanTween.scale(characterUI[2], characterUI[1].GetComponent<RectTransform>().localScale, 1f);
-                LeanTween.scale(characterUI[0], characterUI[2].GetComponent<RectTransform>().localScale, 1f);
-                LeanTween.scale(characterUI[1], characterUI[0].GetComponent<RectTransform>().localScale, 1f);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
 
-                LeanTween.move(characterUI[2], characterUI[2].transform.position + new Vector3(44, 200, 0), 1f);
-                LeanTween.move(characterUI[0], characterUI[0].transform.position + new Vector3(-22, -100, 0), 1f);
-                LeanTween.move(characterUI[1], characterUI[1].transform.position + new Vector3(-22, -100, 0), 1f);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
 
-                break;
+                    characterUI[1].GetComponent<InGameUICharHandler>().AssigningCharUI(gm.playerGameObject[1]);
+
+                    break;
+                case 1:
+                    LeanTween.scale(characterUI[1], characterUI[0].GetComponent<RectTransform>().localScale, .2f);
+                    LeanTween.scale(characterUI[0], characterUI[1].GetComponent<RectTransform>().localScale, .2f);
+
+                    LeanTween.move(characterUI[1], characterUI[1].transform.position + new Vector3(160, 80, 0), .2f);
+                    LeanTween.move(characterUI[0], characterUI[0].transform.position + new Vector3(-160, -80, 0), .2f);
+
+                    LeanTween.moveLocal(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(80, 30, 0), .2f);
+                    LeanTween.scale(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1.5f, 1.5f, 1.5f), .2f);
+
+                    LeanTween.moveLocal(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(-80, -30, 0), .2f);
+                    LeanTween.scale(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1f, 1f, 1f), .2f);
+
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
+
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
+
+                    characterUI[0].GetComponent<InGameUICharHandler>().AssigningCharUI(gm.playerGameObject[0]);
+
+                    break;
+            }
         }
+        else
+        {
+            switch (gm.playableCharacterNum)
+            {
+                case 0:
+                    LeanTween.scale(characterUI[0], characterUI[2].GetComponent<RectTransform>().localScale, .2f);
+                    LeanTween.scale(characterUI[1], characterUI[0].GetComponent<RectTransform>().localScale, .2f);
+                    LeanTween.scale(characterUI[2], characterUI[1].GetComponent<RectTransform>().localScale, .2f);
+
+                    LeanTween.move(characterUI[0], characterUI[0].transform.position + new Vector3(160, 135, 0), .2f);
+                    LeanTween.move(characterUI[1], characterUI[1].transform.position + new Vector3(-160, -80, 0), .2f);
+                    LeanTween.move(characterUI[2], characterUI[2].transform.position + new Vector3(0, -55, 0), .2f);
+
+                    LeanTween.moveLocal(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(80, 30, 0), .2f);
+                    LeanTween.scale(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1.5f, 1.5f, 1.5f), .2f);
+
+                    LeanTween.moveLocal(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(-80, -30, 0), .2f);
+                    LeanTween.scale(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1f, 1f, 1f), .2f);
+
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
+
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
+
+                    characterUI[1].GetComponent<InGameUICharHandler>().AssigningCharUI(gm.playerGameObject[1]);
+
+                    break;
+                case 1:
+                    LeanTween.scale(characterUI[1], characterUI[0].GetComponent<RectTransform>().localScale, .2f);
+                    LeanTween.scale(characterUI[2], characterUI[1].GetComponent<RectTransform>().localScale, .2f);
+                    LeanTween.scale(characterUI[0], characterUI[2].GetComponent<RectTransform>().localScale, .2f);
+
+                    LeanTween.move(characterUI[1], characterUI[1].transform.position + new Vector3(160, 135, 0), .2f);
+                    LeanTween.move(characterUI[2], characterUI[2].transform.position + new Vector3(-160, -80, 0), .2f);
+                    LeanTween.move(characterUI[0], characterUI[0].transform.position + new Vector3(0, -55, 0), .2f);
+
+                    LeanTween.moveLocal(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(80, 30, 0), .2f);
+                    LeanTween.scale(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1.5f, 1.5f, 1.5f), .2f);
+
+                    LeanTween.moveLocal(characterUI[2].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[2].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(-80, -30, 0), .2f);
+                    LeanTween.scale(characterUI[2].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1f, 1f, 1f), .2f);
+
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
+
+                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
+                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
+
+                    characterUI[2].GetComponent<InGameUICharHandler>().AssigningCharUI(gm.playerGameObject[2]);
+
+                    break;
+                case 2:
+                    LeanTween.scale(characterUI[2], characterUI[1].GetComponent<RectTransform>().localScale, .2f);
+                    LeanTween.scale(characterUI[0], characterUI[2].GetComponent<RectTransform>().localScale, .2f);
+                    LeanTween.scale(characterUI[1], characterUI[0].GetComponent<RectTransform>().localScale, .2f);
+
+                    LeanTween.move(characterUI[2], characterUI[2].transform.position + new Vector3(160, 135, 0), .2f);
+                    LeanTween.move(characterUI[0], characterUI[0].transform.position + new Vector3(-160, -80, 0), .2f);
+                    LeanTween.move(characterUI[1], characterUI[1].transform.position + new Vector3(0, -55, 0), .2f);
+
+                    LeanTween.moveLocal(characterUI[2].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[2].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(80, 30, 0), .2f);
+                    LeanTween.scale(characterUI[2].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1.5f, 1.5f, 1.5f), .2f);
+
+                    LeanTween.moveLocal(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(-80, -30, 0), .2f);
+                    LeanTween.scale(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1f, 1f, 1f), .2f);
+
+                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
+                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
+
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
+
+                    characterUI[0].GetComponent<InGameUICharHandler>().AssigningCharUI(gm.playerGameObject[0]);
+
+                    break;
+            }
+        }
+
+        
     }
 
     public void DialogPlay()
