@@ -24,8 +24,8 @@ public class AnimatorCharacterHelp : MonoBehaviour
     // [SerializeField][Range(0, 1f)] private float _pelvisUpDownSpeed = 0.28f;
     // [SerializeField][Range(0, 1f)] private float _feetToLKPosSpeed = 0.5f;
 
-    private const string LEFTFOOTANIM_VARIABLENAME = "LeftFootCurve";
-    private const string RIGHTTFOOTANIM_VARIABLENAME = "RighttFootCurve";
+    private const string LEFTFOOTANIM_VARIABLENAME = "LeftIKRotation";
+    private const string RIGHTTFOOTANIM_VARIABLENAME = "RightIKRotation";
     // private Vector3 _rightFootPos, _leftFootPos, _leftFootIKPos, _rightFootIKPos;
     // private Quaternion _leftFootIKRotation, _rightFootIKRotation;
     // private float _lastPelvisPositionY, _lastRightFootPosY, _lastLeftFootPosY;
@@ -147,6 +147,8 @@ public class AnimatorCharacterHelp : MonoBehaviour
 
             _animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, _leftRotationWeight);
             _animator.SetIKRotationWeight(AvatarIKGoal.RightHand, _rightRotationWeight);
+            // _animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, _animator.GetFloat(LEFTFOOTANIM_VARIABLENAME));
+            // _animator.SetIKRotationWeight(AvatarIKGoal.RightHand, _animator.GetFloat(RIGHTTFOOTANIM_VARIABLENAME));
 
             Ray rayLeftHand = new Ray(_animator.GetIKPosition(AvatarIKGoal.LeftHand) + Vector3.up, Vector3.down);
             if(Physics.Raycast(rayLeftHand, out RaycastHit hitLeftH, _distanceToGround + _raycastDownDistance, _placeToWalkLayer))

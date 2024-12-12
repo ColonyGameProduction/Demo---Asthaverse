@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor;
+
+
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -53,7 +51,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
     [ReadOnly(false), SerializeField] protected Vector3 _leaveDirection;
     protected Vector3 _dirToLookAtWhenTakingCover;
     protected Vector3 _dirToLookAtWhenChecking;
-    protected Vector3 _posToGoWhenCheckingWhenWallIsHigher;
+    protected Vector3 _posToGoWhenCheckingWhenWallIsHigher, _tempPosToGoWhenCheckingWhenWallIsHigher;
     protected bool _isAtTheLeftSideOfTheWall;
     protected bool _isMovingOnXPos;
     #endregion
@@ -353,7 +351,16 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                     }
                 }
 
-                
+                if(isWallTallerThanChara)
+                {
+                    Vector3 dir = (_posToGoWhenCheckingWhenWallIsHigher - _takeCoverPosition).normalized;
+                    float distance = Vector3.Distance(_posToGoWhenCheckingWhenWallIsHigher, _takeCoverPosition);
+                    if(Physics.Raycast(_takeCoverPosition, dir, out RaycastHit hitObstacle, distance, _runAwayObstacleMask))
+                    {
+                        _posToGoWhenCheckingWhenWallIsHigher = _tempPosToGoWhenCheckingWhenWallIsHigher;
+                        _dirToLookAtWhenTakingCover = -_dirToLookAtWhenTakingCover;
+                    }
+                }
                 break;
             } 
             else
@@ -408,6 +415,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                     if(x == 0) tempNewPos += wallRightDir * newHalfWallWidth;
                     if(x == 1) tempNewPos += wallRightDir * -newHalfWallWidth;
                     tempNewPos += wallForwardDir * newHalfWallLength;
+                    // tempNewPos = new Vector3(tempNewPos.x, transform.position.y, tempNewPos.z);
 
                     if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
                     // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue; // if it's before I can take cover, but i go through here again and it's the same place, meaning it's not a safe place,
@@ -427,9 +435,24 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                             _isMovingOnXPos = isFrontBehind;
 
                             _posToGoWhenCheckingWhenWallIsHigher = wallCenter;
-                            if(x == 0) _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * (halfWallWidth - _wallTakeCoverPosBuffer);
-                            if(x == 1) _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * -(halfWallWidth - _wallTakeCoverPosBuffer);
+                            _tempPosToGoWhenCheckingWhenWallIsHigher = wallCenter;
+                            if(x == 0)
+                            {
+                                _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * (halfWallWidth - _wallTakeCoverPosBuffer);
+
+                                _tempPosToGoWhenCheckingWhenWallIsHigher += wallRightDir * -(halfWallWidth - _wallTakeCoverPosBuffer);
+                            }
+                            if(x == 1)
+                            {
+                                _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * -(halfWallWidth - _wallTakeCoverPosBuffer);
+
+                                _tempPosToGoWhenCheckingWhenWallIsHigher += wallRightDir * (halfWallWidth - _wallTakeCoverPosBuffer);
+                            }
                             _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * newHalfWallLength;
+                            _tempPosToGoWhenCheckingWhenWallIsHigher += wallForwardDir * newHalfWallLength;
+
+                            // _posToGoWhenCheckingWhenWallIsHigher = new Vector3(_posToGoWhenCheckingWhenWallIsHigher.x, transform.position.y, _posToGoWhenCheckingWhenWallIsHigher.z);
+                            // _tempPosToGoWhenCheckingWhenWallIsHigher = new Vector3(_tempPosToGoWhenCheckingWhenWallIsHigher.x, transform.position.y, _tempPosToGoWhenCheckingWhenWallIsHigher.z);
                         }
                         
                     }
@@ -450,6 +473,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
 
                         tempNewPos += wallRightDir * newHalfWallWidth;
                         tempNewPos += wallForwardDir * newHalfWallLength;
+                        // tempNewPos = new Vector3(tempNewPos.x, transform.position.y, tempNewPos.z);
 
                         if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
                         // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue;
@@ -480,6 +504,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                         if(x == 0) tempNewPos += wallRightDir * newHalfWallWidth;
                         if(x == 1) tempNewPos += wallRightDir * -newHalfWallWidth;
                         tempNewPos += wallForwardDir * newHalfWallLength;
+                        // tempNewPos = new Vector3(tempNewPos.x, transform.position.y, tempNewPos.z);
 
                         if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
                         // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue;
@@ -514,6 +539,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                     if(x == 0) tempNewPos += wallForwardDir * newHalfWallLength;
                     if(x == 1) tempNewPos += wallForwardDir * -newHalfWallLength;
                     tempNewPos += wallRightDir * newHalfWallWidth;
+                    // tempNewPos = new Vector3(tempNewPos.x, transform.position.y, tempNewPos.z);
 
                     if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
                     // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue;
@@ -532,9 +558,24 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                             newPos = tempNewPos;
 
                             _posToGoWhenCheckingWhenWallIsHigher = wallCenter;
-                            if(x == 0) _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * (halfWallLength - _wallTakeCoverPosBuffer);
-                            if(x == 1) _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * -(halfWallLength - _wallTakeCoverPosBuffer);
+                            _tempPosToGoWhenCheckingWhenWallIsHigher = wallCenter;
+                            if(x == 0) 
+                            {
+                                _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * (halfWallLength - _wallTakeCoverPosBuffer);
+                                
+                                _tempPosToGoWhenCheckingWhenWallIsHigher += wallForwardDir * -(halfWallLength - _wallTakeCoverPosBuffer);
+                            }
+                            if(x == 1)
+                            {
+                                _posToGoWhenCheckingWhenWallIsHigher += wallForwardDir * -(halfWallLength - _wallTakeCoverPosBuffer);
+
+                                _tempPosToGoWhenCheckingWhenWallIsHigher += wallForwardDir * (halfWallLength - _wallTakeCoverPosBuffer);
+                            }
                             _posToGoWhenCheckingWhenWallIsHigher += wallRightDir * newHalfWallWidth;
+                            _tempPosToGoWhenCheckingWhenWallIsHigher += wallRightDir * newHalfWallWidth;
+
+                            // _posToGoWhenCheckingWhenWallIsHigher = new Vector3(_posToGoWhenCheckingWhenWallIsHigher.x, transform.position.y, _posToGoWhenCheckingWhenWallIsHigher.z);
+                            // _tempPosToGoWhenCheckingWhenWallIsHigher = new Vector3(_tempPosToGoWhenCheckingWhenWallIsHigher.x, transform.position.y, _tempPosToGoWhenCheckingWhenWallIsHigher.z);
 
                             _isMovingOnXPos = isFrontBehind;
                         }
@@ -557,6 +598,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                         tempNewPos += wallForwardDir * newHalfWallLength;
                         tempNewPos += wallRightDir * newHalfWallWidth;
 
+                        // tempNewPos = new Vector3(tempNewPos.x, transform.position.y, tempNewPos.z);
                         if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
                         // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue;
                         float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
@@ -589,6 +631,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                         if(x == 1) tempNewPos += wallForwardDir * -newHalfWallLength;
                         tempNewPos += wallRightDir * newHalfWallWidth;
 
+                        // tempNewPos = new Vector3(tempNewPos.x, transform.position.y, tempNewPos.z);
                         if(_takeCoverManager.IsTakeCoverPosOccupied(tempNewPos, this))continue;
                         // if(_canTakeCoverInThePosition)if(tempNewPos == TakeCoverPosition)continue;
                         float distanceCharaToWall = CountNavMeshPathDistance(transform.position, tempNewPos);
