@@ -78,6 +78,8 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
     
     private void Update() 
     {
+        if(!_gm.IsGamePlaying()) return;
+
         _fovMachine.FOVJob();
         CalculateAlertValue();
         CheckPastVisibleTargets();
@@ -469,7 +471,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
                     // Debug.Log("Dot fwd normal " + forwardWithEnemy);
                     // Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallForward * 100f, Color.blue, 2f);
 
-                    GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, wallForward, wallRight, directionLastSeenPosToWall);
+                    GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, wallForward, wallRight, directionLastSeenPosToWall, currColl.bounds.max.y, currColl.bounds.min.y, currWall.localScale.y);
                     
 
                 }
@@ -481,7 +483,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
                         // Debug.Log("Dot fwd balik " + forwardWithEnemy);
                         // Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallForward * 100f, Color.red, 2f);
 
-                        GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, -wallForward, wallRight,directionLastSeenPosToWall);
+                        GetClosestPosition(true, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, -wallForward, wallRight,directionLastSeenPosToWall, currColl.bounds.max.y, currColl.bounds.min.y, currWall.localScale.y);
                     } 
                 }
                 
@@ -495,7 +497,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
                 {
                     // Debug.Log("Dot right normal " + rightWithEnemy);
                     // Debug.DrawRay(_wallArrayNearChara[i].transform.position, wallRight * 100f, Color.grey, 2f);
-                    GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, wallForward, wallRight, directionLastSeenPosToWall);
+                    GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, wallForward, wallRight, directionLastSeenPosToWall, currColl.bounds.max.y, currColl.bounds.min.y, currWall.localScale.y);
                 }
                 else // real life wise, ga mungkin di sisi 1 aman, sisi 1 lg aman juga
                 {
@@ -504,7 +506,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
                     {
                         // Debug.Log("Dot right balik " + rightWithEnemy);
                         // Debug.DrawRay(_wallArrayNearChara[i].transform.position, -wallRight * 100f, Color.magenta, 2f);
-                        GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, wallForward, -wallRight, directionLastSeenPosToWall);
+                        GetClosestPosition(false, ref closestDistance, ref newPos, halfWallLength, halfWallWidth, isWallTallerThanCharaHere, wallCenter, wallForward, -wallRight, directionLastSeenPosToWall, currColl.bounds.max.y, currColl.bounds.min.y, currWall.localScale.y);
                     }
                     
                 }

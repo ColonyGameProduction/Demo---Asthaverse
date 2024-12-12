@@ -13,5 +13,7 @@ public class DebuggingCommand : MonoBehaviour
             Ded = false;
             if(identity!=null)identity.Hurt(identity.CurrHealth);
         }
+        
+
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUseWeaponData, IPlayableUseWeaponDataNeeded
+public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUseWeaponData, IPlayableUseWeaponDataNeeded, IUnsubscribeEvent
 {
     #region Normal Variable
     [Header ("Playable Character Variable")]
@@ -323,4 +323,9 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         }
     }
     #endregion
+
+    public void UnsubscribeEvent()
+    {
+        _getCanInputPlayer.OnIsPlayerInputChange -= CharaIdentity_OnIsPlayerInputChange;
+    }
 }

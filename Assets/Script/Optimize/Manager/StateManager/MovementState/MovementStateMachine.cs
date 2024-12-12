@@ -13,6 +13,8 @@ public struct CharaControllerData
 public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMovementData
 {
     #region Normal Variable
+
+    protected GameManager _gm;
     [Space(1)]
     [Header("Move States - Stand")]
     [ReadOnly(true), SerializeField]protected bool _isIdle = true;
@@ -121,16 +123,22 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     }
     protected virtual void Start() 
     {   
+        _gm = GameManager.instance;
+        
         SetIdleAnimToNormal();
         SwitchState(_states.IdleState());
     }
 
     protected virtual void Update() 
     {
+        if(!_gm.IsGamePlaying()) return;
+
         _currState?.UpdateState();
     }
     private void FixedUpdate() 
     {
+        if(!_gm.IsGamePlaying()) return;
+
         _currState?.PhysicsLogicUpdateState();
     }
 

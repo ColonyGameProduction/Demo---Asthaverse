@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayableCamera : MonoBehaviour
 {
+    private GameManager _gm;
+
     [Header("Cinemachine Camera")]
     [SerializeField] private CinemachineVirtualCamera _followCamera;
     [Header("Reference to Follow Target")]
@@ -25,9 +27,14 @@ public class PlayableCamera : MonoBehaviour
     public Transform GetFollowTarget {get{ return _followTarget;}}
     #endregion
 
-
+    private void Start() 
+    {
+        _gm = GameManager.instance;
+    }
     private void Update()
     {
+        if(!_gm.IsGamePlaying())return;
+        
         HandleCameraMovement();
         ChangingHeight();
     }

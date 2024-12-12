@@ -14,14 +14,7 @@ public class PlayerGunCollide : MonoBehaviour
     {
         _wallCollide = null;
     }
-    // private void OnCollisionEnter(Collision other) 
-    // {
-        
-    // }
-    // private void OnCollisionExit(Collision other) 
-    // {
-        
-    // }
+
     public Vector3 GetClosestPosFromInsideWall(Vector3 originShootPos)
     {
         Debug.Log(originShootPos + " LAMANYA POS ADALA");
