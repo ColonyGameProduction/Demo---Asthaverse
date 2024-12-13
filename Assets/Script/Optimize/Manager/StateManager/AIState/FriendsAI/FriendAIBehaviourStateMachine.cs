@@ -87,6 +87,8 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     void Update()
     {
+        if(!_gm.IsGamePlaying()) return;
+        
         _fovMachine.FOVJob();
         CheckPastVisibleTargets();
         DetectEnemy();

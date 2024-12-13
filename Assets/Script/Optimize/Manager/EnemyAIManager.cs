@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAIManager : MonoBehaviour
+public class EnemyAIManager : MonoBehaviour, IUnsubscribeEvent
 {   
     #region Normal Variable
     public static EnemyAIManager Instance { get; private set;}
+    private GameManager _gm;
     [Header("List")]
     [SerializeField] private List<Transform> _POIPosList;
     [SerializeField] private List<Transform> _POIPosNearLastSeenPosList;
@@ -48,11 +49,15 @@ public class EnemyAIManager : MonoBehaviour
     }
     private void Start()
     {
+        _gm = GameManager.instance;
+        
         OnFoundLastCharaSeenPos += FindAllPOINearLastSeenPos;
         OnEnemyisEngaging += EnemyisEngaging;
     }
     private void Update() 
     {
+        if(!_gm.IsGamePlaying())return;
+
         EngageTimerCounter();
     }
 
@@ -181,4 +186,9 @@ public class EnemyAIManager : MonoBehaviour
         }
     }
 
+    public void UnsubscribeEvent()
+    {
+        OnFoundLastCharaSeenPos -= FindAllPOINearLastSeenPos;
+        OnEnemyisEngaging -= EnemyisEngaging;
+    }
 }

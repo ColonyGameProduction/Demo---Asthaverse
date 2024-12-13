@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
 public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper, IReceiveInputFromPlayer, ICanSwitchWeapon, IInteractable
 {
-    
     [Space(1)]
     [Header("Input Control Now")]
     [ReadOnly(false), SerializeField] protected bool _isPlayerInput;
@@ -161,6 +158,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     protected void Update() 
     {
+        if(!_gm.IsGamePlaying()) return;
+        
         RegenerationTimer();
         
         if(!_isPlayerInput)
@@ -459,4 +458,9 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _animator.SetBool("Reviving", false);
     }
 
+    public override void UnsubscribeEvent()
+    {
+        base.UnsubscribeEvent();
+        EnemyAIManager.Instance.OnEnemyDead -= DeleteEnemyFromList;
+    }
 }

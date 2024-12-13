@@ -229,7 +229,7 @@ public class PlayableInteraction : MonoBehaviour
         if(_heldObject == obj)return;
         _playableCharacterIdentity.GetPlayableUseWeaponStateMachine.TellToTurnOffScope();
         _playableCharacterIdentity.GetPlayableUseWeaponStateMachine.ForceStopUseWeapon();
-        _playableCharacterIdentity.GetPlayableMovementStateMachine.IsMustLookForward = false; //ini digantiu
+        _playableCharacterIdentity.GetPlayableMovementStateMachine.IsMustLookForward = true; //ini digantiu
         if(_heldObject != null)
         {
             _heldObject.RB.isKinematic = false;
@@ -249,6 +249,7 @@ public class PlayableInteraction : MonoBehaviour
         if(_heldObject == null)return;
         if(_heldObject != null)
         {
+            _playableCharacterIdentity.GetPlayableMovementStateMachine.IsMustLookForward = false;
             _heldObject.RB.isKinematic = false;
             _heldObject.transform.SetParent(null);
             _heldObject = null;
@@ -259,6 +260,7 @@ public class PlayableInteraction : MonoBehaviour
         if(_heldObject == null)return;
         if(_heldObject.IsThrowAble)
         {
+            _playableCharacterIdentity.GetPlayableMovementStateMachine.IsMustLookForward = false;
             _heldObject.RB.isKinematic = false;
             _heldObject.transform.SetParent(null);
             _heldObject.IsBeingThrown = true;
