@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayableCharacterCommandManager : MonoBehaviour
+public class PlayableCharacterCommandManager : MonoBehaviour, IUnsubscribeEvent
 {
     [SerializeField] private PlayableCharacterManager _playableCharaManager;
     [SerializeField] private LayerMask _groundMask, _wallMask;
@@ -54,4 +54,9 @@ public class PlayableCharacterCommandManager : MonoBehaviour
         _playableCharaManager.ChangeHoldCommandFriend(false, SelectedFriendID);
     }
 
+    public void UnsubscribeEvent()
+    {
+        _playableCharaManager.OnCommandingBoolChange -= PlayableCharaManager_OnCommandingBoolChange;
+        _playableCharaManager.OnRegroupOneFriendInput -= PlayableCharaManager_OnRegroupOneFriendInput;
+    }
 }

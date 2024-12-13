@@ -2,9 +2,10 @@ using UnityEngine;
 using Cinemachine;
 using System;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IUnsubscribeEvent
 {
     public static GameManager instance;
+
 
     [Header("All Playable Character")]
     public GameObject[] playerGameObject;
@@ -22,7 +23,12 @@ public class GameManager : MonoBehaviour
     public bool scope;
 
     public GameObject[] breadcrumbsGameObject;
+    public Action<EnemyAI> enemy;
 
+
+    #region new Variable
+    private GameInputManager _gameInput;
+    
     [Header("States")]
     [SerializeField] private GameState _currState;
     private bool _isPause;
@@ -30,11 +36,11 @@ public class GameManager : MonoBehaviour
     [Header("Event")]
     public Action<bool> OnPlayerPause;
 
-    public Action<EnemyAI> enemy;
 
     public bool gameIsPaused;
     #region GETTER SETTER VARIABLE
     public GameState GetCurrState { get { return _currState; } }
+    #endregion
     #endregion
 
     private void Awake()
@@ -47,7 +53,9 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        
+        _gameInput = GameInputManager.Instance;
+        SubscribeToGameInputManager();
+
         playableCharacterNum = 0;
         FollowCamerasRefrence();
         CreatingBreadcrumbs();
@@ -56,6 +64,7 @@ public class GameManager : MonoBehaviour
 
         SetGameState(GameState.Play);
     }
+    
 
     public void FollowCamerasRefrence()
     {
@@ -78,23 +87,51 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void Pause()
+    #region NewCode
+    public void PauseGame()
     {
         _isPause = !_isPause;
         OnPlayerPause?.Invoke(_isPause);
         
         if(_isPause)
         {
+            Debug.Log("Game is Paused");
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
             Time.timeScale = 0f;
             SetGameState(GameState.Pause);
         }
         else
         {
+            Debug.Log("Game is Play");
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
             Time.timeScale = 1f;
             SetGameState(GameState.Play);
         }
     }
+    public bool IsGameHaventStart() => CheckGameState(GameState.BeforeStart);
+    public bool IsGamePlaying() => CheckGameState(GameState.Play);
+    public bool IsGamePause() => CheckGameState(GameState.Pause);
+    public bool IsGameCinematic() => CheckGameState(GameState.Cinematic);
+    public bool IsGameFinish() => CheckGameState(GameState.Finish);
+
     private void SetGameState(GameState newState) => _currState = newState;
+    private bool CheckGameState(GameState state) => _currState == state;
+
+
+    private void SubscribeToGameInputManager()
+    {
+        _gameInput.OnPauseGamePerformed += PauseGame;
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _gameInput.OnPauseGamePerformed -= PauseGame;
+    }
+    #endregion
 
 
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 /// The characterIdentity
 /// Juga Tempat ambil data-data universal yg tidak berhubungan dgn si statemachine 
 /// </summary>
-public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
+public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, IUnsubscribeEvent
 {
     [Header("test")]
     public bool immortalized;
@@ -266,4 +266,9 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon
         _useWeaponStateMachine.IsUsingWeapon = isShooting;
     }
     #endregion
+
+    public virtual void UnsubscribeEvent()
+    {
+        _useWeaponStateMachine.OnWasUsingGun -= UseWeapon_OnWasUsingGun;
+    }
 }
