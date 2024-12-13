@@ -64,7 +64,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 9089657534922939768}
+  m_Father: {fileID: 8618025923679574442}
   m_LocalEulerAnglesHint: {x: 0.412, y: 1.155, z: -0.153}
 --- !u!136 &259178428728159110
 CapsuleCollider:
@@ -1528,7 +1528,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 9089657534922939768}
+  m_Father: {fileID: 8618025923679574442}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3386850742799640538
 GameObject:
@@ -2660,14 +2660,14 @@ MonoBehaviour:
     gunGameObject: {fileID: 7458444528702272507}
     shootPlacement: {fileID: 4206929951472678014}
     weaponMagTransform: {fileID: 884638224504861001}
-  - weaponName: PKM
-    gunGameObject: {fileID: 8994445221793563408}
-    shootPlacement: {fileID: 6723668711458763383}
-    weaponMagTransform: {fileID: 7345077467919511138}
   - weaponName: DragunoveSVD
     gunGameObject: {fileID: 5307180487487377232}
     shootPlacement: {fileID: 5459109348842708837}
     weaponMagTransform: {fileID: 9073068516686850132}
+  - weaponName: PKM
+    gunGameObject: {fileID: 8994445221793563408}
+    shootPlacement: {fileID: 6723668711458763383}
+    weaponMagTransform: {fileID: 0}
 --- !u!1 &7541463533865334009
 GameObject:
   m_ObjectHideFlags: 0
@@ -4563,19 +4563,14 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8199037550141971655, guid: 81db446e2b9093448a025839f18ea452, type: 3}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6723668711458763383}
-    - targetCorrespondingSourceObject: {fileID: -8199037550141971655, guid: 81db446e2b9093448a025839f18ea452, type: 3}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2953528989383704149}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81db446e2b9093448a025839f18ea452, type: 3}
---- !u!4 &7345077467919511138 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -7638900339530575837, guid: 81db446e2b9093448a025839f18ea452, type: 3}
-  m_PrefabInstance: {fileID: 8076037802199498305}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8618025923679574442 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
@@ -4584,10 +4579,5 @@ Transform:
 --- !u!1 &8994445221793563408 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 81db446e2b9093448a025839f18ea452, type: 3}
-  m_PrefabInstance: {fileID: 8076037802199498305}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &9089657534922939768 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8199037550141971655, guid: 81db446e2b9093448a025839f18ea452, type: 3}
   m_PrefabInstance: {fileID: 8076037802199498305}
   m_PrefabAsset: {fileID: 0}
