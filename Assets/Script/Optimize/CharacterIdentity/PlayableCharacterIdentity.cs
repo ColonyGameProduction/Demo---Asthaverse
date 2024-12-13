@@ -1,13 +1,9 @@
 using System;
-using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 
 public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper, IReceiveInputFromPlayer, ICanSwitchWeapon, IInteractable
 {
-    private GameManager _gm;
-    
     [Space(1)]
     [Header("Input Control Now")]
     [ReadOnly(false), SerializeField] protected bool _isPlayerInput;
@@ -155,7 +151,6 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected override void Start() 
     {
         base.Start();
-        _gm = GameManager.instance;
         EnemyAIManager.Instance.OnEnemyDead += DeleteEnemyFromList;
     }
 
