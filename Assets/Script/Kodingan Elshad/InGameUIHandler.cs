@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 public class InGameUIHandler : MonoBehaviour
@@ -12,9 +13,12 @@ public class InGameUIHandler : MonoBehaviour
     int index;
 
     public List<GameObject> characterUI = new List<GameObject>();
-    public VideoPlayer video;
+    public GameObject background;
+    public Image faceImage;
     public TextMeshProUGUI dialogText;
+    public TextMeshProUGUI charName;
     public DialogCutsceneSO dialogCutscene;
+    public VideoPlayer video;
     private bool canNextDialog;
 
 
@@ -175,10 +179,13 @@ public class InGameUIHandler : MonoBehaviour
 
     public void DialogPlay()
     {
-        video.clip = dialogCutscene.character[dialogCutscene.charID[index] - 1].MouthAnimation;
+        background.gameObject.SetActive(true);
+        faceImage.sprite = dialogCutscene.character[dialogCutscene.charID[index] - 1].cropFace;
+        charName.text = dialogCutscene.character[dialogCutscene.charID[index] - 1].Name;
         dialogText.text = dialogCutscene.dialogSentence[index];
+        video.Play();
 
-        LeanTween.alpha(video.gameObject.GetComponent<RectTransform>(), 1, .1f);
+        LeanTween.alpha(faceImage.gameObject.GetComponent<RectTransform>(), 1, .1f);
         LeanTween.value(0, 1, 0.5f).setOnUpdate((float value) => {
             Color color = dialogText.color;
             color.a = value;
@@ -191,20 +198,20 @@ public class InGameUIHandler : MonoBehaviour
 
     public IEnumerator NextDialog(float delay)
     {
-        video.Play();
         canNextDialog = false;
 
         yield return new WaitForSeconds(delay);
 
-        if (index == 0 || index == dialogCutscene.dialogSentence.Count - 1)
+        if (index == dialogCutscene.dialogSentence.Count - 1)
         {
-            LeanTween.alpha(video.gameObject.GetComponent<RectTransform>(), 0, .1f);
+            LeanTween.alpha(faceImage.gameObject.GetComponent<RectTransform>(), 0, .1f);
+            background.gameObject.SetActive(false);
         }
         else
         {
             if (dialogCutscene.charID[index] != dialogCutscene.charID[index + 1])
             {
-                LeanTween.alpha(video.gameObject.GetComponent<RectTransform>(), 0, .1f);
+                LeanTween.alpha(faceImage.gameObject.GetComponent<RectTransform>(), 0, .1f);
             }
         }
 
