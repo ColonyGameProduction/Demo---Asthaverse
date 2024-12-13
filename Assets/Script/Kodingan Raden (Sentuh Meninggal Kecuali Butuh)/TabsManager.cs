@@ -1,17 +1,16 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class TabsManager : MonoBehaviour
 {
     public GameObject[] Tabs;
-    public Image[] TabButtonImages;
+    public GameObject[] TabButtonHighlights;
     public TextMeshProUGUI[] TabButtonTexts;
 
     public GameObject mainMenuPanel;
 
-    private float activeAlphaButton = 0.8f;
-    private float inActiveAlpha = 0.5f;
+    private float activeAlphaText = 1f;
+    private float inActiveAlphaText = 0.3f;
 
     public void SwitchToTab(int TabID)
     {
@@ -21,22 +20,18 @@ public class TabsManager : MonoBehaviour
         }
         Tabs[TabID].SetActive(true);
 
-        for (int i = 0; i < TabButtonImages.Length; i++)
+        for (int i = 0; i < TabButtonHighlights.Length; i++)
         {
-            SetButtonAlpha(TabButtonImages[i], TabButtonTexts[i], inActiveAlpha, inActiveAlpha);
+            TabButtonHighlights[i].SetActive(false);
+            SetTextAlpha(TabButtonTexts[i], inActiveAlphaText);
         }
-        SetButtonAlpha(TabButtonImages[TabID], TabButtonTexts[TabID], activeAlphaButton, 1f);
+
+        TabButtonHighlights[TabID].SetActive(true);
+        SetTextAlpha(TabButtonTexts[TabID], activeAlphaText);
     }
 
-    private void SetButtonAlpha(Image buttonImage, TextMeshProUGUI buttonText, float alphaValueButton, float alphaValueText)
+    private void SetTextAlpha(TextMeshProUGUI buttonText, float alphaValueText)
     {
-        if (buttonImage != null)
-        {
-            Color newImageColor = buttonImage.color;
-            newImageColor.a = Mathf.Clamp01(alphaValueButton);
-            buttonImage.color = newImageColor;
-        }
-
         if (buttonText != null)
         {
             Color newTextColor = buttonText.color;
@@ -53,4 +48,4 @@ public class TabsManager : MonoBehaviour
             mainMenuPanel.SetActive(true);
         }
     }
-}  
+}
