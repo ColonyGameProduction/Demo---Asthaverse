@@ -19,9 +19,6 @@ public class ControlsManager : MonoBehaviour
     [Header("Crouch")]
     public TextMeshProUGUI crouchOption;
 
-    [Header("Voice Over")]
-    public TextMeshProUGUI voiceOverOption;
-
     private float stepSize = 0.01f;
 
     private float sensCurrentPresentage = 0.5f;
@@ -38,10 +35,6 @@ public class ControlsManager : MonoBehaviour
     private int currentCrouchIndex = 0;
     private readonly string[] crouchOptions = { "Hold", "Toggle" };
 
-    //Voice Over
-    private int currentVoiceOverIndex = 0;
-    private readonly string[] voiceOverOptions = { "Hold", "Toggle" };
-
     private void Start()
     {
         sensSlider.value = sensCurrentPresentage;
@@ -52,8 +45,6 @@ public class ControlsManager : MonoBehaviour
 
         UpdateAimText();
         UpdateSprintText();
-        UpdateCrouchText();
-        UpdateVoiceOverText();
     }
 
     public void ChangeSensPresentage(float delta)
@@ -115,20 +106,5 @@ public class ControlsManager : MonoBehaviour
     private void UpdateCrouchText()
     {
         crouchOption.text = crouchOptions[currentCrouchIndex];
-    }
-
-    public void ChangeVoiceOver(int change)
-    {
-        currentVoiceOverIndex = (currentVoiceOverIndex + change + voiceOverOptions.Length) % voiceOverOptions.Length;
-
-        // value change
-        // ------------
-
-        UpdateVoiceOverText();
-    }
-
-    private void UpdateVoiceOverText()
-    {
-        voiceOverOption.text = voiceOverOptions[currentVoiceOverIndex];
     }
 }

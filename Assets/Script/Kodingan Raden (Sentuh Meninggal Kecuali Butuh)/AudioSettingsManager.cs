@@ -22,11 +22,11 @@ public class AudioSettingsManager : MonoBehaviour
     public Button soundEffectLeftButton;  // Button to decrease volume
     public Button soundEffectRightButton; // Button to increase volume
 
-    [Header("Subtitle")]
-    public TextMeshProUGUI subtitleVolumeText;
-    public Slider subtitleSlider;
-    public Button subtitleLeftButton;  // Button to decrease volume
-    public Button subtitleRightButton; // Button to increase volume
+    [Header("Dialogue")]
+    public TextMeshProUGUI dialogueVolumeText;
+    public Slider dialogueSlider;
+    public Button dialogueLeftButton;  // Button to decrease volume
+    public Button dialogueRightButton; // Button to increase volume
 
     // Volume Settings
     private float stepSize = 0.05f; // How much the volume changes per button press
@@ -34,7 +34,7 @@ public class AudioSettingsManager : MonoBehaviour
     private float masterCurrentVolume = 0.5f;
     private float musicCurrentVolume = 0.5f;
     private float soundEffectCurrentVolume = 0.5f;
-    private float subtitleCurrentVolume = 0.5f;
+    private float dialogueCurrentVolume = 0.5f;
 
     private void Start()
     {
@@ -48,8 +48,8 @@ public class AudioSettingsManager : MonoBehaviour
         soundEffectSlider.value = soundEffectCurrentVolume;
         UpdateSoundEffectVolume(soundEffectCurrentVolume);
 
-        subtitleSlider.value = subtitleCurrentVolume;
-        UpdateSubtitleVolume(subtitleCurrentVolume);
+        dialogueSlider.value = dialogueCurrentVolume;
+        UpdateDialogueVolume(dialogueCurrentVolume);
 
         // Add listeners to buttons
         masterLeftButton.onClick.AddListener(() => ChangeMasterVolume(-stepSize)); // Decrease volume
@@ -61,8 +61,8 @@ public class AudioSettingsManager : MonoBehaviour
         soundEffectLeftButton.onClick.AddListener(() => ChangeSoundEffectVolume(-stepSize)); // Decrease volume
         soundEffectRightButton.onClick.AddListener(() => ChangeSoundEffectVolume(stepSize)); // Increase volume
 
-        subtitleLeftButton.onClick.AddListener(() => ChangeSubtitleVolume(-stepSize)); // Decrease volume
-        subtitleRightButton.onClick.AddListener(() => ChangeSubtitleVolume(stepSize)); // Increase volume
+        dialogueLeftButton.onClick.AddListener(() => ChangeDialogueVolume(-stepSize)); // Decrease volume
+        dialogueRightButton.onClick.AddListener(() => ChangeDialogueVolume(stepSize)); // Increase volume
     }
 
     public void ChangeMasterVolume(float delta)
@@ -116,20 +116,20 @@ public class AudioSettingsManager : MonoBehaviour
         AudioListener.volume = value; // Update system volume
     }
 
-    public void ChangeSubtitleVolume(float delta)
+    public void ChangeDialogueVolume(float delta)
     {
         // Adjust volume within 0-1 range
-        subtitleCurrentVolume = Mathf.Clamp(subtitleCurrentVolume + delta, 0f, 1f);
+        dialogueCurrentVolume = Mathf.Clamp(dialogueCurrentVolume + delta, 0f, 1f);
 
         // Update slider and volume UI
-        subtitleSlider.value = subtitleCurrentVolume;
-        UpdateSubtitleVolume(subtitleCurrentVolume);
+        dialogueSlider.value = dialogueCurrentVolume;
+        UpdateDialogueVolume(dialogueCurrentVolume);
     }
 
-    public void UpdateSubtitleVolume(float value)
+    public void UpdateDialogueVolume(float value)
     {
         // Update volume and UI text
-        subtitleVolumeText.text = Mathf.RoundToInt(value * 100) + "%";
+        dialogueVolumeText.text = Mathf.RoundToInt(value * 100) + "%";
         AudioListener.volume = value; // Update system volume
     }
 }
