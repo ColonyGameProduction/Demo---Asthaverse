@@ -7,7 +7,7 @@ using UnityEngine.Animations.Rigging;
 public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalUseWeaponData
 {
     #region Normal Variable
-
+    protected GameManager _gm;
     [Space(1)]
     [Header("Use Weapon States - Normal")]
     [ReadOnly(true), SerializeField] protected bool _isIdle = true;
@@ -134,6 +134,8 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     }
     protected virtual void Start() 
     {
+        _gm = GameManager.instance;
+
         _weaponShootVFX = _charaIdentity.GetWeaponShootVFX;
         _weaponLogicManager = WeaponLogicManager.Instance;
 
@@ -143,9 +145,13 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     }
     protected virtual void Update()
     {
+        if(!_gm.IsGamePlaying()) return;
+
         _currState?.UpdateState();
     }
-    private void FixedUpdate() {
+    private void FixedUpdate() 
+    {
+        if(!_gm.IsGamePlaying()) return;
 
         ComplexRecoil();
         _currState?.PhysicsLogicUpdateState();

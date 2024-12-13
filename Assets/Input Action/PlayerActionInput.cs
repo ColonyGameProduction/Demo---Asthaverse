@@ -554,6 +554,34 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""InputMenuAction"",
+            ""id"": ""363ea8e6-5e94-484b-9b46-6339b9b30448"",
+            ""actions"": [
+                {
+                    ""name"": ""Pause Game"",
+                    ""type"": ""Button"",
+                    ""id"": ""b487965e-dbf4-4a47-9ce0-6adae10cdf0c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""a3283999-b572-4261-b807-5859934a9227"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause Game"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -584,6 +612,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_Throw = m_InputPlayerAction.FindAction("Throw", throwIfNotFound: true);
         m_InputPlayerAction_TakeCover = m_InputPlayerAction.FindAction("TakeCover", throwIfNotFound: true);
         m_InputPlayerAction_ExitTakeCover = m_InputPlayerAction.FindAction("ExitTakeCover", throwIfNotFound: true);
+        // InputMenuAction
+        m_InputMenuAction = asset.FindActionMap("InputMenuAction", throwIfNotFound: true);
+        m_InputMenuAction_PauseGame = m_InputMenuAction.FindAction("Pause Game", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -871,6 +902,52 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         }
     }
     public InputPlayerActionActions @InputPlayerAction => new InputPlayerActionActions(this);
+
+    // InputMenuAction
+    private readonly InputActionMap m_InputMenuAction;
+    private List<IInputMenuActionActions> m_InputMenuActionActionsCallbackInterfaces = new List<IInputMenuActionActions>();
+    private readonly InputAction m_InputMenuAction_PauseGame;
+    public struct InputMenuActionActions
+    {
+        private @PlayerActionInput m_Wrapper;
+        public InputMenuActionActions(@PlayerActionInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @PauseGame => m_Wrapper.m_InputMenuAction_PauseGame;
+        public InputActionMap Get() { return m_Wrapper.m_InputMenuAction; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(InputMenuActionActions set) { return set.Get(); }
+        public void AddCallbacks(IInputMenuActionActions instance)
+        {
+            if (instance == null || m_Wrapper.m_InputMenuActionActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_InputMenuActionActionsCallbackInterfaces.Add(instance);
+            @PauseGame.started += instance.OnPauseGame;
+            @PauseGame.performed += instance.OnPauseGame;
+            @PauseGame.canceled += instance.OnPauseGame;
+        }
+
+        private void UnregisterCallbacks(IInputMenuActionActions instance)
+        {
+            @PauseGame.started -= instance.OnPauseGame;
+            @PauseGame.performed -= instance.OnPauseGame;
+            @PauseGame.canceled -= instance.OnPauseGame;
+        }
+
+        public void RemoveCallbacks(IInputMenuActionActions instance)
+        {
+            if (m_Wrapper.m_InputMenuActionActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IInputMenuActionActions instance)
+        {
+            foreach (var item in m_Wrapper.m_InputMenuActionActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_InputMenuActionActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public InputMenuActionActions @InputMenuAction => new InputMenuActionActions(this);
     public interface IInputPlayerActionActions
     {
         void OnShooting(InputAction.CallbackContext context);
@@ -897,5 +974,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnThrow(InputAction.CallbackContext context);
         void OnTakeCover(InputAction.CallbackContext context);
         void OnExitTakeCover(InputAction.CallbackContext context);
+    }
+    public interface IInputMenuActionActions
+    {
+        void OnPauseGame(InputAction.CallbackContext context);
     }
 }

@@ -648,6 +648,29 @@ public class PlayerAction : ExecuteLogic
         // dataMovement.InputMovement = move;
     }
 
+   /* private void HandlePause()
+    {
+        if (inputHandler.pauseTriggered)
+        {
+            isPause = true;
+
+            Time.timeScale = 0f;
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+            pauseMenu.SetActive(true);
+            inGameUI.SetActive(false);
+        }
+
+        if (isPause == false)
+        {
+            isPause == true;
+
+            Time.timeScale = 0f;
+        }
+    }*/
+
     private void FixedUpdate()
     {
         ComplexRecoil(ref curRecoil);

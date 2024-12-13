@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffect
 {
     public static PlayableCharacterCameraManager Instance { get;private set; }
+    
+    private GameManager _gm;
     private PlayableCamera _currPlayableCamera;
     [Header("Camera Effect Variable")]
     [Header("Camera Scope")]
@@ -37,9 +40,15 @@ public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffe
     {
         Instance = this;
     }
+    private void Start() 
+    {
+        _gm = GameManager.instance;
+    }
 
     private void Update() 
     {
+        if(!_gm.IsGamePlaying()) return;
+        
         ChangeNightVisionWeight();
     }
     public void ScopeCamera()

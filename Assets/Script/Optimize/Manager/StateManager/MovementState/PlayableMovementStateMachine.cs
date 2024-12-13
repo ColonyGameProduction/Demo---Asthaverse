@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 
 
 
-public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovementData, IPlayableMovementDataNeeded
+public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovementData, IPlayableMovementDataNeeded, IUnsubscribeEvent
 {
     #region Normal Variable
     [Header ("Playable Character Variable")]
@@ -579,5 +579,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         {
             return base.IsHeadHitWhenUnCrouch();
         }
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _canReceivePlayerInput.OnIsPlayerInputChange -= CharaIdentity_OnIsPlayerInputChange;
+        OnIsTheSamePosition -= OnIsTheSamePositionTakeCover;
     }
 }

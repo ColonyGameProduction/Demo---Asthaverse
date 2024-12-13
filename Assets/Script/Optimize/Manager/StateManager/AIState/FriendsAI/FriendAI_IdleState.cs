@@ -94,7 +94,22 @@ public class FriendAI_IdleState : FriendAIState
             }
             else
             {
-                _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsCommandDirection.position);
+                if(_sm.FriendsCommandDirection.position == _sm.FriendsDefaultDirection.position)
+                {
+                    if(!_sm.IsFriendAlreadyAtDefaultDistance())
+                    {
+                        _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
+                    }
+                    else
+                    {
+                        _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
+                    }
+                }
+                else
+                {
+                    _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsCommandDirection.position);
+                }
+                
             }
         }
         

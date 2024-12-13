@@ -49,6 +49,7 @@ public enum FOVDistState
 
 public enum GameState
 {
+    BeforeStart,
     Play,
     Cinematic,
     Pause,

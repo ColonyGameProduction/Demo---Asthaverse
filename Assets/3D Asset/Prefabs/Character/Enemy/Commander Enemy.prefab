@@ -285,6 +285,9 @@ MonoBehaviour:
   _wallTakeCoverLayer:
     serializedVersion: 2
     m_Bits: 4096
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
   _HideDotMin: 0
   _charaMaxTakeCoverDistance: 100
   _wallTakeCoverPosBuffer: -1.5
@@ -1107,7 +1110,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 948989697149767935}
+  m_Father: {fileID: 330714056552977453}
   m_LocalEulerAnglesHint: {x: 0.412, y: 1.155, z: -0.153}
 --- !u!136 &7882818021647281893
 CapsuleCollider:
@@ -1996,7 +1999,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 948989697149767935}
+  m_Father: {fileID: 330714056552977453}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7517090202506598967
 GameObject:
@@ -2162,10 +2165,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weaponGameObjectDataList:
-  - weaponName: PKM
-    gunGameObject: {fileID: 1143138059766845079}
-    shootPlacement: {fileID: 3101557906644662787}
-    weaponMagTransform: {fileID: 1648734517726782437}
   - weaponName: DragunoveSVD
     gunGameObject: {fileID: 6290102070463764617}
     shootPlacement: {fileID: 2582648258688156544}
@@ -2174,6 +2173,10 @@ MonoBehaviour:
     gunGameObject: {fileID: 4213095155429448319}
     shootPlacement: {fileID: 3909172002340643951}
     weaponMagTransform: {fileID: 5886347338642069709}
+  - weaponName: PKM
+    gunGameObject: {fileID: 1143138059766845079}
+    shootPlacement: {fileID: 3101557906644662787}
+    weaponMagTransform: {fileID: 0}
 --- !u!1 &7879271845727071595
 GameObject:
   m_ObjectHideFlags: 0
@@ -2655,10 +2658,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8199037550141971655, guid: 81db446e2b9093448a025839f18ea452, type: 3}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3101557906644662787}
-    - targetCorrespondingSourceObject: {fileID: -8199037550141971655, guid: 81db446e2b9093448a025839f18ea452, type: 3}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4928669326410110926}
     m_AddedComponents: []
@@ -2668,19 +2671,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
   m_PrefabInstance: {fileID: 224150648863388614}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &948989697149767935 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8199037550141971655, guid: 81db446e2b9093448a025839f18ea452, type: 3}
-  m_PrefabInstance: {fileID: 224150648863388614}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1143138059766845079 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 81db446e2b9093448a025839f18ea452, type: 3}
-  m_PrefabInstance: {fileID: 224150648863388614}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1648734517726782437 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -7638900339530575837, guid: 81db446e2b9093448a025839f18ea452, type: 3}
   m_PrefabInstance: {fileID: 224150648863388614}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3942481912169735982

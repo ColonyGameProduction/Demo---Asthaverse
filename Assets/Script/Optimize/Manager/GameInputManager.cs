@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GameInputManager : MonoBehaviour
+public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
 {
     public static GameInputManager Instance {get; private set;}
     GameManager _gm;
     private PlayerActionInput _inputActions;
 
+    #region Action List InputPlayerAction
     public Action OnRunPerformed, OnRunCanceled, OnCrouchPerformed, OnCrouchCanceled,
                   OnChangePlayerPerformed, OnChangeWeaponPerformed, 
                   OnExitCommandPerformed, OnRegroupFriendPerformed,
@@ -17,11 +18,26 @@ public class GameInputManager : MonoBehaviour
                   OnInteractPerformed, OnNightVisionPerformed, OnSkillPerformed, OnWhistlePerformed, OnThrowPerformed,
                   OnTakeCoverPerformed, OnExitTakeCoverPerformed;
     public Action<int> OnCommandFriendPerformed;
+    #endregion
+
+    #region Action List InputMenuAction
+    public Action OnPauseGamePerformed;
+    #endregion
     private void Awake() 
     {
         Instance = this;
         _inputActions = new PlayerActionInput();  
         //membuat event untuk menjalankan aksi yang dipakai oleh player
+
+        SubscribeToInputPlayerAction();
+        SubscribeToInputMenuAction();
+
+        _inputActions.Enable();
+    }
+
+
+    public void SubscribeToInputPlayerAction()
+    {
         _inputActions.InputPlayerAction.Run.performed += Run_performed;
         _inputActions.InputPlayerAction.Run.canceled += Run_canceled;
 
@@ -51,20 +67,25 @@ public class GameInputManager : MonoBehaviour
 
         _inputActions.InputPlayerAction.TakeCover.performed += TakeCover_performed;
         _inputActions.InputPlayerAction.ExitTakeCover.performed += ExitTakeCover_performed;
-        
-        _inputActions.Enable();
     }
 
-
-
-
-
-    private void Start() 
+    public void SubscribeToInputMenuAction()
     {
-
-
-        _gm = GameManager.instance;
+        _inputActions.InputMenuAction.PauseGame.performed += PauseGame_performed;
     }
+
+    // private void Start() 
+    // {
+
+
+    //     _gm = GameManager.instance;
+    // }
+    #region Function List InputMenuAction
+    private void PauseGame_performed(InputAction.CallbackContext context) => OnPauseGamePerformed?.Invoke();
+
+    #endregion
+
+    #region Function List InputPlayerAction
 
     private void Run_performed(InputAction.CallbackContext context) => OnRunPerformed?.Invoke();
     private void Run_canceled(InputAction.CallbackContext context) => OnRunCanceled?.Invoke();
@@ -100,13 +121,43 @@ public class GameInputManager : MonoBehaviour
         direction = _inputActions.InputPlayerAction.Movement.ReadValue<Vector2>();
         return direction;
     }
+    #endregion
 
 
+    public void UnsubscribeEvent()
+    {
+        _inputActions.InputPlayerAction.Run.performed -= Run_performed;
+        _inputActions.InputPlayerAction.Run.canceled -= Run_canceled;
 
+        _inputActions.InputPlayerAction.Crouch.performed -= Crouch_performed;
+        _inputActions.InputPlayerAction.Crouch.canceled -= Crouch_canceled;
 
+        _inputActions.InputPlayerAction.ChangePlayer.performed -= ChangePlayer_performed;
+        _inputActions.InputPlayerAction.ChangingWeapon.performed -= ChangingWeapon_performed;
 
+        _inputActions.InputPlayerAction.CommandFriend1.performed -= Command1_performed;
+        _inputActions.InputPlayerAction.CommandFriend2.performed -= Command2_performed;
+        _inputActions.InputPlayerAction.ExitCommand.performed -= ExitCommand_performed;
+        _inputActions.InputPlayerAction.RegroupFriend.performed -= RegroupFriend_performed;
 
+        _inputActions.InputPlayerAction.SilentKill.performed -= SilentKill_performed;
 
+        _inputActions.InputPlayerAction.Shooting.performed -= Shooting_Performed;
+        _inputActions.InputPlayerAction.Shooting.canceled -= Shooting_canceled;
+        _inputActions.InputPlayerAction.Scope.performed -= Scope_performed;
+        _inputActions.InputPlayerAction.Reload.performed -= Reload_performed;
+
+        _inputActions.InputPlayerAction.Interact.performed -= Interact_performed;
+        _inputActions.InputPlayerAction.NightVision.performed -= NightVision_performed;
+        _inputActions.InputPlayerAction.SkillButton.performed -= SkillButton_performed;
+        _inputActions.InputPlayerAction.Whistle.performed -= Whistle_performed;
+        _inputActions.InputPlayerAction.Throw.performed -= Throw_performed;
+
+        _inputActions.InputPlayerAction.TakeCover.performed -= TakeCover_performed;
+        _inputActions.InputPlayerAction.ExitTakeCover.performed -= ExitTakeCover_performed;
+
+        _inputActions.InputMenuAction.PauseGame.performed -= PauseGame_performed;
+    }
 
 
 }

@@ -3,14 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BreadCrumbsManager : MonoBehaviour
+public class BreadCrumbsManager : MonoBehaviour, IUnsubscribeEvent
 {
+    private GameManager _gm;
     private PlayableCharacterManager _playableCharaManager;
     [SerializeField] private Transform _breadCrumbsPrefab;
     [SerializeField] private Transform _instantiateParent;
     [SerializeField] private List<BreadCrumbs> _breadCrumbsList;
 
-    [SerializeField] private float _breadCrumbsSpawnDelay, _breadCrumbsGoneMaxTimer;
+    [SerializeField] private float _breadCrumbsSpawnDelayMax, _breadCrumbsGoneMaxTimer;
+    private float _breadCrumbsSpawnDelay;
     [SerializeField] private int _totalBreadCrumbs = 50;
     
     private Transform _currPlayable;
@@ -27,10 +29,24 @@ public class BreadCrumbsManager : MonoBehaviour
 
     private void Start() 
     {
+        _gm = GameManager.instance;
         CreatingBreadcrumbs();
         _currCoroutine = BreadCrumbsDrop();
-        StartCoroutine(_currCoroutine);
+        // StartCoroutine(_currCoroutine);
+
+        _breadCrumbsSpawnDelay = _breadCrumbsSpawnDelayMax;
         
+    }
+    private void Update() 
+    {
+        if(!_gm.IsGamePlaying()) return;
+        
+        if(_breadCrumbsSpawnDelay > 0) _breadCrumbsSpawnDelay -= Time.deltaTime;
+        else
+        {
+            _breadCrumbsSpawnDelay = _breadCrumbsSpawnDelayMax;
+            BreadcrumbsFollowPlayer();
+        }
     }
 
     public void CreatingBreadcrumbs()
@@ -53,7 +69,7 @@ public class BreadCrumbsManager : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(_breadCrumbsSpawnDelay);
+            yield return new WaitForSeconds(_breadCrumbsSpawnDelayMax);
             BreadcrumbsFollowPlayer();
         }
     }
@@ -81,5 +97,10 @@ public class BreadCrumbsManager : MonoBehaviour
     private void PlayableCharaManager_OnPlayerSwitch(Transform transform)
     {
         _currPlayable = transform;
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _playableCharaManager.OnPlayerSwitch -= PlayableCharaManager_OnPlayerSwitch;
     }
 }
