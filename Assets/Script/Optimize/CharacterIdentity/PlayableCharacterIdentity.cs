@@ -1,29 +1,28 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
+
 
 public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataHelper, IReceiveInputFromPlayer, ICanSwitchWeapon, IInteractable
 {
     
     [Space(1)]
     [Header("Input Control Now")]
-    [SerializeField]protected bool _isPlayerInput;
+    [ReadOnly(false), SerializeField] protected bool _isPlayerInput;
     public event Action<bool> OnIsPlayerInputChange;
 
     [Header("Friend Data Helper")]
-    [SerializeField] protected GameObject[] _friendsNormalPosition;
     protected int _friendID;
     [SerializeField] private EntityStatSO _friendStatSO;
+
         #region Friend STATS
 
     [Space(1)]
     [Header("   Health")]
-    [SerializeField] protected float _totalHealthFriend;
-    protected float _currHealthFriend;
-    private bool _isReviving;
+    [ReadOnly(false), SerializeField] protected float _totalHealthFriend;
+    [ReadOnly(true), SerializeField] protected float _currHealthFriend;
+    [ReadOnly(false), SerializeField] private bool _isReviving;
 
     [SerializeField] protected GameObject _deadColl;
 
@@ -41,32 +40,36 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [Space(5)]
     [Header("No Inspector Variable")]
     //Thing needed to getcomponent
-    protected PlayableMovementStateMachine _getPlayableMovementStateData;
-    protected PlayableUseWeaponStateMachine _getPlayableUseWeaponStateData;
-    protected PlayableCamera _getPlayableCamera;
-    protected PlayableInteraction _getPlayableInteraction;
-    protected PlayableSkill _getPlayableSkill;
-    protected PlayableMakeSFX _getPlayableMakeSFX;
+    protected PlayableMovementStateMachine _playableMovementStateMachine;
+    protected PlayableUseWeaponStateMachine _playableUseWeaponStateMachine;
+    protected PlayableCamera _playableCamera;
+    protected PlayableInteraction _playableInteraction;
+    protected PlayableSkill _playableSkill;
+    protected PlayableMakeSFX _playableMakeSFX;
 
     protected FriendAIBehaviourStateMachine _friendAIStateMachine;
     
     
-    protected IEnumerator _revCoroutine;
+    [ReadOnly(false), SerializeField] protected bool _isBeingRevived;
+    [ReadOnly(false), SerializeField] protected PlayableCharacterIdentity _characterIdentityWhoReviving, _characterIdentityWhoBeingRevived;
     [Header("Death Animation Component")]
-    private bool _isAnimatingOtherAnimation;
+    [ReadOnly(false), SerializeField] private bool _isAnimatingOtherAnimation;
+
+    public Action OnIsCrawlingChange;
+
     #region GETTERSETTER Variable
 
     public override float StealthStat 
     { 
         get{ 
-            if(IsPlayerInput)return _stealthStats; 
+            if(IsPlayerInput) return _stealthStats; 
             else return _stealthStatsFriend; 
         }
     }
     public override float TotalHealth
     { 
         get{ 
-            if(IsPlayerInput)return _totalHealth; 
+            if(IsPlayerInput) return _totalHealth; 
             else return _totalHealthFriend; 
         }
     }
@@ -74,7 +77,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     { 
         get
         { 
-            if(IsPlayerInput)return _currHealth; 
+            if(IsPlayerInput) return _currHealth; 
             else return _currHealthFriend; 
         }
         set
@@ -87,7 +90,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         get
         {
-            if(IsPlayerInput)return _currHealth <= _totalHealth/2;
+            if(IsPlayerInput) return _currHealth <= _totalHealth/2;
             else return _currHealthFriend <= _totalHealthFriend/2;
         }
     }
@@ -109,24 +112,25 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         } 
     }
     public int FriendID {get { return _friendID;} set { _friendID = value; }}
-    public GameObject[] GetFriendsNormalPosition { get {return _friendsNormalPosition;}}
 
-    public PlayableMovementStateMachine GetPlayableMovementData {get { return _getPlayableMovementStateData;}}
-    public PlayableUseWeaponStateMachine GetPlayableUseWeaponData {get { return _getPlayableUseWeaponStateData;}}
-    public PlayableCamera GetPlayableCamera {get {return _getPlayableCamera;}}
-    public PlayableInteraction GetPlayableInteraction {get {return _getPlayableInteraction;}}
-    public PlayableSkill GetPlayableSkill {get {return _getPlayableSkill;}}
-    public PlayableMakeSFX GetPlayableMakeSFX {get {return _getPlayableMakeSFX;}}
+    public PlayableMovementStateMachine GetPlayableMovementStateMachine {get { return _playableMovementStateMachine;}}
+    public PlayableUseWeaponStateMachine GetPlayableUseWeaponStateMachine {get { return _playableUseWeaponStateMachine;}}
+    public PlayableCamera GetPlayableCamera {get {return _playableCamera;}}
+    public PlayableInteraction GetPlayableInteraction {get {return _playableInteraction;}}
+    public PlayableSkill GetPlayableSkill {get {return _playableSkill;}}
+    public PlayableMakeSFX GetPlayableMakeSFX {get {return _playableMakeSFX;}}
 
-    public FriendAIBehaviourStateMachine FriendAIStateMachine {get { return _friendAIStateMachine;}}
-    public FOVMachine FOVMachine{get { return _fovMachine;}}
+    public FriendAIBehaviourStateMachine GetFriendAIStateMachine {get { return _friendAIStateMachine;}}
+    public FOVMachine GetFOVMachine{get { return _fovMachine;}}
 
     public bool IsAnimatingOtherAnimation {get {return _isAnimatingOtherAnimation;}}
 
-    public Transform InteractableTransform {get{return transform;}}
+    public Transform GetInteractableTransform {get{return transform;}}
     public bool CanInteract {get{return IsDead && !IsAnimatingOtherAnimation;}}
     public bool IsReviving {get {return _isReviving;} set { _isReviving = value;}}
-    public bool IsSilentKilling {get {return _getPlayableUseWeaponStateData.IsSilentKill;} set { _getPlayableUseWeaponStateData.IsSilentKill = value;}}
+    public bool IsSilentKilling {get {return _playableUseWeaponStateMachine.IsSilentKill;} set { _playableUseWeaponStateMachine.IsSilentKill = value;}}
+
+    public Transform GetFriendBeingRevivedPos {get {return _characterIdentityWhoBeingRevived.transform;}}
     
 
     #endregion
@@ -135,16 +139,16 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         base.Awake();
         
         if(_deadColl.activeSelf)_deadColl.gameObject.SetActive(false);
-        _getPlayableMovementStateData = MovementStateMachine as PlayableMovementStateMachine;
-        _getPlayableUseWeaponStateData = UseWeaponStateMachine as PlayableUseWeaponStateMachine;
-        _getPlayableCamera = GetComponent<PlayableCamera>();
-        _getPlayableInteraction = GetComponentInChildren<PlayableInteraction>();
-        _getPlayableSkill = GetComponent<PlayableSkill>();
-        _getPlayableMakeSFX = GetComponentInChildren<PlayableMakeSFX>();
+        _playableMovementStateMachine = _moveStateMachine as PlayableMovementStateMachine;
+        _playableUseWeaponStateMachine = _useWeaponStateMachine as PlayableUseWeaponStateMachine;
+        _playableCamera = GetComponent<PlayableCamera>();
+        _playableInteraction = GetComponentInChildren<PlayableInteraction>();
+        _playableSkill = GetComponent<PlayableSkill>();
+        _playableMakeSFX = GetComponentInChildren<PlayableMakeSFX>();
         InitializeFriend();
 
 
-        _friendAIStateMachine = GetComponent<FriendAIBehaviourStateMachine>();
+        _friendAIStateMachine = _aiStateMachine as FriendAIBehaviourStateMachine;
         
     }
     protected override void Start() 
@@ -155,14 +159,19 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
 
 
-    protected override void Update() 
+    protected void Update() 
     {
-        base.Update();
-        // if(reviv)
-        // {
-        //     reviv = false;
-        //     Revive();
-        // }
+        RegenerationTimer();
+        
+        if(!_isPlayerInput)
+        {
+            if(!_moveStateMachine.IsAtCrouchPlatform && !_friendAIStateMachine.IsAIEngage && !_friendAIStateMachine.GotDetectedbyEnemy)
+            {
+                if(_playableMovementStateMachine.IsAskedToCrouchByPlayable && !_playableMovementStateMachine.IsCrouching) Crouch(true);
+                else if(_playableMovementStateMachine.IsAskedToRunByPlayable && !_playableMovementStateMachine.IsRunning) Run(true);
+            }
+        }
+
     }
 
     public void InitializeFriend()
@@ -179,7 +188,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _armourTypeFriend = _friendStatSO.armourType;
         _armourFriend = _friendStatSO.armor;
 
-        GetPlayableUseWeaponData.SetCharaFriendAccuracy(_friendStatSO.acuracy);
+        _playableUseWeaponStateMachine.SetCharaFriendAccuracy(_friendStatSO.acuracy);
         _stealthStatsFriend = _friendStatSO.stealth;
 
     }
@@ -205,14 +214,41 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         {
             _currWeaponIdx = 0;
         }
+        _weaponGameObjectDataContainer.GetCurrWeaponGameObjectData(_currWeaponIdx);
+        _useWeaponStateMachine.GunOriginShootPoint = _weaponGameObjectDataContainer.GetCurrShootPlacement();
+        
         _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
+    }
+    protected void Regeneration()
+    {
+        Heal(TotalHealth * _regenScale * Time.deltaTime);
+    }
+    protected void RegenerationTimer()
+    {
+        if(CurrHealth <= TotalHealth && !IsDead)
+        {
+            if(_friendAIStateMachine.EnemyWhoSawAIList.Count > 0)
+            {
+                _regenCDTimer = _regenTimerMax;
+            }
+            else
+            {
+                if(_regenCDTimer > 0) _regenCDTimer -= Time.deltaTime;
+                else
+                {
+                    _regenCDTimer = 0;
+                    Regeneration();
+                }
+            }
+        }
     }
 
     public override void Death()
     {
-        if(_revCoroutine != null)
+        if(IsReviving)
         {
-            StopCoroutine(_revCoroutine);
+            if(_characterIdentityWhoBeingRevived) _characterIdentityWhoBeingRevived.CutOutFromBeingRevived();
+            StopRevivingFriend();
         }
         base.Death();
         _isAnimatingOtherAnimation = true;
@@ -220,13 +256,19 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     public override void AfterFinishDeathAnimation()
     {
-        if(IsPlayerInput)OnPlayableDeath?.Invoke();
-        _getPlayableMovementStateData.SetCharaGameObjRotationToNormal();
+        if(_isPlayerInput) OnPlayableDeath?.Invoke();
+        _playableMovementStateMachine.SetCharaGameObjRotationToNormal();
+        _moveStateMachine.IsCrouching = false;
+        _animator.SetTrigger("KnockTrigger");
+    }
+
+    public void AfterFinishKnockOutAnimation()
+    {
         _isAnimatingOtherAnimation = false;
         _deadColl.SetActive(true);
-        if(!_getPlayableMovementStateData.IsCrawling)
+        if(!_playableMovementStateMachine.IsCrawling)
         {
-            _getPlayableMovementStateData.IsCrawling = true;
+            _playableMovementStateMachine.IsCrawling = true;
         }
     }
 
@@ -235,48 +277,65 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         ForceStopAllStateMachine();
         _deadColl.SetActive(false);
         _isAnimatingOtherAnimation = true;
-        _revCoroutine = Reviving(characterIdentityWhoReviving);
-        StartCoroutine(_revCoroutine);
+
+        _animator.SetBool("BeingRevived", true);
+
+        _characterIdentityWhoReviving = characterIdentityWhoReviving;
+        _isBeingRevived = true;
     }
-    private IEnumerator Reviving(PlayableCharacterIdentity characterIdentityWhoReviving)
+
+    public void AfterFinishReviveAnimation()
     {
-        Debug.Log("reviving");
-        
-        yield return new WaitForSeconds(2f);
-        _animator.SetTrigger("ReviveTrigger");
+        _isBeingRevived = false;
         _fovMachine.enabled = true;
 
-        if(_getPlayableMovementStateData.IsCrawling)_getPlayableMovementStateData.IsCrawling = false;
+        if(_playableMovementStateMachine.IsCrawling) _playableMovementStateMachine.IsCrawling = false;
         ResetHealth();
-
+        _characterIdentityWhoReviving.StopRevivingFriend();
+        _characterIdentityWhoReviving = null;
         _isDead = false;
-        characterIdentityWhoReviving.IsReviving = false;
         _isAnimatingOtherAnimation = false;
-        
-        _revCoroutine = null;
-        Debug.Log("reviving Done");
-        yield return new WaitForSeconds(0.1f);
+        _animator.SetBool("BeingRevived", false);
         _animator.SetBool("Death", false);
     }
+    public void CutOutFromBeingRevived()
+    {
+        if(!_isBeingRevived)return;
+
+        _isBeingRevived = false;
+        _isAnimatingOtherAnimation = false;
+        _animator.SetBool("BeingRevived", false);
+        _animator.Play("Rifle_Knock_Out");
+        _isDead = true;
+        _fovMachine.enabled = false;
+        _animator.SetBool("Death", true);
+        
+        _deadColl.SetActive(true);
+        if(!_playableMovementStateMachine.IsCrawling)
+        {
+            _playableMovementStateMachine.IsCrawling = true;
+        }
+
+    }
+    
     
     public void TurnOnOffFriendAI(bool isTurnOn)
     {
-        // FriendAIStateMachine.enabled = isTurnOn;
         if(!isTurnOn)
         {
-            FriendAIStateMachine.IsAIEngage = false;
-            FriendAIStateMachine.IsAIIdle = true;
-            FriendAIStateMachine.NotDetectedAnymore();
-            FriendAIStateMachine.IsAtTakingCoverHidingPlace = false;
-            FriendAIStateMachine.IsAtTakingCoverHidingPlace = false;
+            _friendAIStateMachine.IsAIEngage = false;
+            _friendAIStateMachine.IsAIIdle = true;
+            _friendAIStateMachine.NotDetectedAnymore();
+            _friendAIStateMachine.IsAtTakingCoverHidingPlace = false;
+            _friendAIStateMachine.IsAtTakingCoverHidingPlace = false;
         }
         if(isTurnOn)
         {
-            if(!IsDead)FOVMachine.enabled = isTurnOn;
+            if(!IsDead) _fovMachine.enabled = isTurnOn;
         }
         else 
         {
-            if(FOVMachine.enabled) FOVMachine.enabled = isTurnOn;
+            if(_fovMachine.enabled) _fovMachine.enabled = isTurnOn;
         }
     }
 
@@ -289,20 +348,21 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     public void Interact(PlayableCharacterIdentity characterIdentityWhoReviving)
     {
-        if(_revCoroutine != null)return;
+        if(_isBeingRevived) return;
+
         if(characterIdentityWhoReviving.GetPlayableInteraction.IsHeldingObject)
         {
             characterIdentityWhoReviving.GetPlayableInteraction.RemoveHeldObject();
         }
-        characterIdentityWhoReviving.IsReviving = true;
-        characterIdentityWhoReviving.GetPlayableUseWeaponData.TellToTurnOffScope();
-        characterIdentityWhoReviving.ForceStopAllStateMachine();
+
+        characterIdentityWhoReviving.RevivingFriend(this);
+
         Revive(characterIdentityWhoReviving);
     }
     public void ForceStopAllStateMachine()
     {
-        GetPlayableUseWeaponData.ForceStopUseWeapon();
-        GetPlayableMovementData.ForceStopMoving();
+        _useWeaponStateMachine.ForceStopUseWeapon();
+        _moveStateMachine.ForceStopMoving();
     }
 
     #region StateMachine Command
@@ -312,22 +372,51 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         {
             if(isRunning)
             {
-                if(GetPlayableMovementData.IsMustLookForward)GetPlayableMovementData.IsMustLookForward = false;
-                UseWeaponStateMachine.ForceStopUseWeapon();
-                // PlayableCharacterCameraManager.Instance.ResetScope();
-                if(MovementStateMachine.IsCrouching)
+                if(_playableMovementStateMachine.IsMustLookForward) _playableMovementStateMachine.IsMustLookForward = false;
+                _useWeaponStateMachine.ForceStopUseWeapon();
+
+                if(_moveStateMachine.IsCrouching)
                 {
-                    MovementStateMachine.IsCrouching = false;
-                    // PlayableCharacterCameraManager.Instance.ResetCameraHeight();
+                    _moveStateMachine.IsCrouching = false;
                 }
             }
-            MovementStateMachine.IsRunning = isRunning;
+            _moveStateMachine.IsRunning = isRunning;
         }
         else
         {
+            
             base.Run(isRunning);
         }
         
+    }
+    public override void Crouch(bool isCrouching)
+    {
+        if(IsPlayerInput)
+        {
+            if(isCrouching)
+            {
+                if(_moveStateMachine.IsRunning)
+                {
+                    _moveStateMachine.IsRunning = false;
+                }
+            }
+            _moveStateMachine.IsCrouching = isCrouching;
+        }
+        else
+        {
+           if(isCrouching)
+            {
+                if(_moveStateMachine.IsRunning)
+                {
+                    _moveStateMachine.IsRunning = false;
+                }
+                _moveStateMachine.IsCrouching = isCrouching;
+            }
+            else
+            {
+                if(!_moveStateMachine.IsAtCrouchPlatform) _moveStateMachine.IsCrouching = isCrouching;
+            }
+        }
     }
     public override void Aiming(bool isAiming)
     {
@@ -335,7 +424,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         if(IsPlayerInput)
         {
             base.Aiming(isAiming);
-            GetPlayableMovementData.IsMustLookForward = isAiming;
+            _playableMovementStateMachine.IsMustLookForward = isAiming;
         }
         else
         {
@@ -345,11 +434,29 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     #endregion
     private void DeleteEnemyFromList(Transform transform)
     {
-        _getPlayableInteraction.DeleteKilledEnemyFromList(transform);
-        if(_fovMachine.VisibleTargets.Contains(transform))_fovMachine.VisibleTargets.Remove(transform);
+        _playableInteraction.DeleteKilledEnemyFromList(transform);
+        if(_fovMachine.VisibleTargets.Contains(transform)) _fovMachine.VisibleTargets.Remove(transform);
         _friendAIStateMachine.DeleteKilledEnemyFromList(transform);
     }
 
 
+    public void RevivingFriend(PlayableCharacterIdentity characterIdentityWhoBeingRevived)
+    {
+        if(GetPlayableInteraction.IsHeldingObject)
+        {
+            GetPlayableInteraction.RemoveHeldObject();
+        }
+        IsReviving = true;
+        _characterIdentityWhoBeingRevived = characterIdentityWhoBeingRevived;
+        _animator.SetBool("Reviving", true);
+        _playableUseWeaponStateMachine.TellToTurnOffScope();
+        ForceStopAllStateMachine();
+    }
+    public void StopRevivingFriend()
+    {
+        IsReviving = false;
+        _characterIdentityWhoBeingRevived = null;
+        _animator.SetBool("Reviving", false);
+    }
 
 }

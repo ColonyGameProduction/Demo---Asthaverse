@@ -30,6 +30,7 @@ public class IdleState : MovementState
     }
     public override void UpdateState()
     {
+        _playableData?.RotateWhileReviving();
         if(_playableData != null && (PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || _playableData.GetPlayableCharacterIdentity.IsReviving || _playableData.GetPlayableCharacterIdentity.IsSilentKilling))return;
 
         if((!_sm.IsAIInput && _playableData.InputMovement != Vector3.zero) || (_sm.IsAIInput && !_sm.IsAIAtDirPos()))
@@ -44,6 +45,9 @@ public class IdleState : MovementState
 
         CheckingIdleAnimationCycle();
         CheckIsCrouchWhileIdle();
+
+        CheckCharaCon();
+        
     }
     public override void ExitState()
     {
@@ -51,6 +55,23 @@ public class IdleState : MovementState
         // base.EnterState(); //Stop Idle Anim
         SetAnimParamActive(ANIMATION_MOVE_PARAMETER_ISMOVING);
         if(_sm.IdleAnimCycleIdx > 1)_sm.SetIdleAnimToNormal();
+    }
+    private void CheckCharaCon()
+    {   if(_standData.IsCrouching)
+        {
+            _sm.CharaConDataToCrouch();
+        }
+        else if(_groundData != null && _groundData.IsCrawling)
+        {
+            if(_groundData.IsCrawling)
+            {
+                _playableData?.CharaConDataToCrawl();
+            }
+        }
+        else if(!_standData.IsCrouching && ((_groundData == null) || (_groundData != null && !_groundData.IsCrawling)))
+        {
+            _sm.CharaConDataToNormal();
+        }
     }
     private void CheckMustRotateWhileIdle()
     {
@@ -61,6 +82,7 @@ public class IdleState : MovementState
     {
         if(_standData.IsCrouching)
         {
+            
             if(_sm.IdleAnimCycleIdx > 1) 
             {
                 _sm.SetIdleAnimToNormal();
@@ -68,12 +90,21 @@ public class IdleState : MovementState
                 _currTargetTime = _sm.IdleAnimCycleTimeTarget[1];
             }
             SetAnimParamActive(ANIMATION_MOVE_PARAMETER_CROUCH);
-            _playableData?.CharaConDataToCrouch();
+            
+
+            if(_sm.IsAtCrouchPlatform && _sm.IsAIInput)
+            {
+                if(!_sm.IsHeadHitWhenUnCrouch())
+                {
+                    _sm.IsAtCrouchPlatform = false;
+                    _sm.IsCrouching = false;
+                }
+
+            }
         }
         else
         {
             SetAnimParamInactive(ANIMATION_MOVE_PARAMETER_CROUCH);
-            _playableData?.CharaConDataToNormal();
         }
     }
     private void StopMovementAnimation()
@@ -86,7 +117,7 @@ public class IdleState : MovementState
     #region Idle Anim Cycle
     private void CheckingIdleAnimationCycle()
     {
-        if(_sm.IsMustStayAlert)
+        if(_sm.IsIdleMustStayAlert)
         {
             if(_sm.IdleAnimCycleIdx != 0)SetIdleAnimToAlert();
         }

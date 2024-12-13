@@ -2,17 +2,34 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
+
+[Serializable]
+public struct CharaControllerData
+{
+    public Vector3 center;
+    public float radius;
+    public float height;
+}
 public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMovementData
 {
     #region Normal Variable
     [Space(1)]
     [Header("Move States - Stand")]
-    [SerializeField] protected bool _isIdle = true;
-    [SerializeField] protected bool _isWalking;
-    [SerializeField] protected bool _isRun;
-    [SerializeField] protected bool _isCrouch;
-    protected bool _isMustStayAlert;
+    [ReadOnly(true), SerializeField]protected bool _isIdle = true;
+    [ReadOnly(true), SerializeField] protected bool _isWalking;
+    [ReadOnly(true), SerializeField] protected bool _isRun;
+    [ReadOnly(true), SerializeField] protected bool _isCrouch;
     
+    [Space(1)]
+    [Header("Move Speed - State Multiplier")]
+    [SerializeField] protected float _runSpeedMultiplier;
+    [SerializeField] protected float _crouchSpeedMultiplier;
+    protected float _walkSpeed;
+    protected float _runSpeed;
+    private float _crouchSpeed;
+    protected float _currSpeed;
+    [SerializeField] protected float _rotationSpeedAI = 180;
+
     protected MovementStateFactory _states;
     protected MovementState _currState;
 
@@ -22,31 +39,39 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [SerializeField] private float _idleAnimCycleSpeed = 2f;
     protected float _idleAnimCycleIdx;
     protected bool _wasCharacterAiming;
-
-
-    [Space(1)]
-    [Header("Move Speed - State Multiplier")]
-    [SerializeField] protected float _runMultiplier;
-    [SerializeField] protected float _crouchMultiplier;
-    protected float _walkSpeed;
-    protected float _runSpeed;
-    private float _crouchSpeed;
-    protected float _currSpeed;
+    /// <summary> To make the idle keep staying in stay alert phase </summary>
+    protected bool _isIdleMustStayAlert; 
 
     [Space(1)]
     [Header("NavMesh Component")]
     protected NavMeshAgent _agentNavMesh;
-    protected Vector3 _currAIDirPos; //Current AI Direction Position
+    /// <summary> Current AI Direction Position To Go </summary>
+    protected Vector3 _currAIDirPos;
 
     [Space(1)]
     [Header("AI Rotation")]
     protected Vector3 _AILookTarget; //position for AI To look at
-    protected bool _isReceivePosADirection;
+    protected bool _isLookTargetDirection;
     protected bool _allowLookTarget;
-    [SerializeField]protected float _faceDirCount = 0.9f;
+    [SerializeField]protected float _lookTargetDotMin = 0.9f;
 
+    [Space(1)]
+    [Header("CharaCon Data")]
+    protected CharaControllerData _normalHeightCharaCon;
+    [SerializeField] protected CharaControllerData _crouchHeightCharaCon;
+
+    [Space(1)]
+    [Header("AI Crouch Head Checker")]
+    [Tooltip("Point to check if there's crouch platform or not for AI")]
+    [SerializeField] protected Transform _feetBasePoint;
+    [SerializeField] protected LayerMask _crouchPlatformLayer;
+    [SerializeField] protected float _crouchRayBuffer = 1.1f;
+    [SerializeField] protected float _crouchHeadHitAngleBuffer = 15;
+    private bool _isAtCrouchPlatform;
+    
+    #region Event
     public Action<Vector3> OnIsTheSamePosition;
-
+    #endregion
     #endregion
 
     #region CONST Variable
@@ -60,8 +85,8 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     public bool IsIdle {get {return _isIdle;} set{ _isIdle = value;} }
     public bool IsWalking {get {return _isWalking;}set{ _isWalking = value;} }
-    public bool IsRunning { get {return _isRun;}set{ _isRun = value;} }
-    public bool IsCrouching { get {return _isCrouch;}set{ _isCrouch = value;} }
+    public virtual bool IsRunning { get {return _isRun;}set{ _isRun = value;} }
+    public virtual bool IsCrouching { get {return _isCrouch;}set{ _isCrouch = value;} }
 
     public float IdleAnimCycleIdx {get {return _idleAnimCycleIdx;}}
     public float[] IdleAnimCycleTimeTarget {get {return _idleAnimCycleTimeTarget;}}
@@ -73,9 +98,13 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public float CrouchSpeed {get{return _crouchSpeed;}}
 
     public NavMeshAgent AgentNavMesh {get {return _agentNavMesh;}}
+    /// <summary> Current AI Direction Position To Go </summary>
     public Vector3 CurrAIDirPos { get {return _currAIDirPos;}}
     public bool AllowLookTarget {get {return _allowLookTarget;} set{_allowLookTarget = value;}}
-    public bool IsMustStayAlert { get {return _isMustStayAlert;}set{ _isMustStayAlert = value;} }
+    /// <summary> To make the idle keep staying in stay alert phase </summary>
+    public bool IsIdleMustStayAlert { get {return _isIdleMustStayAlert;}set{ _isIdleMustStayAlert = value;} }
+
+    public bool IsAtCrouchPlatform {get {return _isAtCrouchPlatform;} set{_isAtCrouchPlatform = value;}}
     
     #endregion
 
@@ -86,9 +115,12 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         _states = new MovementStateFactory(this);
 
         if(AgentNavMesh == null)_agentNavMesh = GetComponent<NavMeshAgent>();
+        _normalHeightCharaCon.center = Vector3.zero;
+        _normalHeightCharaCon.radius = _agentNavMesh.radius;
+        _normalHeightCharaCon.height = _agentNavMesh.height;
     }
     protected virtual void Start() 
-    {        
+    {   
         SetIdleAnimToNormal();
         SwitchState(_states.IdleState());
     }
@@ -132,26 +164,26 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
         bool isFacingTheDirection = true;
         float checkFaceDir = 0;
+
         Vector3 facedir = (AgentNavMesh.steeringTarget - transform.position).normalized;
-        // Debug.Log("Dot Move" + Vector3.Dot(facedir, transform.forward));
-        // bool isFacingMoveDirection = Vector3.Dot(facedir, transform.forward) > .5f;
+        HandleCrouchAIBehaviour(facedir);
         Vector3 animatedFaceDir = transform.InverseTransformDirection(facedir);
 
         if(!AllowLookTarget)
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), _rotationSpeedAI * Time.deltaTime);
             checkFaceDir = Vector3.Dot(facedir, transform.forward);
-            isFacingTheDirection = checkFaceDir > _faceDirCount;
+            isFacingTheDirection = checkFaceDir > _lookTargetDotMin;
         }
         else
         {
             
-            if(!_isReceivePosADirection)facedir = (_AILookTarget - transform.position).normalized;
+            if(!_isLookTargetDirection)facedir = (_AILookTarget - transform.position).normalized;
             else facedir = _AILookTarget;
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), _rotationSpeedAI * Time.deltaTime);
 
             checkFaceDir = Vector3.Dot(facedir, transform.forward);
-            isFacingTheDirection = checkFaceDir > _faceDirCount;
+            isFacingTheDirection = checkFaceDir > _lookTargetDotMin;
         }
         
 
@@ -166,14 +198,12 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
             AgentNavMesh.destination = CurrAIDirPos;
         }
-        // Debug.Log(AgentNavMesh.hasPath + " " + gameObject.name);
         if (AgentNavMesh.pathPending)
         {
             return false;
         }
         if(!AgentNavMesh.hasPath)
         {
-            // Debug.Log("I'm at same pos" + transform.name + " " + AgentNavMesh.destination + " " + CurrAIDirPos);
             OnIsTheSamePosition?.Invoke(CurrAIDirPos);
             return true;
         }
@@ -181,7 +211,6 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentNavMesh.radius)
         {
             AgentNavMesh.ResetPath();
-            // Debug.Log("I'm at same pos2" + transform.name + " " + AgentNavMesh.destination + " " + CurrAIDirPos);
             OnIsTheSamePosition?.Invoke(CurrAIDirPos);
 
             return true;
@@ -200,24 +229,68 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
         IsWalking = false;
         IsRunning = false;
-        // CharaAnimator.SetBool("Scope", false);
     }
 
     public void SetAIDirection(Vector3 newPos)
     {
         _currAIDirPos = newPos;
     }
-    public void SetAITargetToLook(Vector3 posToLook, bool isReceivePosADirection)
+    public void SetAITargetToLook(Vector3 posToLook, bool isLookTargetDirection)
     {
         _AILookTarget = posToLook;
-        _isReceivePosADirection = isReceivePosADirection;
+        _isLookTargetDirection = isLookTargetDirection;
     }
     public void RotateAIToTarget_Idle()
     {
         Vector3 facedir = Vector3.zero;
-        if(!_isReceivePosADirection)facedir = (_AILookTarget - transform.position).normalized;
+
+        if(!_isLookTargetDirection)facedir = (_AILookTarget - transform.position).normalized;
         else facedir = _AILookTarget;
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), 180 * Time.deltaTime);
+
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(facedir), _rotationSpeedAI * Time.deltaTime);
+    }
+    public void HandleCrouchAIBehaviour(Vector3 agentGoalDir)
+    {
+
+        if(!IsCrouching)
+        {
+            // Debug.DrawRay(_feetBasePoint.position, agentGoalDir * (_agentNavMesh.radius * 1.1f), Color.red);
+            if(Physics.Raycast(_feetBasePoint.position, agentGoalDir, out RaycastHit hit, _agentNavMesh.radius * _crouchRayBuffer, _crouchPlatformLayer))
+            {
+                IsAtCrouchPlatform = true;
+                if(IsRunning)IsRunning = false;
+                IsCrouching = true;
+            }
+        }
+        else
+        {
+            float distanceToagentGoal = Vector3.Distance(transform.position, _agentNavMesh.steeringTarget);
+            // Debug.DrawRay(_feetBasePoint.position, agentGoalDir * distanceToagentGoal, Color.red);
+            if(Physics.Raycast(_feetBasePoint.position, agentGoalDir, out RaycastHit hit, distanceToagentGoal, _crouchPlatformLayer))
+            {
+
+                IsAtCrouchPlatform = true;
+                if(IsRunning)IsRunning = false;
+                IsCrouching = true;
+            }
+            else
+            {
+                if(IsAtCrouchPlatform)
+                {
+                    if(IsHeadHitWhenUnCrouch())
+                    {
+                        IsAtCrouchPlatform = true;
+                        if(IsRunning)IsRunning = false;
+                        IsCrouching = true;
+                    }
+                    else
+                    {
+                        IsCrouching = false;
+                        IsAtCrouchPlatform = false;
+                    }
+                }
+            }
+        }
     }
     #endregion
 
@@ -225,8 +298,8 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public virtual void InitializeMovementSpeed(float speed)
     {
         _walkSpeed = speed;
-        _runSpeed = _walkSpeed * _runMultiplier;
-        _crouchSpeed = _walkSpeed * _crouchMultiplier;
+        _runSpeed = _walkSpeed * _runSpeedMultiplier;
+        _crouchSpeed = _walkSpeed * _crouchSpeedMultiplier;
     }
     public void ChangeCurrSpeed(float newSpeed)
     {
@@ -250,6 +323,45 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     }
 
     #endregion
+    #region CharaCon Function
+    public virtual void CharaConDataToNormal() => ChangeNavMeshData(_normalHeightCharaCon);
+    public virtual void CharaConDataToCrouch() => ChangeNavMeshData(_crouchHeightCharaCon);
+    protected void ChangeNavMeshData(CharaControllerData newData)
+    {
+        _agentNavMesh.radius = newData.radius;
+        _agentNavMesh.height = newData.height;
+    }
+    #endregion
+
+    public virtual bool IsHeadHitWhenUnCrouch()
+    {
+        Vector3 facedir = (AgentNavMesh.steeringTarget - transform.position).normalized;
+        // Debug.DrawRay(_feetBasePoint.position, _feetBasePoint.up * _normalHeightCharaCon.height, Color.black, 0.5f);
+        if(Physics.Raycast(_feetBasePoint.position, _feetBasePoint.up, out RaycastHit hitHead, _normalHeightCharaCon.height, _crouchPlatformLayer))
+        {
+            return true;
+        }
+        else
+        {
+
+            Vector3 crossProduct = Vector3.Cross(_feetBasePoint.up, facedir).normalized;
+            Quaternion rotation = Quaternion.AngleAxis(_crouchHeadHitAngleBuffer, crossProduct);
+            
+            Vector3 newDir = rotation * _feetBasePoint.up;
+            // Debug.DrawRay(_feetBasePoint.position, crossProduct * _normalHeightCharaCon.height, Color.red, 0.5f);
+            // Debug.DrawRay(_feetBasePoint.position, newDir * _normalHeightCharaCon.height, Color.black, 0.5f);
+            if(Physics.Raycast(_feetBasePoint.position, newDir, out RaycastHit hitHead2, _normalHeightCharaCon.height, _crouchPlatformLayer))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+    }
+
 
 
 }

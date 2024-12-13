@@ -7,17 +7,13 @@ using UnityEngine.Animations.Rigging;
 public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalUseWeaponData
 {
     #region Normal Variable
-    [Header("Testing")]
-    public bool isGo;
-    public bool isStop;
-    public GameObject target;
 
     [Space(1)]
     [Header("Use Weapon States - Normal")]
-    [SerializeField] protected bool _isIdle = true;
-    [SerializeField] protected bool _isAiming;
-    [SerializeField] protected bool _isUsingWeapon;
-    [SerializeField] protected bool _isReloading;
+    [ReadOnly(true), SerializeField] protected bool _isIdle = true;
+    [ReadOnly(true), SerializeField] protected bool _isAiming;
+    [ReadOnly(true), SerializeField] protected bool _isUsingWeapon;
+    [ReadOnly(true), SerializeField] protected bool _isReloading;
     protected UseWeaponStateFactory _states;
     protected UseWeaponState _currState;
 
@@ -42,12 +38,12 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     [Space(1)]
     [Header("ShootPoint - AI")]
     [Tooltip("Kalo AI isinya FOV, kalo player gausa isi krn ud lsg diisi camera.main")]
-    [SerializeField] protected Transform _originShootPoint_AIContainer; 
+    protected Transform _originShootPoint_AIContainer; 
     protected Transform _currOriginShootPoint, _currDirectionShootPoint;
     protected Vector3 _originShootPosition, _directionShootPosition, _gunOriginShootPosition;
     protected bool isGunInsideWall = false;
     protected Transform _FOVPoint;
-    [SerializeField]protected Transform _gunOriginShootPoint;
+    protected Transform _gunOriginShootPoint;
 
     [Space(1)]
     [Header("Enemy Character Layermask")]
@@ -59,11 +55,13 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     protected WeaponLogicManager _weaponLogicManager;
     protected WeaponShootVFX _weaponShootVFX;
 
-    public Action OnWasUsinghGun;
+    public Action OnWasUsingGun;
 
     [Header("Recoil Data")]
+    [SerializeField]protected float _recoilCoolDownBuffer = 0.1f;
     protected float _currRecoil, _maxRecoil, _recoilCoolDown, _finalCountRecoil;
     
+    public const string ANIMATION_MOVE_PARAMETER_RELOAD = "Reload";
     
     #endregion
     
@@ -114,7 +112,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
     public Transform CurrOriginShootPoint { get{return _currOriginShootPoint;}}
     public Transform CurrDirectionShootPoint { get{return _currDirectionShootPoint;}}
-    public Transform GunOriginShootPoint { get{return _gunOriginShootPoint;}} 
+    public Transform GunOriginShootPoint { get{return _gunOriginShootPoint;} set{_gunOriginShootPoint = value;}} 
     public int CurrActiveAnimLayer { get {return _currActiveAnimLayer;}}
     public float CurrAnimTime {get {return _currAnimTIme;}set {_currAnimTIme = value;}}
     public LayerMask CharaEnemyMask {get{return _charaEnemyMask;}}
@@ -132,12 +130,11 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
             _currOriginShootPoint = _originShootPoint_AIContainer;
             _currDirectionShootPoint = _currChosenTarget;
         }
-        _FOVPoint = GetComponent<FOVMachine>().GetFOVPoint;
         _states = new UseWeaponStateFactory(this);
-        _weaponShootVFX = GetComponent<WeaponShootVFX>();
     }
     protected virtual void Start() 
     {
+        _weaponShootVFX = _charaIdentity.GetWeaponShootVFX;
         _weaponLogicManager = WeaponLogicManager.Instance;
 
         SetCurrWeapon();
@@ -149,6 +146,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         _currState?.UpdateState();
     }
     private void FixedUpdate() {
+
         ComplexRecoil();
         _currState?.PhysicsLogicUpdateState();
     }
@@ -228,7 +226,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     }
     public void ReloadAnimationFinished()
     {
-        _animator.SetBool("Reload", false);
+        _animator.SetBool(ANIMATION_MOVE_PARAMETER_RELOAD, false);
         _charaIdentity.ReloadWeapon();
         CanReload = false;
         IsReloading = false;
@@ -261,11 +259,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
     #endregion
 
-    protected void SetCurrWeapon()
-    {
-        _currWeapon = _charaIdentity.CurrWeapon;
-        // pas ganti weapon, ini dipanggil
-    }
+    protected void SetCurrWeapon() => _currWeapon = _charaIdentity.CurrWeapon;// pas ganti weapon, ini dipanggil
     public void ActivateRigAim() => _rigController.weight = 1;
     public void DeactivateRigAim() => _rigController.weight = 0;
 
@@ -274,7 +268,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     #region Recoil
     protected virtual void RecoilHandler()
     {
-        _recoilCoolDown = _currWeapon.weaponStatSO.fireRate + (_currWeapon.weaponStatSO.fireRate * 0.1f);
+        _recoilCoolDown = _currWeapon.weaponStatSO.fireRate + (_currWeapon.weaponStatSO.fireRate * _recoilCoolDownBuffer);
         _maxRecoil = _currWeapon.weaponStatSO.recoil;
         _finalCountRecoil = _currRecoil;
     }
@@ -291,7 +285,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         }
         else
         {
-            _currRecoil = 0;
+            _currRecoil = _currWeapon.weaponStatSO.recoil;
         }
     }
     #endregion

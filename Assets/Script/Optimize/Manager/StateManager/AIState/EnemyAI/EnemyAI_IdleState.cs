@@ -20,7 +20,7 @@ public class EnemyAI_IdleState : EnemyAIState
     {
         if(_sm.IsCharacterDead || _sm.EnemyIdentity.IsSilentKilled)
         {
-            _sm.GetMoveStateMachine.IsMustStayAlert = false;
+            _sm.GetMoveStateMachine.IsIdleMustStayAlert = false;
             if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
             return;
         }
@@ -28,18 +28,18 @@ public class EnemyAI_IdleState : EnemyAIState
         _sm.GetFOVState.FOVStateHandler();
         if(_sm.GetFOVState.CurrState != FOVDistState.none)
         {
-            _sm.GetMoveStateMachine.IsMustStayAlert = true;
+            _sm.GetMoveStateMachine.IsIdleMustStayAlert = true;
             if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
             _sm.GetMoveStateMachine.SetAITargetToLook(_sm.GetFOVMachine.ClosestEnemy.position, false);
             if(!_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = true;
             
             if(_sm.GetFOVState.CurrState == FOVDistState.middle)
             {
-                _sm.AlertValue = _sm.MaxAlertValue*0.5f + 10;
+                _sm.AlertValue = _sm.MaxAlertValue / 2 + _sm.AlertValueCountMultiplier;
             }
             else if(_sm.GetFOVState.CurrState == FOVDistState.close)
             {
-                _sm.AlertValue = _sm.MaxAlertValue + 10;
+                _sm.AlertValue = _sm.MaxAlertValue + _sm.AlertValueCountMultiplier;
             }
         }
 
@@ -56,14 +56,14 @@ public class EnemyAI_IdleState : EnemyAIState
 
         if(_sm.GetFOVState.CurrState == FOVDistState.none) //no person
         {
-            _sm.GetMoveStateMachine.IsMustStayAlert = false;
+            _sm.GetMoveStateMachine.IsIdleMustStayAlert = false;
             if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
             Patrol();
         }
     }
     public override void ExitState()
     {
-        _sm.GetMoveStateMachine.IsMustStayAlert = false;
+        _sm.GetMoveStateMachine.IsIdleMustStayAlert = false;
         if(_sm.GetMoveStateMachine.AllowLookTarget)_sm.GetMoveStateMachine.AllowLookTarget = false;
         // else 
 

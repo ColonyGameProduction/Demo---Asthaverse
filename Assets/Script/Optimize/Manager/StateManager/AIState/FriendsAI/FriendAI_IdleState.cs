@@ -24,11 +24,8 @@ public class FriendAI_IdleState : FriendAIState
         {
             if(_sm.GetMoveStateMachine.CurrAIDirPos != _sm.transform.position)_sm.GetMoveStateMachine.ForceStopMoving();
             return;
-            // if(_charaIdentity.MovementStateMachine.CurrAIDirection != null)_charaIdentity.MovementStateMachine.ForceStopMoving();
-            // return;
         }
         
-        // if(_sm.GetUseWeaponStateMachine.IsUsingWeapon || _sm.GetUseWeaponStateMachine.IsAiming)_sm.GetUseWeaponStateMachine.ForceStopUseWeapon();
 
         if(_sm.IsAIEngage && !_sm.IsCharacterDead)
         {
@@ -56,10 +53,10 @@ public class FriendAI_IdleState : FriendAIState
                 {
                     if(!_sm.IsFriendAlreadyAtDefaultDistance())
                     {
-                        if(!_sm.CurrPlayableIdentity.GetPlayableMovementData.IsTakingCoverAtWall)_sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
+                        if(!_sm.CurrPlayableIdentity.GetPlayableMovementStateMachine.IsTakingCoverAtWall)_sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
                         else
                         {
-                            _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position + _sm.CurrPlayableIdentity.GetPlayableMovementData.GetCharaGameObjectFaceDir() * 1.5f);
+                            _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position + _sm.CurrPlayableIdentity.GetPlayableMovementStateMachine.GetCharaGameObjectFaceDir() * 1.5f);
                         }
                     }
                     else
@@ -100,18 +97,13 @@ public class FriendAI_IdleState : FriendAIState
                 _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsCommandDirection.position);
             }
         }
-        // if(_sm.GetFOVMachine.VisibleTargets.Count > 0)
-        // {   
-        //     _leaveDirection = GetTotalDirectionTargetPosAndEnemy(transform, false);
-        //     TakingCover();
-        //     isToldHold = false;
-        // }
         
 
     }
     public override void ExitState()
     {
         _sm.IsAIIdle = false;
+        _sm.GetPlayableCharaIdentity.Crouch(false);
     }
     
 

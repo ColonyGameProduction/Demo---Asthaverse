@@ -11,7 +11,7 @@ public class CrouchState : WalkState
     public override void EnterState()
     {
         SetAnimParamActive(_activeStateAnimParamName);
-        _playableData?.CharaConDataToCrouch();
+        _sm.CharaConDataToCrouch();
         
         _sm.ChangeCurrSpeed(_standData.CrouchSpeed);
     }
@@ -27,7 +27,7 @@ public class CrouchState : WalkState
     {
         if(!_standData.IsCrouching)
         {
-            _playableData?.CharaConDataToNormal();
+            _sm.CharaConDataToNormal();
             if(_standData.IsRunning) _sm.SwitchState(_factory.RunState());
             else _sm.SwitchState(_factory.WalkState());
         }

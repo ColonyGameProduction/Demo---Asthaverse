@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface ISilentKillAble
 {
-    public Transform SilentKillAbleTransform{get;}
+    public Transform GetSilentKillAbleTransform{get;}
     public bool CanBeKill{get;}
     void GotSilentKill(PlayableCharacterIdentity characterIdentity);
 }

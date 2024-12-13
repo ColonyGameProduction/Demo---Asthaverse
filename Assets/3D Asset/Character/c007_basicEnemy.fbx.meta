@@ -509,10 +509,115 @@ ModelImporter:
       position: {x: 0, y: 0.032106474, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
       scale: {x: 100, y: 100, z: 100}
+    - name: Ctrl_Master
+      parentName: Armature
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.70709795, y: -0.003535518, z: -0.0035355177, w: 0.70709795}
+      scale: {x: 1, y: 0.99999994, z: 0.99999994}
+    - name: Ctrl_Hips
+      parentName: Ctrl_Master
+      position: {x: 0.00000058769115, y: 0.0093928, z: 0.000058767193}
+      rotation: {x: -0.00000003808594, y: 0.004999978, z: 1.8825484e-10, w: 0.99998754}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Ctrl_Spine
+      parentName: Ctrl_Hips
+      position: {x: 8.973209e-14, y: 0.0010871273, z: -0.00009514401}
+      rotation: {x: -0.04363432, y: -4.653128e-10, z: -1.8144574e-11, w: 0.9990476}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Ctrl_Spine1
+      parentName: Ctrl_Spine
+      position: {x: 3.1392377e-21, y: 0.0012731617, z: 0}
+      rotation: {x: 0.000000044703484, y: 1.5612515e-17, z: 6.9388922e-18, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Ctrl_Spine2
+      parentName: Ctrl_Spine1
+      position: {x: 2.1683712e-21, y: 0.0014550441, z: 3.7252902e-11}
+      rotation: {x: -0.000000029802322, y: 3.4694436e-18, z: -3.4694465e-18, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Ctrl_Neck
+      parentName: Ctrl_Spine2
+      position: {x: 2.1684043e-21, y: 0.0016369252, z: -7.4505804e-11}
+      rotation: {x: 0.04363431, y: -6.945509e-18, z: -3.4727544e-18, w: 0.9990476}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: Ctrl_Head
+      parentName: Ctrl_Neck
+      position: {x: -0, y: 0.00061167125, z: 0.0002423308}
+      rotation: {x: -3.5527137e-15, y: -3.7747884e-17, z: -1.323489e-23, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:Jaw
+      parentName: Ctrl_Head
+      position: {x: -0, y: 0.0006721031, z: 0.0005418646}
+      rotation: {x: 0.78340924, y: -0.0000008149857, z: -0.0000010272904, w: 0.6215062}
+      scale: {x: 1, y: 1.0000001, z: 1}
+    - name: soldier:Jaw_end
+      parentName: soldier:Jaw
+      position: {x: -0, y: 0.00095967005, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
     - name: soldier:Hips
       parentName: Armature
       position: {x: -0, y: -0.00005877013, z: 0.0093928}
       rotation: {x: 0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:LeftUpLeg
+      parentName: soldier:Hips
+      position: {x: -0.0013400273, y: -0.00060395955, z: -0.00007268008}
+      rotation: {x: -0.000000075226886, y: -0.006042447, z: 0.99998176, w: -0.00000004416675}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:LeftLeg
+      parentName: soldier:LeftUpLeg
+      position: {x: 1.6714899e-10, y: 0.0041064755, z: -2.5524825e-12}
+      rotation: {x: -0.033744566, y: 0.0006839141, z: -0.020163223, w: 0.99922687}
+      scale: {x: 1, y: 0.99999994, z: 0.9999999}
+    - name: soldier:LeftFoot
+      parentName: soldier:LeftLeg
+      position: {x: 4.098183e-11, y: 0.0036682812, z: 4.918547e-11}
+      rotation: {x: 0.47615522, y: 0.020932952, z: -0.011338795, w: 0.879039}
+      scale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
+    - name: soldier:LeftToeBase
+      parentName: soldier:LeftFoot
+      position: {x: -2.910383e-10, y: 0.0017808023, z: 5.494803e-10}
+      rotation: {x: 0.3245965, y: 0.012905323, z: -0.004429423, w: 0.9457542}
+      scale: {x: 0.9999999, y: 0.99999994, z: 1}
+    - name: soldier:LeftToe_End
+      parentName: soldier:LeftToeBase
+      position: {x: -5.2605174e-11, y: 0.00072063965, z: 4.0745363e-12}
+      rotation: {x: -5.8207633e-11, y: 0.0000002662855, z: -0.00000022273888, w: 1}
+      scale: {x: 1, y: 1.0000001, z: 1}
+    - name: soldier:LeftToe_End_end
+      parentName: soldier:LeftToe_End
+      position: {x: -0, y: 0.0007206393, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:RightUpLeg
+      parentName: soldier:Hips
+      position: {x: 0.0013400273, y: -0.00060395955, z: -0.00007971216}
+      rotation: {x: -0.000000075213755, y: -0.0063278233, z: 0.99998, w: -0.000000044188212}
+      scale: {x: 1, y: 1.0000001, z: 0.99999994}
+    - name: soldier:RightLeg
+      parentName: soldier:RightUpLeg
+      position: {x: 1.995649e-11, y: 0.0041065053, z: 2.5524472e-12}
+      rotation: {x: -0.031157134, y: -0.0006311471, z: 0.020165322, w: 0.99931085}
+      scale: {x: 1, y: 1, z: 1.0000001}
+    - name: soldier:RightFoot
+      parentName: soldier:RightLeg
+      position: {x: 9.127689e-11, y: 0.0036669718, z: -8.731149e-13}
+      rotation: {x: 0.4750446, y: -0.034118, z: 0.0010689644, w: 0.87929946}
+      scale: {x: 0.99999994, y: 1, z: 1}
+    - name: soldier:RightToeBase
+      parentName: soldier:RightFoot
+      position: {x: -1.2536475e-10, y: 0.0017848829, z: 2.3748725e-10}
+      rotation: {x: 0.32374683, y: -0.012527608, z: 0.004286928, w: 0.9460511}
+      scale: {x: 1, y: 1.0000001, z: 1}
+    - name: soldier:RightToe_End
+      parentName: soldier:RightToeBase
+      position: {x: 5.708716e-10, y: 0.000726751, z: -6.868504e-11}
+      rotation: {x: -0.000000045838537, y: 0.0000006597111, z: -0.000000104158985, w: 1}
+      scale: {x: 0.99999994, y: 0.99999994, z: 1}
+    - name: soldier:RightToe_End_end
+      parentName: soldier:RightToe_End
+      position: {x: -0, y: 0.00072675134, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: soldier:Spine
       parentName: soldier:Hips
@@ -528,46 +633,6 @@ ModelImporter:
       parentName: soldier:Spine1
       position: {x: -0, y: 0.001455043, z: 1.8626451e-11}
       rotation: {x: -0.000000031664968, y: 0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:Neck
-      parentName: soldier:Spine2
-      position: {x: -0, y: 0.0016369263, z: 0}
-      rotation: {x: 0.043634318, y: 0, z: -0, w: 0.9990476}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: soldier:Head
-      parentName: soldier:Neck
-      position: {x: -0, y: 0.0006116712, z: 0.00024233076}
-      rotation: {x: -0.0000000036514027, y: 0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:HeadTop_End
-      parentName: soldier:Head
-      position: {x: -0, y: 0.0023712753, z: 0.0009394469}
-      rotation: {x: -0.000000014605607, y: 0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:HeadTop_End_end
-      parentName: soldier:HeadTop_End
-      position: {x: -0, y: 0.0025505887, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:EyeBall_L
-      parentName: soldier:Head
-      position: {x: -0.00032485576, y: 0.0014111934, z: 0.00092600455}
-      rotation: {x: 0.70716834, y: -0.00016264178, z: -0.00016267008, w: 0.7070452}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:EyeBall_L_end
-      parentName: soldier:EyeBall_L
-      position: {x: -0, y: 0.00034933505, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:EyeBall_R
-      parentName: soldier:Head
-      position: {x: 0.00032485576, y: 0.0014111934, z: 0.00092600455}
-      rotation: {x: 0.70716834, y: 0.00016264178, z: 0.00016267008, w: 0.7070452}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:EyeBall_R_end
-      parentName: soldier:EyeBall_R
-      position: {x: -0, y: 0.00034933505, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: soldier:LeftShoulder
       parentName: soldier:Spine2
@@ -589,31 +654,6 @@ ModelImporter:
       position: {x: -2.4214386e-10, y: 0.002481005, z: 0.000000001322478}
       rotation: {x: 0.041615956, y: -0.10908807, z: -0.03017681, w: 0.992702}
       scale: {x: 1, y: 0.99999994, z: 0.99999994}
-    - name: soldier:LeftHandThumb1
-      parentName: soldier:LeftHand
-      position: {x: 0.00029847064, y: 0.00033283397, z: 0.00010679676}
-      rotation: {x: 0.03996137, y: 0.011944654, z: -0.30091402, w: 0.9527387}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: soldier:LeftHandThumb2
-      parentName: soldier:LeftHandThumb1
-      position: {x: 0.00007215605, y: 0.00036056314, z: 0.0000000026961788}
-      rotation: {x: 0.02608449, y: 0.007014811, z: -0.07672396, w: 0.99668646}
-      scale: {x: 0.99999994, y: 1, z: 0.99999994}
-    - name: soldier:LeftHandThumb3
-      parentName: soldier:LeftHandThumb2
-      position: {x: -0.0000031676423, y: 0.00036687194, z: -0.0000000017788261}
-      rotation: {x: -0.028817853, y: 0.014259632, z: -0.09274383, w: 0.9951708}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:LeftHandThumb4
-      parentName: soldier:LeftHandThumb3
-      position: {x: -0.0000689886, y: 0.00028474463, z: -1.3969838e-10}
-      rotation: {x: -0.0000000055879346, y: 0.00000010500661, z: -0.000000005878973, w: 1}
-      scale: {x: 1, y: 0.99999994, z: 1.0000001}
-    - name: soldier:LeftHandThumb4_end
-      parentName: soldier:LeftHandThumb4
-      position: {x: -0, y: 0.00029298282, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
     - name: soldier:LeftHandIndex1
       parentName: soldier:LeftHand
       position: {x: 0.00035356183, y: 0.0010290459, z: 0.00000833486}
@@ -647,7 +687,7 @@ ModelImporter:
     - name: soldier:LeftHandMiddle2
       parentName: soldier:LeftHandMiddle1
       position: {x: -0.000002278015, y: 0.00034865353, z: 2.0838342e-10}
-      rotation: {x: 0.039908364, y: -0.000050379862, z: 0.0022308866, w: 0.9992008}
+      rotation: {x: 0.039908372, y: -0.000050379862, z: 0.002230887, w: 0.9992008}
       scale: {x: 1.0000001, y: 1.0000001, z: 1}
     - name: soldier:LeftHandMiddle3
       parentName: soldier:LeftHandMiddle2
@@ -662,31 +702,6 @@ ModelImporter:
     - name: soldier:LeftHandMiddle4_end
       parentName: soldier:LeftHandMiddle4
       position: {x: -0, y: 0.0002783117, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:LeftHandRing1
-      parentName: soldier:LeftHand
-      position: {x: -0.00012978195, y: 0.0011329345, z: -0.000013838149}
-      rotation: {x: 0.054940213, y: 0.0027412474, z: 0.0132723525, w: 0.9983977}
-      scale: {x: 0.99999994, y: 1, z: 1.0000001}
-    - name: soldier:LeftHandRing2
-      parentName: soldier:LeftHandRing1
-      position: {x: 0.00000075183806, y: 0.00027489054, z: 0.0000000019371509}
-      rotation: {x: 0.010272217, y: -0.00000017649495, z: -0.00000014622536, w: 0.99994725}
-      scale: {x: 1, y: 1.0000001, z: 1}
-    - name: soldier:LeftHandRing3
-      parentName: soldier:LeftHandRing2
-      position: {x: 0.0000010807067, y: 0.00026703996, z: -0.000000006179325}
-      rotation: {x: -0.038875178, y: 0.0001055821, z: -0.003493138, w: 0.99923795}
-      scale: {x: 1, y: 1.0000001, z: 1}
-    - name: soldier:LeftHandRing4
-      parentName: soldier:LeftHandRing3
-      position: {x: -0.0000018325447, y: 0.00023205685, z: 0.0000000025657936}
-      rotation: {x: -0.0000000074505815, y: -0.000000007450581, z: 0.00000007986091, w: 1}
-      scale: {x: 1, y: 0.99999994, z: 0.99999994}
-    - name: soldier:LeftHandRing4_end
-      parentName: soldier:LeftHandRing4
-      position: {x: -0, y: 0.00023206543, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: soldier:LeftHandPinky1
@@ -714,6 +729,96 @@ ModelImporter:
       position: {x: -0, y: 0.00017931958, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
+    - name: soldier:LeftHandRing1
+      parentName: soldier:LeftHand
+      position: {x: -0.00012978195, y: 0.0011329345, z: -0.000013838149}
+      rotation: {x: 0.054940213, y: 0.0027412474, z: 0.0132723525, w: 0.9983977}
+      scale: {x: 0.99999994, y: 1, z: 1.0000001}
+    - name: soldier:LeftHandRing2
+      parentName: soldier:LeftHandRing1
+      position: {x: 0.00000075183806, y: 0.00027489054, z: 0.0000000019371509}
+      rotation: {x: 0.010272217, y: -0.00000017649495, z: -0.00000014622536, w: 0.99994725}
+      scale: {x: 1, y: 1.0000001, z: 1}
+    - name: soldier:LeftHandRing3
+      parentName: soldier:LeftHandRing2
+      position: {x: 0.0000010807067, y: 0.00026703996, z: -0.000000006179325}
+      rotation: {x: -0.038875178, y: 0.0001055821, z: -0.003493138, w: 0.99923795}
+      scale: {x: 1, y: 1.0000001, z: 1}
+    - name: soldier:LeftHandRing4
+      parentName: soldier:LeftHandRing3
+      position: {x: -0.0000018325447, y: 0.00023205685, z: 0.0000000025657936}
+      rotation: {x: -0.0000000074505815, y: -0.000000007450581, z: 0.00000007986091, w: 1}
+      scale: {x: 1, y: 0.99999994, z: 0.99999994}
+    - name: soldier:LeftHandRing4_end
+      parentName: soldier:LeftHandRing4
+      position: {x: -0, y: 0.00023206543, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:LeftHandThumb1
+      parentName: soldier:LeftHand
+      position: {x: 0.00029847064, y: 0.00033283397, z: 0.00010679676}
+      rotation: {x: 0.039961375, y: 0.011944655, z: -0.30091405, w: 0.95273876}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: soldier:LeftHandThumb2
+      parentName: soldier:LeftHandThumb1
+      position: {x: 0.00007215605, y: 0.00036056314, z: 0.0000000026961788}
+      rotation: {x: 0.02608449, y: 0.007014811, z: -0.07672396, w: 0.99668646}
+      scale: {x: 0.99999994, y: 1, z: 0.99999994}
+    - name: soldier:LeftHandThumb3
+      parentName: soldier:LeftHandThumb2
+      position: {x: -0.0000031676423, y: 0.00036687194, z: -0.0000000017788261}
+      rotation: {x: -0.028817853, y: 0.014259632, z: -0.09274383, w: 0.9951708}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:LeftHandThumb4
+      parentName: soldier:LeftHandThumb3
+      position: {x: -0.0000689886, y: 0.00028474463, z: -1.3969838e-10}
+      rotation: {x: -0.0000000055879346, y: 0.00000010500661, z: -0.000000005878973, w: 1}
+      scale: {x: 1, y: 0.99999994, z: 1.0000001}
+    - name: soldier:LeftHandThumb4_end
+      parentName: soldier:LeftHandThumb4
+      position: {x: -0, y: 0.00029298282, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:Neck
+      parentName: soldier:Spine2
+      position: {x: -0, y: 0.0016369263, z: 0}
+      rotation: {x: 0.043634318, y: 0, z: -0, w: 0.9990476}
+      scale: {x: 1, y: 0.99999994, z: 1}
+    - name: soldier:Head
+      parentName: soldier:Neck
+      position: {x: -0, y: 0.0006116712, z: 0.00024233076}
+      rotation: {x: -0.0000000036514027, y: 0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:EyeBall_L
+      parentName: soldier:Head
+      position: {x: -0.00032485576, y: 0.0014111934, z: 0.00092600455}
+      rotation: {x: 0.70716834, y: -0.00016264178, z: -0.00016267008, w: 0.7070452}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:EyeBall_L_end
+      parentName: soldier:EyeBall_L
+      position: {x: -0, y: 0.00034933505, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:EyeBall_R
+      parentName: soldier:Head
+      position: {x: 0.00032485576, y: 0.0014111934, z: 0.00092600455}
+      rotation: {x: 0.70716834, y: 0.00016264178, z: 0.00016267008, w: 0.7070452}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:EyeBall_R_end
+      parentName: soldier:EyeBall_R
+      position: {x: -0, y: 0.00034933505, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:HeadTop_End
+      parentName: soldier:Head
+      position: {x: -0, y: 0.0023712753, z: 0.0009394469}
+      rotation: {x: -0.000000014605607, y: 0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:HeadTop_End_end
+      parentName: soldier:HeadTop_End
+      position: {x: -0, y: 0.0025505887, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
     - name: soldier:RightShoulder
       parentName: soldier:Spine2
       position: {x: 0.00076706155, y: 0.0014232788, z: -0.0000027846545}
@@ -734,31 +839,6 @@ ModelImporter:
       position: {x: 7.4505804e-11, y: 0.002481197, z: 0.0000000023678877}
       rotation: {x: 0.045613773, y: 0.087573834, z: 0.030481402, w: 0.99464625}
       scale: {x: 1, y: 1, z: 0.9999999}
-    - name: soldier:RightHandThumb1
-      parentName: soldier:RightHand
-      position: {x: -0.00030414428, y: 0.0003360903, z: 0.00012380531}
-      rotation: {x: 0.04859402, y: -0.012476371, z: 0.29318148, w: 0.9547396}
-      scale: {x: 0.9999999, y: 0.9999999, z: 0.9999999}
-    - name: soldier:RightHandThumb2
-      parentName: soldier:RightHandThumb1
-      position: {x: -0.00007701751, y: 0.0003679343, z: -0.000000002235174}
-      rotation: {x: 0.015327545, y: -0.0033607727, z: 0.100212656, w: 0.9948423}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:RightHandThumb3
-      parentName: soldier:RightHandThumb2
-      position: {x: 0.000021632704, y: 0.00035749815, z: 5.122274e-10}
-      rotation: {x: -0.0341353, y: -0.013852609, z: 0.05347992, w: 0.99788916}
-      scale: {x: 0.99999994, y: 0.99999994, z: 1}
-    - name: soldier:RightHandThumb4
-      parentName: soldier:RightHandThumb3
-      position: {x: 0.000055386667, y: 0.0002736293, z: 0.0000000027194618}
-      rotation: {x: 0.0000022985041, y: -0.00000010547229, z: 0.0000005349284, w: 1}
-      scale: {x: 1, y: 1, z: 0.99999994}
-    - name: soldier:RightHandThumb4_end
-      parentName: soldier:RightHandThumb4
-      position: {x: -0, y: 0.00027917788, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
     - name: soldier:RightHandIndex1
       parentName: soldier:RightHand
       position: {x: -0.00035020782, y: 0.0010675166, z: 0.0000053094827}
@@ -809,31 +889,6 @@ ModelImporter:
       position: {x: -0, y: 0.000213612, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-    - name: soldier:RightHandRing1
-      parentName: soldier:RightHand
-      position: {x: 0.00013237279, y: 0.001240203, z: 0.000008641891}
-      rotation: {x: 0.03254883, y: -0.0010436444, z: -0.03202288, w: 0.9989565}
-      scale: {x: 0.99999994, y: 1, z: 0.9999998}
-    - name: soldier:RightHandRing2
-      parentName: soldier:RightHandRing1
-      position: {x: -0.0000003098324, y: 0.00025134164, z: -6.705522e-10}
-      rotation: {x: 0.021552028, y: -0.000000023055588, z: 0.00000007918081, w: 0.9997677}
-      scale: {x: 1, y: 1.0000001, z: 1}
-    - name: soldier:RightHandRing3
-      parentName: soldier:RightHandRing2
-      position: {x: -0.00000078644604, y: 0.00023470496, z: 0.0000000015902333}
-      rotation: {x: -0.03799969, y: -0.00012650527, z: 0.0033400746, w: 0.9992722}
-      scale: {x: 1, y: 1.0000001, z: 0.99999994}
-    - name: soldier:RightHandRing4
-      parentName: soldier:RightHandRing3
-      position: {x: 0.0000010968372, y: 0.00016138832, z: -0.0000000042980535}
-      rotation: {x: -0.000000013969839, y: 8.1490725e-10, z: 0.00000011827797, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:RightHandRing4_end
-      parentName: soldier:RightHandRing4
-      position: {x: -0, y: 0.00016139381, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
     - name: soldier:RightHandPinky1
       parentName: soldier:RightHand
       position: {x: 0.00030382368, y: 0.0009038997, z: -0.00001747746}
@@ -859,64 +914,54 @@ ModelImporter:
       position: {x: -0, y: 0.00019043266, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-    - name: soldier:LeftUpLeg
-      parentName: soldier:Hips
-      position: {x: -0.0013400273, y: -0.00060395955, z: -0.00007268008}
-      rotation: {x: -0.000000075226886, y: -0.006042447, z: 0.99998176, w: -0.00000004416675}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:LeftLeg
-      parentName: soldier:LeftUpLeg
-      position: {x: 1.6714899e-10, y: 0.0041064755, z: -2.5524825e-12}
-      rotation: {x: -0.033744566, y: 0.0006839141, z: -0.020163223, w: 0.99922687}
-      scale: {x: 1, y: 0.99999994, z: 0.9999999}
-    - name: soldier:LeftFoot
-      parentName: soldier:LeftLeg
-      position: {x: 4.098183e-11, y: 0.0036682812, z: 4.918547e-11}
-      rotation: {x: 0.47615522, y: 0.020932952, z: -0.011338795, w: 0.879039}
-      scale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
-    - name: soldier:LeftToeBase
-      parentName: soldier:LeftFoot
-      position: {x: -2.910383e-10, y: 0.0017808023, z: 5.494803e-10}
-      rotation: {x: 0.3245965, y: 0.012905323, z: -0.004429423, w: 0.9457542}
-      scale: {x: 0.9999999, y: 0.99999994, z: 1}
-    - name: soldier:LeftToe_End
-      parentName: soldier:LeftToeBase
-      position: {x: -5.2605174e-11, y: 0.00072063965, z: 4.0745363e-12}
-      rotation: {x: -5.8207633e-11, y: 0.0000002662855, z: -0.00000022273888, w: 1}
+    - name: soldier:RightHandRing1
+      parentName: soldier:RightHand
+      position: {x: 0.00013237279, y: 0.001240203, z: 0.000008641891}
+      rotation: {x: 0.03254883, y: -0.0010436444, z: -0.03202288, w: 0.9989565}
+      scale: {x: 0.99999994, y: 1, z: 0.9999998}
+    - name: soldier:RightHandRing2
+      parentName: soldier:RightHandRing1
+      position: {x: -0.0000003098324, y: 0.00025134164, z: -6.705522e-10}
+      rotation: {x: 0.021552028, y: -0.000000023055588, z: 0.00000007918081, w: 0.9997677}
       scale: {x: 1, y: 1.0000001, z: 1}
-    - name: soldier:LeftToe_End_end
-      parentName: soldier:LeftToe_End
-      position: {x: -0, y: 0.0007206393, z: 0}
+    - name: soldier:RightHandRing3
+      parentName: soldier:RightHandRing2
+      position: {x: -0.00000078644604, y: 0.00023470496, z: 0.0000000015902333}
+      rotation: {x: -0.03799969, y: -0.00012650527, z: 0.0033400746, w: 0.9992722}
+      scale: {x: 1, y: 1.0000001, z: 0.99999994}
+    - name: soldier:RightHandRing4
+      parentName: soldier:RightHandRing3
+      position: {x: 0.0000010968372, y: 0.00016138832, z: -0.0000000042980535}
+      rotation: {x: -0.000000013969839, y: 8.1490725e-10, z: 0.00000011827797, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:RightHandRing4_end
+      parentName: soldier:RightHandRing4
+      position: {x: -0, y: 0.00016139381, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-    - name: soldier:RightUpLeg
-      parentName: soldier:Hips
-      position: {x: 0.0013400273, y: -0.00060395955, z: -0.00007971216}
-      rotation: {x: -0.000000075213755, y: -0.0063278233, z: 0.99998, w: -0.000000044188212}
-      scale: {x: 1, y: 1.0000001, z: 0.99999994}
-    - name: soldier:RightLeg
-      parentName: soldier:RightUpLeg
-      position: {x: 1.995649e-11, y: 0.0041065053, z: 2.5524472e-12}
-      rotation: {x: -0.03115713, y: -0.0006311471, z: 0.020165319, w: 0.99931085}
-      scale: {x: 1, y: 1, z: 1.0000001}
-    - name: soldier:RightFoot
-      parentName: soldier:RightLeg
-      position: {x: 9.127689e-11, y: 0.0036669718, z: -8.731149e-13}
-      rotation: {x: 0.4750446, y: -0.034118, z: 0.0010689644, w: 0.87929946}
-      scale: {x: 0.99999994, y: 1, z: 1}
-    - name: soldier:RightToeBase
-      parentName: soldier:RightFoot
-      position: {x: -1.2536475e-10, y: 0.0017848829, z: 2.3748725e-10}
-      rotation: {x: 0.32374683, y: -0.012527608, z: 0.004286928, w: 0.9460511}
-      scale: {x: 1, y: 1.0000001, z: 1}
-    - name: soldier:RightToe_End
-      parentName: soldier:RightToeBase
-      position: {x: 5.708716e-10, y: 0.000726751, z: -6.868504e-11}
-      rotation: {x: -0.000000045838537, y: 0.0000006597111, z: -0.000000104158985, w: 1}
+    - name: soldier:RightHandThumb1
+      parentName: soldier:RightHand
+      position: {x: -0.00030414428, y: 0.0003360903, z: 0.00012380531}
+      rotation: {x: 0.04859402, y: -0.012476371, z: 0.29318148, w: 0.9547396}
+      scale: {x: 0.9999999, y: 0.9999999, z: 0.9999999}
+    - name: soldier:RightHandThumb2
+      parentName: soldier:RightHandThumb1
+      position: {x: -0.00007701751, y: 0.0003679343, z: -0.000000002235174}
+      rotation: {x: 0.015327547, y: -0.0033607727, z: 0.10021267, w: 0.9948423}
+      scale: {x: 1, y: 1, z: 1}
+    - name: soldier:RightHandThumb3
+      parentName: soldier:RightHandThumb2
+      position: {x: 0.000021632704, y: 0.00035749815, z: 5.122274e-10}
+      rotation: {x: -0.0341353, y: -0.013852609, z: 0.05347992, w: 0.99788916}
       scale: {x: 0.99999994, y: 0.99999994, z: 1}
-    - name: soldier:RightToe_End_end
-      parentName: soldier:RightToe_End
-      position: {x: -0, y: 0.00072675134, z: 0}
+    - name: soldier:RightHandThumb4
+      parentName: soldier:RightHandThumb3
+      position: {x: 0.000055386667, y: 0.0002736293, z: 0.0000000027194618}
+      rotation: {x: 0.0000022985041, y: -0.00000010547229, z: 0.0000005349284, w: 1}
+      scale: {x: 1, y: 1, z: 0.99999994}
+    - name: soldier:RightHandThumb4_end
+      parentName: soldier:RightHandThumb4
+      position: {x: -0, y: 0.00027917788, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: weapon:bone.001
@@ -949,58 +994,8 @@ ModelImporter:
       position: {x: -0, y: 0.0006622488, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
-    - name: Ctrl_Master
-      parentName: Armature
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: 0.70709795, y: -0.003535518, z: -0.0035355177, w: 0.70709795}
-      scale: {x: 1, y: 0.99999994, z: 0.99999994}
-    - name: Ctrl_Hips
-      parentName: Ctrl_Master
-      position: {x: 0.00000058769115, y: 0.0093928, z: 0.000058767193}
-      rotation: {x: -0.00000003808594, y: 0.004999978, z: 1.8825484e-10, w: 0.99998754}
-      scale: {x: 1, y: 1, z: 1}
-    - name: Ctrl_Spine
-      parentName: Ctrl_Hips
-      position: {x: 8.973209e-14, y: 0.0010871273, z: -0.00009514401}
-      rotation: {x: -0.04363432, y: -4.653128e-10, z: -1.8144574e-11, w: 0.9990476}
-      scale: {x: 1, y: 1, z: 1}
-    - name: Ctrl_Spine1
-      parentName: Ctrl_Spine
-      position: {x: 3.1392377e-21, y: 0.0012731617, z: 0}
-      rotation: {x: 0.000000044703484, y: 1.5612515e-17, z: 6.9388922e-18, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: Ctrl_Spine2
-      parentName: Ctrl_Spine1
-      position: {x: 2.1683712e-21, y: 0.0014550441, z: 3.7252902e-11}
-      rotation: {x: -0.000000029802322, y: 3.4694436e-18, z: -3.4694465e-18, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: Ctrl_Neck
-      parentName: Ctrl_Spine2
-      position: {x: 2.1684043e-21, y: 0.0016369252, z: -7.4505804e-11}
-      rotation: {x: 0.04363431, y: -6.945509e-18, z: -3.4727544e-18, w: 0.9990476}
-      scale: {x: 1, y: 0.99999994, z: 1}
-    - name: Ctrl_Head
-      parentName: Ctrl_Neck
-      position: {x: -0, y: 0.00061167125, z: 0.0002423308}
-      rotation: {x: -3.5527137e-15, y: -3.7747884e-17, z: -1.323489e-23, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: soldier:Jaw
-      parentName: Ctrl_Head
-      position: {x: -0, y: 0.0006721031, z: 0.0005418646}
-      rotation: {x: 0.78340924, y: -0.0000008149857, z: -0.0000010272904, w: 0.6215062}
-      scale: {x: 1, y: 1.0000001, z: 1}
-    - name: soldier:Jaw_end
-      parentName: soldier:Jaw
-      position: {x: -0, y: 0.00095967005, z: 0}
-      rotation: {x: 0, y: -0, z: -0, w: 1}
-      scale: {x: 1, y: 1, z: 1}
-    - name: p022_SM_AK-110
+    - name: BASIC_ENEMY_Body
       parentName: c007_basicEnemy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-      scale: {x: 100, y: 100, z: 100}
-    - name: SM_AK-110_Mag
-      parentName: p022_SM_AK-110
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
       scale: {x: 100, y: 100, z: 100}
@@ -1019,11 +1014,6 @@ ModelImporter:
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
       scale: {x: 100, y: 100, z: 100}
-    - name: BASIC_ENEMY_Body
-      parentName: c007_basicEnemy(Clone)
-      position: {x: -0, y: 0, z: 0}
-      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-      scale: {x: 100, y: 100, z: 100}
     - name: BASIC_ENEMY_Headphone
       parentName: c007_basicEnemy(Clone)
       position: {x: -0, y: 0, z: 0}
@@ -1036,6 +1026,16 @@ ModelImporter:
       scale: {x: 100, y: 100, z: 100}
     - name: BASIC_ENEMY_Vest
       parentName: c007_basicEnemy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
+    - name: p022_SM_AK-110
+      parentName: c007_basicEnemy(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100, z: 100}
+    - name: SM_AK-110_Mag
+      parentName: p022_SM_AK-110
       position: {x: -0, y: 0, z: 0}
       rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
       scale: {x: 100, y: 100, z: 100}

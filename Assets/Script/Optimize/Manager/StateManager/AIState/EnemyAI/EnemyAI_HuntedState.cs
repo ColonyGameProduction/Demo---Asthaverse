@@ -27,14 +27,14 @@ public class EnemyAI_HuntedState : EnemyAIState
             if(_sm.GetFOVState.CurrState == FOVDistState.middle)
             {
                 // _sm.MaxAlertValue *= 0.5f;
-                tempAlertValue = _sm.MaxAlertValue*0.5f;
-                if(_sm.AlertValue < tempAlertValue) _sm.AlertValue = tempAlertValue + 10f;
+                tempAlertValue = _sm.MaxAlertValue / 2;
+                if(_sm.AlertValue < tempAlertValue) _sm.AlertValue = tempAlertValue + _sm.AlertValueCountMultiplier;
             }
             else if(_sm.GetFOVState.CurrState == FOVDistState.close)
             {
                 // _sm.MaxAlertValue = 0f;
                 tempAlertValue = _sm.MaxAlertValue;
-                if(_sm.AlertValue < tempAlertValue) _sm.AlertValue = tempAlertValue + 10f;
+                if(_sm.AlertValue < tempAlertValue) _sm.AlertValue = tempAlertValue + _sm.AlertValueCountMultiplier;
             }
             // Debug.Log("HALOOO");
         }
