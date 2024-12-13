@@ -1334,7 +1334,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2185761319076698409}
+  m_Father: {fileID: 1722892812285156859}
   m_LocalEulerAnglesHint: {x: 0.412, y: 1.155, z: -0.153}
 --- !u!136 &8468574384610004807
 CapsuleCollider:
@@ -1966,7 +1966,7 @@ Transform:
   m_GameObject: {fileID: 5676575966294271959}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.7160015, y: 0.482, z: -1.7000008}
+  m_LocalPosition: {x: 0.7160034, y: 0.482, z: -1.699997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2693,7 +2693,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2185761319076698409}
+  m_Father: {fileID: 1722892812285156859}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6677612105739638703
 GameObject:
@@ -2932,14 +2932,14 @@ MonoBehaviour:
     gunGameObject: {fileID: 6040754581011919663}
     shootPlacement: {fileID: 7068282592131478915}
     weaponMagTransform: {fileID: 4040424058563490205}
-  - weaponName: PKM
-    gunGameObject: {fileID: 2063529677265618753}
-    shootPlacement: {fileID: 1631800140586661517}
-    weaponMagTransform: {fileID: 405152452099353139}
   - weaponName: DragunoveSVD
     gunGameObject: {fileID: 6961688710972701748}
     shootPlacement: {fileID: 4499807608173238582}
     weaponMagTransform: {fileID: 6111391056164051760}
+  - weaponName: PKM
+    gunGameObject: {fileID: 2063529677265618753}
+    shootPlacement: {fileID: 1631800140586661517}
+    weaponMagTransform: {fileID: 0}
 --- !u!1 &7871993766071220539
 GameObject:
   m_ObjectHideFlags: 0
@@ -3691,15 +3691,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.01
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.01
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.01
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3764,19 +3764,14 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8199037550141971655, guid: 81db446e2b9093448a025839f18ea452, type: 3}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1631800140586661517}
-    - targetCorrespondingSourceObject: {fileID: -8199037550141971655, guid: 81db446e2b9093448a025839f18ea452, type: 3}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2276172966557050849}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81db446e2b9093448a025839f18ea452, type: 3}
---- !u!4 &405152452099353139 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -7638900339530575837, guid: 81db446e2b9093448a025839f18ea452, type: 3}
-  m_PrefabInstance: {fileID: 1180585900345260560}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1722892812285156859 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 81db446e2b9093448a025839f18ea452, type: 3}
@@ -3785,11 +3780,6 @@ Transform:
 --- !u!1 &2063529677265618753 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 81db446e2b9093448a025839f18ea452, type: 3}
-  m_PrefabInstance: {fileID: 1180585900345260560}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &2185761319076698409 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8199037550141971655, guid: 81db446e2b9093448a025839f18ea452, type: 3}
   m_PrefabInstance: {fileID: 1180585900345260560}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1798699869172401268
