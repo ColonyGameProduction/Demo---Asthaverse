@@ -8,23 +8,16 @@ public class LoadingScreenVisual : MonoBehaviour
     public GameObject[] descriptions;
 
     private int currentIndex = 0;
-    public float switchInterval = 5f;
 
     void Start()
     {
+        SetRandomBackground();
         UpdateBackgroundAndDescription();
-        InvokeRepeating(nameof(ChangeBackground), switchInterval, switchInterval);
     }
 
-    private void ChangeBackground()
+    private void SetRandomBackground()
     {
-        descriptions[currentIndex].SetActive(false);
-
-        currentIndex = (currentIndex + 1) % backgroundImages.Length;
-
-        mainBackground.sprite = backgroundImages[currentIndex];
-
-        descriptions[currentIndex].SetActive(true);
+        currentIndex = Random.Range(0, backgroundImages.Length);
     }
 
     private void UpdateBackgroundAndDescription()
