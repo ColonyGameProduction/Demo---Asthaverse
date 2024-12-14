@@ -11,4 +11,6 @@ public class CutsceneMouthSO : ScriptableObject
     public Sprite OpenMouth;
     public Sprite CloseMouth;
     public VideoClip MouthAnimation;
+
+    public Sprite cropFace;
 }

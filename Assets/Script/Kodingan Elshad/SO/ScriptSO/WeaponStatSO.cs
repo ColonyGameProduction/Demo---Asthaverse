@@ -20,6 +20,9 @@ public class WeaponStatSO : ScriptableObject
     public float totalBullet;                    //jumlah magazine yang dibawa
     public float currBullet;                    //jumlah magazine yang dibawa
     public bool allowHoldDownButton;        //true jika senjatanya automatic
+
+    public Sprite gunShilouete;
+
     public Transform gunShootPoint;         //shootpoingpergun
     public TrailRenderer bulletTrailPrefab;    //bulletTrailEffectpergun
     public ParticleSystem gunFlashPrefab;      //gunflasheffectpergun

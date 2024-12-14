@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu (fileName = "EntityStatSO", menuName = "ScriptableObject/EntityStatSO")]
 public class EntityStatSO : ScriptableObject
@@ -15,4 +16,6 @@ public class EntityStatSO : ScriptableObject
     public float FOVRadius;
 
     public WeaponStatSO[] weaponStat;
+
+    public Sprite cropImage;
 }

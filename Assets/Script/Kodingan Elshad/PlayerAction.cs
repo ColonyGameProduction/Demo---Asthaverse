@@ -59,16 +59,15 @@ public class PlayerAction : ExecuteLogic
     private LayerMask enemyMask;
     [SerializeField]
     private WeaponStatSO[] weaponStat;
-    private WeaponStatSO activeWeapon;
+    public WeaponStatSO activeWeapon;
 
     [Header("Audio")]
     public AudioSource footstepsSource;
     public AudioSource whistleSource;
 
-    [SerializeField]
-    private EntityStatSO character;
-    private float playerHP;
-    private float maxPlayerHP;
+    public EntityStatSO character;
+    public float playerHP;
+    public float maxPlayerHP;
 
     private AnimationTestScript testAnimation;
 
