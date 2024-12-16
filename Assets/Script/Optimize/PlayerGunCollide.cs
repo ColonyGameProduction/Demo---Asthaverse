@@ -10,6 +10,10 @@ public class PlayerGunCollide : MonoBehaviour
     {
         _wallCollide = other;
     }
+    private void OnTriggerStay(Collider other) 
+    {
+        _wallCollide = other;
+    }
     private void OnTriggerExit(Collider other) 
     {
         _wallCollide = null;
@@ -30,5 +34,9 @@ public class PlayerGunCollide : MonoBehaviour
     public bool IsInsideWall()
     {
         return _wallCollide != null ? true : false;
+    }
+    public void ResetCollider()
+    {
+        _wallCollide = null;
     }
 }

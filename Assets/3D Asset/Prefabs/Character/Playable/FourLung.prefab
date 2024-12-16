@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2607346649138194666}
   - component: {fileID: 1692587459755266201}
   - component: {fileID: 7796788443029707795}
+  - component: {fileID: 4424148345347368790}
   m_Layer: 15
   m_Name: Collider
   m_TagString: Weapon
@@ -83,6 +84,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &4424148345347368790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194551210406418453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890274604b13e114aa126eb4732ba288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  example: {fileID: 0}
 --- !u!1 &381477370424349445
 GameObject:
   m_ObjectHideFlags: 0
@@ -813,6 +827,7 @@ GameObject:
   - component: {fileID: 9081595695959853400}
   - component: {fileID: 2791756641523571366}
   - component: {fileID: 8760878074394333138}
+  - component: {fileID: 7548466186105044757}
   m_Layer: 15
   m_Name: Collider
   m_TagString: Weapon
@@ -885,6 +900,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &7548466186105044757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048640097891323259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890274604b13e114aa126eb4732ba288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  example: {fileID: 0}
 --- !u!1 &2139360285864644913
 GameObject:
   m_ObjectHideFlags: 0
@@ -1458,14 +1486,17 @@ MonoBehaviour:
     gunGameObject: {fileID: 7409583890130847251}
     shootPlacement: {fileID: 3177609970652892017}
     weaponMagTransform: {fileID: 5951725143930921239}
+    playerGunCollide: {fileID: 0}
   - weaponName: AK47
     gunGameObject: {fileID: 4883540444280324366}
     shootPlacement: {fileID: 1088623677968480630}
     weaponMagTransform: {fileID: 2883069191320765372}
+    playerGunCollide: {fileID: 0}
   - weaponName: PKM
     gunGameObject: {fileID: 4090617169364646716}
     shootPlacement: {fileID: 3599470072134083434}
     weaponMagTransform: {fileID: 2447864627220026958}
+    playerGunCollide: {fileID: 0}
 --- !u!1 &3728759513829729309
 GameObject:
   m_ObjectHideFlags: 0

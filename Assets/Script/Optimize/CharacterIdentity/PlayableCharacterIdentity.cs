@@ -138,6 +138,10 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         if(_deadColl.activeSelf)_deadColl.gameObject.SetActive(false);
         _playableMovementStateMachine = _moveStateMachine as PlayableMovementStateMachine;
         _playableUseWeaponStateMachine = _useWeaponStateMachine as PlayableUseWeaponStateMachine;
+        
+        
+        _playableUseWeaponStateMachine.GetPlayerGunCollider = _weaponGameObjectDataContainer.GetPlayerGunCollide();
+
         _playableCamera = GetComponent<PlayableCamera>();
         _playableInteraction = GetComponentInChildren<PlayableInteraction>();
         _playableSkill = GetComponent<PlayableSkill>();
@@ -195,7 +199,13 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public override void SetWeaponGameObjectDataContainer()
     {
         base.SetWeaponGameObjectDataContainer();
-        _playableUseWeaponStateMachine.GetPlayerGunCollider = _weaponGameObjectDataContainer.GetPlayerGunCollide();
+
+        if(_playableUseWeaponStateMachine != null)
+        {
+            if(_playableUseWeaponStateMachine.GetPlayerGunCollider != null) _playableUseWeaponStateMachine.GetPlayerGunCollider.ResetCollider();
+            _playableUseWeaponStateMachine.GetPlayerGunCollider = _weaponGameObjectDataContainer.GetPlayerGunCollide();
+
+        }
     }
     public override void ReloadWeapon()
     {

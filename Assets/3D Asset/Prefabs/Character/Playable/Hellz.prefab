@@ -121,14 +121,17 @@ MonoBehaviour:
     gunGameObject: {fileID: 4975526669444594033}
     shootPlacement: {fileID: 1794458273252157322}
     weaponMagTransform: {fileID: 3372058313308191683}
+    playerGunCollide: {fileID: 0}
   - weaponName: DragunoveSVD
     gunGameObject: {fileID: 255426125713093624}
     shootPlacement: {fileID: 4055314316244662022}
     weaponMagTransform: {fileID: 4019343383386133756}
+    playerGunCollide: {fileID: 0}
   - weaponName: PKM
     gunGameObject: {fileID: 7896985861255559545}
     shootPlacement: {fileID: 1848036863390552997}
     weaponMagTransform: {fileID: 8407094062285132811}
+    playerGunCollide: {fileID: 0}
 --- !u!1 &557810180955893895
 GameObject:
   m_ObjectHideFlags: 0
@@ -1325,6 +1328,7 @@ GameObject:
   - component: {fileID: 5918774335400558883}
   - component: {fileID: 8998686155606119604}
   - component: {fileID: 7594134483080326085}
+  - component: {fileID: 7186412099325874165}
   m_Layer: 15
   m_Name: Collider
   m_TagString: Weapon
@@ -1397,6 +1401,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &7186412099325874165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4507154504425226568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890274604b13e114aa126eb4732ba288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  example: {fileID: 0}
 --- !u!1 &4523886821625292369
 GameObject:
   m_ObjectHideFlags: 0
@@ -2494,6 +2511,7 @@ GameObject:
   - component: {fileID: 6792117910975637142}
   - component: {fileID: 8523231219666434640}
   - component: {fileID: 3398261912839896977}
+  - component: {fileID: 8535522333899732583}
   m_Layer: 15
   m_Name: Collider
   m_TagString: Weapon
@@ -2566,6 +2584,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &8535522333899732583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7204984640741830118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890274604b13e114aa126eb4732ba288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  example: {fileID: 0}
 --- !u!1 &7447028707434098743
 GameObject:
   m_ObjectHideFlags: 0
