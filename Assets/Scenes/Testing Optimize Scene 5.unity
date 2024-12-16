@@ -467,6 +467,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseCanvas: {fileID: 2023302737}
+  highlightGameObject: {fileID: 0}
 --- !u!114 &49420905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3270,6 +3271,7 @@ GameObject:
   m_Component:
   - component: {fileID: 720671502}
   - component: {fileID: 720671503}
+  - component: {fileID: 720671504}
   m_Layer: 0
   m_Name: DamageUIHandler
   m_TagString: Untagged
@@ -3299,7 +3301,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 720671501}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 966cce817bcca4f4680fd7428bbb99b4, type: 3}
   m_Name: 
@@ -3322,6 +3324,28 @@ MonoBehaviour:
   player: {fileID: 0}
   stayTime: 2
   fadeTime: 2
+--- !u!114 &720671504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720671501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 931341ac75d35ba40882db99bb95f9fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dmgVisualContainer: {fileID: 256950024}
+  _dmgVisualPhase2: {fileID: 649825188}
+  _dmgVisualPhase3: {fileID: 822040620}
+  _dmgVisualPhase4: {fileID: 739024068}
+  _dmgDirContainer: {fileID: 0}
+  _arrowIndicator: {fileID: 0}
+  _upBloodDamage: {fileID: 0}
+  _rightBloodDamage: {fileID: 0}
+  _leftBloodDamage: {fileID: 0}
+  _bottomBloodDamage: {fileID: 0}
 --- !u!1 &732146695
 GameObject:
   m_ObjectHideFlags: 0
@@ -3719,6 +3743,7 @@ GameObject:
   - component: {fileID: 849947679}
   - component: {fileID: 849947680}
   - component: {fileID: 849947682}
+  - component: {fileID: 849947683}
   - component: {fileID: 849947681}
   m_Layer: 0
   m_Name: PlayerManager
@@ -3825,6 +3850,19 @@ MonoBehaviour:
   _changeNightVisionSpeed: 5
   _normalHeight: -0.018
   _crouchHeight: -0.4
+--- !u!114 &849947683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849947677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8301e24878ceb4bbd80080ae837643, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dmgUIHandler: {fileID: 720671504}
 --- !u!1 &896024677
 GameObject:
   m_ObjectHideFlags: 0
@@ -7881,7 +7919,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2003852421
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -52,7 +52,11 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [Header("Death Animation Component")]
     [ReadOnly(false), SerializeField] private bool _isAnimatingOtherAnimation;
 
+
+    [Space(1)]
+    [Header("Event")]
     public Action OnIsCrawlingChange;
+    public Action<float, float> OnPlayableHealthChange;
 
     #region GETTERSETTER Variable
 
@@ -256,6 +260,28 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         }
     }
 
+    public override void Hurt(float Damage)
+    {
+        if(CurrHealth <= 0)return;
+        
+        _regenCDTimer = _regenTimerMax;
+        CurrHealth -= Damage;
+        
+        if(IsPlayerInput)OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
+
+        if(CurrHealth <= 0)
+        {
+            CurrHealth = 0;
+            
+            if(!immortalized) Death();
+        }
+    }
+    public override void Heal(float Healing)
+    {
+        base.Heal(Healing);
+
+        if(IsPlayerInput)OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
+    }
     public override void Death()
     {
         if(IsReviving)

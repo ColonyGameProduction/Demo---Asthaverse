@@ -38,6 +38,11 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     [SerializeField] private float _cameraDelayDuration = 0.1f;
     [SerializeField] private float _switchDelayDuration = 1f;
 
+    [Space(1)]
+    [Header("Damage UI Handler")]
+    private WeaponLogicManager _weaponLogicManager;
+    private PlayableCharacterUIManager _playableCharacterUIManager;
+
     //Saving all curr variable..
     [Header("Curr Playable StateMachine & other data")]
     private int _currCharaidx, _oldIdx;
@@ -71,12 +76,13 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     private void Awake() 
     {
         if(_playableCharacterCameraManager == null) _playableCharacterCameraManager = GetComponent<PlayableCharacterCameraManager>();
+
+        _playableCharacterUIManager = GetComponent<PlayableCharacterUIManager>();
     }
     void Start()
     {
         _gm = GameManager.instance;
         _gm.OnPlayerPause += GameManager_OnPlayerPause;
-
 
         _worldSoundManager = WorldSoundManager.Instance;
 
@@ -158,6 +164,8 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         CurrPlayableChara.IsPlayerInput = false;
         if(_currPlayableMoveStateMachine.IsTakingCoverAtWall)_currPlayableMoveStateMachine.ExitTakeCover();
+
+        _playableCharacterUIManager.DisconnectUIHandler();
         
         //Kategori kamera
         _playableCharacterCameraManager.ResetCameraHeight();
@@ -242,6 +250,8 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     }
     private void SetAllCurr()
     {
+        _playableCharacterUIManager.ConnectUIHandler(CurrPlayableChara);
+
         //Dapetin semua class data dr CurrPlayableChara jdnya ga ngebebanin pas getter setter terus
         _currPlayableMoveStateMachine = CurrPlayableChara.GetPlayableMovementStateMachine;
         _currPlayableUseWeaponStateMachine = CurrPlayableChara.GetPlayableUseWeaponStateMachine;

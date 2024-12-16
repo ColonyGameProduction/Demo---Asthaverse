@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
 
     private void SubscribeToGameInputManager()
     {
-        _gameInput.OnPauseGamePerformed += PauseGame;
+        if(_gameInput != null)_gameInput.OnPauseGamePerformed += PauseGame;
     }
 
     public void UnsubscribeEvent()

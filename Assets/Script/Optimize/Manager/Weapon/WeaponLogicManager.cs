@@ -15,6 +15,8 @@ public class WeaponLogicManager : MonoBehaviour
     [SerializeField]private ParticleSystem _impactParticleSystem;
     private bool isHitBody;
     private bool isHitAnything;
+
+    // public Action<Transform, CharacterIdentity> OnCharacterGotHurt;
     private void Awake() 
     {
         Instance = this;
@@ -168,6 +170,7 @@ public class WeaponLogicManager : MonoBehaviour
     {
         IHealth _getHealthFunction =  entityGameObject.transform.GetComponentInParent<IHealth>();
 
+        CharacterIdentity character = entityGameObject.transform.GetComponentInParent<CharacterIdentity>();
         // if(_getHealthFunction == null) _getHealthFunction = entityGameObject.transform.GetComponentInParent<IHealth>();
         // Debug.Log("Halooo????");
         if(_getHealthFunction != null)
@@ -228,7 +231,7 @@ public class WeaponLogicManager : MonoBehaviour
     }
     private IEnumerator SpawnParticle(ParticleSystem impactParticle, WeaponShootVFX weaponShootVFX)
     {
-        float timer = 0;
+        // float timer = 0;
         impactParticle.gameObject.SetActive(true);
         impactParticle.Play();
         // while(timer < 1)
