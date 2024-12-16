@@ -79,7 +79,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     public bool CanSilentKill { get {return _canSilentKill;} set {_canSilentKill = value;}}
     public float SilentKillDuration { get {return _silentKillDuration;}}
     public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get {return _getPlayableCharacterIdentity;}}
-    
+    public PlayerGunCollide GetPlayerGunCollider {get {return _getPlayerGunCollide;} set { _getPlayerGunCollide = value;}} 
 
     #endregion
     public event Action OnTurningOffScope;// ini dipanggil kalo misal lg input player dan reload - yg subs adalah playablecharamanager
@@ -90,7 +90,6 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         CharaIdentity_OnIsPlayerInputChange(!IsAIInput);
         _getCanSwitchWeapon = GetComponent<ICanSwitchWeapon>();
         _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
-        _getPlayerGunCollide = GetComponentInChildren<PlayerGunCollide>();
         _getCanInputPlayer = GetComponent<IReceiveInputFromPlayer>();
         _isAIInput = !_getCanInputPlayer.IsPlayerInput;
         _getCanInputPlayer.OnIsPlayerInputChange += CharaIdentity_OnIsPlayerInputChange; // Ditaro di sini biar ga ketinggalan sebelah, krn sebelah diubah di start
@@ -186,6 +185,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
             _originShootPosition = CurrOriginShootPoint.position;
             _directionShootPosition = CurrDirectionShootPoint.forward.normalized;
             _gunOriginShootPosition = _gunOriginShootPoint.position;
+
             isGunInsideWall = _getPlayerGunCollide.IsInsideWall();
         }
         else

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1030973401}
   - component: {fileID: 1030973402}
+  - component: {fileID: 1462196866282022337}
   m_Layer: 0
   m_Name: SM_Mattress01
   m_TagString: Untagged
@@ -27,8 +28,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1030973405}
   - {fileID: 1030973409}
@@ -63,6 +64,27 @@ LODGroup:
     - renderer: {fileID: 1030973414}
     - renderer: {fileID: 0}
   m_Enabled: 1
+--- !u!65 &1462196866282022337
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1030973400}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.85541725, y: 0.2021167, z: 2.0911193}
+  m_Center: {x: 0.00048148632, y: 0.100145414, z: -0.0008943081}
 --- !u!1 &1030973404
 GameObject:
   m_ObjectHideFlags: 0
