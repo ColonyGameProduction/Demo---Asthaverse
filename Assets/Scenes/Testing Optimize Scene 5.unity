@@ -1081,8 +1081,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -245}
-  m_SizeDelta: {x: 0, y: 490}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &264924375
 GameObject:
@@ -2181,7 +2181,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -245}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &511648510
@@ -3341,11 +3341,14 @@ MonoBehaviour:
   _dmgVisualPhase3: {fileID: 822040620}
   _dmgVisualPhase4: {fileID: 739024068}
   _dmgDirContainer: {fileID: 0}
-  _arrowIndicator: {fileID: 0}
-  _upBloodDamage: {fileID: 0}
-  _rightBloodDamage: {fileID: 0}
-  _leftBloodDamage: {fileID: 0}
-  _bottomBloodDamage: {fileID: 0}
+  _dmgDirArrowContainer: {fileID: 496405135}
+  _arrowPrefab: {fileID: 7873583235577081737, guid: 02bdbe18f6c85954fa7d5dc1af1d7cbf, type: 3}
+  _upBloodDamage: {fileID: 226948706}
+  _rightBloodDamage: {fileID: 2006616811}
+  _leftBloodDamage: {fileID: 2109260783}
+  _bottomBloodDamage: {fileID: 1198708910}
+  _dmgDirStayTime: 2
+  _dmgDirFadeTime: 2
 --- !u!1 &732146695
 GameObject:
   m_ObjectHideFlags: 0
@@ -3510,8 +3513,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -245}
-  m_SizeDelta: {x: 0, y: 490}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &752859310
 GameObject:
@@ -3863,6 +3866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dmgUIHandler: {fileID: 720671504}
+  _playableCharacterManager: {fileID: 849947679}
 --- !u!1 &896024677
 GameObject:
   m_ObjectHideFlags: 0
@@ -4895,7 +4899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5213727cc95cecc4494f076732481665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Debugs: 1
+  Debugs: 0
   DebugDrawBiasa: 1
   _bulletTrailPrefab: {fileID: 2827296060237937757, guid: 068d69049e6f4cb4d8a24deaaa65b31a, type: 3}
   _impactParticleSystem: {fileID: 2835829649678232274, guid: ec368ec3ef47c0f48961272df0ca56f6, type: 3}
@@ -5426,7 +5430,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -245}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1181823022
@@ -8129,8 +8133,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 245}
-  m_SizeDelta: {x: 0, y: -490}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &2017098525 stripped
 Transform:
@@ -14552,6 +14556,10 @@ PrefabInstance:
       propertyPath: _agent
       value: 
       objectReference: {fileID: 743586305}
+    - target: {fileID: 6198287295076427440, guid: 2c431afe91a9c99459577246f9f3833d, type: 3}
+      propertyPath: immortalized
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6405660892747392425, guid: 2c431afe91a9c99459577246f9f3833d, type: 3}
       propertyPath: m_Name
       value: Ammon
@@ -14640,6 +14648,10 @@ PrefabInstance:
     - target: {fileID: 5222188787147458708, guid: 59cb88159c413774089f477803e6887f, type: 3}
       propertyPath: _crawlSpeedMultiplier
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5860861127627359425, guid: 59cb88159c413774089f477803e6887f, type: 3}
+      propertyPath: immortalized
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6111728477538391948, guid: 59cb88159c413774089f477803e6887f, type: 3}
       propertyPath: _charaGameObject
@@ -14956,6 +14968,10 @@ PrefabInstance:
     - target: {fileID: 7090022013679683779, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
       propertyPath: _magHandLocalEulerAngles.z
       value: 5.526
+      objectReference: {fileID: 0}
+    - target: {fileID: 7596239048254286310, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
+      propertyPath: immortalized
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8916737995085213083, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
       propertyPath: _agent

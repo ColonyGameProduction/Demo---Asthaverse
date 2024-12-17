@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 {
+    // public static PlayableCharacterManager Instance {get; private set;}
     #region Normal Variable
     [Header("Test")]
     public PlayableCharacterIdentity _chose;
@@ -75,6 +76,8 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     #endregion
     private void Awake() 
     {
+        // Instance = this;
+
         if(_playableCharacterCameraManager == null) _playableCharacterCameraManager = GetComponent<PlayableCharacterCameraManager>();
 
         _playableCharacterUIManager = GetComponent<PlayableCharacterUIManager>();

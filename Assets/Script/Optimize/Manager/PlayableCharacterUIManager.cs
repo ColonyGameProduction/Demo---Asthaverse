@@ -6,7 +6,18 @@ public class PlayableCharacterUIManager : MonoBehaviour
 {
     [SerializeField] private DamageUIHandler _dmgUIHandler;
     private PlayableCharacterIdentity currPlayable;
+    private WeaponLogicManager _weaponLogicManager;
+    private PlayableCharacterManager _playableCharacterManager;
 
+    private void Awake() 
+    {
+        _playableCharacterManager = GetComponent<PlayableCharacterManager>();
+    }
+    private void Start() 
+    {
+        _weaponLogicManager = WeaponLogicManager.Instance;
+        _weaponLogicManager.OnCharacterGotHurt += WeaponLogicManager_OnCharacterGotHurt;
+    }
     public void ConnectUIHandler(PlayableCharacterIdentity curr)
     {
         currPlayable = curr;
@@ -30,5 +41,13 @@ public class PlayableCharacterUIManager : MonoBehaviour
     public void ResetUI()
     {
         _dmgUIHandler.ResetDamageVisual();
+    }
+
+    private void WeaponLogicManager_OnCharacterGotHurt(Transform shooter, CharacterIdentity character)
+    {
+        if(character.transform == _playableCharacterManager.CurrPlayableChara.transform)
+        {
+            _dmgUIHandler.SpawnArrow(shooter);
+        }
     }
 }
