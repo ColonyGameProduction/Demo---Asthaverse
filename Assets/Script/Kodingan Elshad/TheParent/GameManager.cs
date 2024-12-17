@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
 
 
     public bool gameIsPaused;
+    public bool isAtSetting;
     #region GETTER SETTER VARIABLE
     public GameState GetCurrState { get { return _currState; } }
     #endregion

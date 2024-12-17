@@ -23,6 +23,8 @@ public class InGameUICharHandler : MonoBehaviour
         gm = GameManager.instance;
     }
 
+    
+
     public void AssigningCharUI(GameObject currPlayer)
     {
         player = currPlayer.GetComponent<PlayerAction>();
@@ -37,11 +39,11 @@ public class InGameUICharHandler : MonoBehaviour
         currHP = Mathf.Round(player.playerHP).ToString();
         maxHP = player.maxPlayerHP.ToString();
 
-        transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = charFace;
-        transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = charName;
+        transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<Image>().sprite = charFace;
+        transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = charName;
 
-        transform.GetChild(0).GetChild(0).GetChild(1).GetComponent<Image>().sprite = weaponShilouete;
-        transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = weaponName;
+        transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = weaponShilouete;
+        transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>().text = weaponName;
 
         transform.GetChild(0).GetChild(0).GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = currHP;
         transform.GetChild(0).GetChild(0).GetChild(2).GetChild(2).GetComponent<TextMeshProUGUI>().text = maxHP;
