@@ -10,6 +10,7 @@ public class WeaponGameObjectData
     public GameObject gunGameObject;
     public Transform shootPlacement;
     public Transform weaponMagTransform;
+    public PlayerGunCollide playerGunCollide;
 }
 public class WeaponGameObjectDataContainer : MonoBehaviour
 {
@@ -24,7 +25,10 @@ public class WeaponGameObjectDataContainer : MonoBehaviour
     {
         return _currWeaponGameObjectData.weaponMagTransform;
     }
-
+    public PlayerGunCollide GetPlayerGunCollide()
+    {
+        return _currWeaponGameObjectData.playerGunCollide;
+    }
 
     //Nanti ini diganti berdasarkan nama kalo uda bener
     public void GetCurrWeaponGameObjectData(int idx)

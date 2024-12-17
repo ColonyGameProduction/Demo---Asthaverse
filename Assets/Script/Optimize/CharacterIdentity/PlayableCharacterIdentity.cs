@@ -192,6 +192,11 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     }
 
+    public override void SetWeaponGameObjectDataContainer()
+    {
+        base.SetWeaponGameObjectDataContainer();
+        _playableUseWeaponStateMachine.GetPlayerGunCollider = _weaponGameObjectDataContainer.GetPlayerGunCollide();
+    }
     public override void ReloadWeapon()
     {
         float bulletNeed = CurrWeapon.weaponStatSO.magSize - CurrWeapon.currBullet;
@@ -213,8 +218,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         {
             _currWeaponIdx = 0;
         }
-        _weaponGameObjectDataContainer.GetCurrWeaponGameObjectData(_currWeaponIdx);
-        _useWeaponStateMachine.GunOriginShootPoint = _weaponGameObjectDataContainer.GetCurrShootPlacement();
+        SetWeaponGameObjectDataContainer();
         
         _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
     }
