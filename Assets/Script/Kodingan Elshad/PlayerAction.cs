@@ -387,6 +387,7 @@ public class PlayerAction : ExecuteLogic
 
     private void ChangingWeapon_performed(InputAction.CallbackContext context)
     {
+        inGameUIHandler.SwitchingWeaponUI(this);
         ChangeWeapon(this, weaponStat, curWeapon);
     }
 

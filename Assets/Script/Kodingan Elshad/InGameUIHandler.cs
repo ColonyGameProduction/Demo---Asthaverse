@@ -42,6 +42,26 @@ public class InGameUIHandler : MonoBehaviour
         }
     }
 
+
+    public void SwitchingWeaponUI(PlayerAction player)
+    {
+        Image weaponImage = characterUI[gm.playableCharacterNum].transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>();
+        TextMeshProUGUI weaponName = weaponImage.GetComponentInChildren<TextMeshProUGUI>();
+        GameObject weaponImageGameObject = weaponImage.gameObject;
+
+        LeanTween.move(weaponImageGameObject, weaponImageGameObject.transform.position + new Vector3(200, 0, 0), .2f);
+        LeanTween.alpha(weaponImageGameObject.GetComponent<RectTransform>(), 0, .2f)
+        .setOnComplete(() =>
+        {
+            weaponImage.sprite = player.activeWeapon.gunShilouete;
+            weaponName.text = player.activeWeapon.weaponName;
+
+            LeanTween.move(weaponImageGameObject, weaponImageGameObject.transform.position + new Vector3(-200, 0, 0), .2f);
+            LeanTween.alpha(weaponImageGameObject.GetComponent<RectTransform>(), 1, .2f);
+        });
+
+    }
+
     public void SwitchingUICharacter()
     {
 
@@ -62,11 +82,11 @@ public class InGameUIHandler : MonoBehaviour
                     LeanTween.moveLocal(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(-80, -30, 0), .2f);
                     LeanTween.scale(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1f, 1f, 1f), .2f);
 
-                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
-                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(false);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
 
-                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
-                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(true);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
 
                     characterUI[1].GetComponent<InGameUICharHandler>().AssigningCharUI(gm.playerGameObject[1]);
 
@@ -84,11 +104,11 @@ public class InGameUIHandler : MonoBehaviour
                     LeanTween.moveLocal(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(-80, -30, 0), .2f);
                     LeanTween.scale(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1f, 1f, 1f), .2f);
 
-                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
-                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(false);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
 
-                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
-                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(true);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
 
                     characterUI[0].GetComponent<InGameUICharHandler>().AssigningCharUI(gm.playerGameObject[0]);
 
@@ -114,11 +134,11 @@ public class InGameUIHandler : MonoBehaviour
                     LeanTween.moveLocal(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(-80, -30, 0), .2f);
                     LeanTween.scale(characterUI[1].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1f, 1f, 1f), .2f);
 
-                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
-                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(false);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
 
-                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
-                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(true);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
 
                     characterUI[1].GetComponent<InGameUICharHandler>().AssigningCharUI(gm.playerGameObject[1]);
 
@@ -138,11 +158,11 @@ public class InGameUIHandler : MonoBehaviour
                     LeanTween.moveLocal(characterUI[2].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[2].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(-80, -30, 0), .2f);
                     LeanTween.scale(characterUI[2].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1f, 1f, 1f), .2f);
 
-                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
-                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(false);
+                    characterUI[1].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
 
-                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
-                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
+                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(true);
+                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
 
                     characterUI[2].GetComponent<InGameUICharHandler>().AssigningCharUI(gm.playerGameObject[2]);
 
@@ -162,11 +182,11 @@ public class InGameUIHandler : MonoBehaviour
                     LeanTween.moveLocal(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).localPosition + new Vector3(-80, -30, 0), .2f);
                     LeanTween.scale(characterUI[0].transform.GetChild(0).GetChild(0).GetChild(2).gameObject, new Vector3(1f, 1f, 1f), .2f);
 
-                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
-                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
+                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(false);
+                    characterUI[2].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(false);
 
-                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
-                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.SetActive(true);
+                    characterUI[0].transform.GetChild(0).GetChild(0).GetChild(0).gameObject.SetActive(true);
 
                     characterUI[0].GetComponent<InGameUICharHandler>().AssigningCharUI(gm.playerGameObject[0]);
 

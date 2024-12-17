@@ -25,6 +25,8 @@ public class StealthBar : MonoBehaviour
 
         if(IsBarVisible(Camera.main, imageContainer))
         {
+            imageContainer.transform.forward = transform.position - Camera.main.transform.position;
+
             imageContainerCheck = null;
             Destroy(imageContainerCameraCanvas);
 
@@ -46,7 +48,7 @@ public class StealthBar : MonoBehaviour
 
             if(imageContainerCameraCanvas != null)
             {
-                imageContainerCameraCanvas.GetComponent<RectTransform>().localScale = new Vector3(70, 70, 70);
+                imageContainerCameraCanvas.GetComponent<RectTransform>().localScale = new Vector3(150, 150, 150);
                 fillBarImage = imageContainerCameraCanvas.transform.GetChild(1).GetComponent<Image>();
                 fillBarImage.fillAmount = currStealth / MaxStealth;
                 fillBar(imageContainerCameraCanvas);
