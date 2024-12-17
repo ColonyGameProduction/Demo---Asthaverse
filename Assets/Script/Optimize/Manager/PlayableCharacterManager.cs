@@ -2,12 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Cinemachine;
 using UnityEngine;
 
 public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 {
-    // public static PlayableCharacterManager Instance {get; private set;}
+    public static PlayableCharacterManager Instance {get; private set;}
     #region Normal Variable
     [Header("Test")]
     public PlayableCharacterIdentity _chose;
@@ -55,6 +54,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     private PlayableInteraction _currPlayableInteraction;
     private PlayableSkill _currPlayableSkill;
     private PlayableMakeSFX _currPlayableMakeSFX;
+    private PlayableMinimapSymbolHandler _currPlayableMinimapSymbolHandler;
     private WorldSoundManager _worldSoundManager;
 
 
@@ -76,7 +76,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     #endregion
     private void Awake() 
     {
-        // Instance = this;
+        Instance = this;
 
         if(_playableCharacterCameraManager == null) _playableCharacterCameraManager = GetComponent<PlayableCharacterCameraManager>();
 
@@ -152,6 +152,12 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
                 if(!_charaIdentities[newIdx].IsDead)break;
             }
         }
+
+        if(_charaIdentities[newIdx].IsDead)
+        {
+            _gm.GameOver();
+            return;
+        }
         
 
         if(newIdx == _currCharaidx && !_isFirstTimeSwitch) return; //Kalo balik lg ke karakter awal yauda gausa ganti
@@ -214,12 +220,15 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         
         //kategori untuk friendsAI - updating move direction etc
         CurrPlayableChara.FriendID = 0;
+        _currPlayableMinimapSymbolHandler.ChangeSymbolColorToPlayable();
+
         int nextCharaidx = _currCharaidx + 1;
         for(int i=1; i <= _charaIdentities.Count - 1; i++)
         {
             if(nextCharaidx == _charaIdentities.Count)nextCharaidx = 0;
             
             _charaIdentities[nextCharaidx].FriendID = i;
+            _charaIdentities[nextCharaidx].GetPlayableMinimapSymbolHandler.ChangeSymbolColorToFriend();
             //Di sini nanti jg taro di AI controllernya, posisi update mereka yang biasa
             // Debug.Log(CurrPlayableChara + " AAAAAA" + _currCharaidx);
             _charaIdentities[nextCharaidx].GetFriendAIStateMachine.GiveUpdateFriendDirection(CurrPlayableChara, _friendsCommandPosition[i-1].transform);
@@ -264,6 +273,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         _currPlayableSkill = CurrPlayableChara.GetPlayableSkill;
         _currPlayableMakeSFX = CurrPlayableChara.GetPlayableMakeSFX;
+        _currPlayableMinimapSymbolHandler = CurrPlayableChara.GetPlayableMinimapSymbolHandler;
 
     }
     #endregion

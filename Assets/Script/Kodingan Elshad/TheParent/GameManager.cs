@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
 
     [Header("Event")]
     public Action<bool> OnPlayerPause;
+    public Action OnGameOver;
 
 
     public bool gameIsPaused;
@@ -113,11 +114,18 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
             SetGameState(GameState.Play);
         }
     }
+    public void GameOver()
+    {
+        SetGameState(GameState.GameOver);
+        // Time.timeScale = 0f;
+        OnGameOver?.Invoke();
+    }
     public bool IsGameHaventStart() => CheckGameState(GameState.BeforeStart);
     public bool IsGamePlaying() => CheckGameState(GameState.Play);
     public bool IsGamePause() => CheckGameState(GameState.Pause);
     public bool IsGameCinematic() => CheckGameState(GameState.Cinematic);
     public bool IsGameFinish() => CheckGameState(GameState.Finish);
+    public bool IsGameOver() => CheckGameState(GameState.GameOver);
 
     private void SetGameState(GameState newState) => _currState = newState;
     private bool CheckGameState(GameState state) => _currState == state;

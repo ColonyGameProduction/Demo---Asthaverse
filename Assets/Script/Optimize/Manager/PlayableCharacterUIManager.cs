@@ -8,6 +8,7 @@ public class PlayableCharacterUIManager : MonoBehaviour
     private PlayableCharacterIdentity currPlayable;
     private WeaponLogicManager _weaponLogicManager;
     private PlayableCharacterManager _playableCharacterManager;
+    private EnemyAIManager _enemyAIManager;
 
     private void Awake() 
     {
@@ -17,6 +18,9 @@ public class PlayableCharacterUIManager : MonoBehaviour
     {
         _weaponLogicManager = WeaponLogicManager.Instance;
         _weaponLogicManager.OnCharacterGotHurt += WeaponLogicManager_OnCharacterGotHurt;
+
+        _enemyAIManager = EnemyAIManager.Instance;
+        _enemyAIManager.OnEnemyDead += _dmgUIHandler.StoreArrowBasedOnShooter;
     }
     public void ConnectUIHandler(PlayableCharacterIdentity curr)
     {
@@ -47,7 +51,7 @@ public class PlayableCharacterUIManager : MonoBehaviour
     {
         if(character.transform == _playableCharacterManager.CurrPlayableChara.transform)
         {
-            _dmgUIHandler.SpawnArrow(shooter);
+            _dmgUIHandler.CallArrow(shooter);
         }
     }
 }

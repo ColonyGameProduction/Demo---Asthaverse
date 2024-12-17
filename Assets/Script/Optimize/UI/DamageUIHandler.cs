@@ -24,20 +24,24 @@ public class DamageUIHandler : MonoBehaviour
     [SerializeField] private GameObject _dmgDirContainer;
     [SerializeField] private GameObject _dmgDirArrowContainer;
     [SerializeField] private GameObject _arrowPrefab;
+    [SerializeField] private int _totalArrow;
     [SerializeField] private CanvasGroup _upBloodDamage, _rightBloodDamage, _leftBloodDamage, _bottomBloodDamage;
     [SerializeField] private float _dmgDirStayTime, _dmgDirFadeTime; 
     private float _dmgDirAngle;
 
-    private List<ArrowDamageVisualDirData> _arrowList = new List<ArrowDamageVisualDirData>();
+    private List<ArrowDamageVisualDirData> _arrowStoredList = new List<ArrowDamageVisualDirData>();
+    private List<ArrowDamageVisualDirData> _arrowUsedList = new List<ArrowDamageVisualDirData>();
     private List<ArrowDamageVisualDirData> _tempList = new List<ArrowDamageVisualDirData>();
 
     // [ReadOnly(false), SerializeField] private Transform _currPlayable;
     private Transform _cameraTransform;
+    
 
     private void Awake() 
     {
         _cameraTransform = Camera.main.transform;
 
+        SpawnArrow();
         ResetDamageVisual();
         if(!_dmgVisualContainer.activeSelf)_dmgVisualContainer.SetActive(true);
     }
@@ -74,11 +78,24 @@ public class DamageUIHandler : MonoBehaviour
     #endregion
 
     #region Visual Direction Function
-    public void SpawnArrow(Transform whoShoot)
+    private void SpawnArrow()
+    {
+        for(int i=0; i<_totalArrow; i++)
+        {
+            GameObject arrowGameObject = Instantiate(_arrowPrefab, _dmgDirArrowContainer.transform);
+            arrowGameObject.SetActive(false);
+
+            ArrowDamageVisualDirData currArrowData = new ArrowDamageVisualDirData();
+            currArrowData.arrow = arrowGameObject;
+            currArrowData.arrowImg = arrowGameObject.GetComponentInChildren<Image>();
+            _arrowStoredList.Add(currArrowData);
+        }
+    }
+    public void CallArrow(Transform whoShoot)
     {
         ArrowDamageVisualDirData currArrowData = null;
 
-        foreach(ArrowDamageVisualDirData arrowData in _arrowList)
+        foreach(ArrowDamageVisualDirData arrowData in _arrowUsedList)
         {
             if(arrowData.whoShootMe == whoShoot)
             {
@@ -89,24 +106,48 @@ public class DamageUIHandler : MonoBehaviour
 
         if (currArrowData == null)
         {
-            GameObject arrowGameObject = Instantiate(_arrowPrefab, _dmgDirArrowContainer.transform);
-            currArrowData = new ArrowDamageVisualDirData();
-            currArrowData.arrow = arrowGameObject;
-            currArrowData.arrowImg = arrowGameObject.GetComponentInChildren<Image>();
+            currArrowData = _arrowStoredList[0];
+            _arrowStoredList.Remove(currArrowData);
+
             currArrowData.whoShootMe = whoShoot;
-            _arrowList.Add(currArrowData);
+            _arrowUsedList.Add(currArrowData);
         }
         
         ChangeImageAlphaValue(currArrowData.arrowImg, 1);
         DamageVisualDirectionIndicator(currArrowData);
         
     }
+    private void StoreArrow(ArrowDamageVisualDirData arrowData)
+    {
+        arrowData.arrow.SetActive(false);
+        arrowData.fadeTime = 0;
+        arrowData.stayTime = 0;
+        arrowData.whoShootMe = null;
+        ChangeImageAlphaValue(arrowData.arrowImg, 0);
+
+        _arrowUsedList.Remove(arrowData);
+        _arrowStoredList.Add(arrowData);
+    }
+    public void StoreArrowBasedOnShooter(Transform shooter)
+    {
+        ArrowDamageVisualDirData chosen = null;
+        foreach(ArrowDamageVisualDirData arrowData in _arrowUsedList)
+        {
+            if(arrowData.whoShootMe == shooter)
+            {
+                chosen = arrowData;
+            }
+        }
+        if(chosen == null) return;
+        
+        StoreArrow(chosen);
+    }
     private void DamageVisualDirectionIndicator(ArrowDamageVisualDirData currArrowData)
     {
+        DamageArrowDirectionIndicator(currArrowData);
+
         currArrowData.stayTime = _dmgDirStayTime;
         currArrowData.fadeTime = _dmgDirFadeTime;
-
-        DamageArrowDirectionIndicator(currArrowData);
 
         if(_dmgDirAngle >= -45 && _dmgDirAngle < 45)
         {
@@ -150,11 +191,13 @@ public class DamageUIHandler : MonoBehaviour
 
         _dmgDirAngle = Vector3.SignedAngle(direction, flatForward, Vector3.up);
         currArrowData.arrow.transform.localEulerAngles = new Vector3(0, 0, _dmgDirAngle);
+
+        if(!currArrowData.arrow.activeSelf)currArrowData.arrow.SetActive(true);
     }
 
     private void DamageArrowDirAngleHandler()
     {
-        _tempList = _arrowList;
+        _tempList = _arrowUsedList;
 
         for(int i=0; i < _tempList.Count;i++)
         {
@@ -176,12 +219,12 @@ public class DamageUIHandler : MonoBehaviour
                 }
                 else
                 {                    
-                    Destroy(_tempList[i].arrow); 
-                    _arrowList.Remove(_tempList[i]);
+                    StoreArrow(_tempList[i]);
                 }
             }
         }
     }
+
     #endregion
     public void ResetDamageVisual()
     {
@@ -189,4 +232,5 @@ public class DamageUIHandler : MonoBehaviour
         ChangeImageAlphaValue(_dmgVisualPhase3, 0);
         ChangeImageAlphaValue(_dmgVisualPhase4, 0);
     }
+
 }

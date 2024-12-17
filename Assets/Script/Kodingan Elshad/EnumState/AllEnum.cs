@@ -53,6 +53,7 @@ public enum GameState
     Play,
     Cinematic,
     Pause,
-    Finish
+    Finish,
+    GameOver
 }
 

@@ -2,24 +2,35 @@ using UnityEngine;
 
 public class MinimapCameraFollow : MonoBehaviour
 {
-    [SerializeField] private MinimapSettings settings;
-    [SerializeField] private float cameraHeight;
+    [SerializeField] private PlayableCharacterManager _playableCharaManager;
+    private float cameraHeight;
+    [SerializeField] private Transform targetToFollow;
+    [SerializeField] private bool rotateWithTheTarget = true;
 
     private void Awake()
     {
-        settings = GetComponentInParent<MinimapSettings>();
         cameraHeight = transform.position.y;
+        if(_playableCharaManager != null)_playableCharaManager.OnPlayerSwitch += ChangeTargetToFollow;
     }
 
     private void Update()
     {
-        Vector3 targetPosition = settings.targetToFollow.transform.position;
+        FollowTarget();
+    }
+    private void ChangeTargetToFollow(Transform target)
+    {
+        PlayableCharacterIdentity chara = target.gameObject.GetComponent<PlayableCharacterIdentity>();
+        targetToFollow = chara.GetPlayableMovementStateMachine.CharaGameObject;
+    }
+    private void FollowTarget()
+    {
+        Vector3 targetPosition = targetToFollow.position;
         
         transform.position = new Vector3(targetPosition.x, targetPosition.y + cameraHeight, targetPosition.z);
 
-        if (settings.rotateWithTheTarget)
+        if (rotateWithTheTarget)
         {
-            Quaternion targetRotation = settings.targetToFollow.transform.rotation;
+            Quaternion targetRotation = targetToFollow.transform.rotation;
 
             transform.rotation = Quaternion.Euler(90f, targetRotation.eulerAngles.y, 0f);
         }

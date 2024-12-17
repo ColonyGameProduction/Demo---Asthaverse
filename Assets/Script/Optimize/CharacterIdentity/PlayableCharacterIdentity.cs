@@ -43,6 +43,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected PlayableInteraction _playableInteraction;
     protected PlayableSkill _playableSkill;
     protected PlayableMakeSFX _playableMakeSFX;
+    protected PlayableMinimapSymbolHandler _playableMinimapSymbolHandler;
 
     protected FriendAIBehaviourStateMachine _friendAIStateMachine;
     
@@ -120,6 +121,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public PlayableInteraction GetPlayableInteraction {get {return _playableInteraction;}}
     public PlayableSkill GetPlayableSkill {get {return _playableSkill;}}
     public PlayableMakeSFX GetPlayableMakeSFX {get {return _playableMakeSFX;}}
+    public PlayableMinimapSymbolHandler GetPlayableMinimapSymbolHandler {get {return _playableMinimapSymbolHandler;}}
 
     public FriendAIBehaviourStateMachine GetFriendAIStateMachine {get { return _friendAIStateMachine;}}
     public FOVMachine GetFOVMachine{get { return _fovMachine;}}
@@ -150,6 +152,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _playableInteraction = GetComponentInChildren<PlayableInteraction>();
         _playableSkill = GetComponent<PlayableSkill>();
         _playableMakeSFX = GetComponentInChildren<PlayableMakeSFX>();
+        _playableMinimapSymbolHandler = GetComponentInChildren<PlayableMinimapSymbolHandler>();
         InitializeFriend();
 
 
