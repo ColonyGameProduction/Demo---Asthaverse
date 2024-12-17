@@ -3,6 +3,8 @@ using TMPro;
 
 public class TabsManager : MonoBehaviour
 {
+    GameManager gm;
+
     public GameObject[] Tabs;
     public GameObject[] TabButtonHighlights;
     public TextMeshProUGUI[] TabButtonTexts;
@@ -40,10 +42,19 @@ public class TabsManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        gm = GameManager.instance;
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if(gm != null)
+            {
+                gm.isAtSetting = false;
+            }
             gameObject.SetActive(false);
             mainMenuPanel.SetActive(true);
         }
