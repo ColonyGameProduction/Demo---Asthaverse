@@ -91,8 +91,9 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         foreach(GameObject player in _gm.playerGameObject)
         {
-            _charaIdentities.Add(player.GetComponent<PlayableCharacterIdentity>());
-            
+            PlayableCharacterIdentity charaIdentity = player.GetComponent<PlayableCharacterIdentity>();
+            _charaIdentities.Add(charaIdentity);
+            _playableCharacterUIManager.GetCharacterProfileUIHandler.AssignCharaProfileUI(charaIdentity);
         }
 
         //jd kalo misal ada save save bs lwt sini
@@ -162,6 +163,8 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         if(newIdx == _currCharaidx && !_isFirstTimeSwitch) return; //Kalo balik lg ke karakter awal yauda gausa ganti
 
+        _playableCharacterUIManager.GetCharacterProfileUIHandler.SwitchingCharaProfileUI(newIdx);
+        
         _isFirstTimeSwitch = false;
         _isSwitchingCharacter = true;
         //Matikan semua pergerakan dan aim dan lainnya - in state machine and player identities

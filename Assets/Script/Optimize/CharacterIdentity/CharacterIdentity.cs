@@ -79,6 +79,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
 
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
+    public EntityStatSO GetCharaStatSO {get {return _characterStatSO;}}
 
     #endregion
     protected virtual void Awake()

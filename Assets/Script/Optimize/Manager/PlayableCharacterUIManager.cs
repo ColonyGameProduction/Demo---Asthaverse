@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class PlayableCharacterUIManager : MonoBehaviour
 {
-    [SerializeField] private DamageUIHandler _dmgUIHandler;
     private PlayableCharacterIdentity currPlayable;
     private WeaponLogicManager _weaponLogicManager;
     private PlayableCharacterManager _playableCharacterManager;
     private EnemyAIManager _enemyAIManager;
+    [SerializeField] private DamageUIHandler _dmgUIHandler;
+    [SerializeField] private CharacterProfileUIHandler _characterProfileUIHandler;
+    
+    public CharacterProfileUIHandler GetCharacterProfileUIHandler {get {return _characterProfileUIHandler;}}
 
     private void Awake() 
     {
         _playableCharacterManager = GetComponent<PlayableCharacterManager>();
+        _playableCharacterManager.OnPlayerSwitch += _characterProfileUIHandler.UpdateHealthData;
     }
     private void Start() 
     {

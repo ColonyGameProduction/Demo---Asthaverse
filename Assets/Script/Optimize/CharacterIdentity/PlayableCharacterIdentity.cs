@@ -58,6 +58,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [Header("Event")]
     public Action OnIsCrawlingChange;
     public Action<float, float> OnPlayableHealthChange;
+    public Action OnSwitchWeapon;
 
     #region GETTERSETTER Variable
 
@@ -238,6 +239,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         SetWeaponGameObjectDataContainer();
         
         _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
+        OnSwitchWeapon?.Invoke();
     }
     protected void Regeneration()
     {
