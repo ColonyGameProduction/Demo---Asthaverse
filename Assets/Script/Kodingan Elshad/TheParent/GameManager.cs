@@ -30,18 +30,21 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     private GameInputManager _gameInput;
     
     [Header("States")]
-    [SerializeField] private GameState _currState;
+    [ReadOnly(false), SerializeField] private GameState _currGameState;
+    [ReadOnly(false), SerializeField] private GamePauseState _currGamePauseState;
     private bool _isPause;
 
     [Header("Event")]
     public Action<bool> OnPlayerPause;
     public Action OnGameOver;
+    public Action OnQuitSettings;
 
 
     public bool gameIsPaused;
     public bool isAtSetting;
     #region GETTER SETTER VARIABLE
-    public GameState GetCurrState { get { return _currState; } }
+    public GameState GetCurrGameState { get { return _currGameState; } }
+    public GamePauseState GetCurrGamePauseState { get { return _currGamePauseState; } }
     #endregion
     #endregion
 
@@ -90,9 +93,17 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     }
 
     #region NewCode
+    #region GameState
     public void PauseGame()
     {
-        if(_currState != GameState.Play && _currState != GameState.Pause) return;
+        if(CheckGamePauseState(GamePauseState.Settings))
+        {
+            OnQuitSettings?.Invoke();
+            return;
+        }
+
+        
+        if(_currGameState != GameState.Play && _currGameState != GameState.Pause) return;
         _isPause = !_isPause;
         OnPlayerPause?.Invoke(_isPause);
         
@@ -121,6 +132,8 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
         // Time.timeScale = 0f;
         OnGameOver?.Invoke();
     }
+
+    
     public bool IsGameHaventStart() => CheckGameState(GameState.BeforeStart);
     public bool IsGamePlaying() => CheckGameState(GameState.Play);
     public bool IsGamePause() => CheckGameState(GameState.Pause);
@@ -128,10 +141,26 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     public bool IsGameFinish() => CheckGameState(GameState.Finish);
     public bool IsGameOver() => CheckGameState(GameState.GameOver);
 
-    private void SetGameState(GameState newState) => _currState = newState;
-    private bool CheckGameState(GameState state) => _currState == state;
+    private void SetGameState(GameState newState)
+    {
+        _currGameState = newState;
+        if(_currGameState != GameState.Pause) SetGamePauseState(GamePauseState.None);
+        else OpenPauseMenu();
+    }
+    private bool CheckGameState(GameState state) => _currGameState == state;
 
+    #endregion
 
+    #region GamePauseState
+    public void OpenSettingsMenu() => SetGamePauseState(GamePauseState.Settings);
+    public void OpenPauseMenu() => SetGamePauseState(GamePauseState.PauseMenu);
+    public bool IsNotPauseState() => CheckGamePauseState(GamePauseState.None);
+    public bool IsStatePauseMenu() => CheckGamePauseState(GamePauseState.PauseMenu);
+    public bool IsStateSettingsMenu() => CheckGamePauseState(GamePauseState.Settings);
+
+    private void SetGamePauseState(GamePauseState newState) => _currGamePauseState = newState;
+    private bool CheckGamePauseState(GamePauseState state) => _currGamePauseState == state;
+    #endregion
     private void SubscribeToGameInputManager()
     {
         if(_gameInput != null)_gameInput.OnPauseGamePerformed += PauseGame;

@@ -638,7 +638,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
                 break;
             }  
         }
-        if(chosenFriend.IsDead)return;
+        if(chosenFriend.IsDead || chosenFriend == null)return;
 
         if(IsCommandingFriend)OnCommandingBoolChange?.Invoke(true, friendID);
 
@@ -649,7 +649,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         if(chosenFriend.GetFriendAIStateMachine.IsToldHold)
         {
-            _friendsCommandPosition[friendID - 1].transform.position = chosenFriend.transform.position;
+            // _friendsCommandPosition[friendID - 1].transform.position = chosenFriend.transform.position;
         }
         else
         {

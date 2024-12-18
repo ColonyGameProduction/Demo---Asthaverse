@@ -56,4 +56,10 @@ public enum GameState
     Finish,
     GameOver
 }
+public enum GamePauseState
+{
+    None,
+    PauseMenu,
+    Settings
+}
 

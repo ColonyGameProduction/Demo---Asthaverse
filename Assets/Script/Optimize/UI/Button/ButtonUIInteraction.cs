@@ -8,16 +8,21 @@ public class ButtonUIInteraction : MonoBehaviour, IPointerEnterHandler, IPointer
     [SerializeField] private GameObject _highlightContainer;
     protected virtual void Awake() 
     {
-        _highlightContainer.SetActive(false);
+        ToggleHighlight(false);
     }
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-        _highlightContainer.SetActive(true);  
+        ToggleHighlight(true);
     }
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-        _highlightContainer.SetActive(false);
+        ToggleHighlight(false);
+    }
+
+    public void ToggleHighlight(bool change)
+    {
+        _highlightContainer.SetActive(change);
     }
 }

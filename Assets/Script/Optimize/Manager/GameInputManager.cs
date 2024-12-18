@@ -13,7 +13,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
     #region Action List InputPlayerAction
     public Action OnRunPerformed, OnRunCanceled, OnCrouchPerformed, OnCrouchCanceled,
                   OnChangePlayerPerformed, OnChangeWeaponPerformed, 
-                  OnExitCommandPerformed, OnRegroupFriendPerformed,
+                  OnCommandPerformed, OnExitCommandPerformed, OnRegroupFriendPerformed,
                   OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnReloadPerformed,
                   OnInteractPerformed, OnNightVisionPerformed, OnSkillPerformed, OnWhistlePerformed, OnThrowPerformed,
                   OnTakeCoverPerformed, OnExitTakeCoverPerformed;
@@ -47,9 +47,11 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
         _inputActions.InputPlayerAction.ChangePlayer.performed += ChangePlayer_performed;
         _inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
 
-        _inputActions.InputPlayerAction.CommandFriend1.performed += Command1_performed;
-        _inputActions.InputPlayerAction.CommandFriend2.performed += Command2_performed;
-        _inputActions.InputPlayerAction.ExitCommand.performed += ExitCommand_performed;
+        // _inputActions.InputPlayerAction.CommandFriend1.performed += Command1_performed;
+        // _inputActions.InputPlayerAction.CommandFriend2.performed += Command2_performed;
+        _inputActions.InputPlayerAction.CommandFriend.performed += Command1_performed;
+        _inputActions.InputPlayerAction.CommandFriend.canceled += ExitCommand_performed;
+        // _inputActions.InputPlayerAction.ExitCommand.performed += ExitCommand_performed;
         _inputActions.InputPlayerAction.RegroupFriend.performed += RegroupFriend_performed;
 
         _inputActions.InputPlayerAction.SilentKill.performed += SilentKill_performed;
@@ -83,6 +85,12 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
     #region Function List InputMenuAction
     private void PauseGame_performed(InputAction.CallbackContext context) => OnPauseGamePerformed?.Invoke();
 
+    public float GetCommandValue()
+    {
+        float direction = 0;
+        direction = _inputActions.InputMenuAction.SelectCommandButton.ReadValue<float>();
+        return direction;
+    }
     #endregion
 
     #region Function List InputPlayerAction

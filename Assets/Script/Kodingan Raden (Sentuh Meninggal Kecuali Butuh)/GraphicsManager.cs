@@ -4,19 +4,19 @@ using TMPro;
 public class GraphicsManager : MonoBehaviour
 {
     [Header("Resolution")]
-    public TextMeshProUGUI resolutionOption;
+    [SerializeField] private TextMeshProUGUI resolutionOption;
 
     [Header("Display Mode")]
-    public TextMeshProUGUI displayModeOption;
+    [SerializeField] private TextMeshProUGUI displayModeOption;
 
     [Header("Graphic Quality")]
-    public TextMeshProUGUI qualityOption;
+    [SerializeField] private TextMeshProUGUI qualityOption;
 
     [Header("VSync")]
-    public TextMeshProUGUI VSyncOption;
+    [SerializeField] private TextMeshProUGUI VSyncOption;
 
     [Header("Max Framerate")]
-    public TextMeshProUGUI maxFrameOption;
+    [SerializeField] private TextMeshProUGUI maxFrameOption;
 
     // Resolution
     private Resolution[] resolutions;
