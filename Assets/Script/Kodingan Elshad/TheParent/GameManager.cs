@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     #region NewCode
     public void PauseGame()
     {
+        if(_currState != GameState.Play && _currState != GameState.Pause) return;
         _isPause = !_isPause;
         OnPlayerPause?.Invoke(_isPause);
         

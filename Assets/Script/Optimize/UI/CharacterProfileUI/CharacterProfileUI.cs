@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -63,7 +64,10 @@ public class CharacterProfileUI : MonoBehaviour
     }
     public void UpdateHealthData()
     {
-        _currHPContainer.text = Mathf.Round(_playableIdentity.CurrHealth).ToString();
+        float currHealth = Mathf.Round(_playableIdentity.CurrHealth);
+        currHealth = currHealth > 0 ? currHealth : 0;
+        
+        _currHPContainer.text = currHealth.ToString();
         _maxHPContainer.text = _playableIdentity.TotalHealth.ToString();
     }
     private void UpdateWeaponData()

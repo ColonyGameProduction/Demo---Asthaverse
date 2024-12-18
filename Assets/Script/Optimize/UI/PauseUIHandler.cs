@@ -13,14 +13,14 @@ public class PauseUIHandler : MonoBehaviour
 
     private void TogglePauseUI(bool change)
     {
-        if(change) ShowPauseUI();
-        else HidePauseUI();
+        if(change) OpenPauseUI();
+        else ClosePauseUI();
     }
-    private void ShowPauseUI()
+    private void OpenPauseUI()
     {
         _pauseUIContainer.SetActive(true);
     }
-    public void HidePauseUI()
+    public void ClosePauseUI()
     {
         _pauseUIContainer.SetActive(false);
     }
