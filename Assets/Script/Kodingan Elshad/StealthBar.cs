@@ -7,6 +7,12 @@ public class StealthBar : MonoBehaviour
 {
     GameManager gm;
 
+    public Sprite backgroundFillSpriteExclamation;
+    public Sprite fillSpriteExclamation;
+
+    public Sprite backgroundFillSprite;
+    public Sprite fillSprite;
+
     public GameObject imageContainer;
     public GameObject fillBarImageParent;
     public GameObject imageContainerCameraCanvas;
@@ -27,15 +33,23 @@ public class StealthBar : MonoBehaviour
         {
             imageContainer.transform.forward = transform.position - Camera.main.transform.position;
 
+            
+
             imageContainerCheck = null;
             Destroy(imageContainerCameraCanvas);
 
             fillBarImage = imageContainer.transform.GetChild(1).GetComponent<Image>();
+
+            imageContainer.transform.GetChild(0).GetComponent<Image>().sprite = backgroundFillSpriteExclamation;
+            imageContainer.transform.GetChild(1).GetComponent<Image>().sprite = fillSpriteExclamation;
+            imageContainer.transform.GetChild(1).GetComponent<Image>().fillMethod = Image.FillMethod.Vertical;
             fillBarImage.fillAmount = currStealth / MaxStealth;
             FillingTheBar(imageContainer, fillBarImage);
         }
         else
         {
+            
+
             if(imageContainerCheck != imageContainer)
             {
                 if(imageContainer.activeSelf)
@@ -48,8 +62,12 @@ public class StealthBar : MonoBehaviour
 
             if(imageContainerCameraCanvas != null)
             {
-                imageContainerCameraCanvas.GetComponent<RectTransform>().localScale = new Vector3(150, 150, 150);
+                imageContainerCameraCanvas.GetComponent<RectTransform>().localScale = new Vector3(100, 100, 100);
                 fillBarImage = imageContainerCameraCanvas.transform.GetChild(1).GetComponent<Image>();
+
+                imageContainerCameraCanvas.transform.GetChild(0).GetComponent<Image>().sprite = backgroundFillSprite;
+                imageContainerCameraCanvas.transform.GetChild(1).GetComponent<Image>().sprite = fillSprite;
+                imageContainerCameraCanvas.transform.GetChild(1).GetComponent<Image>().fillMethod = Image.FillMethod.Horizontal;
                 fillBarImage.fillAmount = currStealth / MaxStealth;
                 fillBar(imageContainerCameraCanvas);
                 FillingTheBar(imageContainerCameraCanvas, fillBarImage);

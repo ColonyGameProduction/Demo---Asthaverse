@@ -529,6 +529,59 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9faaf32607770b5469cd14d9154e22ad, type: 3}
+--- !u!1 &43563258
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 43563259}
+  - component: {fileID: 43563260}
+  m_Layer: 0
+  m_Name: Blur
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &43563259
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 43563258}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 131231983}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &43563260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 43563258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 1
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 2b742406522f5be4680f4fe054ac1f5d, type: 2}
 --- !u!1 &43963194
 GameObject:
   m_ObjectHideFlags: 0
@@ -1624,6 +1677,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1949739712}
+  - {fileID: 43563259}
   - {fileID: 214864418}
   - {fileID: 1748359445}
   - {fileID: 1346226340}
@@ -1730,7 +1784,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2727,14 +2781,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7ba7a25493dc32f47bb5499f82acd352, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
   m_Type: 3
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 1
   m_FillAmount: 0
   m_FillClockwise: 1
-  m_FillOrigin: 1
+  m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &181229695
@@ -8493,7 +8547,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9120,7 +9174,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 64a5b9f39586fd64b9554bf2a43d22b3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -10888,6 +10942,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774aedca2eaa0d041be918251ff38fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundFillSpriteExclamation: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
+  fillSpriteExclamation: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
+  backgroundFillSprite: {fileID: 21300000, guid: e72de9865deb00b4eabe6bd2254ae57b, type: 3}
+  fillSprite: {fileID: 21300000, guid: 5b446baa89fbf11449f5f9bf1626870f, type: 3}
   imageContainer: {fileID: 1079747321}
   fillBarImageParent: {fileID: 372115483}
   imageContainerCameraCanvas: {fileID: 0}
@@ -13389,6 +13447,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774aedca2eaa0d041be918251ff38fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundFillSpriteExclamation: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
+  fillSpriteExclamation: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
+  backgroundFillSprite: {fileID: 21300000, guid: e72de9865deb00b4eabe6bd2254ae57b, type: 3}
+  fillSprite: {fileID: 21300000, guid: 5b446baa89fbf11449f5f9bf1626870f, type: 3}
   imageContainer: {fileID: 395601588}
   fillBarImageParent: {fileID: 372115483}
   imageContainerCameraCanvas: {fileID: 0}
@@ -17387,7 +17449,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -17753,7 +17815,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -20254,14 +20316,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7ba7a25493dc32f47bb5499f82acd352, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
   m_Type: 3
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 1
   m_FillAmount: 0
   m_FillClockwise: 1
-  m_FillOrigin: 1
+  m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &979098683
@@ -21150,14 +21212,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7ba7a25493dc32f47bb5499f82acd352, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
   m_Type: 3
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 1
   m_FillAmount: 0
   m_FillClockwise: 1
-  m_FillOrigin: 1
+  m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1057158619
@@ -21654,6 +21716,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774aedca2eaa0d041be918251ff38fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundFillSpriteExclamation: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
+  fillSpriteExclamation: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
+  backgroundFillSprite: {fileID: 21300000, guid: e72de9865deb00b4eabe6bd2254ae57b, type: 3}
+  fillSprite: {fileID: 21300000, guid: 5b446baa89fbf11449f5f9bf1626870f, type: 3}
   imageContainer: {fileID: 1059789679}
   fillBarImageParent: {fileID: 0}
   imageContainerCameraCanvas: {fileID: 0}
@@ -23222,6 +23288,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774aedca2eaa0d041be918251ff38fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundFillSpriteExclamation: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
+  fillSpriteExclamation: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
+  backgroundFillSprite: {fileID: 21300000, guid: e72de9865deb00b4eabe6bd2254ae57b, type: 3}
+  fillSprite: {fileID: 21300000, guid: 5b446baa89fbf11449f5f9bf1626870f, type: 3}
   imageContainer: {fileID: 1451643576}
   fillBarImageParent: {fileID: 0}
   imageContainerCameraCanvas: {fileID: 0}
@@ -23830,7 +23900,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 64a5b9f39586fd64b9554bf2a43d22b3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -24531,6 +24601,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774aedca2eaa0d041be918251ff38fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundFillSpriteExclamation: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
+  fillSpriteExclamation: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
+  backgroundFillSprite: {fileID: 21300000, guid: e72de9865deb00b4eabe6bd2254ae57b, type: 3}
+  fillSprite: {fileID: 21300000, guid: 5b446baa89fbf11449f5f9bf1626870f, type: 3}
   imageContainer: {fileID: 1655095675}
   fillBarImageParent: {fileID: 0}
   imageContainerCameraCanvas: {fileID: 0}
@@ -30517,6 +30591,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774aedca2eaa0d041be918251ff38fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundFillSpriteExclamation: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
+  fillSpriteExclamation: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
+  backgroundFillSprite: {fileID: 21300000, guid: e72de9865deb00b4eabe6bd2254ae57b, type: 3}
+  fillSprite: {fileID: 21300000, guid: 5b446baa89fbf11449f5f9bf1626870f, type: 3}
   imageContainer: {fileID: 383686914}
   fillBarImageParent: {fileID: 372115483}
   imageContainerCameraCanvas: {fileID: 0}
@@ -31514,7 +31592,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: e7d5a8204c56c684a8ad183a6c841b7e, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -33672,7 +33750,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -36164,7 +36242,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 64a5b9f39586fd64b9554bf2a43d22b3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7a053119ce1ed4c41b27d11d8bffd03c, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
