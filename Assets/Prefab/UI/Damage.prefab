@@ -409,7 +409,6 @@ RectTransform:
   - {fileID: 7795492135099012097}
   - {fileID: 1148067814191141953}
   - {fileID: 7241165822616368015}
-  - {fileID: 4801251943897975268}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -436,6 +435,7 @@ MonoBehaviour:
   _dmgDirContainer: {fileID: 8739453073155146658}
   _dmgDirArrowContainer: {fileID: 8415665494295380251}
   _arrowPrefab: {fileID: 7873583235577081737, guid: 02bdbe18f6c85954fa7d5dc1af1d7cbf, type: 3}
+  _totalArrow: 0
   _upBloodDamage: {fileID: 1335371256041646782}
   _rightBloodDamage: {fileID: 8229184860863844615}
   _leftBloodDamage: {fileID: 5321302579437193171}
@@ -605,41 +605,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!1 &8055588082597565333
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4801251943897975268}
-  m_Layer: 0
-  m_Name: StealthContainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &4801251943897975268
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8055588082597565333}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6855249183008115803}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8415665494295380251
 GameObject:
   m_ObjectHideFlags: 0
