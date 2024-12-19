@@ -10,6 +10,8 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
 {
     public List<Canvas> faces = new List<Canvas>();
 
+    public GameObject soundMove;
+
     public VideoPlayer curVideo;
     private Sprite curSprite;
     public CutsceneMouthSO cutsceneMouth;
@@ -56,6 +58,12 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
                 StopAllCoroutines();
                 text.text = curCutsceneDialog.dialogSentence[index];
             }
+        }
+
+        if(text.text == curCutsceneDialog.dialogSentence[index])
+        {
+            faces[charID].GetComponentInChildren<VideoPlayer>().Pause();
+            soundMove.SetActive(false);
         }
     }
 
@@ -177,7 +185,7 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
         LeanTween.alpha(faces[charID].GetComponentInChildren<Image>().rectTransform, 0, .5f);
 
         faces[charID].GetComponentInChildren<VideoPlayer>().Play();
-
+        soundMove.SetActive(true);
 
         if (charID != prevCharID)
         {
