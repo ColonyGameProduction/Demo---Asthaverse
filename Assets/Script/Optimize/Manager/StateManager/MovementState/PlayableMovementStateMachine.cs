@@ -179,7 +179,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     protected override void Update()
     {
-        
+        if(!_gm.IsGamePlaying()) _getPlayableMakeSFX.PlayStopSFX(AudioSFXName.NormalWalk, false);
         base.Update();
         GoingToTakeCover();
     }

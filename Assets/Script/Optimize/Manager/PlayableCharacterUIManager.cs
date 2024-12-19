@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class PlayableCharacterUIManager : MonoBehaviour
     private EnemyAIManager _enemyAIManager;
     [SerializeField] private DamageUIHandler _dmgUIHandler;
     [SerializeField] private CharacterProfileUIHandler _characterProfileUIHandler;
+    [SerializeField] private ControlsManager _controlsManager;
     
     public CharacterProfileUIHandler GetCharacterProfileUIHandler {get {return _characterProfileUIHandler;}}
 
@@ -17,7 +19,14 @@ public class PlayableCharacterUIManager : MonoBehaviour
     {
         _playableCharacterManager = GetComponent<PlayableCharacterManager>();
         _playableCharacterManager.OnPlayerSwitch += _characterProfileUIHandler.UpdateHealthData;
+
+        _controlsManager.OnAimModeChange += Settings_OnScopeModeChange;
+        _controlsManager.OnSprintModeChange += Settings_OnSprintModeChange;
+        _controlsManager.OnCrouchModeChange += Settings_OnCrouchModeChange;
     }
+
+
+
     private void Start() 
     {
         _weaponLogicManager = WeaponLogicManager.Instance;
@@ -58,4 +67,19 @@ public class PlayableCharacterUIManager : MonoBehaviour
             _dmgUIHandler.CallArrow(shooter);
         }
     }
+
+    private void Settings_OnScopeModeChange(bool change)
+    {
+        _playableCharacterManager.IsScopeModeHold = change;
+    }
+
+    private void Settings_OnSprintModeChange(bool change)
+    {
+        _playableCharacterManager.IsRunModeHold = change;
+    }
+    private void Settings_OnCrouchModeChange(bool change)
+    {
+        _playableCharacterManager.IsCrouchModeHold = change;
+    }
+
 }

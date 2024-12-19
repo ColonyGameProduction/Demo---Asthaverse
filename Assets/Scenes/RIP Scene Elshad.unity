@@ -8657,22 +8657,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ee89567e51e90c43bcf9f4faee3f824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterVolumeText: {fileID: 934067521}
-  masterSlider: {fileID: 529698221}
-  masterLeftButton: {fileID: 0}
-  masterRightButton: {fileID: 0}
-  musicVolumeText: {fileID: 0}
-  musicSlider: {fileID: 0}
-  musicLeftButton: {fileID: 0}
-  musicRightButton: {fileID: 0}
-  soundEffectVolumeText: {fileID: 0}
-  soundEffectSlider: {fileID: 0}
-  soundEffectLeftButton: {fileID: 0}
-  soundEffectRightButton: {fileID: 0}
-  dialogueVolumeText: {fileID: 0}
-  dialogueSlider: {fileID: 0}
-  dialogueLeftButton: {fileID: 0}
-  dialogueRightButton: {fileID: 0}
+  _audioMixer: {fileID: 0}
+  _outputOption: {fileID: 0}
+  _masterVolumeText: {fileID: 0}
+  _masterSlider: {fileID: 0}
+  _masterLeftButton: {fileID: 0}
+  _masterRightButton: {fileID: 0}
+  _musicVolumeText: {fileID: 0}
+  _musicSlider: {fileID: 0}
+  _musicLeftButton: {fileID: 0}
+  _musicRightButton: {fileID: 0}
+  _soundEffectVolumeText: {fileID: 0}
+  _soundEffectSlider: {fileID: 0}
+  _soundEffectLeftButton: {fileID: 0}
+  _soundEffectRightButton: {fileID: 0}
+  _dialogueVolumeText: {fileID: 0}
+  _dialogueSlider: {fileID: 0}
+  _dialogueLeftButton: {fileID: 0}
+  _dialogueRightButton: {fileID: 0}
+  _stepSize: 0.05
+  _currentOutputIndex: 0
+  _masterCurrentVolume: 0.5
+  _musicCurrentVolume: 0.5
+  _soundEffectCurrentVolume: 0.5
+  _dialogueCurrentVolume: 0.5
 --- !u!224 &460198270
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10683,7 +10691,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: sadasdsadsadassdasdasdsa
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -19742,13 +19750,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa417f4f547f3db4783c56179809363d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensPresentageText: {fileID: 1727754053}
-  sensSlider: {fileID: 1637984738}
-  sensLeftButton: {fileID: 1452368920}
-  sensRightButton: {fileID: 2122537608}
-  aimOption: {fileID: 1479427906}
-  sprintOption: {fileID: 1698350437}
-  crouchOption: {fileID: 1592576580}
+  _sensPresentageText: {fileID: 0}
+  _sensSlider: {fileID: 0}
+  _sensLeftButton: {fileID: 0}
+  _sensRightButton: {fileID: 0}
+  _aimOption: {fileID: 0}
+  _sprintOption: {fileID: 0}
+  _crouchOption: {fileID: 0}
+  _stepSize: 0.01
+  _sensCurrentPresentage: 0.5
+  _currentAimIndex: 0
+  _currentSprintIndex: 0
+  _currentCrouchIndex: 0
 --- !u!224 &956151274
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21674,7 +21687,8 @@ MonoBehaviour:
   canSwitch: 1
   scope: 0
   breadcrumbsGameObject: []
-  _currState: 0
+  _currGameState: 0
+  _currGamePauseState: 0
   gameIsPaused: 0
   isAtSetting: 0
 --- !u!1 &1079747321
@@ -29614,11 +29628,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5742c7509a199c94c8b2587d5e9b3ba8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resolutionOption: {fileID: 2023879932}
-  displayModeOption: {fileID: 277410815}
-  qualityOption: {fileID: 955195995}
-  VSyncOption: {fileID: 1994101623}
-  maxFrameOption: {fileID: 1359444223}
+  _resolutionOption: {fileID: 0}
+  _displayModeOption: {fileID: 0}
+  _qualityOption: {fileID: 0}
+  _VSyncOption: {fileID: 0}
+  _maxFrameOption: {fileID: 0}
+  _currentResolutionIndex: 0
+  _currentDisplayModeIndex: 0
+  _currentQualityIndex: 0
+  _isVSyncOn: 1
+  _currentFramerateIndex: 6
 --- !u!224 &1536264535
 RectTransform:
   m_ObjectHideFlags: 0

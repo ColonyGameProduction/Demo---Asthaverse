@@ -57,6 +57,10 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     private PlayableMinimapSymbolHandler _currPlayableMinimapSymbolHandler;
     private WorldSoundManager _worldSoundManager;
 
+    [Header("Control Settings Option")]
+    [ReadOnly(false), SerializeField] private bool _isScopeModeHold;
+    [ReadOnly(false), SerializeField] private bool _isRunModeHold, _isCrouchModeHold;
+    private bool _isCanCancelRun_ModeToggle, _isCanCancelScope_ModeToggle, _isCanCancelCrouch_ModeToggle;
 
     [Header("Events")]
     public Action<bool, int> OnCommandingBoolChange;
@@ -72,6 +76,57 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     public static bool IsHoldInPlaceFriend { get { return _isHoldInPlaceFriend;}}
 
     public PlayableCharacterIdentity CurrPlayableChara { get { return _charaIdentities[_currCharaidx];}}
+    public bool IsScopeModeHold 
+    {
+        get {return _isScopeModeHold;} 
+        set 
+        {
+            if(_isScopeModeHold != value && value)
+            {
+                _isScopeModeHold = value;
+                if(_playableCharacterCameraManager.IsScope)
+                {
+                    GameInput_OnScopeCanceled();
+                }
+                _isCanCancelScope_ModeToggle = false;
+            }
+            else _isScopeModeHold = value;
+        }
+    }
+    public bool IsRunModeHold
+    {
+        get {return _isRunModeHold;} 
+        set 
+        {
+            if(_isRunModeHold != value && value)
+            {
+                _isRunModeHold = value;
+                if(_currPlayableMoveStateMachine != null && _currPlayableMoveStateMachine.IsRunning)
+                {
+                    GameInput_OnRunCanceled();
+                }
+                _isCanCancelRun_ModeToggle = false;
+            }
+            else _isRunModeHold = value;
+        }
+    }
+    public bool IsCrouchModeHold
+    {
+        get {return _isCrouchModeHold;} 
+        set 
+        {
+            if(_isCrouchModeHold != value && value)
+            {
+                _isCrouchModeHold = value;
+                if(_currPlayableMoveStateMachine != null && _currPlayableMoveStateMachine.IsCrouching)
+                {
+                    GameInput_OnCrouchCanceled();
+                }
+                _isCanCancelCrouch_ModeToggle = false;
+            }
+            else _isCrouchModeHold = value;
+        }
+    }
 
     #endregion
     private void Awake() 
@@ -427,6 +482,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _gameInputManager.OnShootingPerformed += GameInput_OnShootingPerformed;
         _gameInputManager.OnShootingCanceled += GameInput_OnShootingCanceled;
         _gameInputManager.OnScopePerformed += GameInput_OnScopePerformed;
+        _gameInputManager.OnScopeCanceled += GameInput_OnScopeCanceled;
         _gameInputManager.OnReloadPerformed += GameInput_OnReloadPerformed;
 
         _gameInputManager.OnInteractPerformed += GameInput_OnInteractPerformed;
@@ -517,6 +573,16 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
+        if(!_isRunModeHold)
+        {
+            if(_currPlayableMoveStateMachine.IsRunning)
+            {
+                _isCanCancelRun_ModeToggle = true;
+                GameInput_OnRunCanceled();
+                return;
+            }
+        }
+
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {   
             if(_currPlayableMoveStateMachine.IsCrouching)
@@ -547,6 +613,24 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
     private void GameInput_OnRunCanceled()
     {
+        if(!_isRunModeHold)
+        {
+            if(_gm.IsGamePlaying())
+            {
+                if(_isCanCancelRun_ModeToggle)
+                {
+                    _isCanCancelRun_ModeToggle = false;
+                }
+                else return;
+            }
+            else
+            {
+                _isCanCancelRun_ModeToggle = false;
+                return;
+            }
+        }
+
+
         CurrPlayableChara.Run(false);
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
@@ -559,6 +643,16 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     private void GameInput_OnCrouchPerformed()
     {
         if(!_gm.IsGamePlaying()) return;
+
+        if(!_isCrouchModeHold)
+        {
+            if(_currPlayableMoveStateMachine.IsCrouching)
+            {
+                _isCanCancelCrouch_ModeToggle = true;
+                GameInput_OnCrouchCanceled();
+                return;
+            }
+        }
 
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
         {
@@ -579,6 +673,23 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
     private void GameInput_OnCrouchCanceled()
     {
+        if(!_isCrouchModeHold)
+        {
+            if(_gm.IsGamePlaying())
+            {
+                if(_isCanCancelCrouch_ModeToggle)
+                {
+                    _isCanCancelCrouch_ModeToggle = false;
+                }
+                else return;
+            }
+            else
+            {
+                _isCanCancelCrouch_ModeToggle = false;
+                return;
+            }
+        }
+
         if(!_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {
             if(!_currPlayableMoveStateMachine.IsHeadHitWhenUnCrouch())
@@ -722,24 +833,48 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     private void GameInput_OnScopePerformed()
     {
         if(!_gm.IsGamePlaying()) return;
+        
+        if(!_isScopeModeHold)
+        {
+            if(_playableCharacterCameraManager.IsScope)
+            {
+                _isCanCancelScope_ModeToggle = true;
+                GameInput_OnScopeCanceled();
+                return;
+            }
+        }
 
         if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {
             //KALO LAGI mo ngescope, tp blm aim, lsg aim nya nyalain jg
 
             //tp kalo unscope, dan
-            if(!_playableCharacterCameraManager.IsScope)
+            CurrPlayableChara.Aiming(true);
+            _playableCharacterCameraManager.ScopeCamera();
+
+        }
+    }
+    private void GameInput_OnScopeCanceled()
+    {
+        if(!_isScopeModeHold)
+        {
+            if(_gm.IsGamePlaying())
             {
-                CurrPlayableChara.Aiming(true);
-                _playableCharacterCameraManager.ScopeCamera();
+                if(_isCanCancelScope_ModeToggle)
+                {
+                    _isCanCancelScope_ModeToggle = false;
+                }
+                else return;
             }
             else
             {
-                CurrPlayableChara.Aiming(false);
-                _playableCharacterCameraManager.ResetScope();
+                _isCanCancelScope_ModeToggle = false;
+                return;
             }
-
         }
+
+        CurrPlayableChara.Aiming(false);
+        _playableCharacterCameraManager.ResetScope();
     }
     private void GameInput_OnReloadPerformed()
     {
@@ -777,6 +912,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _gameInputManager.OnShootingPerformed -= GameInput_OnShootingPerformed;
         _gameInputManager.OnShootingCanceled -= GameInput_OnShootingCanceled;
         _gameInputManager.OnScopePerformed -= GameInput_OnScopePerformed;
+        _gameInputManager.OnScopeCanceled -= GameInput_OnScopeCanceled;
         _gameInputManager.OnReloadPerformed -= GameInput_OnReloadPerformed;
 
         _gameInputManager.OnInteractPerformed -= GameInput_OnInteractPerformed;

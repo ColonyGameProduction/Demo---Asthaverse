@@ -14,7 +14,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
     public Action OnRunPerformed, OnRunCanceled, OnCrouchPerformed, OnCrouchCanceled,
                   OnChangePlayerPerformed, OnChangeWeaponPerformed, 
                   OnCommandPerformed, OnExitCommandPerformed, OnRegroupFriendPerformed,
-                  OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnReloadPerformed,
+                  OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnScopeCanceled, OnReloadPerformed,
                   OnInteractPerformed, OnNightVisionPerformed, OnSkillPerformed, OnWhistlePerformed, OnThrowPerformed,
                   OnTakeCoverPerformed, OnExitTakeCoverPerformed;
     public Action<int> OnCommandFriendPerformed;
@@ -59,6 +59,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
         _inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
         _inputActions.InputPlayerAction.Shooting.canceled += Shooting_canceled;
         _inputActions.InputPlayerAction.Scope.performed += Scope_performed;
+        _inputActions.InputPlayerAction.Scope.canceled += Scope_canceled;
         _inputActions.InputPlayerAction.Reload.performed += Reload_performed;
 
         _inputActions.InputPlayerAction.Interact.performed += Interact_performed;
@@ -70,6 +71,8 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
         _inputActions.InputPlayerAction.TakeCover.performed += TakeCover_performed;
         _inputActions.InputPlayerAction.ExitTakeCover.performed += ExitTakeCover_performed;
     }
+
+    
 
     public void SubscribeToInputMenuAction()
     {
@@ -113,6 +116,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
     private void Shooting_Performed(InputAction.CallbackContext context)=> OnShootingPerformed?.Invoke();
     private void Shooting_canceled(InputAction.CallbackContext context)=> OnShootingCanceled?.Invoke();    
     private void Scope_performed(InputAction.CallbackContext context)=> OnScopePerformed?.Invoke();
+    private void Scope_canceled(InputAction.CallbackContext context) => OnScopeCanceled?.Invoke();
     private void Reload_performed(InputAction.CallbackContext context)=> OnReloadPerformed?.Invoke();
     private void Interact_performed(InputAction.CallbackContext context) => OnInteractPerformed?.Invoke();
     private void NightVision_performed(InputAction.CallbackContext context) => OnNightVisionPerformed?.Invoke();

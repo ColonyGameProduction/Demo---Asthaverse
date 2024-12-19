@@ -166,11 +166,11 @@ public class EnemyAlertUI : MonoBehaviour
 
     private void ShowAlertUIContainer()
     {
-        ToggleAlertUIContainer(_chosenUIContainer, true);
+        if(_chosenUIContainer != null) ToggleAlertUIContainer(_chosenUIContainer, true);
     }
     private void HideAlertUIContainer()
     {
-        ToggleAlertUIContainer(_chosenUIContainer, false);
+        if(_chosenUIContainer != null) ToggleAlertUIContainer(_chosenUIContainer, false);
     }
     private void HideAllAlertUIContainer()
     {
@@ -184,7 +184,7 @@ public class EnemyAlertUI : MonoBehaviour
     }
     private void SetFillImage(float value)
     {
-        _chosenFillImage.fillAmount = value;
+        if(_chosenFillImage != null) _chosenFillImage.fillAmount = value;
     }
     private void ToggleAlertUIContainer(GameObject alertUIContainer,bool change)=> alertUIContainer.SetActive(change);
 

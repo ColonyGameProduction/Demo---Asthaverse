@@ -5,7 +5,8 @@ using UnityEngine;
 public class GameOverUIHandler : MonoBehaviour
 {
     private GameManager _gm;
-    [SerializeField] private CanvasGroup _gameOverContainer;
+    [SerializeField] private GameObject _gameOverContainer, _buttonsContainer;
+    [SerializeField] private CanvasGroup _gameOverImageCanvasGroup;
     [SerializeField] private float _showDuration = 0.5f;
     private void Awake() 
     {
@@ -20,18 +21,19 @@ public class GameOverUIHandler : MonoBehaviour
     public void ShowGameOverUI()
     {
         _gameOverContainer.gameObject.SetActive(true);
-        LeanTween.alphaCanvas(_gameOverContainer, 1, _showDuration).setOnComplete(
+        LeanTween.alphaCanvas(_gameOverImageCanvasGroup, 1, _showDuration).setOnComplete(
             ()=>
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-
+                _buttonsContainer.SetActive(true);
             }
         );
     }
     public void HideGameOverUI()
     {
         _gameOverContainer.gameObject.SetActive(false);
-        _gameOverContainer.alpha = 0f;
+        _gameOverImageCanvasGroup.alpha = 0f;
+        _buttonsContainer.SetActive(false);
     }
 }
