@@ -12,7 +12,15 @@ public class AudioManager : MonoBehaviour
     private List<Audio> _audioList = new List<Audio>();
     private void Awake() 
     {
+        if(Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
+        DontDestroyOnLoad(Instance);
+        
         for(int i = 0; i < _audioSFXList.audioSFX.Count ; i++)
         {
             if(_audioSFXList.audioSFX[i].useSpatialBlend)continue;

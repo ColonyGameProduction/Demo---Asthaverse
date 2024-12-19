@@ -30,7 +30,7 @@ public class EnemyAlertUI : MonoBehaviour
     [ReadOnly(false), SerializeField] private GameObject _chosenUIContainer;
     [ReadOnly(false), SerializeField] private Image _chosenFillImage;
     [ReadOnly(false), SerializeField] private bool _isAlertUIAtEnemyVisibleOnCam = true;
-    [ReadOnly(false), SerializeField] private bool _isShowUI;
+    [ReadOnly(true), SerializeField] private bool _isShowUI;
     [ReadOnly(false), SerializeField] private float _fillImageValue = 0;
 
     public bool IsAlertUIAtEnemyVisibleOnCam 
@@ -159,10 +159,9 @@ public class EnemyAlertUI : MonoBehaviour
         // if(!_isAlertUIAtEnemyVisibleOnCam || (_isAlertUIAtEnemyVisibleOnCam && !_isShowUI)) return;
 
 
-        Vector3 flatForward = _camera.transform.forward;
-        flatForward.y = 0;
-        flatForward.Normalize();
-        _alertUIExclamationContainer.transform.LookAt(flatForward);
+        Vector3 cameraPos = _camera.transform.position;
+        cameraPos.y = _alertUIExclamationContainer.transform.position.y;
+        _alertUIExclamationContainer.transform.LookAt(cameraPos);
     }
 
     private void ShowAlertUIContainer()
@@ -188,4 +187,9 @@ public class EnemyAlertUI : MonoBehaviour
         _chosenFillImage.fillAmount = value;
     }
     private void ToggleAlertUIContainer(GameObject alertUIContainer,bool change)=> alertUIContainer.SetActive(change);
+
+    public void RemoveAlertUINormal()
+    {
+        Destroy(_alertUINormalContainer);
+    }
 }

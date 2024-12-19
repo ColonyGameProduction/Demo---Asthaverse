@@ -1,110 +1,157 @@
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
 
 public class ControlsManager : MonoBehaviour
 {
     [Header("Sensitivity")]
-    public TextMeshProUGUI sensPresentageText;
-    public Slider sensSlider;
-    public Button sensLeftButton;
-    public Button sensRightButton;
+    [SerializeField] private TextMeshProUGUI _sensPresentageText;
+    [SerializeField] private Slider _sensSlider;
+    [SerializeField] private Button _sensLeftButton;
+    [SerializeField] private Button _sensRightButton;
 
     [Header("Aim")]
-    public TextMeshProUGUI aimOption;
+    [SerializeField] private TextMeshProUGUI _aimOption;
 
     [Header("Sprint")]
-    public TextMeshProUGUI sprintOption;
+    [SerializeField] private TextMeshProUGUI _sprintOption;
 
     [Header("Crouch")]
-    public TextMeshProUGUI crouchOption;
+    [SerializeField] private TextMeshProUGUI _crouchOption;
 
-    private float stepSize = 0.01f;
+    [SerializeField] private float _stepSize = 0.01f;
 
-    private float sensCurrentPresentage = 0.5f;
+    [ReadOnly(false), SerializeField] private float _sensCurrentPresentage = 0.5f;
+    private bool _isSensChangeFromSlider = false;
 
     //Aim
-    private int currentAimIndex = 0;
-    private readonly string[] aimOptions = { "Hold", "Toggle"};
+    [ReadOnly(false), SerializeField] private int _currentAimIndex = 0;
+    [ReadOnly(false), SerializeField] private readonly string[] _aimOptions = { "Hold", "Toggle"};
 
     //Sprint
-    private int currentSprintIndex = 0;
-    private readonly string[] sprintOptions = { "Hold", "Toggle" };
+    [ReadOnly(false), SerializeField] private int _currentSprintIndex = 0;
+    [ReadOnly(false), SerializeField] private readonly string[] _sprintOptions = { "Hold", "Toggle" };
 
     //Crouch
-    private int currentCrouchIndex = 0;
-    private readonly string[] crouchOptions = { "Hold", "Toggle" };
+    [ReadOnly(false), SerializeField] private int _currentCrouchIndex = 0;
+    [ReadOnly(false), SerializeField] private readonly string[] _crouchOptions = { "Hold", "Toggle" };
+
+    #region event
+    public Action<float> OnSensValueChange;
+    public Action<bool> OnAimModeChange, OnSprintModeChange, OnCrouchModeChange;
+    #endregion
+
+    #region const
+    public const string SENS_VALUE_PREF = "SensValue";
+    public const string AIM_MODE_PREF = "AimMode";
+    public const string SPRINT_MODE_PREF = "SprintMode";
+    public const string CROUCH_MODE_PREF = "CrouchMode";
+    #endregion
 
     private void Start()
     {
-        sensSlider.value = sensCurrentPresentage;
-        UpdateSensPresentage(sensCurrentPresentage);
+        LoadPref();
+        
 
-        sensLeftButton.onClick.AddListener(() => ChangeSensPresentage(-stepSize));
-        sensRightButton.onClick.AddListener(() => ChangeSensPresentage(stepSize));
+        _sensLeftButton.onClick.AddListener(() => ChangeSensPresentageButton(-_stepSize));
+        _sensRightButton.onClick.AddListener(() => ChangeSensPresentageButton(_stepSize));
+        _sensSlider.onValueChanged.AddListener(ChangeSensPresentageSlider);
+    }
 
+    private void LoadPref()
+    {
+        _sensCurrentPresentage = PlayerPrefs.GetFloat(SENS_VALUE_PREF, _sensCurrentPresentage);
+        _currentAimIndex = PlayerPrefs.GetInt(AIM_MODE_PREF, _currentAimIndex);
+        _currentSprintIndex = PlayerPrefs.GetInt(SPRINT_MODE_PREF, _currentSprintIndex);
+        _currentCrouchIndex = PlayerPrefs.GetInt(CROUCH_MODE_PREF, _currentCrouchIndex);
+
+        UpdateSensPresentage(_sensCurrentPresentage);
         UpdateAimText();
         UpdateSprintText();
+        UpdateCrouchText();
     }
 
-    public void ChangeSensPresentage(float delta)
+    public void ChangeSensPresentageButton(float delta)
     {
-        sensCurrentPresentage = Mathf.Clamp(sensCurrentPresentage + delta, 0f, 1f);
+        _sensCurrentPresentage = Mathf.Clamp(_sensCurrentPresentage + delta, 0f, 1f);
 
-        sensSlider.value = sensCurrentPresentage;
-        UpdateSensPresentage(sensCurrentPresentage);
+        _isSensChangeFromSlider = false;
+        UpdateSensPresentage(_sensCurrentPresentage);
+
+        PlayerPrefs.SetFloat(SENS_VALUE_PREF, _sensCurrentPresentage);
+    }
+    public void ChangeSensPresentageSlider(float value)
+    {
+        if(_isSensChangeFromSlider)UpdateSensPresentage(value);
+        else _isSensChangeFromSlider = true;
+
+        PlayerPrefs.SetFloat(SENS_VALUE_PREF, value);
     }
 
-    public void UpdateSensPresentage(float value)
+    private void UpdateSensPresentage(float value)
     {
-        sensPresentageText.text = Mathf.RoundToInt(value * 100) + "%";
-
+        if(_isSensChangeFromSlider) _sensCurrentPresentage = value;
+        else _sensSlider.value = value;
+        
+        _sensPresentageText.text = Mathf.RoundToInt(value * 100) + "%";
+        
         // value change
         // ------------
+        
+        OnSensValueChange?.Invoke(value);
+        
     }
 
     public void ChangeAim(int change)
     {
-        currentAimIndex = (currentAimIndex + change + aimOptions.Length) % aimOptions.Length;
+        _currentAimIndex = (_currentAimIndex + change + _aimOptions.Length) % _aimOptions.Length;
 
         // value change
-        // ------------
+        PlayerPrefs.SetInt(AIM_MODE_PREF, _currentAimIndex);
 
         UpdateAimText();
     }
 
     private void UpdateAimText()
     {
-        aimOption.text = aimOptions[currentAimIndex];
+        _aimOption.text = _aimOptions[_currentAimIndex];
+
+        OnAimModeChange?.Invoke(_currentAimIndex == 0 ? true : false);
     }
 
     public void ChangeSprint(int change)
     {
-        currentSprintIndex = (currentSprintIndex + change + sprintOptions.Length) % sprintOptions.Length;
+        _currentSprintIndex = (_currentSprintIndex + change + _sprintOptions.Length) % _sprintOptions.Length;
 
         // value change
-        // ------------
-
+        PlayerPrefs.SetInt(SPRINT_MODE_PREF, _currentSprintIndex);
+        
         UpdateSprintText();
     }
 
     private void UpdateSprintText()
     {
-        sprintOption.text = sprintOptions[currentSprintIndex];
+        _sprintOption.text = _sprintOptions[_currentSprintIndex];
+
+        OnSprintModeChange?.Invoke(_currentSprintIndex == 0 ? true : false);
     }
 
     public void ChangeCrouch(int change)
     {
-        currentCrouchIndex = (currentCrouchIndex + change + crouchOptions.Length) % crouchOptions.Length;
+        _currentCrouchIndex = (_currentCrouchIndex + change + _crouchOptions.Length) % _crouchOptions.Length;
 
         // value change
-        // ------------
+        PlayerPrefs.SetInt(CROUCH_MODE_PREF, _currentCrouchIndex);
 
         UpdateCrouchText();
     }
 
     private void UpdateCrouchText()
     {
-        crouchOption.text = crouchOptions[currentCrouchIndex];
+        _crouchOption.text = _crouchOptions[_currentCrouchIndex];
+
+        OnCrouchModeChange?.Invoke(_currentCrouchIndex == 0 ? true : false);
     }
 }

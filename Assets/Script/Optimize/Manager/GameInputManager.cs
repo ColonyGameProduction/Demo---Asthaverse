@@ -52,7 +52,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
         _inputActions.InputPlayerAction.CommandFriend.performed += Command1_performed;
         _inputActions.InputPlayerAction.CommandFriend.canceled += ExitCommand_performed;
         // _inputActions.InputPlayerAction.ExitCommand.performed += ExitCommand_performed;
-        _inputActions.InputPlayerAction.RegroupFriend.performed += RegroupFriend_performed;
+        // _inputActions.InputPlayerAction.RegroupFriend.performed += RegroupFriend_performed;
 
         _inputActions.InputPlayerAction.SilentKill.performed += SilentKill_performed;
 

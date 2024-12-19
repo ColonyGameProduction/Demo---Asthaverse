@@ -10,7 +10,7 @@ public class WeaponGameObjectData
     public GameObject gunGameObject;
     public Transform shootPlacement;
     public Transform weaponMagTransform;
-    public PlayerGunCollide playerGunCollide;
+    [HideInInspector]public PlayerGunCollide playerGunCollide;
 }
 public class WeaponGameObjectDataContainer : MonoBehaviour
 {

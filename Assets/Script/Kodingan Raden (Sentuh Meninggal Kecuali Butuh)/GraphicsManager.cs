@@ -4,28 +4,28 @@ using TMPro;
 public class GraphicsManager : MonoBehaviour
 {
     [Header("Resolution")]
-    [SerializeField] private TextMeshProUGUI resolutionOption;
+    [SerializeField] private TextMeshProUGUI _resolutionOption;
 
     [Header("Display Mode")]
-    [SerializeField] private TextMeshProUGUI displayModeOption;
+    [SerializeField] private TextMeshProUGUI _displayModeOption;
 
     [Header("Graphic Quality")]
-    [SerializeField] private TextMeshProUGUI qualityOption;
+    [SerializeField] private TextMeshProUGUI _qualityOption;
 
     [Header("VSync")]
-    [SerializeField] private TextMeshProUGUI VSyncOption;
+    [SerializeField] private TextMeshProUGUI _VSyncOption;
 
     [Header("Max Framerate")]
-    [SerializeField] private TextMeshProUGUI maxFrameOption;
+    [SerializeField] private TextMeshProUGUI _maxFrameOption;
 
     // Resolution
-    private Resolution[] resolutions;
-    private int currentResolutionIndex = 0;
+    private Resolution[] _resolutions;
+    [ReadOnly(false), SerializeField] private int _currentResolutionIndex = 0;
 
     // Display Mode
-    private int currentDisplayModeIndex = 0;
-    private readonly string[] displayModes = { "Fullscreen", "Windowed", "Borderless" };
-    private readonly Resolution[] commonResolutions = new Resolution[] 
+    [ReadOnly(false), SerializeField] private int _currentDisplayModeIndex = 0;
+    private readonly string[] _displayModes = { "Fullscreen", "Windowed", "Borderless" };
+    private readonly Resolution[] _commonResolutions = new Resolution[] 
     {
         new Resolution { width = 1280, height = 720 },
         new Resolution { width = 1600, height = 900 },
@@ -35,90 +35,116 @@ public class GraphicsManager : MonoBehaviour
     };
 
     //Graphic Quality
-    private int currentQualityIndex = 0;
-    private readonly string[] qualityLevels = { "Low", "Medium", "High", "Ultra" };
+    [ReadOnly(false), SerializeField] private int _currentQualityIndex = 0;
+    private readonly string[] _qualityLevels = { "Low", "Medium", "High", "Ultra" };
 
     // VSync
-    private bool isVSyncOn = true;
+    [ReadOnly(false), SerializeField] private bool _isVSyncOn = true;
 
     // Max Framerate
-    private int[] framerateOptions = { 30, 60, 120, 144, 165, 240, -1 };
-    private int currentFramerateIndex = 6;
+    private int[] _framerateOptions = { 30, 60, 120, 144, 165, 240, -1 };
+    [ReadOnly(false), SerializeField] private int _currentFramerateIndex = 6;
 
+    #region const
+    public const string RESOLUTION_OPTION_PREF = "ResolutionOption";
+    public const string DISPLAYMODE_OPTION_PREF = "DisplayModeOption";
+    public const string QUALITY_OPTION_PREF = "QualityOption";
+    public const string VSYNC_OPTION_PREF = "VsyncOption";
+    public const string MAXFRAME_OPTION_PREF = "MaxFrameOption";
+    #endregion
     private void Start()
     {
-        resolutions = System.Array.FindAll(commonResolutions, r => r.width <= Screen.currentResolution.width && r.height <= Screen.currentResolution.height);
+        _resolutions = System.Array.FindAll(_commonResolutions, r => r.width <= Screen.currentResolution.width && r.height <= Screen.currentResolution.height);
+
+        LoadPref();
+    }
+
+    private void LoadPref()
+    {
+        _currentResolutionIndex = PlayerPrefs.GetInt(RESOLUTION_OPTION_PREF, _currentResolutionIndex);
+        _currentDisplayModeIndex = PlayerPrefs.GetInt(DISPLAYMODE_OPTION_PREF, _currentDisplayModeIndex);
+        _currentQualityIndex = PlayerPrefs.GetInt(QUALITY_OPTION_PREF, _currentQualityIndex);
+        _isVSyncOn = PlayerPrefs.GetInt(VSYNC_OPTION_PREF, _isVSyncOn ? 1 : 0) == 1 ? true : false;
+        _currentFramerateIndex = PlayerPrefs.GetInt(MAXFRAME_OPTION_PREF, _currentFramerateIndex);
+
         UpdateResolutionText();
         UpdateDisplayModeText();
         UpdateQualityText();
         UpdateVSyncText();
+        UpdateMaxFramerateText();
     }
 
     public void ChangeResolution(int change)
     {
-        currentResolutionIndex = (currentResolutionIndex + change + resolutions.Length) % resolutions.Length;
-        Resolution res = resolutions[currentResolutionIndex];
+        _currentResolutionIndex = (_currentResolutionIndex + change + _resolutions.Length) % _resolutions.Length;
+        Resolution res = _resolutions[_currentResolutionIndex];
         Screen.SetResolution(res.width, res.height, Screen.fullScreenMode);
 
+        PlayerPrefs.SetInt(RESOLUTION_OPTION_PREF, _currentResolutionIndex);
         UpdateResolutionText();
     }
 
     public void ChangeDisplayMode(int change)
     {
-        currentDisplayModeIndex = (currentDisplayModeIndex + change + displayModes.Length) % displayModes.Length;
-        Screen.fullScreenMode = (FullScreenMode)currentDisplayModeIndex;
+        _currentDisplayModeIndex = (_currentDisplayModeIndex + change + _displayModes.Length) % _displayModes.Length;
+        Screen.fullScreenMode = (FullScreenMode)_currentDisplayModeIndex;
 
+        PlayerPrefs.SetInt(DISPLAYMODE_OPTION_PREF, _currentDisplayModeIndex);
         UpdateDisplayModeText();
     }
 
     public void ChangeQuality(int change)
     {
-        currentQualityIndex = (currentQualityIndex + change + qualityLevels.Length) % qualityLevels.Length;
-        QualitySettings.SetQualityLevel(currentQualityIndex);
+        _currentQualityIndex = (_currentQualityIndex + change + _qualityLevels.Length) % _qualityLevels.Length;
+        QualitySettings.SetQualityLevel(_currentQualityIndex);
 
+        PlayerPrefs.SetInt(QUALITY_OPTION_PREF, _currentQualityIndex);
         UpdateQualityText();
     }
 
     public void ToggleVSync()
     {
-        isVSyncOn = !isVSyncOn;
-        QualitySettings.vSyncCount = isVSyncOn ? 1 : 0;
+        _isVSyncOn = !_isVSyncOn;
+        QualitySettings.vSyncCount = _isVSyncOn ? 1 : 0;
+
+        PlayerPrefs.SetInt(VSYNC_OPTION_PREF, _isVSyncOn ? 1 : 0);
         UpdateVSyncText();
     }
 
     public void ChangeMaxFramerate(int change)
     {
-        currentFramerateIndex = (currentFramerateIndex + change + framerateOptions.Length) % framerateOptions.Length;
-        int framerate = framerateOptions[currentFramerateIndex];
+        _currentFramerateIndex = (_currentFramerateIndex + change + _framerateOptions.Length) % _framerateOptions.Length;
+        int framerate = _framerateOptions[_currentFramerateIndex];
         Application.targetFrameRate = framerate;
 
+        PlayerPrefs.SetInt(MAXFRAME_OPTION_PREF, _currentFramerateIndex);
         UpdateMaxFramerateText();
     }
 
     private void UpdateResolutionText()
     {
-        Resolution res = resolutions[currentResolutionIndex];
-        resolutionOption.text = $"{res.width} x {res.height}";
+        Resolution res = _resolutions[_currentResolutionIndex];
+        _resolutionOption.text = $"{res.width} x {res.height}";
     }
 
     private void UpdateDisplayModeText()
     {
-        displayModeOption.text = displayModes[currentDisplayModeIndex];
+        _displayModeOption.text = _displayModes[_currentDisplayModeIndex];
     }
 
     private void UpdateQualityText()
     {
-        qualityOption.text = qualityLevels[currentQualityIndex];
+        _qualityOption.text = _qualityLevels[_currentQualityIndex];
     }
 
     private void UpdateVSyncText()
     {
-        VSyncOption.text = isVSyncOn ? "On" : "Off";
+        _VSyncOption.text = _isVSyncOn ? "On" : "Off";
     }
 
     private void UpdateMaxFramerateText()
     {
-        int framerate = framerateOptions[currentFramerateIndex];
-        maxFrameOption.text = framerate == -1 ? "Unlimited" : framerate.ToString();
+        int framerate = _framerateOptions[_currentFramerateIndex];
+        _maxFrameOption.text = framerate == -1 ? "Unlimited" : framerate.ToString();
     }
 }

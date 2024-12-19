@@ -6,6 +6,7 @@ using UnityEngine;
 public class EnemyAlertUIHandler : MonoBehaviour
 {
     private GameManager _gm;
+    private EnemyAIManager _enemyAIManager;
     private Camera _camera;
     private List<EnemyAlertUI> _enemyAlertUIList;
     private void Awake() 
@@ -16,6 +17,9 @@ public class EnemyAlertUIHandler : MonoBehaviour
     private void Start() 
     {
         _gm = GameManager.instance;
+
+        _enemyAIManager = EnemyAIManager.Instance;
+        _enemyAIManager.OnEnemyDead += RemoveDeadEnemy;
     }
 
     private void Update() 
@@ -47,5 +51,11 @@ public class EnemyAlertUIHandler : MonoBehaviour
             }
             enemy.IsAlertUIAtEnemyVisibleOnCam = isVisible;
         }
+    }
+    public void RemoveDeadEnemy(Transform enemy)
+    {
+        EnemyAlertUI alertUI = enemy.GetComponentInChildren<EnemyAlertUI>();
+        alertUI.RemoveAlertUINormal();
+        _enemyAlertUIList.Remove(alertUI);
     }
 }

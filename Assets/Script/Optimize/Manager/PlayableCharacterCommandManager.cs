@@ -23,13 +23,13 @@ public class PlayableCharacterCommandManager : MonoBehaviour, IUnsubscribeEvent
         // _playableCharaManager.OnCommandUnHoldInput += PlayableCharaManager_OnCommandUnHoldInput;
     }
 
-    void Update()
-    {
-        if (PlayableCharacterManager.IsCommandingFriend && Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            GetCommandPosForFriend();
-        }
-    }
+    // void Update()
+    // {
+    //     if (PlayableCharacterManager.IsCommandingFriend && Mouse.current.leftButton.wasPressedThisFrame)
+    //     {
+    //         GetCommandPosForFriend();
+    //     }
+    // }
     public void GetCommandPosForFriend()
     {
         if(_selectedFriendID != -1)
