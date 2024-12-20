@@ -33,6 +33,9 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected float _stealthStatsFriend;
         #endregion
     
+    [Space(1)]
+    [Header("Hold Interaction")]
+    [ReadOnly(false), SerializeField] private bool _isHoldingInteraction;
 
     [Space(5)]
     [Header("No Inspector Variable")]
@@ -56,9 +59,11 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     [Space(1)]
     [Header("Event")]
+    public Action OnPlayableDeath;
     public Action OnIsCrawlingChange;
     public Action<float, float> OnPlayableHealthChange;
     public Action OnSwitchWeapon;
+    public Action OnCancelInteractionButton;
 
     #region GETTERSETTER Variable
 
@@ -98,8 +103,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         }
     }
 
-    [Header("Event")]
-    public Action OnPlayableDeath;
+
     [HideInInspector]
     //Getter Setter
     public bool IsPlayerInput 
@@ -135,6 +139,19 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public bool IsSilentKilling {get {return _playableUseWeaponStateMachine.IsSilentKill;} set { _playableUseWeaponStateMachine.IsSilentKill = value;}}
 
     public Transform GetFriendBeingRevivedPos {get {return _characterIdentityWhoBeingRevived.transform;}}
+
+    public bool IsHoldingInteraction 
+    {
+        get {return _isHoldingInteraction;}
+        set 
+        {
+            if(_isHoldingInteraction != value && !value)
+            {
+                OnCancelInteractionButton?.Invoke();
+            }
+            _isHoldingInteraction = value;
+        }
+    }
     
 
     #endregion
@@ -147,7 +164,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _playableUseWeaponStateMachine = _useWeaponStateMachine as PlayableUseWeaponStateMachine;
         
         
-        _playableUseWeaponStateMachine.GetPlayerGunCollider = _weaponGameObjectDataContainer.GetPlayerGunCollide();
+        
 
         _playableCamera = GetComponent<PlayableCamera>();
         _playableInteraction = GetComponentInChildren<PlayableInteraction>();
@@ -163,6 +180,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected override void Start() 
     {
         base.Start();
+        _playableUseWeaponStateMachine.GetPlayerGunCollider = _weaponGameObjectDataContainer.GetPlayerGunCollide();
         EnemyAIManager.Instance.OnEnemyDead += DeleteEnemyFromList;
     }
 

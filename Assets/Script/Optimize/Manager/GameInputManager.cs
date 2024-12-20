@@ -15,7 +15,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
                   OnChangePlayerPerformed, OnChangeWeaponPerformed, 
                   OnCommandPerformed, OnExitCommandPerformed, OnRegroupFriendPerformed,
                   OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnScopeCanceled, OnReloadPerformed,
-                  OnInteractPerformed, OnNightVisionPerformed, OnSkillPerformed, OnWhistlePerformed, OnThrowPerformed,
+                  OnInteractPerformed, OnInteractCanceled, OnNightVisionPerformed, OnSkillPerformed, OnWhistlePerformed, OnThrowPerformed,
                   OnTakeCoverPerformed, OnExitTakeCoverPerformed;
     public Action<int> OnCommandFriendPerformed;
     #endregion
@@ -63,6 +63,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
         _inputActions.InputPlayerAction.Reload.performed += Reload_performed;
 
         _inputActions.InputPlayerAction.Interact.performed += Interact_performed;
+        _inputActions.InputPlayerAction.Interact.canceled += Interact_canceled;
         _inputActions.InputPlayerAction.NightVision.performed += NightVision_performed;
         _inputActions.InputPlayerAction.SkillButton.performed += SkillButton_performed;
         _inputActions.InputPlayerAction.Whistle.performed += Whistle_performed;
@@ -119,6 +120,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
     private void Scope_canceled(InputAction.CallbackContext context) => OnScopeCanceled?.Invoke();
     private void Reload_performed(InputAction.CallbackContext context)=> OnReloadPerformed?.Invoke();
     private void Interact_performed(InputAction.CallbackContext context) => OnInteractPerformed?.Invoke();
+    private void Interact_canceled(InputAction.CallbackContext context) => OnInteractCanceled?.Invoke();
     private void NightVision_performed(InputAction.CallbackContext context) => OnNightVisionPerformed?.Invoke();
     private void SkillButton_performed(InputAction.CallbackContext context) => OnSkillPerformed?.Invoke();
 

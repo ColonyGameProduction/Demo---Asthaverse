@@ -399,6 +399,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         foreach(PlayableCharacterIdentity chara in _charaIdentities)
         {
+            CurrPlayableChara.IsHoldingInteraction = false;
             chara.GetMovementStateMachine?.ForceStopMoving();
             chara.GetUseWeaponStateMachine?.ForceStopUseWeapon();
 
@@ -486,6 +487,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _gameInputManager.OnReloadPerformed += GameInput_OnReloadPerformed;
 
         _gameInputManager.OnInteractPerformed += GameInput_OnInteractPerformed;
+        _gameInputManager.OnInteractCanceled += GameInput_OnInteractCanceled;
         _gameInputManager.OnNightVisionPerformed += GameInput_OnNightVisionPerformed;
         _gameInputManager.OnSkillPerformed += GameInput_OnSkillPerformed;
         _gameInputManager.OnWhistlePerformed += GameInput_OnWhistlePerformed;
@@ -498,7 +500,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && _currPlayableMoveStateMachine.IsNearWall())
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && _currPlayableMoveStateMachine.IsNearWall() && !CurrPlayableChara.IsHoldingInteraction)
         {
             if(_currPlayableInteraction.IsHeldingObject) _currPlayableInteraction.RemoveHeldObject();
             if(_playableCharacterCameraManager.IsScope) _playableCharacterCameraManager.ResetScope();
@@ -511,7 +513,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && _currPlayableMoveStateMachine.IsTakingCoverAtWall)
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && _currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
         {
             _currPlayableMoveStateMachine.ExitTakeCover();
         }   
@@ -522,7 +524,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && _currPlayableInteraction.IsHeldingObject)
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && _currPlayableInteraction.IsHeldingObject && !CurrPlayableChara.IsHoldingInteraction)
         {
             _currPlayableInteraction.ThrowHeldObject();
         }
@@ -532,7 +534,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsHoldingInteraction)
         {
             _worldSoundManager.MakeSound(WorldSoundName.Whistle, CurrPlayableChara.transform.position, CurrPlayableChara.GetFOVMachine.CharaEnemyMask);
             _currPlayableMakeSFX.PlaySFXOnce(AudioSFXName.Whistle);
@@ -543,7 +545,14 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
         //Ntr kasi syarat lain
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)_currPlayableInteraction.Interact();
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)_currPlayableInteraction.Interact();
+    }
+    private void GameInput_OnInteractCanceled()
+    {
+        if(CurrPlayableChara.IsHoldingInteraction)
+        {
+            CurrPlayableChara.IsHoldingInteraction = false;
+        }
     }
 
     private void GameInput_OnNightVisionPerformed()
@@ -567,7 +576,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)_currPlayableMoveStateMachine.InputMovement = _gameInputManager.Movement();
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsHoldingInteraction)_currPlayableMoveStateMachine.InputMovement = _gameInputManager.Movement();
     }
     private void GameInput_OnRunPerformed()
     {
@@ -583,7 +592,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
             }
         }
 
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
         {   
             if(_currPlayableMoveStateMachine.IsCrouching)
             {
@@ -654,7 +663,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
             }
         }
 
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill)
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsHoldingInteraction)
         {
 
             CurrPlayableChara.Crouch(true);
@@ -727,7 +736,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
+        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
         {
             if(_currPlayableInteraction.IsHeldingObject)_currPlayableInteraction.RemoveHeldObject();
             _currPlayableUseWeaponStateMachine.IsSwitchingWeapon = true;
@@ -753,7 +762,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         if(IsCommandingFriend)OnCommandingBoolChange?.Invoke(true, friendID);
 
-        if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead || CurrPlayableChara.IsReviving || _currPlayableUseWeaponStateMachine.IsSilentKill || _currPlayableUseWeaponStateMachine.IsReloading || _currPlayableUseWeaponStateMachine.IsSwitchingWeapon || _currPlayableMoveStateMachine.IsTakingCoverAtWall)return;
+        if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead || CurrPlayableChara.IsReviving || _currPlayableUseWeaponStateMachine.IsSilentKill || _currPlayableUseWeaponStateMachine.IsReloading || _currPlayableUseWeaponStateMachine.IsSwitchingWeapon || _currPlayableMoveStateMachine.IsTakingCoverAtWall || CurrPlayableChara.IsHoldingInteraction)return;
         _currPlayableMoveStateMachine.ForceStopMoving();
         _currPlayableUseWeaponStateMachine.ForceStopUseWeapon();
         Time.timeScale = 0.2f;
@@ -798,7 +807,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
+        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
         {
             _currPlayableInteraction.SilentKill();
         }
@@ -807,7 +816,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
+        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
         {   
             CurrPlayableChara.Shooting(true);
             // if(!_currPlayableUseWeaponStateMachine.IsAiming)_currPlayableUseWeaponStateMachine.IsAiming = true;
@@ -844,7 +853,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
             }
         }
 
-        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
+        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
         {
             //KALO LAGI mo ngescope, tp blm aim, lsg aim nya nyalain jg
 
@@ -880,7 +889,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
+        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
         {
             if(_currPlayableInteraction.IsHeldingObject)_currPlayableInteraction.RemoveHeldObject();
             _currPlayableUseWeaponStateMachine.IsReloading = true;
@@ -916,6 +925,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _gameInputManager.OnReloadPerformed -= GameInput_OnReloadPerformed;
 
         _gameInputManager.OnInteractPerformed -= GameInput_OnInteractPerformed;
+        _gameInputManager.OnInteractCanceled -= GameInput_OnInteractCanceled;
         _gameInputManager.OnNightVisionPerformed -= GameInput_OnNightVisionPerformed;
         _gameInputManager.OnSkillPerformed -= GameInput_OnSkillPerformed;
         _gameInputManager.OnWhistlePerformed -= GameInput_OnWhistlePerformed;
