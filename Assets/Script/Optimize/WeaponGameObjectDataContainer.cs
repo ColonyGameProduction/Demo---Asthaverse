@@ -16,6 +16,13 @@ public class WeaponGameObjectDataContainer : MonoBehaviour
 {
     [SerializeField] private List<WeaponGameObjectData> _weaponGameObjectDataList;
     private WeaponGameObjectData _currWeaponGameObjectData;
+    private void Awake() 
+    {
+        for(int i=0; i < _weaponGameObjectDataList.Count; i++)
+        {
+            _weaponGameObjectDataList[i].playerGunCollide = _weaponGameObjectDataList[i].gunGameObject.GetComponentInChildren<PlayerGunCollide>();
+        }
+    }
 
     public Transform GetCurrShootPlacement()
     {

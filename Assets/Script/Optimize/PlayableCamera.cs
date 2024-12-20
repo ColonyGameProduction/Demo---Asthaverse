@@ -14,6 +14,7 @@ public class PlayableCamera : MonoBehaviour
 
     [Header("Adjust Camera Rotation Speed")]
     [SerializeField] private float _cameraRotationSpeed = 200f;
+    private float _cameraRotationMultiplier = 1f;
     
 
     [Header("Camera Height Variable")]
@@ -25,6 +26,7 @@ public class PlayableCamera : MonoBehaviour
 
     public CinemachineVirtualCamera GetFollowCamera {get { return _followCamera;}}
     public Transform GetFollowTarget {get{ return _followTarget;}}
+    public float SetCameraRotationMultiplier {set {_cameraRotationMultiplier = value;}}
     #endregion
 
     private void Start() 
@@ -42,8 +44,8 @@ public class PlayableCamera : MonoBehaviour
     private void HandleCameraMovement()
     {
         // mouse input declaration
-        float mouseX = Input.GetAxis("Mouse X") * _cameraRotationSpeed * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * _cameraRotationSpeed * Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X") * (_cameraRotationSpeed * _cameraRotationMultiplier) * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * (_cameraRotationSpeed * _cameraRotationMultiplier) * Time.deltaTime;
 
         // move the camera x and y axis with rotating follow target from player
         _followTarget.rotation *= Quaternion.AngleAxis(mouseX, Vector3.up);

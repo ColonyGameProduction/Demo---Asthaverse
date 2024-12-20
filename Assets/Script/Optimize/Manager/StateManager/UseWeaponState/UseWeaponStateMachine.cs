@@ -179,7 +179,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         {
             RecoilHandler();
             SetShootPosition();
-            _weaponLogicManager.ShootingPerformed(_originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask, _finalCountRecoil, _gunOriginShootPosition, IsAIInput, isGunInsideWall, _weaponShootVFX);
+            _weaponLogicManager.ShootingPerformed(this.transform, _originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask, _finalCountRecoil, _gunOriginShootPosition, IsAIInput, isGunInsideWall, _weaponShootVFX);
             CurrWeapon.currBullet -= 1;
             if(!CurrWeapon.weaponStatSO.allowHoldDownButton)IsUsingWeapon = false;
             StartCoroutine(FireRate(CurrWeapon.weaponStatSO.fireRate));

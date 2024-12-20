@@ -4401,6 +4401,37 @@ RectTransform:
   m_AnchoredPosition: {x: 300, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &256891154
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 256891155}
+  m_Layer: 0
+  m_Name: High Cover Detector Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &256891155
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256891154}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.567, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1417087815}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &261307987
 GameObject:
   m_ObjectHideFlags: 0
@@ -7360,6 +7391,37 @@ RectTransform:
   m_AnchoredPosition: {x: -180, y: 0}
   m_SizeDelta: {x: 176.3923, y: 89.0868}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &357914297
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 357914298}
+  m_Layer: 0
+  m_Name: Right Cover Detector Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &357914298
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 357914297}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.4, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1417087815}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &359722751
 GameObject:
   m_ObjectHideFlags: 0
@@ -8435,6 +8497,7 @@ Transform:
   - {fileID: 1457320076}
   - {fileID: 1799307561}
   - {fileID: 1398962085}
+  - {fileID: 1417087815}
   m_Father: {fileID: 1347309374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &439030862
@@ -8989,22 +9052,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ee89567e51e90c43bcf9f4faee3f824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  masterVolumeText: {fileID: 934067521}
-  masterSlider: {fileID: 529698221}
-  masterLeftButton: {fileID: 0}
-  masterRightButton: {fileID: 0}
-  musicVolumeText: {fileID: 0}
-  musicSlider: {fileID: 0}
-  musicLeftButton: {fileID: 0}
-  musicRightButton: {fileID: 0}
-  soundEffectVolumeText: {fileID: 0}
-  soundEffectSlider: {fileID: 0}
-  soundEffectLeftButton: {fileID: 0}
-  soundEffectRightButton: {fileID: 0}
-  dialogueVolumeText: {fileID: 0}
-  dialogueSlider: {fileID: 0}
-  dialogueLeftButton: {fileID: 0}
-  dialogueRightButton: {fileID: 0}
+  _audioMixer: {fileID: 0}
+  _outputOption: {fileID: 0}
+  _masterVolumeText: {fileID: 0}
+  _masterSlider: {fileID: 0}
+  _masterLeftButton: {fileID: 0}
+  _masterRightButton: {fileID: 0}
+  _musicVolumeText: {fileID: 0}
+  _musicSlider: {fileID: 0}
+  _musicLeftButton: {fileID: 0}
+  _musicRightButton: {fileID: 0}
+  _soundEffectVolumeText: {fileID: 0}
+  _soundEffectSlider: {fileID: 0}
+  _soundEffectLeftButton: {fileID: 0}
+  _soundEffectRightButton: {fileID: 0}
+  _dialogueVolumeText: {fileID: 0}
+  _dialogueSlider: {fileID: 0}
+  _dialogueLeftButton: {fileID: 0}
+  _dialogueRightButton: {fileID: 0}
+  _stepSize: 0.05
+  _currentOutputIndex: 0
+  _masterCurrentVolume: 0.5
+  _musicCurrentVolume: 0.5
+  _soundEffectCurrentVolume: 0.5
+  _dialogueCurrentVolume: 0.5
 --- !u!224 &460198270
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11097,7 +11168,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: sadasdsadsadassdasdasdsa
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9b2096c18411bdc4e9bdd26a0d5d1e66, type: 2}
   m_sharedMaterial: {fileID: -5544463146743732178, guid: 9b2096c18411bdc4e9bdd26a0d5d1e66, type: 2}
@@ -14555,6 +14626,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 937414102}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &736224518
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 736224519}
+  m_Layer: 0
+  m_Name: Left Cover Detector Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &736224519
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736224518}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.4, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1417087815}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &736647468
 GameObject:
   m_ObjectHideFlags: 0
@@ -15036,7 +15138,7 @@ MonoBehaviour:
   walls: []
   buffer: -1.5
   stateMachine: {fileID: 0}
-  damageCanvasHandler: {fileID: 0}
+  damageCanvasHandler: {fileID: 302655636}
   inGameUIHandler: {fileID: 1997041997}
   playerGameObject: {fileID: 439030860}
   followTarget: {fileID: 1611590578}
@@ -20510,13 +20612,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa417f4f547f3db4783c56179809363d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensPresentageText: {fileID: 1727754053}
-  sensSlider: {fileID: 1637984738}
-  sensLeftButton: {fileID: 1452368920}
-  sensRightButton: {fileID: 2122537608}
-  aimOption: {fileID: 1479427906}
-  sprintOption: {fileID: 1698350437}
-  crouchOption: {fileID: 1592576580}
+  _sensPresentageText: {fileID: 0}
+  _sensSlider: {fileID: 0}
+  _sensLeftButton: {fileID: 0}
+  _sensRightButton: {fileID: 0}
+  _aimOption: {fileID: 0}
+  _sprintOption: {fileID: 0}
+  _crouchOption: {fileID: 0}
+  _stepSize: 0.01
+  _sensCurrentPresentage: 0.5
+  _currentAimIndex: 0
+  _currentSprintIndex: 0
+  _currentCrouchIndex: 0
 --- !u!224 &956151274
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21968,6 +22075,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1051962012
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1051962013}
+  m_Layer: 0
+  m_Name: High Cover Detector Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1051962013
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1051962012}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.567, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1383250744}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1054155001
 GameObject:
   m_ObjectHideFlags: 0
@@ -22410,7 +22548,8 @@ MonoBehaviour:
   canSwitch: 1
   scope: 0
   breadcrumbsGameObject: []
-  _currState: 0
+  _currGameState: 0
+  _currGamePauseState: 0
   gameIsPaused: 0
   isAtSetting: 0
 --- !u!1 &1079747321
@@ -23168,7 +23307,7 @@ MonoBehaviour:
   walls: []
   buffer: -1.5
   stateMachine: {fileID: 0}
-  damageCanvasHandler: {fileID: 0}
+  damageCanvasHandler: {fileID: 302655636}
   inGameUIHandler: {fileID: 1997041997}
   playerGameObject: {fileID: 1911957387}
   followTarget: {fileID: 2085741375}
@@ -26432,6 +26571,37 @@ RectTransform:
   m_AnchoredPosition: {x: 9.2828, y: 2.3694}
   m_SizeDelta: {x: 714.7191, y: 68.9227}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1329949999
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1329950000}
+  m_Layer: 0
+  m_Name: Right Cover Detector Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1329950000
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329949999}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.4, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1383250744}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1330186911
 GameObject:
   m_ObjectHideFlags: 0
@@ -27194,6 +27364,40 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4755716441238886717, guid: 9faaf32607770b5469cd14d9154e22ad, type: 3}
   m_PrefabInstance: {fileID: 1376693317}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1383250743
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1383250744}
+  m_Layer: 0
+  m_Name: Cover Raycast Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1383250744
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383250743}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1051962013}
+  - {fileID: 1329950000}
+  - {fileID: 1889148188}
+  m_Father: {fileID: 1911957387}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1392786987
 GameObject:
   m_ObjectHideFlags: 0
@@ -27827,6 +28031,40 @@ MonoBehaviour:
   weaponName: 
   currHP: 
   maxHP: 
+--- !u!1 &1417087814
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1417087815}
+  m_Layer: 0
+  m_Name: Cover Raycast Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1417087815
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1417087814}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 256891155}
+  - {fileID: 357914298}
+  - {fileID: 736224519}
+  m_Father: {fileID: 439030860}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1429569330
 GameObject:
   m_ObjectHideFlags: 0
@@ -30327,11 +30565,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5742c7509a199c94c8b2587d5e9b3ba8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resolutionOption: {fileID: 2023879932}
-  displayModeOption: {fileID: 277410815}
-  qualityOption: {fileID: 955195995}
-  VSyncOption: {fileID: 1994101623}
-  maxFrameOption: {fileID: 1359444223}
+  _resolutionOption: {fileID: 0}
+  _displayModeOption: {fileID: 0}
+  _qualityOption: {fileID: 0}
+  _VSyncOption: {fileID: 0}
+  _maxFrameOption: {fileID: 0}
+  _currentResolutionIndex: 0
+  _currentDisplayModeIndex: 0
+  _currentQualityIndex: 0
+  _isVSyncOn: 1
+  _currentFramerateIndex: 6
 --- !u!224 &1536264535
 RectTransform:
   m_ObjectHideFlags: 0
@@ -36816,6 +37059,37 @@ Transform:
   - {fileID: 160775851}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1889148187
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1889148188}
+  m_Layer: 0
+  m_Name: Left Cover Detector Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1889148188
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1889148187}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.4, y: -0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1383250744}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1897181811
 GameObject:
   m_ObjectHideFlags: 0
@@ -36997,6 +37271,7 @@ Transform:
   - {fileID: 2094983564}
   - {fileID: 946796280}
   - {fileID: 56341114}
+  - {fileID: 1383250744}
   m_Father: {fileID: 745014794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1911957389

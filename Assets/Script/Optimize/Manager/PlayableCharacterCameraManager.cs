@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.Rendering;
 
 public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffect
@@ -11,6 +13,9 @@ public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffe
     private GameManager _gm;
     private PlayableCamera _currPlayableCamera;
     [Header("Camera Effect Variable")]
+    [Header("Camera Sensitivity")]
+    [SerializeField] private ControlsManager _controlsManager;
+    private List<PlayableCamera> _playableCameraList = new List<PlayableCamera>();
     [Header("Camera Scope")]
     [SerializeField] private float _normalFOV = 40, _scopeFOV = 60;
     [SerializeField] private bool _isScope;
@@ -39,6 +44,9 @@ public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffe
     private void Awake() 
     {
         Instance = this;
+        _playableCameraList = FindObjectsOfType<PlayableCamera>().ToList();
+        _controlsManager.OnSensValueChange += SetAllPlayableCameraSensitivityMultiplier;
+        
     }
     private void Start() 
     {
@@ -109,4 +117,11 @@ public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffe
         _currPlayableCamera = curr;
     }
 
+    public void SetAllPlayableCameraSensitivityMultiplier(float value)
+    {
+        foreach(PlayableCamera camera in _playableCameraList)
+        {
+            camera.SetCameraRotationMultiplier = value;
+        }
+    }
 }

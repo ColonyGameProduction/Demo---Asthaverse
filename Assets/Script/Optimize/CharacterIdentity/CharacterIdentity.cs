@@ -51,7 +51,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
 
     [Space(1)]
     [Header("   Stealth")]
-    protected float _stealthStats;
+    [ReadOnly(true), SerializeField] protected float _stealthStats;
     #endregion
     [Header("Regen Stats")]
     [SerializeField] protected float _regenScale = 0.7f;
@@ -79,6 +79,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
 
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
+    public EntityStatSO GetCharaStatSO {get {return _characterStatSO;}}
 
     #endregion
     protected virtual void Awake()

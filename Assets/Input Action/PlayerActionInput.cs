@@ -242,6 +242,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Command Friend"",
+                    ""type"": ""Button"",
+                    ""id"": ""882bfb27-e90b-4080-8262-2f3fb5c649b2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -552,6 +561,17 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""ExitTakeCover"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0055b4fc-bedf-48b6-9ca3-46285ae9b673"",
+                    ""path"": ""<Keyboard>/leftAlt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Command Friend"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -567,6 +587,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Select Command Button"",
+                    ""type"": ""Value"",
+                    ""id"": ""4a4986d8-d9cf-418c-8243-d7164f37481d"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -580,6 +609,39 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""Pause Game"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""3953109a-074b-43b7-b48f-8d1e21c0c8fe"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select Command Button"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""1955f498-a997-49fe-aefc-c8c41666a487"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select Command Button"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""480795b1-f237-4707-8eec-74a4a07c1b5b"",
+                    ""path"": ""<Mouse>/scroll/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Select Command Button"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -612,9 +674,11 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_Throw = m_InputPlayerAction.FindAction("Throw", throwIfNotFound: true);
         m_InputPlayerAction_TakeCover = m_InputPlayerAction.FindAction("TakeCover", throwIfNotFound: true);
         m_InputPlayerAction_ExitTakeCover = m_InputPlayerAction.FindAction("ExitTakeCover", throwIfNotFound: true);
+        m_InputPlayerAction_CommandFriend = m_InputPlayerAction.FindAction("Command Friend", throwIfNotFound: true);
         // InputMenuAction
         m_InputMenuAction = asset.FindActionMap("InputMenuAction", throwIfNotFound: true);
         m_InputMenuAction_PauseGame = m_InputMenuAction.FindAction("Pause Game", throwIfNotFound: true);
+        m_InputMenuAction_SelectCommandButton = m_InputMenuAction.FindAction("Select Command Button", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -700,6 +764,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_Throw;
     private readonly InputAction m_InputPlayerAction_TakeCover;
     private readonly InputAction m_InputPlayerAction_ExitTakeCover;
+    private readonly InputAction m_InputPlayerAction_CommandFriend;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -728,6 +793,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @Throw => m_Wrapper.m_InputPlayerAction_Throw;
         public InputAction @TakeCover => m_Wrapper.m_InputPlayerAction_TakeCover;
         public InputAction @ExitTakeCover => m_Wrapper.m_InputPlayerAction_ExitTakeCover;
+        public InputAction @CommandFriend => m_Wrapper.m_InputPlayerAction_CommandFriend;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -809,6 +875,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @ExitTakeCover.started += instance.OnExitTakeCover;
             @ExitTakeCover.performed += instance.OnExitTakeCover;
             @ExitTakeCover.canceled += instance.OnExitTakeCover;
+            @CommandFriend.started += instance.OnCommandFriend;
+            @CommandFriend.performed += instance.OnCommandFriend;
+            @CommandFriend.canceled += instance.OnCommandFriend;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -885,6 +954,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @ExitTakeCover.started -= instance.OnExitTakeCover;
             @ExitTakeCover.performed -= instance.OnExitTakeCover;
             @ExitTakeCover.canceled -= instance.OnExitTakeCover;
+            @CommandFriend.started -= instance.OnCommandFriend;
+            @CommandFriend.performed -= instance.OnCommandFriend;
+            @CommandFriend.canceled -= instance.OnCommandFriend;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -907,11 +979,13 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_InputMenuAction;
     private List<IInputMenuActionActions> m_InputMenuActionActionsCallbackInterfaces = new List<IInputMenuActionActions>();
     private readonly InputAction m_InputMenuAction_PauseGame;
+    private readonly InputAction m_InputMenuAction_SelectCommandButton;
     public struct InputMenuActionActions
     {
         private @PlayerActionInput m_Wrapper;
         public InputMenuActionActions(@PlayerActionInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @PauseGame => m_Wrapper.m_InputMenuAction_PauseGame;
+        public InputAction @SelectCommandButton => m_Wrapper.m_InputMenuAction_SelectCommandButton;
         public InputActionMap Get() { return m_Wrapper.m_InputMenuAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -924,6 +998,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @PauseGame.started += instance.OnPauseGame;
             @PauseGame.performed += instance.OnPauseGame;
             @PauseGame.canceled += instance.OnPauseGame;
+            @SelectCommandButton.started += instance.OnSelectCommandButton;
+            @SelectCommandButton.performed += instance.OnSelectCommandButton;
+            @SelectCommandButton.canceled += instance.OnSelectCommandButton;
         }
 
         private void UnregisterCallbacks(IInputMenuActionActions instance)
@@ -931,6 +1008,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @PauseGame.started -= instance.OnPauseGame;
             @PauseGame.performed -= instance.OnPauseGame;
             @PauseGame.canceled -= instance.OnPauseGame;
+            @SelectCommandButton.started -= instance.OnSelectCommandButton;
+            @SelectCommandButton.performed -= instance.OnSelectCommandButton;
+            @SelectCommandButton.canceled -= instance.OnSelectCommandButton;
         }
 
         public void RemoveCallbacks(IInputMenuActionActions instance)
@@ -974,9 +1054,11 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnThrow(InputAction.CallbackContext context);
         void OnTakeCover(InputAction.CallbackContext context);
         void OnExitTakeCover(InputAction.CallbackContext context);
+        void OnCommandFriend(InputAction.CallbackContext context);
     }
     public interface IInputMenuActionActions
     {
         void OnPauseGame(InputAction.CallbackContext context);
+        void OnSelectCommandButton(InputAction.CallbackContext context);
     }
 }

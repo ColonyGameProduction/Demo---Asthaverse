@@ -220,6 +220,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Command Friend",
+                    "type": "Button",
+                    "id": "882bfb27-e90b-4080-8262-2f3fb5c649b2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -530,6 +539,17 @@
                     "action": "ExitTakeCover",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0055b4fc-bedf-48b6-9ca3-46285ae9b673",
+                    "path": "<Keyboard>/leftAlt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Command Friend",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -545,6 +565,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Select Command Button",
+                    "type": "Value",
+                    "id": "4a4986d8-d9cf-418c-8243-d7164f37481d",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -558,6 +587,39 @@
                     "action": "Pause Game",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "3953109a-074b-43b7-b48f-8d1e21c0c8fe",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select Command Button",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "1955f498-a997-49fe-aefc-c8c41666a487",
+                    "path": "<Mouse>/scroll/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select Command Button",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "480795b1-f237-4707-8eec-74a4a07c1b5b",
+                    "path": "<Mouse>/scroll/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select Command Button",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
