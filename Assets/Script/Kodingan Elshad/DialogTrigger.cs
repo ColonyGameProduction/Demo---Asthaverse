@@ -14,11 +14,14 @@ public class DialogTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (!isActivate)
+            if(other.gameObject.GetComponentInParent<PlayerAction>().enabled)
             {
-                inGameUIHandler.dialogCutscene = dialog;
-                inGameUIHandler.DialogPlay();
-                isActivate = true;
+                if (!isActivate)
+                {
+                    inGameUIHandler.dialogCutscene = dialog;
+                    inGameUIHandler.DialogPlay();
+                    isActivate = true;
+                }
             }
         }
     }
