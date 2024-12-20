@@ -272,7 +272,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _regenCDTimer = _regenTimerMax;
         CurrHealth -= Damage;
         
-        if(IsPlayerInput)OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
+        OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
 
         if(CurrHealth <= 0)
         {
@@ -285,7 +285,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         base.Heal(Healing);
 
-        if(IsPlayerInput)OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
+        OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
     }
     public override void Death()
     {
@@ -338,6 +338,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _characterIdentityWhoReviving.StopRevivingFriend();
         _characterIdentityWhoReviving = null;
         _isDead = false;
+
+        OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
         _isAnimatingOtherAnimation = false;
         _animator.SetBool("BeingRevived", false);
         _animator.SetBool("Death", false);

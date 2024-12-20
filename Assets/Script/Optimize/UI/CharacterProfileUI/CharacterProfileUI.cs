@@ -65,7 +65,7 @@ public class CharacterProfileUI : MonoBehaviour
     public void UpdateHealthData()
     {
         float currHealth = Mathf.Round(_playableIdentity.CurrHealth);
-        currHealth = currHealth > 0 ? currHealth : 0;
+        currHealth = currHealth > 0 ? (!_playableIdentity.IsDead ? currHealth : 0) : 0;
         
         _currHPContainer.text = currHealth.ToString();
         _maxHPContainer.text = _playableIdentity.TotalHealth.ToString();
