@@ -545,7 +545,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
         //Ntr kasi syarat lain
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)_currPlayableInteraction.Interact();
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction) _currPlayableInteraction.Interact();
     }
     private void GameInput_OnInteractCanceled()
     {
@@ -816,8 +816,9 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
+        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {   
+            if(!CurrPlayableChara.IsHoldingInteraction) GameInput_OnInteractCanceled();
             CurrPlayableChara.Shooting(true);
             // if(!_currPlayableUseWeaponStateMachine.IsAiming)_currPlayableUseWeaponStateMachine.IsAiming = true;
             // _currPlayableUseWeaponStateMachine.IsUsingWeapon = true;

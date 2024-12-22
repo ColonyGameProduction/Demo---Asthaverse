@@ -148,6 +148,7 @@ MonoBehaviour:
   _currHealthFriend: 0
   _isReviving: 0
   _deadColl: {fileID: 6647361069912848206}
+  _isHoldingInteraction: 0
   _isBeingRevived: 0
   _characterIdentityWhoReviving: {fileID: 0}
   _characterIdentityWhoBeingRevived: {fileID: 0}
@@ -3688,50 +3689,427 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1153496071547330523, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[0].weaponName
+      value: MK46MOD1(SP)
       objectReference: {fileID: 0}
-    - target: {fileID: 2474006508078182788, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[1].weaponName
+      value: SigSauerP226R(SP)
       objectReference: {fileID: 0}
-    - target: {fileID: 2815895375473071701, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[2].weaponName
+      value: HKMP7(SP)
       objectReference: {fileID: 0}
-    - target: {fileID: 4174533370864984575, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[3].weaponName
+      value: AK47
       objectReference: {fileID: 0}
-    - target: {fileID: 4955956751968651068, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[4].weaponName
+      value: DragunoveSVD
       objectReference: {fileID: 0}
-    - target: {fileID: 5197850069965927703, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[5].weaponName
+      value: PKM(General-PurposeMG)
       objectReference: {fileID: 0}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[6].weaponName
+      value: Dozer(BarrettM82SP)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[7].weaponName
+      value: HK416(SP)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[8].weaponName
+      value: MK13CQBR(SP)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[9].weaponName
+      value: Remington870(SP)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[10].weaponName
+      value: M249
+      objectReference: {fileID: 0}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[0].gunGameObject
+      value: 
+      objectReference: {fileID: 2795456841330674029}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[1].gunGameObject
+      value: 
+      objectReference: {fileID: 944973061578570837}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[2].gunGameObject
+      value: 
+      objectReference: {fileID: 8324831638788169605}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[3].gunGameObject
+      value: 
+      objectReference: {fileID: 7889537248955328559}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[4].gunGameObject
+      value: 
+      objectReference: {fileID: 1057868548539906374}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[5].gunGameObject
+      value: 
+      objectReference: {fileID: 6515405944609710497}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[6].gunGameObject
+      value: 
+      objectReference: {fileID: 4286651977221178904}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[7].gunGameObject
+      value: 
+      objectReference: {fileID: 165274903300524909}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[8].gunGameObject
+      value: 
+      objectReference: {fileID: 7510942534941282302}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[9].gunGameObject
+      value: 
+      objectReference: {fileID: 4630775539840184056}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[0].shootPlacement
+      value: 
+      objectReference: {fileID: 4605160586392054874}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[10].gunGameObject
+      value: 
+      objectReference: {fileID: 310603335195529267}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[1].shootPlacement
+      value: 
+      objectReference: {fileID: 5697493048972318256}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[2].shootPlacement
+      value: 
+      objectReference: {fileID: 8758364552931047643}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[3].shootPlacement
+      value: 
+      objectReference: {fileID: 6979967958945422869}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[4].shootPlacement
+      value: 
+      objectReference: {fileID: 5882707814443371152}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[5].shootPlacement
+      value: 
+      objectReference: {fileID: 9039610751857692191}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[6].shootPlacement
+      value: 
+      objectReference: {fileID: 7587227020215882972}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[7].shootPlacement
+      value: 
+      objectReference: {fileID: 2757299144096421848}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[8].shootPlacement
+      value: 
+      objectReference: {fileID: 5861671534566396942}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[9].shootPlacement
+      value: 
+      objectReference: {fileID: 3862078548762524691}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[10].shootPlacement
+      value: 
+      objectReference: {fileID: 3079531010268354136}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[0].playerGunCollide
+      value: 
+      objectReference: {fileID: 4191081307122345844}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[1].playerGunCollide
+      value: 
+      objectReference: {fileID: 2669983502037921544}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[7].playerGunCollide
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[8].playerGunCollide
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[9].playerGunCollide
+      value: 
+      objectReference: {fileID: 8609430046544682526}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[10].playerGunCollide
+      value: 
+      objectReference: {fileID: 9049569310736918548}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[0].weaponMagTransform
+      value: 
+      objectReference: {fileID: 9054793072168358964}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[1].weaponMagTransform
+      value: 
+      objectReference: {fileID: 1526947666912411129}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[2].weaponMagTransform
+      value: 
+      objectReference: {fileID: 2622085796148605071}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[3].weaponMagTransform
+      value: 
+      objectReference: {fileID: 484750885757971101}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[4].weaponMagTransform
+      value: 
+      objectReference: {fileID: 4243141683533897282}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[5].weaponMagTransform
+      value: 
+      objectReference: {fileID: 4852376138037087443}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[6].weaponMagTransform
+      value: 
+      objectReference: {fileID: 320303272866982071}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[7].weaponMagTransform
+      value: 
+      objectReference: {fileID: 6504710814154170225}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[8].weaponMagTransform
+      value: 
+      objectReference: {fileID: 5697377890736855329}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[9].weaponMagTransform
+      value: 
+      objectReference: {fileID: 5421702583148947909}
+    - target: {fileID: 4006073480704176806, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: _weaponGameObjectDataList.Array.data[10].weaponMagTransform
+      value: 
+      objectReference: {fileID: 1722067784164016008}
     - target: {fileID: 7323051966141489391, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
       propertyPath: m_Name
       value: weapon:bone.001-allweapon-player
-      objectReference: {fileID: 0}
-    - target: {fileID: 7323051966141489391, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8148255263035734114, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+--- !u!1 &165274903300524909 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5197850069965927703, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &310603335195529267 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5631234189931884105, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &320303272866982071 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5627432032958977741, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &484750885757971101 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5535904585272906983, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &944973061578570837 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5148848306850955823, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1057868548539906374 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4955956751968651068, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1526947666912411129 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6870693609342092163, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1722067784164016008 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6741701974031352306, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2622085796148605071 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7929379465988525813, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2669983502037921544 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8026815752521814386, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890274604b13e114aa126eb4732ba288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2757299144096421848 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7794237032256383394, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2795456841330674029 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7827854908828055319, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3079531010268354136 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6977734557157386274, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3862078548762524691 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9219306339948839529, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4191081307122345844 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8088715074522552590, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890274604b13e114aa126eb4732ba288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &4243141683533897282 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8109856334263738424, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4286651977221178904 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8148255263035734114, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4605160586392054874 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8467194562803798560, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4630775539840184056 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 732543501596676226, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4652200276917009431 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 785519967252611693, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4852376138037087443 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 666057601439855273, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5421702583148947909 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 95864740968142783, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5697377890736855329 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 394191127848544091, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5697493048972318256 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 394304672670525514, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5861671534566396942 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1959490847239334516, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5882707814443371152 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2002630866546914538, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6504710814154170225 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1165365480081334539, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6515405944609710497 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1153496071547330523, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6979967958945422869 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3077232191823011951, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7510942534941282302 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2474006508078182788, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7587227020215882972 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2531704111724472998, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7889537248955328559 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2815895375473071701, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8324831638788169605 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4174533370864984575, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8609430046544682526 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4401005006167466084, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890274604b13e114aa126eb4732ba288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &8758364552931047643 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3738730510736606881, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &9039610751857692191 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3970613198847651941, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9049569310736918548 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4035175685513090670, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 5361911112160591482}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 890274604b13e114aa126eb4732ba288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &9054793072168358964 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4017285549861530190, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
   m_PrefabInstance: {fileID: 5361911112160591482}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6607377038150404924

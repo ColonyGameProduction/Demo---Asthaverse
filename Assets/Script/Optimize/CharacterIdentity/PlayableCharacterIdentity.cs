@@ -56,6 +56,14 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [Header("Death Animation Component")]
     [ReadOnly(false), SerializeField] private bool _isAnimatingOtherAnimation;
 
+    #region const
+    public const string ANIMATION_RIFLE_KNOCK_OUT_NAME = "Rifle_Knock_Out"; 
+    public const string ANIMATION_KNOCK_TRIGGER_PARAMETER = "KnockTrigger"; 
+    public const string ANIMATION_REVIVING_PARAMETER = "Reviving"; 
+    public const string ANIMATION_BEING_REVIVED_PARAMETER = "BeingRevived"; 
+    public const string ANIMATION_GUN_COUNTER_PARAMETER = "GunCounter"; 
+    #endregion
+
 
     [Space(1)]
     [Header("Event")]
@@ -226,6 +234,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         base.SetWeaponGameObjectDataContainer();
 
+        _animator.SetFloat(ANIMATION_GUN_COUNTER_PARAMETER, (float)_currWeaponIdx);
+        Debug.Log("KOK INI GA KEPANGGIL ????? + " + _animator.GetFloat(ANIMATION_GUN_COUNTER_PARAMETER));
         if(_playableUseWeaponStateMachine != null)
         {
             if(_playableUseWeaponStateMachine.GetPlayerGunCollider != null) _playableUseWeaponStateMachine.GetPlayerGunCollider.ResetCollider();
@@ -321,7 +331,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         if(_isPlayerInput) OnPlayableDeath?.Invoke();
         _playableMovementStateMachine.SetCharaGameObjRotationToNormal();
         _moveStateMachine.IsCrouching = false;
-        _animator.SetTrigger("KnockTrigger");
+        _animator.SetTrigger(ANIMATION_KNOCK_TRIGGER_PARAMETER);
     }
 
     public void AfterFinishKnockOutAnimation()
@@ -340,7 +350,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _deadColl.SetActive(false);
         _isAnimatingOtherAnimation = true;
 
-        _animator.SetBool("BeingRevived", true);
+        _animator.SetBool(ANIMATION_BEING_REVIVED_PARAMETER, true);
 
         _characterIdentityWhoReviving = characterIdentityWhoReviving;
         _isBeingRevived = true;
@@ -359,8 +369,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
         OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
         _isAnimatingOtherAnimation = false;
-        _animator.SetBool("BeingRevived", false);
-        _animator.SetBool("Death", false);
+        _animator.SetBool(ANIMATION_BEING_REVIVED_PARAMETER, false);
+        _animator.SetBool(ANIMATION_DEATH_PARAMETER, false);
     }
     public void CutOutFromBeingRevived()
     {
@@ -368,11 +378,11 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
         _isBeingRevived = false;
         _isAnimatingOtherAnimation = false;
-        _animator.SetBool("BeingRevived", false);
-        _animator.Play("Rifle_Knock_Out");
+        _animator.SetBool(ANIMATION_BEING_REVIVED_PARAMETER, false);
+        _animator.Play(ANIMATION_RIFLE_KNOCK_OUT_NAME);
         _isDead = true;
         _fovMachine.enabled = false;
-        _animator.SetBool("Death", true);
+        _animator.SetBool(ANIMATION_DEATH_PARAMETER, true);
         
         _deadColl.SetActive(true);
         if(!_playableMovementStateMachine.IsCrawling)
@@ -512,7 +522,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         }
         IsReviving = true;
         _characterIdentityWhoBeingRevived = characterIdentityWhoBeingRevived;
-        _animator.SetBool("Reviving", true);
+        _animator.SetBool(ANIMATION_REVIVING_PARAMETER, true);
         _playableUseWeaponStateMachine.TellToTurnOffScope();
         ForceStopAllStateMachine();
     }
@@ -520,7 +530,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         IsReviving = false;
         _characterIdentityWhoBeingRevived = null;
-        _animator.SetBool("Reviving", false);
+        _animator.SetBool(ANIMATION_REVIVING_PARAMETER, false);
     }
 
     public override void UnsubscribeEvent()

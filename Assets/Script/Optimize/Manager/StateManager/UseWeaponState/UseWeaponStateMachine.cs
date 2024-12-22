@@ -232,7 +232,9 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     }
     public void ReloadAnimationFinished()
     {
+        if(!_isReloading) return;
         _animator.SetBool(ANIMATION_MOVE_PARAMETER_RELOAD, false);
+        _currAnimTIme = 0f;
         _charaIdentity.ReloadWeapon();
         CanReload = false;
         IsReloading = false;

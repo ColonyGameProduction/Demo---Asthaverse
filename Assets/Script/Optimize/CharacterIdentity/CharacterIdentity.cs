@@ -60,6 +60,11 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
 
     #endregion
 
+    #region const
+    public const string ANIMATION_DEATH_PARAMETER = "Death"; 
+    public const string ANIMATION_DEATH_TRIGGER_PARAMETER = "DeathTrigger";
+    #endregion
+
     #region GETTERSETTER Variable
     [HideInInspector]
 
@@ -135,8 +140,8 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
 
         _isDead = true;
         _regenCDTimer = 0f;
-        _animator.SetBool("Death", true);
-        _animator.SetTrigger("DeathTrigger");
+        _animator.SetBool(ANIMATION_DEATH_PARAMETER, true);
+        _animator.SetTrigger(ANIMATION_DEATH_TRIGGER_PARAMETER);
         _useWeaponStateMachine.ForceStopUseWeapon();
         _moveStateMachine.ForceStopMoving();
         

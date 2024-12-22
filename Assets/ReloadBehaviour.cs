@@ -7,6 +7,7 @@ public class ReloadBehaviour : StateMachineBehaviour
     public string animationClipName;
     // public float time = 0.2f;
     private UseWeaponStateMachine _useWeaponStateMachine;
+    private AnimatorCharacterHelp _animatorHelper;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -28,7 +29,9 @@ public class ReloadBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     // override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     // {
+    //     if(_animatorHelper == null) _animatorHelper = animator.GetComponent<AnimatorCharacterHelp>();
 
+    //     _animatorHelper.ReloadWeaponFinish();
     // }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
