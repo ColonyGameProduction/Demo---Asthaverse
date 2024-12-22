@@ -9,20 +9,21 @@ public class CharacterProfileUIHandler : MonoBehaviour
     [SerializeField] private GameObject _charaProfileUIPrefab;
     [SerializeField] private GameObject _charaProfileUIContainer;
     [Header("Weapon Chara Profile")] 
-    [SerializeField]private float _weaponUIAnimationMoveDirX = 200f;
-    [SerializeField]private float _weaponUIAnimationAlphaDuration = 0.2f;
+    [SerializeField] private float _weaponUIAnimationMoveDirX = 200f;
+    [SerializeField] private float _weaponUIAnimationAlphaDuration = 0.2f;
+    [SerializeField] private Vector3 _weaponShowPos;
 
     [Header("HP Chara Profile")] 
-    [SerializeField]private Vector3 _playableHPContainerPos;
-    [SerializeField]private Vector3 _playableHPContainerScale, _friendHPContainerPos , _friendHPContainerScale;
+    [SerializeField] private Vector3 _playableHPContainerPos;
+    [SerializeField] private Vector3 _playableHPContainerScale, _friendHPContainerPos , _friendHPContainerScale;
 
     [Header("Chara Profile")]    
-    [SerializeField]private Vector3 _playableProfileScaleSize;
-    [SerializeField]private Vector3 _playableProfilePos;
-    [SerializeField]private Vector3 _friendProfileScaleSize, _friendProfilePos, _friendProfileMoveDir;
+    [SerializeField] private Vector3 _playableProfileScaleSize;
+    [SerializeField] private Vector3 _playableProfilePos;
+    [SerializeField] private Vector3 _friendProfileScaleSize, _friendProfilePos, _friendProfileMoveDir;
 
     [Space(1)]
-    [SerializeField]private float _animationDuration = 0.2f;
+    [SerializeField] private float _animationDuration = 0.2f;
 
     #region Getter Setter Variable
     public PlayableCharacterManager SetPlayableCharaManager {set{_playableCharacterManager = value;}}
@@ -33,7 +34,7 @@ public class CharacterProfileUIHandler : MonoBehaviour
         CharacterProfileUI characterProfileUI = charaProfileUIGO.GetComponent<CharacterProfileUI>();
 
         characterProfileUI.AssignDataToCharacterProfileUI(playableCharacterIdentity);
-        characterProfileUI.AssignUIAnimationData(_weaponUIAnimationMoveDirX, _weaponUIAnimationAlphaDuration, _playableHPContainerPos, _friendHPContainerPos, _playableHPContainerScale, _friendHPContainerScale, _animationDuration);
+        characterProfileUI.AssignUIAnimationData(_weaponUIAnimationMoveDirX, _weaponUIAnimationAlphaDuration, _weaponShowPos, _playableHPContainerPos, _friendHPContainerPos, _playableHPContainerScale, _friendHPContainerScale, _animationDuration);
 
         _charaProfileUIList.Add(characterProfileUI);
     }

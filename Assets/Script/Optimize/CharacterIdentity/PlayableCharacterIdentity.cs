@@ -160,18 +160,20 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             _isHoldingInteraction = value;
         }
     }
-    
+    public int CurrWeaponIdx {get{return _currWeaponIdx;}}
 
     #endregion
     protected override void Awake()
     {
         base.Awake();
+        SwitchAnimatorGunCounterToCurr();
         
         if(_deadColl.activeSelf)_deadColl.gameObject.SetActive(false);
         _playableMovementStateMachine = _moveStateMachine as PlayableMovementStateMachine;
         _playableUseWeaponStateMachine = _useWeaponStateMachine as PlayableUseWeaponStateMachine;
         
-        
+        if(_playableUseWeaponStateMachine.GetPlayerGunCollider != null) _playableUseWeaponStateMachine.GetPlayerGunCollider.ResetCollider();
+        _playableUseWeaponStateMachine.GetPlayerGunCollider = _weaponGameObjectDataContainer.GetPlayerGunCollide();
         
 
         _playableCamera = GetComponent<PlayableCamera>();
@@ -234,8 +236,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         base.SetWeaponGameObjectDataContainer();
 
-        _animator.SetFloat(ANIMATION_GUN_COUNTER_PARAMETER, (float)_currWeaponIdx);
-        Debug.Log("KOK INI GA KEPANGGIL ????? + " + _animator.GetFloat(ANIMATION_GUN_COUNTER_PARAMETER));
+        
+        // Debug.Log("KOK INI GA KEPANGGIL ????? + " + _animator.GetFloat(ANIMATION_GUN_COUNTER_PARAMETER));
         if(_playableUseWeaponStateMachine != null)
         {
             if(_playableUseWeaponStateMachine.GetPlayerGunCollider != null) _playableUseWeaponStateMachine.GetPlayerGunCollider.ResetCollider();
@@ -268,6 +270,24 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         
         _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
         OnSwitchWeapon?.Invoke();
+    }
+    public void EnsureSwitchWeapon(int oldIdx)
+    {
+        if(oldIdx == _currWeaponIdx)
+        {
+            SwitchWeapon();
+            SwitchAnimatorGunCounterToCurr();
+            GetPlayableUseWeaponStateMachine.SetCurrWeapon();
+        }
+        else
+        {
+            SetWeaponGameObjectDataContainer();
+            // OnSwitchWeapon?.Invoke();
+        }
+    }
+    public void SwitchAnimatorGunCounterToCurr()
+    {
+        _animator.SetFloat(ANIMATION_GUN_COUNTER_PARAMETER, (float)_currWeaponIdx);
     }
     protected void Regeneration()
     {

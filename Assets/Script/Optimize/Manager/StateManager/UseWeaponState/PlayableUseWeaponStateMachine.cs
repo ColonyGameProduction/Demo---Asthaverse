@@ -43,6 +43,9 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     [SerializeField] protected float _currRecoilModBufferOnScopeNotIdle = 0.25f, _currRecoilModBufferNotOnScopeNotIdle = 0.5f, _currRecoildModNotOnScopeIdleCrouch = 0.25f;
     [SerializeField] protected float _recoildAddMultiplierOnScopeNotIdle = 1.5f, _recoildAddMultiplierNotOnScopeNotIdle = 3f, _recoilAddMultiplierNotOnScopeIdleCrouch = 1.5f;
 
+
+    public const string ANIMATION_MOVE_PARAMETER_SWITCHWEAPON= "SwitchWeapon";
+    public const string ANIMATION_GUN_COUNTER_PARAMETER = "GunCounter"; 
     #endregion
     #region GETTERSETTER Variable
     public override float CharaAimAccuracy
@@ -139,6 +142,24 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         IsSwitchingWeapon = false;
         
     }
+    public void SwitchWeaponAnimationFinished()
+    {
+        if(!IsSwitchingWeapon) return;
+        _animator.SetBool(ANIMATION_MOVE_PARAMETER_SWITCHWEAPON, false);
+        _isResetAnimTime = true;
+        
+        // _getCanSwitchWeapon.SwitchWeapon();
+        if(_currWeapon == _charaIdentity.CurrWeapon)
+        {
+            _getCanSwitchWeapon.SwitchWeapon();
+        }
+        _getPlayableCharacterIdentity.SwitchAnimatorGunCounterToCurr();
+        SetCurrWeapon();
+        
+
+        CanSwitchWeapon = false;
+        IsSwitchingWeapon = false;
+    }
     public void CanSwitchWeapon_Coroutine()
     {
         StartCoroutine(CanSwitchWeaponNow());
@@ -174,7 +195,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         else if(_currState == _states.SwitchingWeaponState() && IsSwitchingWeapon && CanSwitchWeapon)
         {
             if(IsSilentKill)IsSilentKill = false;
-            if(IsSwitchingWeapon)IsSwitchingWeapon = false;
+            if(IsReloading)IsReloading = false;
         }
     }
     

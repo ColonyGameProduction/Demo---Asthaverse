@@ -8,6 +8,8 @@ public class AnimatorCharacterHelp : MonoBehaviour
     [SerializeField] private CharacterIdentity _characterIdentity;
     [SerializeField] private PlayableCharacterIdentity _playableCharaIdentity;
     [SerializeField] private UseWeaponStateMachine _useWeaponStateMachine;
+    [SerializeField] private PlayableUseWeaponStateMachine _playableUseWeaponStateMachine;
+    [SerializeField] private WeaponGameObjectDataContainer _weaponGameObjectDataContainer;
     private bool wasDeath;
 
     #region FEET IK VARIABLE
@@ -44,9 +46,16 @@ public class AnimatorCharacterHelp : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _useWeaponStateMachine = GetComponentInParent<UseWeaponStateMachine>();
+        _useWeaponStateMachine.OnEnsuringReload += EnsuringReload;
+
+        _playableUseWeaponStateMachine = _useWeaponStateMachine as PlayableUseWeaponStateMachine;
         _characterIdentity = GetComponentInParent<CharacterIdentity>();
         _playableCharaIdentity = _characterIdentity as PlayableCharacterIdentity;
+        _weaponGameObjectDataContainer = GetComponentInChildren<WeaponGameObjectDataContainer>();
     }
+
+
+
     private void Start() 
     {
         if(_playableCharaIdentity != null)_playableCharaIdentity.GetPlayableMovementStateMachine.OnIsCrawlingChange += ChangeIsCrawling;
@@ -276,17 +285,17 @@ public class AnimatorCharacterHelp : MonoBehaviour
 
     public void ChangeMagParentToNormal()
     {
-        
+        _magOriginalLocalPos = _weaponGameObjectDataContainer.GetCurrWeaponOriLocalPos();
+        _magOriginalLocalEulerAngles = _weaponGameObjectDataContainer.GetCurrWeaponOriEulerAngles();
+        _magGunParent = _weaponGameObjectDataContainer.GetCurrWeaponMagParent();
         ChangeMagParent(_magGunParent, _magOriginalLocalPos, _magOriginalLocalEulerAngles);
     }
     public void ChangeMagParentToHand()
     {
-        _magCurrGunTransform = _characterIdentity.GetWeaponGameObjectDataContainer.GetCurrWeaponMagTransform();
+        _magCurrGunTransform = _weaponGameObjectDataContainer.GetCurrWeaponMagTransform();
         if(_magCurrGunTransform == null)return;
         
-        _magOriginalLocalPos = _magCurrGunTransform.localPosition;
-        _magOriginalLocalEulerAngles = _magCurrGunTransform.localEulerAngles;
-        _magGunParent = _magCurrGunTransform.parent;
+        
         ChangeMagParent(_handReloadParent, _magHandLocalPos, _magHandLocalEulerAngles);
     }
     private void ChangeMagParent(Transform parent, Vector3 newLocalPos, Vector3 newLocalEulerAngles)
@@ -309,6 +318,27 @@ public class AnimatorCharacterHelp : MonoBehaviour
         // Debug.Log("Show Mag");
         _magCurrGunTransform.gameObject.SetActive(true);
     } 
+
+    private void EnsuringReload()
+    {
+        ChangeMagParentToNormal();
+        ShowMag();
+    }
+    #endregion
+
+    #region Switch Weapon Methods
+    public void HideCurrWeapon()
+    {
+        _weaponGameObjectDataContainer.HideCurrWeapon();
+    }
+    public void SwitchingWeapon()
+    {
+        _playableCharaIdentity.SwitchWeapon();
+    }
+    public void SwitchWeaponFinished()
+    {
+        _playableUseWeaponStateMachine.SwitchWeaponAnimationFinished();
+    }
     #endregion
 
 }

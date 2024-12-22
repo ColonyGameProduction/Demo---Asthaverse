@@ -22,6 +22,8 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     
     protected int _currActiveAnimLayer;
     protected float _currAnimTIme;
+    protected bool _isResetAnimTime;
+
 
     [Space(1)]
     [Header("Spam Weapon State Change Delay Time")]
@@ -56,6 +58,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     protected WeaponShootVFX _weaponShootVFX;
 
     public Action OnWasUsingGun;
+    public Action OnEnsuringReload;
 
     [Header("Recoil Data")]
     [SerializeField]protected float _recoilCoolDownBuffer = 0.1f;
@@ -115,6 +118,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     public Transform GunOriginShootPoint { get{return _gunOriginShootPoint;} set{_gunOriginShootPoint = value;}} 
     public int CurrActiveAnimLayer { get {return _currActiveAnimLayer;}}
     public float CurrAnimTime {get {return _currAnimTIme;}set {_currAnimTIme = value;}}
+    public bool IsResetAnimTime {get {return _isResetAnimTime;} set {_isResetAnimTime = value;}}
     public LayerMask CharaEnemyMask {get{return _charaEnemyMask;}}
 
     #endregion
@@ -234,10 +238,15 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     {
         if(!_isReloading) return;
         _animator.SetBool(ANIMATION_MOVE_PARAMETER_RELOAD, false);
-        _currAnimTIme = 0f;
+        _isResetAnimTime = true;
         _charaIdentity.ReloadWeapon();
         CanReload = false;
         IsReloading = false;
+    }
+    public void EnsureReloadWeapon()
+    {
+        _charaIdentity.ReloadWeapon();
+        OnEnsuringReload?.Invoke();
     }
     
     public void CanReloadWeapon_Coroutine()
@@ -267,7 +276,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
     #endregion
 
-    protected void SetCurrWeapon() => _currWeapon = _charaIdentity.CurrWeapon;// pas ganti weapon, ini dipanggil
+    public void SetCurrWeapon() => _currWeapon = _charaIdentity.CurrWeapon;// pas ganti weapon, ini dipanggil
     public void ActivateRigAim() => _rigController.weight = 1;
     public void DeactivateRigAim() => _rigController.weight = 0;
 

@@ -10,6 +10,8 @@ public class WeaponGameObjectData
     public GameObject gunGameObject;
     public Transform shootPlacement;
     public Transform weaponMagTransform;
+    public Transform weaponMagParent;
+    public Vector3 oriLocalMagPos, oriLocalEulerAngles;
     public PlayerGunCollide playerGunCollide;
 }
 public class WeaponGameObjectDataContainer : MonoBehaviour
@@ -21,9 +23,21 @@ public class WeaponGameObjectDataContainer : MonoBehaviour
         for(int i=0; i < _weaponGameObjectDataList.Count; i++)
         {
             _weaponGameObjectDataList[i].playerGunCollide = _weaponGameObjectDataList[i].gunGameObject.GetComponentInChildren<PlayerGunCollide>();
+            _weaponGameObjectDataList[i].weaponMagParent = _weaponGameObjectDataList[i].weaponMagTransform.parent;
         }
     }
-
+    private void Start() 
+    {
+        SaveOriginalLocalPosRot();
+    }
+    private void SaveOriginalLocalPosRot()
+    {
+        for(int i=0; i < _weaponGameObjectDataList.Count; i++)
+        {
+            _weaponGameObjectDataList[i].oriLocalMagPos = _weaponGameObjectDataList[i].weaponMagTransform.localPosition;
+            _weaponGameObjectDataList[i].oriLocalEulerAngles = _weaponGameObjectDataList[i].weaponMagTransform.localEulerAngles;
+        }
+    }
     public Transform GetCurrShootPlacement()
     {
         return _currWeaponGameObjectData.shootPlacement;
@@ -31,6 +45,18 @@ public class WeaponGameObjectDataContainer : MonoBehaviour
     public Transform GetCurrWeaponMagTransform()
     {
         return _currWeaponGameObjectData.weaponMagTransform;
+    }
+    public Transform GetCurrWeaponMagParent()
+    {
+        return _currWeaponGameObjectData.weaponMagParent;
+    }
+    public Vector3 GetCurrWeaponOriLocalPos()
+    {
+        return _currWeaponGameObjectData.oriLocalMagPos;
+    }
+    public Vector3 GetCurrWeaponOriEulerAngles()
+    {
+        return _currWeaponGameObjectData.oriLocalEulerAngles;
     }
     public PlayerGunCollide GetPlayerGunCollide()
     {
@@ -48,6 +74,10 @@ public class WeaponGameObjectDataContainer : MonoBehaviour
             if(_currWeaponGameObjectData == weaponData)weaponData.gunGameObject.SetActive(true);
             else weaponData.gunGameObject.SetActive(false);
         }
+    }
+    public void HideCurrWeapon()
+    {
+        if(_currWeaponGameObjectData != null) _currWeaponGameObjectData.gunGameObject.SetActive(false);
     }
 }
 

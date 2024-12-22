@@ -20,6 +20,7 @@ public class CharacterProfileUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _maxHPContainer;
     private RectTransform _weaponImageRectTransform, _charaProfileRectTransform;
     private float _moveWeaponDirX = 200f, _changeWeaponUIAlphaDuration = 0.2f;
+    private Vector3 _weaponShowPos;
     private Vector3 _playableHPContainerPos, _friendHPContainerPos, _playableHPContainerScale, _friendHPContainerScale;
     private float  _animationDuration = 0.2f;
 
@@ -47,16 +48,18 @@ public class CharacterProfileUI : MonoBehaviour
         _maxHPContainer.text = _playableIdentity.TotalHealth.ToString();
     }
 
-    public void AssignUIAnimationData(float moveWeaponDirectionX, float changeWeaponUIAlphaDuration, Vector3 playableHPContainerPos, Vector3 friendHPContainerPos, Vector3 playableHPContainerScale, Vector3 friendHPContainerScale, float animationDuration)
+    public void AssignUIAnimationData(float moveWeaponDirectionX, float changeWeaponUIAlphaDuration, Vector3 WeaponShowPos,  Vector3 playableHPContainerPos, Vector3 friendHPContainerPos, Vector3 playableHPContainerScale, Vector3 friendHPContainerScale, float animationDuration)
     {
         _moveWeaponDirX = moveWeaponDirectionX;
         _changeWeaponUIAlphaDuration = changeWeaponUIAlphaDuration;
-        _animationDuration = animationDuration;
+        _weaponShowPos = WeaponShowPos;
+        // _weaponHidePos = WeaponHidePos;
 
         _playableHPContainerPos = playableHPContainerPos;
         _friendHPContainerPos = friendHPContainerPos;
         _playableHPContainerScale = playableHPContainerScale;
         _friendHPContainerScale = friendHPContainerScale;
+        _animationDuration = animationDuration;
     }
     public void UpdateHealthDataWhenHealthChange(float currHealth, float totalHealth)
     {
@@ -80,12 +83,20 @@ public class CharacterProfileUI : MonoBehaviour
     {
         GameObject weaponImageGameObject = _weaponImageContainer.gameObject;
 
-        LeanTween.moveX(weaponImageGameObject, weaponImageGameObject.transform.position.x + _moveWeaponDirX, _animationDuration);
+        // LeanTween.moveX(weaponImageGameObject, weaponImageGameObject.transform.position.x + _moveWeaponDirX, _animationDuration);
+
+        Vector3 newPos = _weaponShowPos;
+        newPos.x += _moveWeaponDirX;
+
+
+        LeanTween.moveLocal(weaponImageGameObject, newPos, _animationDuration);
         LeanTween.alpha(_weaponImageRectTransform, 0, _changeWeaponUIAlphaDuration).setOnComplete(
             ()=>
             {
                 UpdateWeaponData();
-                LeanTween.moveX(weaponImageGameObject, weaponImageGameObject.transform.position.x - _moveWeaponDirX, _animationDuration);
+                // LeanTween.moveX(weaponImageGameObject, weaponImageGameObject.transform.position.x - _moveWeaponDirX, _animationDuration);
+                newPos.x -= _moveWeaponDirX;
+                LeanTween.moveLocal(weaponImageGameObject, newPos, _animationDuration);
                 LeanTween.alpha(_weaponImageRectTransform, 1, _changeWeaponUIAlphaDuration);
             }
         );

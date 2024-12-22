@@ -12,9 +12,15 @@ public class ReloadBehaviour : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if(_useWeaponStateMachine == null) _useWeaponStateMachine = animator.gameObject.GetComponentInParent<UseWeaponStateMachine>();
-        if(_useWeaponStateMachine != null && animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime != _useWeaponStateMachine.CurrAnimTime)
+        if(_useWeaponStateMachine != null && _useWeaponStateMachine.IsResetAnimTime)
+        {
+            _useWeaponStateMachine.CurrAnimTime = 0;
+            _useWeaponStateMachine.IsResetAnimTime = false;
+        }
+        if(_useWeaponStateMachine != null && stateInfo.normalizedTime != _useWeaponStateMachine.CurrAnimTime)
         {
             animator.Play(animationClipName, layerIndex, _useWeaponStateMachine.CurrAnimTime);
+            Debug.Log("ReloadEnter" + _useWeaponStateMachine.CurrAnimTime + " AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + animationClipName);
             // Debug.Log("lewat siuni sekali");
         }
     }
@@ -22,7 +28,8 @@ public class ReloadBehaviour : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(_useWeaponStateMachine != null)_useWeaponStateMachine.CurrAnimTime = animator.GetCurrentAnimatorStateInfo(layerIndex).normalizedTime;
+        if(_useWeaponStateMachine != null)_useWeaponStateMachine.CurrAnimTime = stateInfo.normalizedTime;
+        Debug.Log("ReloadUpdate" + _useWeaponStateMachine.CurrAnimTime  + animationClipName);
         // Debug.Log(_useWeaponStateMachine.CurrAnimTime + " s");
     }
 

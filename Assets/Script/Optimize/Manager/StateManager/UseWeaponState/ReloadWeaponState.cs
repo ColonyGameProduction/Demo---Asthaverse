@@ -15,7 +15,7 @@ public class ReloadWeaponState : UseWeaponState
         // mainkan animasi
         // _stateMachine.CharaAnimator.
         isDoReloading = false;
-        _sm.CurrAnimTime = 0;
+        _sm.IsResetAnimTime = true;
         if(!_sm.IsAIInput)
         {
             _playableData.TellToTurnOffScope();
@@ -27,9 +27,6 @@ public class ReloadWeaponState : UseWeaponState
     {
         // _stateMachine.CharaAnimator.Play("Crouch", 1, _currAnimTIme);
         if(!_normalUse.IsAiming)SetAnimParamInactive("Aim");
-
-
-        
 
 
         if(!isDoReloading && _normalUse.IsReloading)
@@ -73,6 +70,8 @@ public class ReloadWeaponState : UseWeaponState
     }
     public override void ExitState()
     {
+        _sm.EnsureReloadWeapon();
+
         _sm.CanReloadWeapon_Coroutine();
     }
 
