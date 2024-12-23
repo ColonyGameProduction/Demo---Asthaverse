@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cinemachine;
 using System;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour, IUnsubscribeEvent
 {
@@ -25,6 +26,8 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     public GameObject[] breadcrumbsGameObject;
     public Action<EnemyAI> enemy;
 
+    public bool gameIsPaused;
+    public bool isAtSetting;
 
     #region new Variable
     private GameInputManager _gameInput;
@@ -34,14 +37,19 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     [ReadOnly(false), SerializeField] private GamePauseState _currGamePauseState;
     private bool _isPause;
 
+    [Header("Checkpoint")]
+    public bool startAtCheckPoint;
+    [SerializeField] private List<GameObject> _checkPointList;
+    [SerializeField] private Vector3 _friendOffset;
+    private int _currCheckPointIdx;
+    public const string CHECK_POINT_PREF = "Checkpoint";
+
     [Header("Event")]
     public Action<bool> OnPlayerPause;
     public Action OnGameOver;
     public Action OnQuitSettings;
 
 
-    public bool gameIsPaused;
-    public bool isAtSetting;
     #region GETTER SETTER VARIABLE
     public GameState GetCurrGameState { get { return _currGameState; } }
     public GamePauseState GetCurrGamePauseState { get { return _currGamePauseState; } }
@@ -67,6 +75,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
         canSwitch = true;
         scope = false;
 
+        if(startAtCheckPoint) LoadCheckPoint();
         SetGameState(GameState.Play);
     }
     
@@ -172,5 +181,29 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     }
     #endregion
 
+    #region CheckPoint
+    private void LoadCheckPoint()
+    {
+        _currCheckPointIdx = PlayerPrefs.GetInt(CHECK_POINT_PREF, 0);
+        SpawnAtCheckPoint();
+    }
+    private void SpawnAtCheckPoint()
+    {
+        Vector3 startPos = _checkPointList[_currCheckPointIdx].transform.position;
+        for(int i=0; i< playerGameObject.Length; i++)
+        {
+            Vector3 charaPos = playerGameObject[i].transform.position;
+            startPos.y = charaPos.y;
 
+            playerGameObject[i].transform.position = startPos;
+            startPos += _friendOffset;
+        }
+    }
+    public int GetCurrCheckPointIdx() => _currCheckPointIdx;
+    public void SaveCheckPoint(int idx)
+    {
+        _currCheckPointIdx = idx;
+        PlayerPrefs.SetInt(CHECK_POINT_PREF, idx);
+    }
+    #endregion
 }
