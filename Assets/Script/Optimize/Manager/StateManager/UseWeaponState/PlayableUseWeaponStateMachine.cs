@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.Serialization;
 
 public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUseWeaponData, IPlayableUseWeaponDataNeeded, IUnsubscribeEvent
 {
@@ -22,8 +23,11 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
 
     [Space(1)]
     [Header("Additional Animation Component")]
-    [SerializeField] private MultiAimConstraint _bodyRigConstraintData;
-    [SerializeField] private MultiAimConstraint _aimRigConstraintData;
+    [SerializeField] protected Rig _rigControllerPistol;
+    [FormerlySerializedAs("_bodyRigConstraintData")][SerializeField] private MultiAimConstraint _bodyRigConstraintDataRifle;
+    [FormerlySerializedAs("_aimRigConstraintData")][SerializeField] private MultiAimConstraint _aimRigConstraintDataRifle;
+    [SerializeField] private MultiAimConstraint _bodyRigConstraintDataPistol;
+    [SerializeField] private MultiAimConstraint _aimRigConstraintDataPistol;
 
     [Space(1)]
     [Header("Saving other component data")]
@@ -38,10 +42,10 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected PlayableCharacterIdentity _getPlayableCharacterIdentity;
     protected PlayerGunCollide _getPlayerGunCollide;
     [Header("Recoil Data Advanced")]
-    protected float _movingMaxRecoil, _currRecoilMod, _recoilAddMultiplier;
     [SerializeField] protected float _movingMaxRecoilOnScopeNotIdleBuffer = 0.5f, _movingMaxRecoilNotOnScopeIdleCrouch = 0.5f;
     [SerializeField] protected float _currRecoilModBufferOnScopeNotIdle = 0.25f, _currRecoilModBufferNotOnScopeNotIdle = 0.5f, _currRecoildModNotOnScopeIdleCrouch = 0.25f;
     [SerializeField] protected float _recoildAddMultiplierOnScopeNotIdle = 1.5f, _recoildAddMultiplierNotOnScopeNotIdle = 3f, _recoilAddMultiplierNotOnScopeIdleCrouch = 1.5f;
+    protected float _movingMaxRecoil, _currRecoilMod, _recoilAddMultiplier;
 
 
     public const string ANIMATION_MOVE_PARAMETER_SWITCHWEAPON= "SwitchWeapon";
@@ -227,23 +231,45 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
             _currOriginShootPoint = _mainCamera.transform;
             _currDirectionShootPoint = _mainCamera.transform;
 
-            var sourceObjectsData =_aimRigConstraintData.data.sourceObjects;
-            sourceObjectsData.SetWeight(0, 1f);
-            sourceObjectsData.SetWeight(1, 0f);
-            _aimRigConstraintData.data.sourceObjects = sourceObjectsData;
-            _bodyRigConstraintData.data.sourceObjects = sourceObjectsData;
+            SetConstraintData();
         }
         else
         {
             _currOriginShootPoint = _originShootPoint_AIContainer;
             _currDirectionShootPoint = _currChosenTarget;
 
-            var sourceObjectsData =_aimRigConstraintData.data.sourceObjects;
-            sourceObjectsData.SetWeight(0, 0f);
-            sourceObjectsData.SetWeight(1, 1f);
-            _aimRigConstraintData.data.sourceObjects = sourceObjectsData;
-            _bodyRigConstraintData.data.sourceObjects = sourceObjectsData;
+            SetConstraintData();
         }
+    }
+    private void SetConstraintData()
+    {
+        var sourceObjectsData =_aimRigConstraintDataRifle.data.sourceObjects;
+        sourceObjectsData.SetWeight(0, IsAIInput ? 0 : 1);
+        sourceObjectsData.SetWeight(1, IsAIInput ? 1 : 0);
+
+        _aimRigConstraintDataRifle.data.sourceObjects = sourceObjectsData;
+        _bodyRigConstraintDataRifle.data.sourceObjects = sourceObjectsData;
+        if(_aimRigConstraintDataPistol)_aimRigConstraintDataPistol.data.sourceObjects = sourceObjectsData;
+        if(_bodyRigConstraintDataPistol)_bodyRigConstraintDataPistol.data.sourceObjects = sourceObjectsData;
+    }
+
+    public override void ActivateRigAim()
+    {
+        if(_getPlayableCharacterIdentity.CurrWeaponIdx == 0)
+        {
+            base.ActivateRigAim();
+            if(_rigControllerPistol)_rigControllerPistol.weight = 0;
+        }
+        else
+        {
+            base.DeactivateRigAim();
+            if(_rigControllerPistol)_rigControllerPistol.weight = 1;
+        }
+    }
+    public override void DeactivateRigAim()
+    {
+        base.DeactivateRigAim();
+        if(_rigControllerPistol)_rigControllerPistol.weight = 0;
     }
 
     public void TellToTurnOffScope()

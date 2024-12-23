@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.Serialization;
 
 public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalUseWeaponData
 {
@@ -18,7 +19,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
     protected UseWeaponState _currState;
 
     [Header("Animator Component")]
-    [SerializeField] protected Rig _rigController;
+    [FormerlySerializedAs("_rigController")][SerializeField] protected Rig _rigControllerRifle;
     
     protected int _currActiveAnimLayer;
     protected float _currAnimTIme;
@@ -276,9 +277,9 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
     #endregion
 
-    public void SetCurrWeapon() => _currWeapon = _charaIdentity.CurrWeapon;// pas ganti weapon, ini dipanggil
-    public void ActivateRigAim() => _rigController.weight = 1;
-    public void DeactivateRigAim() => _rigController.weight = 0;
+    public virtual void SetCurrWeapon() => _currWeapon = _charaIdentity.CurrWeapon;// pas ganti weapon, ini dipanggil
+    public virtual void ActivateRigAim() => _rigControllerRifle.weight = 1;
+    public virtual void DeactivateRigAim() => _rigControllerRifle.weight = 0;
 
     public void SetCharaAimAccuracy(float newAccuracy) => _charaAimAccuracy = newAccuracy;
 

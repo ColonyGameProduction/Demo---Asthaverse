@@ -416,7 +416,9 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     #region  Weapon Data
     private void UseWeaponData_OnTurningOffScope()
     {
-        if(_playableCharacterCameraManager.IsScope)_playableCharacterCameraManager.ResetScope();
+        if(!_playableCharacterCameraManager.IsScope) return;
+        CurrPlayableChara.Aiming(false);
+        _playableCharacterCameraManager.ResetScope();
     }
     #endregion
 
