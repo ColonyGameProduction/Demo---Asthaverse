@@ -7,7 +7,6 @@ public class DoorScript : MonoBehaviour
     public bool isOpen = false;
     public bool isInfront = false;
     public bool isStaying = false;
-    public bool canOnlyOnce = true;
 
     public void DoorInteracted(Transform playerPos)
     {
@@ -28,7 +27,6 @@ public class DoorScript : MonoBehaviour
         }
         else
         {
-            canOnlyOnce = true;
             if (dot > 0)
             {
                 isInfront = true;

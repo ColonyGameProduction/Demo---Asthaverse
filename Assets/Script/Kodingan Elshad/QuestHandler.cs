@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class QuestHandler : MonoBehaviour
 {
-    public bool eavesdropComplete;
-    public bool keyItemInteracted;
+    public int totalQuest;
+    public List<T> questList = new List<T>();
+    public static QuestHandler questHandler;
+
+    private void Awake()
+    {
+        questHandler = this;
+    }
 }
