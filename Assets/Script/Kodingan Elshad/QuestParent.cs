@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class QuestParent : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public string questName, questDescription;
+    public bool questActivate, questComplete;
+
+    public virtual void StartingTheQuest()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public virtual void CompletedTheQuest()
     {
-        
+
     }
+
+    public virtual void ActivatingTheNextQuest()
+    {
+
+    }
+
 }
