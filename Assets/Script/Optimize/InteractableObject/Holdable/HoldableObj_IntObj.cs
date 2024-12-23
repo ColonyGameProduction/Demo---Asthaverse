@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,12 +13,17 @@ public class HoldableObj_IntObj : InteractableObject
 
     protected PlayableCharacterIdentity _currCharaInteracting;
     public override bool CanInteract {get{ return !_isComplete;}}
+    public Action<float> OnValueChange;
     protected virtual void Update() 
     {
         if(_isComplete) return;
         if(_isBeingInteracted)
         {
-            if(_value < _totalValueToDoSomething) _value += Time.deltaTime * _valueFillSpeed;
+            if(_value < _totalValueToDoSomething)
+            {
+                _value += Time.deltaTime * _valueFillSpeed;
+                OnValueChange?.Invoke(_value/_totalValueToDoSomething);
+            }
             else
             {
                 _isComplete = true; // Do something
@@ -33,6 +39,8 @@ public class HoldableObj_IntObj : InteractableObject
         _currCharaInteracting = characterIdentity;
         _currCharaInteracting.OnCancelInteractionButton += ResetInteraction;
         _currCharaInteracting.IsHoldingInteraction = true;
+        HoldInteractUI.OnStartHoldInteracting?.Invoke(this);
+
         _isBeingInteracted = true;
     }
 
@@ -44,6 +52,8 @@ public class HoldableObj_IntObj : InteractableObject
     protected virtual void ResetInteraction()
     {
         _currCharaInteracting.OnCancelInteractionButton -= ResetInteraction;
+        _currCharaInteracting.IsHoldingInteraction = false;
+        HoldInteractUI.OnStopHoldInteracting?.Invoke(this);
         _currCharaInteracting = null;
 
         if(_isComplete) return;
