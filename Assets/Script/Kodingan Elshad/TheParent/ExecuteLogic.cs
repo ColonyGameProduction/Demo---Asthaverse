@@ -133,6 +133,9 @@ public class ExecuteLogic : AILogic
         //ShowMouseCursor();
 
         PlayerAction playerAction = GetComponent<PlayerAction>();
+        ChangeKeybindsUI changeKeybind = FindObjectOfType<ChangeKeybindsUI>();
+
+        changeKeybind.isCommand = true;
 
         playerAction.isCommandActive = true;
         playerAction.command.SetActive(true);
@@ -142,6 +145,9 @@ public class ExecuteLogic : AILogic
     public void UnCommand()
     {
         PlayerAction playerAction = GetComponent<PlayerAction>();
+        ChangeKeybindsUI changeKeybind = FindObjectOfType<ChangeKeybindsUI>();
+
+        changeKeybind.isCommand = false;
 
         if (playerAction.isCommandActive == true)
         {
@@ -185,6 +191,8 @@ public class ExecuteLogic : AILogic
         {
             PlayerAction playerAction = GetComponent<PlayerAction>();
 
+            ChangeKeybindsUI changeKeybind = FindObjectOfType<ChangeKeybindsUI>();
+
             if (hit.collider.GetComponent<PickableItems>())
             {
                 Debug.Log("Ambil!");
@@ -193,6 +201,8 @@ public class ExecuteLogic : AILogic
 
                 if (playerAction.heldObject == null)
                 {
+                    changeKeybind.isPickUp = true;
+
                     playerAction.heldObject = newObject;
                     PickupObject(playerAction.heldObject);
                 }
@@ -228,10 +238,13 @@ public class ExecuteLogic : AILogic
     public void ThrowObject()
     {
         PlayerAction playerAction = GetComponent<PlayerAction>();
+        ChangeKeybindsUI changeKeybind = FindObjectOfType<ChangeKeybindsUI>();
+
         Rigidbody rb = playerAction.heldObject.GetComponent<Rigidbody>();
 
         if (rb != null)
         {
+            changeKeybind.isPickUp = false;
             rb.isKinematic = false;
             rb.AddForce(Camera.main.transform.forward * 10f, ForceMode.VelocityChange);
 
