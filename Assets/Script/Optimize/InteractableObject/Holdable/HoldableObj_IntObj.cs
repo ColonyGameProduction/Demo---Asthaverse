@@ -6,9 +6,9 @@ public class HoldableObj_IntObj : InteractableObject
 {
     [SerializeField] protected float _totalValueToDoSomething;
     [SerializeField] protected float _valueFillSpeed;
-    protected float _value = 0;
-    protected bool _isBeingInteracted;
-    protected bool _isComplete;
+    [ReadOnly(false), SerializeField] protected float _value = 0;
+    [ReadOnly(false), SerializeField] protected bool _isBeingInteracted;
+    [ReadOnly(false), SerializeField] protected bool _isComplete;
 
     protected PlayableCharacterIdentity _currCharaInteracting;
     public override bool CanInteract {get{ return !_isComplete;}}

@@ -818,7 +818,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall)
         {   
-            if(!CurrPlayableChara.IsHoldingInteraction) GameInput_OnInteractCanceled();
+            if(CurrPlayableChara.IsHoldingInteraction) GameInput_OnInteractCanceled();
             CurrPlayableChara.Shooting(true);
             // if(!_currPlayableUseWeaponStateMachine.IsAiming)_currPlayableUseWeaponStateMachine.IsAiming = true;
             // _currPlayableUseWeaponStateMachine.IsUsingWeapon = true;

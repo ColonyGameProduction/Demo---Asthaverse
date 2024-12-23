@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -63,3 +64,8 @@ public enum GamePauseState
     Settings
 }
 
+[Serializable]
+public enum DialogCutsceneTitle
+{
+    None, Test1, Test2
+}
