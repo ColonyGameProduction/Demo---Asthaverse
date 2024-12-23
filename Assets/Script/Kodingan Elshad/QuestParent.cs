@@ -7,6 +7,11 @@ public class QuestParent : MonoBehaviour
     public string questName, questDescription;
     public bool questActivate, questComplete;
 
+    public virtual void QuestIsntStarting()
+    {
+
+    }
+
     public virtual void StartingTheQuest()
     {
 
