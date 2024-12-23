@@ -51,7 +51,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
 
     [Space(1)]
     [Header("   Stealth")]
-    protected float _stealthStats;
+    [ReadOnly(true), SerializeField] protected float _stealthStats;
     #endregion
     [Header("Regen Stats")]
     [SerializeField] protected float _regenScale = 0.7f;
@@ -79,6 +79,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
 
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
+    public EntityStatSO GetCharaStatSO {get {return _characterStatSO;}}
 
     #endregion
     protected virtual void Awake()
@@ -188,8 +189,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
         }
 
         _currWeaponIdx = 0;
-        _weaponGameObjectDataContainer.GetCurrWeaponGameObjectData(_currWeaponIdx);
-        _useWeaponStateMachine.GunOriginShootPoint = _weaponGameObjectDataContainer.GetCurrShootPlacement();
+        SetWeaponGameObjectDataContainer();
 
         _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
 
@@ -198,6 +198,11 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
             _weaponShootVFX.SpawnTrail((int)(weaponStat.magSize * weaponStat.bulletPerTap), _useWeaponStateMachine.GunOriginShootPoint.position, weaponStat.bulletTrailPrefab, weaponStat.gunFlashPrefab);
         }
 
+    }
+    public virtual void SetWeaponGameObjectDataContainer()
+    {
+        _weaponGameObjectDataContainer.GetCurrWeaponGameObjectData(_currWeaponIdx);
+        _useWeaponStateMachine.GunOriginShootPoint = _weaponGameObjectDataContainer.GetCurrShootPlacement();
     }
     public abstract void ReloadWeapon();
     #endregion

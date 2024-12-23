@@ -180,7 +180,7 @@ public class ExecuteLogic : AILogic
         }
     }
 
-    public void Interact()
+    public void Interact(PlayerAction playerAction, bool holdButton)
     {
         Vector3 rayOrigin = Camera.main.transform.position;
         Vector3 rayDirection = Camera.main.transform.forward.normalized;
@@ -189,7 +189,6 @@ public class ExecuteLogic : AILogic
 
         if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Interactable")))
         {
-            PlayerAction playerAction = GetComponent<PlayerAction>();
 
             ChangeKeybindsUI changeKeybind = FindObjectOfType<ChangeKeybindsUI>();
 
@@ -213,9 +212,26 @@ public class ExecuteLogic : AILogic
                     PickupObject(playerAction.heldObject);
                 }
             }
-            else if (hit.collider.GetComponent<OpenableObject>())
+            else if(hit.collider.GetComponentInParent<DoorScript>())
+            {   
+                DoorScript door = hit.collider.GetComponentInParent<DoorScript>();
+                if(holdButton)
+                {
+                    door.DoorInteracted(playerAction.transform);
+                }
+            }
+            else if(hit.collider.GetComponentInParent<HoldButtonInteract>())
             {
-                Debug.Log("Buka!");
+                HoldButtonInteract holdInteract = hit.collider.GetComponentInParent<HoldButtonInteract>();
+                holdInteract.HoldInteraction(holdButton);
+            }
+            else if(hit.collider.GetComponentInParent<KeyItem>())
+            {
+                KeyItem keyItem = hit.collider.GetComponentInParent<KeyItem>();
+                if(holdButton)
+                {
+                    keyItem.KeyItemInteract();
+                }
             }
         }
     }

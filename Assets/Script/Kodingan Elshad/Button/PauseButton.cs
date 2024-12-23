@@ -23,7 +23,7 @@ public class PauseButton : ButtonParent
 
     public void ButtonPause()
     {
-        if (gm.gameIsPaused)
+        if (gm.gameIsPaused && !gm.isAtSetting)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;

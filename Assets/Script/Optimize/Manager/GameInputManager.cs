@@ -13,9 +13,9 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
     #region Action List InputPlayerAction
     public Action OnRunPerformed, OnRunCanceled, OnCrouchPerformed, OnCrouchCanceled,
                   OnChangePlayerPerformed, OnChangeWeaponPerformed, 
-                  OnExitCommandPerformed, OnRegroupFriendPerformed,
-                  OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnReloadPerformed,
-                  OnInteractPerformed, OnNightVisionPerformed, OnSkillPerformed, OnWhistlePerformed, OnThrowPerformed,
+                  OnCommandPerformed, OnExitCommandPerformed, OnRegroupFriendPerformed,
+                  OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnScopeCanceled, OnReloadPerformed,
+                  OnInteractPerformed, OnInteractCanceled, OnNightVisionPerformed, OnSkillPerformed, OnWhistlePerformed, OnThrowPerformed,
                   OnTakeCoverPerformed, OnExitTakeCoverPerformed;
     public Action<int> OnCommandFriendPerformed;
     #endregion
@@ -47,19 +47,23 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
         _inputActions.InputPlayerAction.ChangePlayer.performed += ChangePlayer_performed;
         _inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
 
-        _inputActions.InputPlayerAction.CommandFriend1.performed += Command1_performed;
-        _inputActions.InputPlayerAction.CommandFriend2.performed += Command2_performed;
-        _inputActions.InputPlayerAction.ExitCommand.performed += ExitCommand_performed;
-        _inputActions.InputPlayerAction.RegroupFriend.performed += RegroupFriend_performed;
+        // _inputActions.InputPlayerAction.CommandFriend1.performed += Command1_performed;
+        // _inputActions.InputPlayerAction.CommandFriend2.performed += Command2_performed;
+        _inputActions.InputPlayerAction.CommandFriend.performed += Command1_performed;
+        _inputActions.InputPlayerAction.CommandFriend.canceled += ExitCommand_performed;
+        // _inputActions.InputPlayerAction.ExitCommand.performed += ExitCommand_performed;
+        // _inputActions.InputPlayerAction.RegroupFriend.performed += RegroupFriend_performed;
 
         _inputActions.InputPlayerAction.SilentKill.performed += SilentKill_performed;
 
         _inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
         _inputActions.InputPlayerAction.Shooting.canceled += Shooting_canceled;
         _inputActions.InputPlayerAction.Scope.performed += Scope_performed;
+        _inputActions.InputPlayerAction.Scope.canceled += Scope_canceled;
         _inputActions.InputPlayerAction.Reload.performed += Reload_performed;
 
         _inputActions.InputPlayerAction.Interact.performed += Interact_performed;
+        _inputActions.InputPlayerAction.Interact.canceled += Interact_canceled;
         _inputActions.InputPlayerAction.NightVision.performed += NightVision_performed;
         _inputActions.InputPlayerAction.SkillButton.performed += SkillButton_performed;
         _inputActions.InputPlayerAction.Whistle.performed += Whistle_performed;
@@ -68,6 +72,8 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
         _inputActions.InputPlayerAction.TakeCover.performed += TakeCover_performed;
         _inputActions.InputPlayerAction.ExitTakeCover.performed += ExitTakeCover_performed;
     }
+
+    
 
     public void SubscribeToInputMenuAction()
     {
@@ -83,6 +89,12 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
     #region Function List InputMenuAction
     private void PauseGame_performed(InputAction.CallbackContext context) => OnPauseGamePerformed?.Invoke();
 
+    public float GetCommandValue()
+    {
+        float direction = 0;
+        direction = _inputActions.InputMenuAction.SelectCommandButton.ReadValue<float>();
+        return direction;
+    }
     #endregion
 
     #region Function List InputPlayerAction
@@ -105,8 +117,10 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
     private void Shooting_Performed(InputAction.CallbackContext context)=> OnShootingPerformed?.Invoke();
     private void Shooting_canceled(InputAction.CallbackContext context)=> OnShootingCanceled?.Invoke();    
     private void Scope_performed(InputAction.CallbackContext context)=> OnScopePerformed?.Invoke();
+    private void Scope_canceled(InputAction.CallbackContext context) => OnScopeCanceled?.Invoke();
     private void Reload_performed(InputAction.CallbackContext context)=> OnReloadPerformed?.Invoke();
     private void Interact_performed(InputAction.CallbackContext context) => OnInteractPerformed?.Invoke();
+    private void Interact_canceled(InputAction.CallbackContext context) => OnInteractCanceled?.Invoke();
     private void NightVision_performed(InputAction.CallbackContext context) => OnNightVisionPerformed?.Invoke();
     private void SkillButton_performed(InputAction.CallbackContext context) => OnSkillPerformed?.Invoke();
 

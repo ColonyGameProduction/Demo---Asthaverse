@@ -59,16 +59,15 @@ public class PlayerAction : ExecuteLogic
     private LayerMask enemyMask;
     [SerializeField]
     private WeaponStatSO[] weaponStat;
-    private WeaponStatSO activeWeapon;
+    public WeaponStatSO activeWeapon;
 
     [Header("Audio")]
     public AudioSource footstepsSource;
     public AudioSource whistleSource;
 
-    [SerializeField]
-    private EntityStatSO character;
-    private float playerHP;
-    private float maxPlayerHP;
+    public EntityStatSO character;
+    public float playerHP;
+    public float maxPlayerHP;
 
     private AnimationTestScript testAnimation;
 
@@ -129,6 +128,8 @@ public class PlayerAction : ExecuteLogic
     public Transform playerObjParent;
     public Transform coverRaycastTransformParent;
 
+    public bool holdButton;
+
     //supaya input action bisa digunakan
     private void Awake()
     {
@@ -153,12 +154,14 @@ public class PlayerAction : ExecuteLogic
         inputActions.InputPlayerAction.Shooting.performed += Shooting_Performed;
         inputActions.InputPlayerAction.Shooting.canceled += Shooting_canceled;
 
+        inputActions.InputPlayerAction.Interact.performed += Interact_performed;
+        inputActions.InputPlayerAction.Interact.canceled += Interact_canceled;
+
         inputActions.InputPlayerAction.SilentKill.performed += SilentKill_performed;
         inputActions.InputPlayerAction.ChangePlayer.performed += ChangePlayer_performed;
         inputActions.InputPlayerAction.ChangingWeapon.performed += ChangingWeapon_performed;
         inputActions.InputPlayerAction.Scope.performed += Scope_performed;
         inputActions.InputPlayerAction.Reload.performed += Reload_performed;
-        inputActions.InputPlayerAction.Interact.performed += Interact_performed;
         inputActions.InputPlayerAction.Throw.performed += Throw_performed;
         inputActions.InputPlayerAction.NightVision.performed += NightVision_performed;
 
@@ -178,6 +181,8 @@ public class PlayerAction : ExecuteLogic
 
         StartingSetup();
     }
+
+    
 
     private void TakeCover_performed(InputAction.CallbackContext context)
     {
@@ -388,6 +393,7 @@ public class PlayerAction : ExecuteLogic
 
     private void ChangingWeapon_performed(InputAction.CallbackContext context)
     {
+        inGameUIHandler.SwitchingWeaponUI(this);
         ChangeWeapon(this, weaponStat, curWeapon);
     }
 
@@ -445,7 +451,14 @@ public class PlayerAction : ExecuteLogic
 
     private void Interact_performed(InputAction.CallbackContext context)
     {
-        Interact();
+        holdButton = true;
+        Interact(this, holdButton);
+    }
+
+    private void Interact_canceled(InputAction.CallbackContext obj)
+    {
+        holdButton = false;
+        Interact(this, holdButton);
     }
 
     private void Throw_performed(InputAction.CallbackContext context)

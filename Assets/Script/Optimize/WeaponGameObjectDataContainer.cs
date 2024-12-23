@@ -10,11 +10,19 @@ public class WeaponGameObjectData
     public GameObject gunGameObject;
     public Transform shootPlacement;
     public Transform weaponMagTransform;
+    public PlayerGunCollide playerGunCollide;
 }
 public class WeaponGameObjectDataContainer : MonoBehaviour
 {
     [SerializeField] private List<WeaponGameObjectData> _weaponGameObjectDataList;
     private WeaponGameObjectData _currWeaponGameObjectData;
+    private void Awake() 
+    {
+        for(int i=0; i < _weaponGameObjectDataList.Count; i++)
+        {
+            _weaponGameObjectDataList[i].playerGunCollide = _weaponGameObjectDataList[i].gunGameObject.GetComponentInChildren<PlayerGunCollide>();
+        }
+    }
 
     public Transform GetCurrShootPlacement()
     {
@@ -24,7 +32,10 @@ public class WeaponGameObjectDataContainer : MonoBehaviour
     {
         return _currWeaponGameObjectData.weaponMagTransform;
     }
-
+    public PlayerGunCollide GetPlayerGunCollide()
+    {
+        return _currWeaponGameObjectData.playerGunCollide;
+    }
 
     //Nanti ini diganti berdasarkan nama kalo uda bener
     public void GetCurrWeaponGameObjectData(int idx)
