@@ -77,7 +77,7 @@ public class WeaponGameObjectDataContainer : MonoBehaviour
     }
     public void HideCurrWeapon()
     {
-        if(_currWeaponGameObjectData != null) _currWeaponGameObjectData.gunGameObject.SetActive(false);
+        _currWeaponGameObjectData?.gunGameObject.SetActive(false);
     }
 }
 

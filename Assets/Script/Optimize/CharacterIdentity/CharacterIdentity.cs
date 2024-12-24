@@ -63,6 +63,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     #region const
     public const string ANIMATION_DEATH_PARAMETER = "Death"; 
     public const string ANIMATION_DEATH_TRIGGER_PARAMETER = "DeathTrigger";
+    public const string ANIMATION_IsBoyChara_PARAMETER = "IsBoyChara";
     #endregion
 
     #region GETTERSETTER Variable
@@ -159,6 +160,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
         }
 
         _charaName = _characterStatSO.entityName;
+        _animator.SetFloat(ANIMATION_IsBoyChara_PARAMETER, !_characterStatSO.isCharBoy? 0 : 1);
 
         _totalHealth = _characterStatSO.health;
         _currHealth = _totalHealth;

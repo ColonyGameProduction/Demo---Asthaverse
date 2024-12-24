@@ -20,7 +20,7 @@ public class SwitchWeaponBehaviour : StateMachineBehaviour
         if(_useWeaponStateMachine != null && stateInfo.normalizedTime != _useWeaponStateMachine.CurrAnimTime)
         {
             animator.Play(animationClipName, layerIndex, _useWeaponStateMachine.CurrAnimTime);
-            Debug.Log("SwitchWeaponEnter" + _useWeaponStateMachine.CurrAnimTime + " AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  + animationClipName);
+            // Debug.Log("SwitchWeaponEnter" + _useWeaponStateMachine.CurrAnimTime + " AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"  + animationClipName);
             // Debug.Log("lewat siuni sekali");
         }
     }
@@ -30,7 +30,7 @@ public class SwitchWeaponBehaviour : StateMachineBehaviour
     {
         if(_useWeaponStateMachine != null)_useWeaponStateMachine.CurrAnimTime = stateInfo.normalizedTime;
 
-        Debug.Log("SwitchWeaponUpdate" + _useWeaponStateMachine.CurrAnimTime  + " " + animationClipName);
+        // Debug.Log("SwitchWeaponUpdate" + _useWeaponStateMachine.CurrAnimTime  + " " + animationClipName);
         // Debug.Log(_useWeaponStateMachine.CurrAnimTime + " s");
     }
 

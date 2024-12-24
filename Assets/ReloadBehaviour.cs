@@ -20,7 +20,7 @@ public class ReloadBehaviour : StateMachineBehaviour
         if(_useWeaponStateMachine != null && stateInfo.normalizedTime != _useWeaponStateMachine.CurrAnimTime)
         {
             animator.Play(animationClipName, layerIndex, _useWeaponStateMachine.CurrAnimTime);
-            Debug.Log("ReloadEnter" + _useWeaponStateMachine.CurrAnimTime + " AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + animationClipName);
+            // Debug.Log("ReloadEnter" + _useWeaponStateMachine.CurrAnimTime + " AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + animationClipName);
             // Debug.Log("lewat siuni sekali");
         }
     }
@@ -29,7 +29,7 @@ public class ReloadBehaviour : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if(_useWeaponStateMachine != null)_useWeaponStateMachine.CurrAnimTime = stateInfo.normalizedTime;
-        Debug.Log("ReloadUpdate" + _useWeaponStateMachine.CurrAnimTime  + animationClipName);
+        // Debug.Log("ReloadUpdate" + _useWeaponStateMachine.CurrAnimTime  + animationClipName);
         // Debug.Log(_useWeaponStateMachine.CurrAnimTime + " s");
     }
 
