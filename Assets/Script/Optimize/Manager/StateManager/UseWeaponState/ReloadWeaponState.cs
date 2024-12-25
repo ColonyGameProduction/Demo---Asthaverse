@@ -32,6 +32,7 @@ public class ReloadWeaponState : UseWeaponState
         if(!isDoReloading && _normalUse.IsReloading)
         {
             isDoReloading = true;
+            _sm.CharaIdentity.OnToggleLeftHandRig?.Invoke(false, false);
             base.EnterState();
         }
         else if(isDoReloading && !_normalUse.IsReloading)
@@ -70,6 +71,7 @@ public class ReloadWeaponState : UseWeaponState
     }
     public override void ExitState()
     {
+        _sm.CharaIdentity.OnToggleLeftHandRig?.Invoke(true, false);
         _sm.EnsureReloadWeapon();
 
         _sm.CanReloadWeapon_Coroutine();

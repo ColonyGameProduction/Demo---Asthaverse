@@ -107,6 +107,14 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public bool IsIdleMustStayAlert { get {return _isIdleMustStayAlert;}set{ _isIdleMustStayAlert = value;} }
 
     public bool IsAtCrouchPlatform {get {return _isAtCrouchPlatform;} set{_isAtCrouchPlatform = value;}}
+
+    public virtual float AgentRadius
+    {
+        get 
+        {
+            return _agentNavMesh.radius;
+        }
+    }
     
     #endregion
 
@@ -120,6 +128,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         _normalHeightCharaCon.center = Vector3.zero;
         _normalHeightCharaCon.radius = _agentNavMesh.radius;
         _normalHeightCharaCon.height = _agentNavMesh.height;
+        // Debug.Log("agent navmesh radiusnya adala" + _agentNavMesh.radius);
     }
     protected virtual void Start() 
     {   
@@ -216,7 +225,8 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
             return true;
         }
 
-        if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentNavMesh.radius)
+        // Debug.Log(transform.name + " agent Radius" + AgentRadius);
+        if(Vector3.Distance(transform.position, AgentNavMesh.destination) < AgentRadius)
         {
             AgentNavMesh.ResetPath();
             OnIsTheSamePosition?.Invoke(CurrAIDirPos);

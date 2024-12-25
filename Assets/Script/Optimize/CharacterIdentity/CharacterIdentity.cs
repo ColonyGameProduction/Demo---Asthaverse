@@ -58,6 +58,8 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     [SerializeField] protected float _regenTimerMax = 0.5f;
     [ReadOnly(false), SerializeField] protected float _regenCDTimer;
 
+    [Header("Rigging")]
+    public Action<bool, bool> OnToggleLeftHandRig;
     #endregion
 
     #region const
@@ -138,6 +140,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     public virtual void Death()
     {
         if(_isDead)return;
+        OnToggleLeftHandRig?.Invoke(false, false);
 
         _isDead = true;
         _regenCDTimer = 0f;

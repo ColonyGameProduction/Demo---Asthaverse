@@ -30,6 +30,7 @@ public class SwitchingWeaponState : UseWeaponState
         {
             isDoSwitch = true;
             _sm.IsResetAnimTime = true;
+            _sm.CharaIdentity.OnToggleLeftHandRig?.Invoke(false, false);
             base.EnterState();
         }
         else if(isDoSwitch && !_advancedUse.IsSwitchingWeapon)
@@ -73,7 +74,7 @@ public class SwitchingWeaponState : UseWeaponState
     public override void ExitState()
     {
         _playableData.GetPlayableCharacterIdentity.EnsureSwitchWeapon(oldIdx);
-        
+        _sm.CharaIdentity.OnToggleLeftHandRig?.Invoke(true, false);
 
         _advancedUse.CanSwitchWeapon_Coroutine();
     }

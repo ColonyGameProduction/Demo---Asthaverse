@@ -381,6 +381,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _isBeingRevived = false;
         _fovMachine.enabled = true;
 
+        OnToggleLeftHandRig?.Invoke(true, true);
+
         if(_playableMovementStateMachine.IsCrawling) _playableMovementStateMachine.IsCrawling = false;
         ResetHealth();
         _characterIdentityWhoReviving.StopRevivingFriend();
@@ -542,6 +544,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         }
         IsReviving = true;
         _characterIdentityWhoBeingRevived = characterIdentityWhoBeingRevived;
+
+        OnToggleLeftHandRig?.Invoke(false, false);
         _animator.SetBool(ANIMATION_REVIVING_PARAMETER, true);
         _playableUseWeaponStateMachine.TellToTurnOffScope();
         ForceStopAllStateMachine();
@@ -551,6 +555,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         IsReviving = false;
         _characterIdentityWhoBeingRevived = null;
         _animator.SetBool(ANIMATION_REVIVING_PARAMETER, false);
+        
+        OnToggleLeftHandRig?.Invoke(true, true);
     }
 
     public override void UnsubscribeEvent()

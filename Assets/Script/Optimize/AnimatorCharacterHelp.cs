@@ -1,5 +1,5 @@
 using System;
-
+using UnityEngine.Animations.Rigging;
 using UnityEngine;
 
 public class AnimatorCharacterHelp : MonoBehaviour
@@ -16,12 +16,12 @@ public class AnimatorCharacterHelp : MonoBehaviour
 
     [Header("Feet IK Ground")]
     // public bool _enableIKFeature = true, _enableIKProFeature = true, _showDebug = true;
-    private bool _isCrawl;
     [SerializeField][Range(0, 2f)] private float _distanceToGround = 1.14f;
     [SerializeField][Range(0, 2f)] private float _raycastDownDistance = 1.5f;
     [SerializeField][Range(0, 1f)] private float _leftRotationWeight = 1;
     [SerializeField][Range(0, 1f)] private float _rightRotationWeight = 1;
     [SerializeField] private LayerMask _placeToWalkLayer;
+    private bool _isCrawl;
     // [SerializeField] private float _pelvisOffset = 0f;
     // [SerializeField][Range(0, 1f)] private float _pelvisUpDownSpeed = 0.28f;
     // [SerializeField][Range(0, 1f)] private float _feetToLKPosSpeed = 0.5f;
@@ -35,13 +35,18 @@ public class AnimatorCharacterHelp : MonoBehaviour
 
     #region  Reload Weapon Variable
     [Header("Reload Weapon")]
+    [SerializeField] private Transform _handReloadParent;
     private Transform _magCurrGunTransform;
     private Transform _magGunParent;
-    [SerializeField] private Transform _handReloadParent;
     private Vector3 _magOriginalLocalPos, _magOriginalLocalEulerAngles;
     [SerializeField] private Vector3 _magHandLocalPos, _magHandLocalEulerAngles;
     #endregion
 
+    #region  Rigging Variable
+    [SerializeField] private TwoBoneIKConstraint _leftHandRig;
+    private bool _isChangeInUpdate;
+    private bool _isTurnOn;
+    #endregion
     private void Awake() 
     {
         _animator = GetComponent<Animator>();
@@ -50,6 +55,8 @@ public class AnimatorCharacterHelp : MonoBehaviour
 
         _playableUseWeaponStateMachine = _useWeaponStateMachine as PlayableUseWeaponStateMachine;
         _characterIdentity = GetComponentInParent<CharacterIdentity>();
+        _characterIdentity.OnToggleLeftHandRig += ToggleLeftHandRig;
+
         _playableCharaIdentity = _characterIdentity as PlayableCharacterIdentity;
         _weaponGameObjectDataContainer = GetComponentInChildren<WeaponGameObjectDataContainer>();
     }
@@ -59,6 +66,14 @@ public class AnimatorCharacterHelp : MonoBehaviour
     private void Start() 
     {
         if(_playableCharaIdentity != null)_playableCharaIdentity.GetPlayableMovementStateMachine.OnIsCrawlingChange += ChangeIsCrawling;
+    }
+    private void Update() 
+    {
+        if(_isChangeInUpdate)
+        {
+            _isChangeInUpdate = false;
+            ChangeLeftHandRigWeight(_isTurnOn);
+        }
     }
 
     public void ChangeIsCrawling(bool value) => _isCrawl = value;
@@ -338,6 +353,23 @@ public class AnimatorCharacterHelp : MonoBehaviour
     public void SwitchWeaponFinished()
     {
         _playableUseWeaponStateMachine.SwitchWeaponAnimationFinished();
+    }
+    #endregion
+
+    #region Rigging Methods
+    private void ToggleLeftHandRig(bool isTurnOn, bool isChangeInUpdate)
+    {
+        if(_leftHandRig != null) 
+        {
+            ChangeLeftHandRigWeight(isTurnOn);
+
+            _isChangeInUpdate = isChangeInUpdate;
+            _isTurnOn = isTurnOn;
+        }
+    }
+    private void ChangeLeftHandRigWeight(bool isTurnOn)
+    {
+        _leftHandRig.weight = isTurnOn ? 1 : 0;
     }
     #endregion
 

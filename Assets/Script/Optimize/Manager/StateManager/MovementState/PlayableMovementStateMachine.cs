@@ -134,6 +134,15 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     public PlayableMakeSFX GetPlayableMakeSFX {get {return _getPlayableMakeSFX;}}
     public Action<bool> OnIsCrawlingChange;
 
+    public override float AgentRadius
+    {
+        get 
+        {
+            return IsTakingCoverAtWall ?  0.1f :  _agentNavMesh.radius;
+            
+        }
+    }
+
     #endregion
     protected override void Awake()
     {
