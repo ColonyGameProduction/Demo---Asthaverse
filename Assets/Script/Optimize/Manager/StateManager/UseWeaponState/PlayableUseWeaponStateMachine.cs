@@ -273,6 +273,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     }
     private void SetRigHandFollow()
     {
+        Debug.Log(transform.name + "Masuk sini " + _getPlayableCharacterIdentity.CurrWeaponIdx);
         if(_getPlayableCharacterIdentity.CurrWeaponIdx == 0)
         {
             if(_rigHandFollowRifle) _rigHandFollowRifle.weight = 1;

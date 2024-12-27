@@ -22,6 +22,8 @@ public class PickableObj_IntObj : InteractableObject
         _playerWhoHeldItem = characterIdentity;
         IsBeingThrown = false;
         characterIdentity.GetPlayableInteraction.PickUpObject(this);
+
+        KeybindUIHandler.OnChangeKeybind?.Invoke(KeybindUIType.PickUp);
     }
     private void OnCollisionEnter(Collision other) 
     {

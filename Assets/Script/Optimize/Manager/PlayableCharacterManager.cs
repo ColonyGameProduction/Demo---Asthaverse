@@ -561,7 +561,17 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead)_playableCharacterCameraManager.NightVision();
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead)
+        {
+            if(_playableCharacterCameraManager.IsNightVision)
+            {
+                _playableCharacterCameraManager.ResetNightVision();
+            }
+            else
+            {
+                _playableCharacterCameraManager.NightVision();
+            }
+        }
     }
     private void GameInput_OnSkillPerformed()
     {
@@ -765,6 +775,8 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         if(IsCommandingFriend)OnCommandingBoolChange?.Invoke(true, friendID);
 
         if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead || CurrPlayableChara.IsReviving || _currPlayableUseWeaponStateMachine.IsSilentKill || _currPlayableUseWeaponStateMachine.IsReloading || _currPlayableUseWeaponStateMachine.IsSwitchingWeapon || _currPlayableMoveStateMachine.IsTakingCoverAtWall || CurrPlayableChara.IsHoldingInteraction)return;
+
+        
         _currPlayableMoveStateMachine.ForceStopMoving();
         _currPlayableUseWeaponStateMachine.ForceStopUseWeapon();
         Time.timeScale = 0.2f;
@@ -903,6 +915,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
     public void UnsubscribeEvent()
     {
+        _gm.OnPlayerPause -= GameManager_OnPlayerPause;
         CurrPlayableChara.OnPlayableDeath -= PlayableChara_OnPlayableDeath;
         _currPlayableUseWeaponStateMachine.OnTurningOffScope -= UseWeaponData_OnTurningOffScope;
 

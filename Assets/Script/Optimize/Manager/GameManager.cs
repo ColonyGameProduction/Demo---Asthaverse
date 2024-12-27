@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     [ReadOnly(false), SerializeField] private GameState _currGameState;
     [ReadOnly(false), SerializeField] private GamePauseState _currGamePauseState;
     private bool _isPause;
+    private FadeBGUIHandler _fadeUIHandler;
 
     [Header("Checkpoint")]
     public bool startAtCheckPoint;
@@ -43,6 +44,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     [SerializeField] private Vector3 _friendOffset;
     private int _currCheckPointIdx;
     public const string CHECK_POINT_PREF = "Checkpoint";
+
 
     [Header("Event")]
     public Action<bool> OnPlayerPause;
@@ -76,9 +78,15 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
         scope = false;
 
         if(startAtCheckPoint) LoadCheckPoint();
-        SetGameState(GameState.Play);
+        
+        _fadeUIHandler = FadeBGUIHandler.Instance;
+        _fadeUIHandler.HideBGStart(StartGame);
     }
     
+    private void StartGame()
+    {
+        SetGameState(GameState.Play);
+    }
 
     public void FollowCamerasRefrence()
     {

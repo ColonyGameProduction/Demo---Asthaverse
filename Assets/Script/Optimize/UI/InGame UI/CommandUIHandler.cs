@@ -36,6 +36,8 @@ public class CommandUIHandler : MonoBehaviour
     }
     public void OpenCommandUI()
     {
+        KeybindUIHandler.OnChangeKeybind?.Invoke(KeybindUIType.Command);
+
         _currentIDX = 0;
         _isPressed = true;
         SelectButton(_currentIDX);
@@ -43,6 +45,8 @@ public class CommandUIHandler : MonoBehaviour
     }
     public void CloseCommandUI()
     {
+        KeybindUIHandler.OnChangeKeybind?.Invoke(KeybindUIType.General);
+
         _isPressed = false;
         if(EventSystem.current.currentSelectedGameObject == _commandButton[_currentIDX].gameObject)
         {

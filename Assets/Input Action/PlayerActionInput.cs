@@ -589,6 +589,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""ExitSettingsMainMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""94806917-2bd8-41d5-9b4f-a3f5479238a2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Select Command Button"",
                     ""type"": ""Value"",
                     ""id"": ""4a4986d8-d9cf-418c-8243-d7164f37481d"",
@@ -642,6 +651,17 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""Select Command Button"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5cef0d72-b3c8-4eee-a0a8-6de3ea4d9316"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ExitSettingsMainMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -678,6 +698,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         // InputMenuAction
         m_InputMenuAction = asset.FindActionMap("InputMenuAction", throwIfNotFound: true);
         m_InputMenuAction_PauseGame = m_InputMenuAction.FindAction("Pause Game", throwIfNotFound: true);
+        m_InputMenuAction_ExitSettingsMainMenu = m_InputMenuAction.FindAction("ExitSettingsMainMenu", throwIfNotFound: true);
         m_InputMenuAction_SelectCommandButton = m_InputMenuAction.FindAction("Select Command Button", throwIfNotFound: true);
     }
 
@@ -979,12 +1000,14 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_InputMenuAction;
     private List<IInputMenuActionActions> m_InputMenuActionActionsCallbackInterfaces = new List<IInputMenuActionActions>();
     private readonly InputAction m_InputMenuAction_PauseGame;
+    private readonly InputAction m_InputMenuAction_ExitSettingsMainMenu;
     private readonly InputAction m_InputMenuAction_SelectCommandButton;
     public struct InputMenuActionActions
     {
         private @PlayerActionInput m_Wrapper;
         public InputMenuActionActions(@PlayerActionInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @PauseGame => m_Wrapper.m_InputMenuAction_PauseGame;
+        public InputAction @ExitSettingsMainMenu => m_Wrapper.m_InputMenuAction_ExitSettingsMainMenu;
         public InputAction @SelectCommandButton => m_Wrapper.m_InputMenuAction_SelectCommandButton;
         public InputActionMap Get() { return m_Wrapper.m_InputMenuAction; }
         public void Enable() { Get().Enable(); }
@@ -998,6 +1021,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @PauseGame.started += instance.OnPauseGame;
             @PauseGame.performed += instance.OnPauseGame;
             @PauseGame.canceled += instance.OnPauseGame;
+            @ExitSettingsMainMenu.started += instance.OnExitSettingsMainMenu;
+            @ExitSettingsMainMenu.performed += instance.OnExitSettingsMainMenu;
+            @ExitSettingsMainMenu.canceled += instance.OnExitSettingsMainMenu;
             @SelectCommandButton.started += instance.OnSelectCommandButton;
             @SelectCommandButton.performed += instance.OnSelectCommandButton;
             @SelectCommandButton.canceled += instance.OnSelectCommandButton;
@@ -1008,6 +1034,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @PauseGame.started -= instance.OnPauseGame;
             @PauseGame.performed -= instance.OnPauseGame;
             @PauseGame.canceled -= instance.OnPauseGame;
+            @ExitSettingsMainMenu.started -= instance.OnExitSettingsMainMenu;
+            @ExitSettingsMainMenu.performed -= instance.OnExitSettingsMainMenu;
+            @ExitSettingsMainMenu.canceled -= instance.OnExitSettingsMainMenu;
             @SelectCommandButton.started -= instance.OnSelectCommandButton;
             @SelectCommandButton.performed -= instance.OnSelectCommandButton;
             @SelectCommandButton.canceled -= instance.OnSelectCommandButton;
@@ -1059,6 +1088,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     public interface IInputMenuActionActions
     {
         void OnPauseGame(InputAction.CallbackContext context);
+        void OnExitSettingsMainMenu(InputAction.CallbackContext context);
         void OnSelectCommandButton(InputAction.CallbackContext context);
     }
 }

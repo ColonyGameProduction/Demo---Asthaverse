@@ -6,6 +6,7 @@ using UnityEngine;
 public class SettingUIHandler : MonoBehaviour
 {
     [Header("Sesuai urutan di UI")]
+    [SerializeField] private GameObject _settingsUIContainer;
     [SerializeField] private GameObject[] _tabs;
     [SerializeField] private GameObject[] _buttonHighlights;
     [SerializeField] private TextMeshProUGUI[] _buttonTexts;
@@ -14,6 +15,7 @@ public class SettingUIHandler : MonoBehaviour
     [SerializeField] private float inActiveAlphaText = 0.3f;
     private void Awake() 
     {
+        HideSettingsUI();   
         SwitchTab(0);
     }
 
@@ -36,6 +38,17 @@ public class SettingUIHandler : MonoBehaviour
             buttonText.color = newTextColor;
         }
     }
+
+    #region  Settings UI
+    public void ShowSettingsUI()
+    {
+        _settingsUIContainer.SetActive(true);
+    }
+    public void HideSettingsUI()
+    {
+        _settingsUIContainer.SetActive(false);
+    }
+    #endregion
 
 
 }

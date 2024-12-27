@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HoldableObj_IntObj : InteractableObject
+public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent
 {
     [SerializeField] protected float _totalValueToDoSomething;
     [SerializeField] protected float _valueFillSpeed;
@@ -62,4 +62,8 @@ public class HoldableObj_IntObj : InteractableObject
         
     }
 
+    public void UnsubscribeEvent()
+    {
+        if(_currCharaInteracting) _currCharaInteracting.OnCancelInteractionButton -= ResetInteraction;
+    }
 }

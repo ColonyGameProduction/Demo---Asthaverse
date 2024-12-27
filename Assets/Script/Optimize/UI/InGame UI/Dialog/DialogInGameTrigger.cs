@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogInGameTrigger : MonoBehaviour
+public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent
 {
     private DIalogInGameManager _dialogInGameManager;
     [SerializeField] private DialogCutsceneTitle _chosenTitleToPlay;
@@ -40,7 +40,12 @@ public class DialogInGameTrigger : MonoBehaviour
         if(!_isTestAfterDialogDone)
         {
             _isTestAfterDialogDone = true;
-            Debug.Log(this.transform.name + " DONE");
+            // Debug.Log(this.transform.name + " DONE");
         }
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _dialogInGameManager.OnDialogFinish -= Manager_OnDialogFinish;
     }
 }

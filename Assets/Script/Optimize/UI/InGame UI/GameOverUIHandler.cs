@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameOverUIHandler : MonoBehaviour
+public class GameOverUIHandler : MonoBehaviour, IUnsubscribeEvent
 {
     private GameManager _gm;
     [SerializeField] private GameObject _gameOverContainer, _buttonsContainer;
@@ -35,5 +35,10 @@ public class GameOverUIHandler : MonoBehaviour
         _gameOverContainer.gameObject.SetActive(false);
         _gameOverImageCanvasGroup.alpha = 0f;
         _buttonsContainer.SetActive(false);
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _gm.OnGameOver -= ShowGameOverUI;
     }
 }

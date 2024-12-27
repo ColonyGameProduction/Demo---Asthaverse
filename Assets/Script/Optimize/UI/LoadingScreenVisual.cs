@@ -9,7 +9,7 @@ public class LoadingScreenVisual : MonoBehaviour
 
     private int currentIndex = 0;
 
-    void Start()
+    void Awake()
     {
         SetRandomBackground();
         UpdateBackgroundAndDescription();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyAlertUI : MonoBehaviour
+public class EnemyAlertUI : MonoBehaviour, IUnsubscribeEvent
 {
     private GameManager _gm;
     private EnemyAIBehaviourStateMachine _enemyAIBehaviourStateMachine;
@@ -191,5 +191,10 @@ public class EnemyAlertUI : MonoBehaviour
     public void RemoveAlertUINormal()
     {
         Destroy(_alertUINormalContainer);
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _enemyAIBehaviourStateMachine.OnAlertValueChanged -= ChangeAlertFillVisual;
     }
 }

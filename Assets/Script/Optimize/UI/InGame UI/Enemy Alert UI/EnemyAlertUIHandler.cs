@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EnemyAlertUIHandler : MonoBehaviour
+public class EnemyAlertUIHandler : MonoBehaviour, IUnsubscribeEvent
 {
     private GameManager _gm;
     private EnemyAIManager _enemyAIManager;
@@ -57,5 +57,10 @@ public class EnemyAlertUIHandler : MonoBehaviour
         EnemyAlertUI alertUI = enemy.GetComponentInChildren<EnemyAlertUI>();
         alertUI.RemoveAlertUINormal();
         _enemyAlertUIList.Remove(alertUI);
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _enemyAIManager.OnEnemyDead -= RemoveDeadEnemy;
     }
 }

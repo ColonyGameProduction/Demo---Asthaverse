@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.Animations.Rigging;
 using UnityEngine;
 
-public class RiggingController : MonoBehaviour
+public class RiggingController : MonoBehaviour, IUnsubscribeEvent
 {
 
     private CharacterIdentity _characterIdentity;
@@ -41,5 +41,10 @@ public class RiggingController : MonoBehaviour
         {
             leftHandRig.weight = isTurnOn ? 1 : 0;
         }
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _characterIdentity.OnToggleLeftHandRig -= ToggleLeftHandRig;
     }
 }

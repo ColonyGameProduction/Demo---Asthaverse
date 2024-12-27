@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HoldInteractUI : MonoBehaviour
+public class HoldInteractUI : MonoBehaviour, IUnsubscribeEvent
 {
     [SerializeField] private GameObject _holdInteractContainer;
     [SerializeField] private Image _holdFillImage;
@@ -43,5 +43,11 @@ public class HoldInteractUI : MonoBehaviour
     private void HideHoldInteractUI()
     {
         _holdInteractContainer.SetActive(false);
+    }
+
+    public void UnsubscribeEvent()
+    {
+        OnStartHoldInteracting -= StartHoldInteracting;
+        OnStopHoldInteracting -= StopHoldInteracting;
     }
 }

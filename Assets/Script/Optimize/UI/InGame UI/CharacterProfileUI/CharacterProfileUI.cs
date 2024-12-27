@@ -5,7 +5,7 @@ using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterProfileUI : MonoBehaviour
+public class CharacterProfileUI : MonoBehaviour, IUnsubscribeEvent
 {
     [ReadOnly(false), SerializeField] private PlayableCharacterIdentity _playableIdentity;
 
@@ -124,5 +124,10 @@ public class CharacterProfileUI : MonoBehaviour
         LeanTween.scale(this.gameObject, newScale, _animationDuration);
         LeanTween.moveLocal(this.gameObject, newPos, _animationDuration);
     }
-    
+
+    public void UnsubscribeEvent()
+    {
+        _playableIdentity.OnPlayableHealthChange -= UpdateHealthDataWhenHealthChange;
+        _playableIdentity.OnSwitchWeapon -= SwitchWeaponUI;
+    }
 }

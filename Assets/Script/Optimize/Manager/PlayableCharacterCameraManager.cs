@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Rendering;
 
-public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffect
+public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffect, IUnsubscribeEvent
 {
     public static PlayableCharacterCameraManager Instance { get;private set; }
     
@@ -123,5 +123,10 @@ public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffe
         {
             camera.SetCameraRotationMultiplier = value;
         }
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _controlsManager.OnSensValueChange -= SetAllPlayableCameraSensitivityMultiplier;
     }
 }

@@ -69,3 +69,8 @@ public enum DialogCutsceneTitle
 {
     None, Test1, Test2
 }
+
+public enum KeybindUIType
+{
+    General, PickUp, Command 
+}

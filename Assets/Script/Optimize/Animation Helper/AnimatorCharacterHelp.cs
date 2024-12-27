@@ -2,7 +2,7 @@ using System;
 
 using UnityEngine;
 
-public class AnimatorCharacterHelp : MonoBehaviour
+public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
 {
     [SerializeField] private Animator _animator;
     [SerializeField] private CharacterIdentity _characterIdentity;
@@ -61,7 +61,7 @@ public class AnimatorCharacterHelp : MonoBehaviour
 
     private void Start() 
     {
-        if(_playableCharaIdentity != null)_playableCharaIdentity.GetPlayableMovementStateMachine.OnIsCrawlingChange += ChangeIsCrawling;
+        if(_playableCharaIdentity != null) _playableCharaIdentity.GetPlayableMovementStateMachine.OnIsCrawlingChange += ChangeIsCrawling;
     }
 
 
@@ -343,8 +343,14 @@ public class AnimatorCharacterHelp : MonoBehaviour
     {
         _playableUseWeaponStateMachine.SwitchWeaponAnimationFinished();
     }
+
     #endregion
 
+    public void UnsubscribeEvent()
+    {
+        _useWeaponStateMachine.OnEnsuringReload -= EnsuringReload;
+        if(_playableCharaIdentity != null) _playableCharaIdentity.GetPlayableMovementStateMachine.OnIsCrawlingChange -= ChangeIsCrawling;
+    }
 
 }
 

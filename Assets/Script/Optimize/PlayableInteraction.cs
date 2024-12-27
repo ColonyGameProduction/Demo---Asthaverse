@@ -253,6 +253,8 @@ public class PlayableInteraction : MonoBehaviour
             _heldObject.RB.isKinematic = false;
             _heldObject.transform.SetParent(null);
             _heldObject = null;
+
+            KeybindUIHandler.OnChangeKeybind?.Invoke(KeybindUIType.General);
         }
     }
     public void ThrowHeldObject()
@@ -266,6 +268,8 @@ public class PlayableInteraction : MonoBehaviour
             _heldObject.IsBeingThrown = true;
             _heldObject.RB.AddForce(_mainCamera.transform.forward.normalized * _throwForceMultiplier, ForceMode.VelocityChange);
             _heldObject = null;
+
+            KeybindUIHandler.OnChangeKeybind?.Invoke(KeybindUIType.General);
         }
         else
         {

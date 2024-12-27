@@ -1,18 +1,17 @@
 
 using UnityEngine;
 
-public class PauseUIHandler : MonoBehaviour
+public class PauseUIHandler : MonoBehaviour, IUnsubscribeEvent
 {
     private GameManager _gm;
     [SerializeField] private GameObject _pauseUIContainer;
-    [SerializeField] private GameObject _settingsUIContainer;
+    private SceneManagementManager _sceneManagementManager;
     private SettingUIHandler _settingsUIHandler;
     private void Awake() 
     {
         _settingsUIHandler = GetComponent<SettingUIHandler>();
 
         _pauseUIContainer.SetActive(false);
-        _settingsUIContainer.SetActive(false);
     }
 
     private void Start() 
@@ -20,6 +19,7 @@ public class PauseUIHandler : MonoBehaviour
         _gm = GameManager.instance;
         _gm.OnPlayerPause += TogglePauseUI;
         _gm.OnQuitSettings += CloseSettingsUI;
+        _sceneManagementManager = SceneManagementManager.Instance;
     }
 
     #region  Pause UI
@@ -38,18 +38,28 @@ public class PauseUIHandler : MonoBehaviour
     }
     #endregion
 
-    #region  Settings UI
     public void OpenSettingsUI()
     {
         _gm.OpenSettingsMenu();
-        _settingsUIContainer.SetActive(true);
+        _settingsUIHandler.ShowSettingsUI();
         ClosePauseUI();
     }
     private void CloseSettingsUI()
     {
         OpenPauseUI();
-        _settingsUIContainer.SetActive(false);
+        _settingsUIHandler.HideSettingsUI();
         _gm.OpenPauseMenu();
     }
-    #endregion
+
+    public void GoBackToMainMenu()
+    {
+        _sceneManagementManager.SaveLoadSceneName("Main Menu");
+        _sceneManagementManager.GoToOtherScene();
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _gm.OnPlayerPause -= TogglePauseUI;
+        _gm.OnQuitSettings -= CloseSettingsUI;
+    }
 }
