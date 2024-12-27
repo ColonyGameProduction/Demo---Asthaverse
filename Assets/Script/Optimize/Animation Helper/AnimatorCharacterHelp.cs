@@ -1,5 +1,5 @@
 using System;
-using UnityEngine.Animations.Rigging;
+
 using UnityEngine;
 
 public class AnimatorCharacterHelp : MonoBehaviour
@@ -42,11 +42,7 @@ public class AnimatorCharacterHelp : MonoBehaviour
     [SerializeField] private Vector3 _magHandLocalPos, _magHandLocalEulerAngles;
     #endregion
 
-    #region  Rigging Variable
-    [SerializeField] private TwoBoneIKConstraint _leftHandRig;
-    private bool _isChangeInUpdate;
-    private bool _isTurnOn;
-    #endregion
+    
     private void Awake() 
     {
         _animator = GetComponent<Animator>();
@@ -55,7 +51,7 @@ public class AnimatorCharacterHelp : MonoBehaviour
 
         _playableUseWeaponStateMachine = _useWeaponStateMachine as PlayableUseWeaponStateMachine;
         _characterIdentity = GetComponentInParent<CharacterIdentity>();
-        _characterIdentity.OnToggleLeftHandRig += ToggleLeftHandRig;
+        
 
         _playableCharaIdentity = _characterIdentity as PlayableCharacterIdentity;
         _weaponGameObjectDataContainer = GetComponentInChildren<WeaponGameObjectDataContainer>();
@@ -67,14 +63,7 @@ public class AnimatorCharacterHelp : MonoBehaviour
     {
         if(_playableCharaIdentity != null)_playableCharaIdentity.GetPlayableMovementStateMachine.OnIsCrawlingChange += ChangeIsCrawling;
     }
-    private void Update() 
-    {
-        if(_isChangeInUpdate)
-        {
-            _isChangeInUpdate = false;
-            ChangeLeftHandRigWeight(_isTurnOn);
-        }
-    }
+
 
     public void ChangeIsCrawling(bool value) => _isCrawl = value;
 
@@ -356,22 +345,6 @@ public class AnimatorCharacterHelp : MonoBehaviour
     }
     #endregion
 
-    #region Rigging Methods
-    private void ToggleLeftHandRig(bool isTurnOn, bool isChangeInUpdate)
-    {
-        if(_leftHandRig != null) 
-        {
-            ChangeLeftHandRigWeight(isTurnOn);
-
-            _isChangeInUpdate = isChangeInUpdate;
-            _isTurnOn = isTurnOn;
-        }
-    }
-    private void ChangeLeftHandRigWeight(bool isTurnOn)
-    {
-        _leftHandRig.weight = isTurnOn ? 1 : 0;
-    }
-    #endregion
 
 }
 

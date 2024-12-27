@@ -24,10 +24,12 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     [Space(1)]
     [Header("Additional Animation Component")]
     [SerializeField] protected Rig _rigControllerPistol;
-    [FormerlySerializedAs("_bodyRigConstraintData")][SerializeField] private MultiAimConstraint _bodyRigConstraintDataRifle;
-    [FormerlySerializedAs("_aimRigConstraintData")][SerializeField] private MultiAimConstraint _aimRigConstraintDataRifle;
+    [SerializeField] protected Rig _rigHandFollowRifle, _rigHandFollowPistol;
+    [SerializeField] private MultiAimConstraint _bodyRigConstraintDataRifle;
+    [SerializeField] private MultiAimConstraint _aimRigConstraintDataRifle;
     [SerializeField] private MultiAimConstraint _bodyRigConstraintDataPistol;
     [SerializeField] private MultiAimConstraint _aimRigConstraintDataPistol;
+    private bool _isChangeInUpdate;
 
     [Space(1)]
     [Header("Saving other component data")]
@@ -106,6 +108,16 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     {
         _charaCameraManager = PlayableCharacterCameraManager.Instance;
         base.Start();
+    }
+    protected override void Update()
+    {
+        base.Update();
+
+        if(_isChangeInUpdate)
+        {
+            _isChangeInUpdate = false;
+            SetRigHandFollow();
+        }
     }
     #region  Weapon
     public void SilentKill()
@@ -251,6 +263,26 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         _bodyRigConstraintDataRifle.data.sourceObjects = sourceObjectsData;
         if(_aimRigConstraintDataPistol)_aimRigConstraintDataPistol.data.sourceObjects = sourceObjectsData;
         if(_bodyRigConstraintDataPistol)_bodyRigConstraintDataPistol.data.sourceObjects = sourceObjectsData;
+    }
+    public override void SetCurrWeapon()
+    {
+        base.SetCurrWeapon();
+        SetRigHandFollow();
+        _isChangeInUpdate = true;
+        
+    }
+    private void SetRigHandFollow()
+    {
+        if(_getPlayableCharacterIdentity.CurrWeaponIdx == 0)
+        {
+            if(_rigHandFollowRifle) _rigHandFollowRifle.weight = 1;
+            if(_rigHandFollowPistol) _rigHandFollowPistol.weight = 0;
+        }
+        else
+        {
+            if(_rigHandFollowRifle) _rigHandFollowRifle.weight = 0;
+            if(_rigHandFollowPistol) _rigHandFollowPistol.weight = 1;
+        }
     }
 
     public override void ActivateRigAim()
