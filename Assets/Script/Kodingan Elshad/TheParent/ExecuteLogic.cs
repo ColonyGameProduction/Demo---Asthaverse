@@ -30,7 +30,7 @@ public class ExecuteLogic : AILogic
     {
         GameManager gm = GameManager.instance;
         gm.playerGameObject[1].GetComponent<FriendsAI>().friendsID = 1;
-        gm.playerGameObject[2].GetComponent<FriendsAI>().friendsID = 2;
+        //gm.playerGameObject[2].GetComponent<FriendsAI>().friendsID = 2;
     }
 
     public void BreadcrumbsFollowPlayer(PlayerAction playerAction, ref int currBreadcrumbs)
