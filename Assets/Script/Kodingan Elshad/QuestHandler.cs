@@ -5,7 +5,7 @@ using UnityEngine;
 public class QuestHandler : MonoBehaviour
 {
     public int totalQuest;
-    public List<T> questList = new List<T>();
+    public List<Quest> questList = new List<Quest>();
     public static QuestHandler questHandler;
 
     private void Awake()

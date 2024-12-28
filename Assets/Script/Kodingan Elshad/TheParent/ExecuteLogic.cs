@@ -220,14 +220,14 @@ public class ExecuteLogic : AILogic
                     door.DoorInteracted(playerAction.transform);
                 }
             }
-            else if(hit.collider.GetComponentInParent<HoldButtonInteract>())
+            else if(hit.collider.GetComponentInChildren<HoldButtonInteract>())
             {
-                HoldButtonInteract holdInteract = hit.collider.GetComponentInParent<HoldButtonInteract>();
+                HoldButtonInteract holdInteract = hit.collider.GetComponentInChildren<HoldButtonInteract>();
                 holdInteract.HoldInteraction(holdButton);
             }
-            else if(hit.collider.GetComponentInParent<KeyItem>())
+            else if(hit.collider.GetComponentInChildren<KeyItem>())
             {
-                KeyItem keyItem = hit.collider.GetComponentInParent<KeyItem>();
+                KeyItem keyItem = hit.collider.GetComponentInChildren<KeyItem>();
                 if(holdButton)
                 {
                     keyItem.KeyItemInteract();

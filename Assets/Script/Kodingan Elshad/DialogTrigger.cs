@@ -6,9 +6,21 @@ using UnityEngine.UI;
 
 public class DialogTrigger : MonoBehaviour
 {
+    public List<int> nextQuestID = new List<int>();
+
     public DialogCutsceneSO dialog;
     public InGameUIHandler inGameUIHandler;
+    public Quest dialouge;
     bool isActivate;
+
+    private void Start()
+    {
+        dialouge = GetComponent<Quest>();
+        if(!dialouge.questActivate)
+        {
+            gameObject.SetActive(false);
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -19,6 +31,8 @@ public class DialogTrigger : MonoBehaviour
                 if (!isActivate)
                 {
                     inGameUIHandler.dialogCutscene = dialog;
+                    inGameUIHandler.dialougeQuest = dialouge;
+                    inGameUIHandler.nextQuestID = nextQuestID;
                     inGameUIHandler.DialogPlay();
                     isActivate = true;
                 }
