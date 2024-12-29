@@ -11,6 +11,10 @@ public class EnemyAI : ExecuteLogic
 {
     EnemyManager EM;
 
+    public Quest thisQuest;
+    public bool canProceedToNextQuest;
+    public List<int> nextQuestID = new List<int>();
+
     private StealthBar stealth;
 
     public bool stopMoving;
@@ -77,6 +81,7 @@ public class EnemyAI : ExecuteLogic
     Body tempBody;
     Body enemyBodyParts;
     bool bodyIsFound = false;
+    bool isDead = false;
 
 
     private float curRecoil = 0;
@@ -87,6 +92,8 @@ public class EnemyAI : ExecuteLogic
 
     private void Start()
     {
+        thisQuest = GetComponent<Quest>();
+
         EM = EnemyManager.instance;
 
         EM.enemyHunted += CombatStateHunted;
@@ -104,10 +111,10 @@ public class EnemyAI : ExecuteLogic
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
         StartCoroutine(FindTargetWithDelay(.2f));
-        enemyHP = enemyStat.health;
+        enemyHP = enemyStat.health + enemyStat.armor;
         weapon = enemyStat.weaponStat[0];
     }
-
+        
     private void LateUpdate()
     {
         DrawFieldOfView(edgeResolveIteration, edgeDistanceTreshold, viewRadius, viewAngle, meshResolution, FOVPoint, viewMesh, groundMask);
@@ -235,10 +242,17 @@ public class EnemyAI : ExecuteLogic
 
         if(enemyHP <= 0)
         {
-            Debug.Log("Dead");
+            if(!isDead)
+            {
+                if(thisQuest != null)
+                {
+                    ActivatingNextQuest();
+                }
+
+                Debug.Log("Dead");
+                isDead = true;
+            }
         }
-
-
     }
 
     private void ParsingToFriends()
@@ -439,7 +453,7 @@ public class EnemyAI : ExecuteLogic
 
         if(stealth != null)
         {
-            stealth.FillingTheImage(alertValue, maxAlertValue);
+            stealth.        FillingTheImage(alertValue, maxAlertValue);
         }
 
         if (enemyState == alertState.Idle)
@@ -761,7 +775,7 @@ public class EnemyAI : ExecuteLogic
     }
     public float GetEnemyHP()
     {
-        return enemyHP + enemyStat.armor;
+        return enemyHP;
     }
 
     public void SetEnemyHP(float hp)
@@ -782,5 +796,50 @@ public class EnemyAI : ExecuteLogic
     public EntityStatSO GetEnemyStat()
     {
         return enemyStat;
+    }
+
+    public void ActivatingNextQuest()
+    {
+        thisQuest.questComplete = true;
+
+        if (thisQuest.multiplyQuestAtOnce.Count > 0)
+        {
+            for (int i = 0; i < thisQuest.multiplyQuestAtOnce.Count; i++)
+            {
+                if (thisQuest.multiplyQuestAtOnce[i].questComplete == true)
+                {
+                    canProceedToNextQuest = true;
+                }
+                else
+                {
+                    canProceedToNextQuest = false;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            canProceedToNextQuest = true;
+        }
+
+        Debug.Log(canProceedToNextQuest);
+
+        for (int i = 0; i < nextQuestID.Count; i++)
+        {
+            if (canProceedToNextQuest)
+            {
+                QuestHandler QH = QuestHandler.questHandler;
+                Quest quest = QH.questList[nextQuestID[i]];
+                quest.questActivate = true;
+                quest.gameObject.SetActive(true);
+                if (nextQuestID.Count > 1)
+                {
+                    for (int j = 0; j < nextQuestID.Count; j++)
+                    {
+                        quest.multiplyQuestAtOnce.Add(QH.questList[nextQuestID[j]]);
+                    }
+                }
+            }
+        }
     }
 }
