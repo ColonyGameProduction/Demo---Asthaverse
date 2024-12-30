@@ -10,6 +10,7 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     [SerializeField] private UseWeaponStateMachine _useWeaponStateMachine;
     [SerializeField] private PlayableUseWeaponStateMachine _playableUseWeaponStateMachine;
     [SerializeField] private WeaponGameObjectDataContainer _weaponGameObjectDataContainer;
+    [SerializeField] private PlayableInteraction _playableInteraction;
     private bool wasDeath;
 
     #region FEET IK VARIABLE
@@ -41,7 +42,9 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     private Vector3 _magOriginalLocalPos, _magOriginalLocalEulerAngles;
     [SerializeField] private Vector3 _magHandLocalPos, _magHandLocalEulerAngles;
     #endregion
-
+    public GameObject target;
+    public bool canDoIt;
+    public GameObject _chara;
     
     private void Awake() 
     {
@@ -54,6 +57,8 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
         
 
         _playableCharaIdentity = _characterIdentity as PlayableCharacterIdentity;
+        
+        // Debug.Log(transform.name + "Apakah adayg namanya interaksi " + _playableInteraction);
         _weaponGameObjectDataContainer = GetComponentInChildren<WeaponGameObjectDataContainer>();
     }
 
@@ -62,8 +67,19 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     private void Start() 
     {
         if(_playableCharaIdentity != null) _playableCharaIdentity.GetPlayableMovementStateMachine.OnIsCrawlingChange += ChangeIsCrawling;
-    }
 
+        if(_playableCharaIdentity) _playableInteraction = _playableCharaIdentity.GetPlayableInteraction;
+    }
+    private void Update() {
+        Debug.Log(_characterIdentity.transform.name + "IK RIGHT HAND POS Di Update" + _animator.GetIKPosition(AvatarIKGoal.RightHand));
+        if(target && canDoIt)
+        {
+            Vector3 dir = _chara.transform.forward;
+            dir.y = 0;
+            Vector3 pos = _animator.GetIKPosition(AvatarIKGoal.RightHand);
+            target.transform.position = pos + 1.5f *dir;
+        }
+    }
 
     public void ChangeIsCrawling(bool value) => _isCrawl = value;
 
@@ -95,6 +111,7 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
 
     public void OnAnimatorIK(int layerIndex) 
     {
+        Debug.Log(_characterIdentity.transform.name + "IK RIGHT HAND POS Di ON ANIMATOR IK" + _animator.GetIKPosition(AvatarIKGoal.RightHand));
         FeetHandGroundControl();
 
 
@@ -344,6 +361,21 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
         _playableUseWeaponStateMachine.SwitchWeaponAnimationFinished();
     }
 
+    #endregion
+
+    #region Picking Up Item
+    public void PickUpItem()
+    {
+        _playableInteraction.AddHeldObject();
+    }
+    public void ThrowItem()
+    {
+        _playableInteraction.ThrowHeldObject();
+    }
+    public void ExitThrowAnim()
+    {
+        _playableCharaIdentity.ExitThrowInteractionAnimation();
+    }
     #endregion
 
     public void UnsubscribeEvent()

@@ -62,9 +62,15 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public const string ANIMATION_REVIVING_PARAMETER = "Reviving"; 
     public const string ANIMATION_BEING_REVIVED_PARAMETER = "BeingRevived"; 
     public const string ANIMATION_GUN_COUNTER_PARAMETER = "GunCounter"; 
+    public const string ANIMATION_IS_NORMALINTERACTION_PARAMETER = "IsNormalInteraction"; 
+    public const string ANIMATION_IS_PICKUPINTERACTION_PARAMETER = "IsPickUpInteraction"; 
+    public const string ANIMATION_NORMALINTERACTION_TRIGGER_PARAMETER = "NormalInteractionTrigger";
+    public const string ANIMATION_STAND_TAKE_ITEM_CLIP = "Stand_Take_Item";
+    public const string ANIMATION_IS_HOLDING_ITEM_PARAMETER = "IsHoldingItem";
+    public const string ANIMATION_IS_THROWING_PARAMETER = "IsThrowing";
     #endregion
 
-
+    private bool _isHoldSwitchState;
     [Space(1)]
     [Header("Event")]
     public Action OnPlayableDeath;
@@ -161,6 +167,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         }
     }
     public int CurrWeaponIdx {get{return _currWeaponIdx;}}
+    public bool IsHoldSwitchState {get {return _isHoldSwitchState;} set {_isHoldSwitchState = value;}}
 
     #endregion
     protected override void Awake()
@@ -342,7 +349,15 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             if(_characterIdentityWhoBeingRevived) _characterIdentityWhoBeingRevived.CutOutFromBeingRevived();
             StopRevivingFriend();
         }
+        _isHoldSwitchState = false;
         base.Death();
+
+        if(IsHoldingInteraction) IsHoldingInteraction = false;
+        if(_playableInteraction.IsHeldingObject) _playableInteraction.RemoveHeldObject();
+        StopNormalInteractionAnimation();
+        StopPickUpInteractionAnimation();
+        StopThrowInteractionAnimation();
+
         _isAnimatingOtherAnimation = true;
     }
 
@@ -556,8 +571,50 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _characterIdentityWhoBeingRevived = null;
         _animator.SetBool(ANIMATION_REVIVING_PARAMETER, false);
         
-        OnToggleLeftHandRig?.Invoke(true, true);
+        if(!_playableInteraction.IsHeldingObject) OnToggleLeftHandRig?.Invoke(true, true);
     }
+
+    #region Interaction animation
+    public void DoNormalInteractionAnimation()
+    {
+        OnToggleLeftHandRig?.Invoke(false, false);
+        _animator.SetBool(ANIMATION_IS_NORMALINTERACTION_PARAMETER, true);
+        _animator.SetTrigger(ANIMATION_NORMALINTERACTION_TRIGGER_PARAMETER);
+    }
+    public void StopNormalInteractionAnimation()
+    {
+        if(!_playableInteraction.IsHeldingObject && !_isDead) OnToggleLeftHandRig?.Invoke(true, false);
+        _animator.SetBool(ANIMATION_IS_NORMALINTERACTION_PARAMETER, false);
+    }
+    public void DoPickUpInteractionAnimation()
+    {
+        OnToggleLeftHandRig?.Invoke(false, false);
+        _animator.SetBool(ANIMATION_IS_PICKUPINTERACTION_PARAMETER, true);
+        _animator.Play(ANIMATION_STAND_TAKE_ITEM_CLIP);
+    }
+    public void StopPickUpInteractionAnimation()
+    {
+        if(!_playableInteraction.IsHeldingObject && !_isDead) OnToggleLeftHandRig?.Invoke(true, true);
+        _animator.SetBool(ANIMATION_IS_PICKUPINTERACTION_PARAMETER, false);
+    }
+    public void ChangeIsHoldingItemAnimationValue(float value)
+    {
+        _animator.SetFloat(ANIMATION_IS_HOLDING_ITEM_PARAMETER, value);
+    }
+    public void DoThrowInteractionAnimation()
+    {
+        _animator.SetBool(ANIMATION_IS_THROWING_PARAMETER, true);
+    }
+    public void StopThrowInteractionAnimation()
+    {
+        _animator.SetBool(ANIMATION_IS_THROWING_PARAMETER, false);
+    }
+    public void ExitThrowInteractionAnimation()
+    {
+        if(!_playableInteraction.IsHeldingObject && !_isDead) OnToggleLeftHandRig?.Invoke(true, true);
+        _playableInteraction.IsAnimatingThrowingItem = false;
+    }
+    #endregion
 
     public override void UnsubscribeEvent()
     {

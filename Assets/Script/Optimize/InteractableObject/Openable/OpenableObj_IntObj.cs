@@ -17,7 +17,9 @@ public abstract class OpenableObj_IntObj : InteractableObject
     {
         //jalankan animasi buka 
         // Debug.Log("Opening this");
+        characterIdentity.DoNormalInteractionAnimation();
         ToggleOpenClose(characterIdentity.transform);
+        characterIdentity.StopNormalInteractionAnimation();
         // StartCoroutine(OpenObj());
     }
     protected virtual void ToggleOpenClose(Transform chara)

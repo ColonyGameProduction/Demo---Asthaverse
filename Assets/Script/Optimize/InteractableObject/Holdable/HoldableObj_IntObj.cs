@@ -39,6 +39,7 @@ public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent
         _currCharaInteracting = characterIdentity;
         _currCharaInteracting.OnCancelInteractionButton += ResetInteraction;
         _currCharaInteracting.IsHoldingInteraction = true;
+        characterIdentity.DoNormalInteractionAnimation();
         HoldInteractUI.OnStartHoldInteracting?.Invoke(this);
 
         _isBeingInteracted = true;
@@ -53,6 +54,7 @@ public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent
     {
         _currCharaInteracting.OnCancelInteractionButton -= ResetInteraction;
         _currCharaInteracting.IsHoldingInteraction = false;
+        _currCharaInteracting.StopNormalInteractionAnimation();
         HoldInteractUI.OnStopHoldInteracting?.Invoke(this);
         _currCharaInteracting = null;
 

@@ -29,7 +29,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     [SerializeField] private MultiAimConstraint _aimRigConstraintDataRifle;
     [SerializeField] private MultiAimConstraint _bodyRigConstraintDataPistol;
     [SerializeField] private MultiAimConstraint _aimRigConstraintDataPistol;
-    private bool _isChangeInUpdate;
+    private bool _isChangeInUpdate, _isChangeInUpdateMultiAimConstraint;
 
     [Space(1)]
     [Header("Saving other component data")]
@@ -117,6 +117,11 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         {
             _isChangeInUpdate = false;
             SetRigHandFollow();
+        }
+        if(_isChangeInUpdateMultiAimConstraint)
+        {
+            _isChangeInUpdateMultiAimConstraint = false;
+            SetConstraintData();
         }
     }
     #region  Weapon
@@ -252,9 +257,11 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
 
             SetConstraintData();
         }
+        Debug.Log("Halo ini OnisPlayerInput ga kepanggil???" + transform.name + " " + obj);
     }
     private void SetConstraintData()
     {
+        
         var sourceObjectsData =_aimRigConstraintDataRifle.data.sourceObjects;
         sourceObjectsData.SetWeight(0, IsAIInput ? 0 : 1);
         sourceObjectsData.SetWeight(1, IsAIInput ? 1 : 0);
@@ -263,6 +270,10 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         _bodyRigConstraintDataRifle.data.sourceObjects = sourceObjectsData;
         if(_aimRigConstraintDataPistol)_aimRigConstraintDataPistol.data.sourceObjects = sourceObjectsData;
         if(_bodyRigConstraintDataPistol)_bodyRigConstraintDataPistol.data.sourceObjects = sourceObjectsData;
+
+        _isChangeInUpdateMultiAimConstraint = true;
+        // _aimRigConstraintDataRifle.upd
+        // Debug.Log("Halo ini OnisPlayerInput ga kepanggil???" + _aimRigConstraintDataRifle.data.sourceObjects.GetWeight(0) + " " + transform.name + " " + IsAIInput);
     }
     public override void SetCurrWeapon()
     {

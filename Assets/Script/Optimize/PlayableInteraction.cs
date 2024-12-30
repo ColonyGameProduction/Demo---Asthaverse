@@ -15,7 +15,9 @@ public class PlayableInteraction : MonoBehaviour
     [Header("TakeItem")]
     [SerializeField]protected Transform _pickableObjPoint;
     [SerializeField]protected float _throwForceMultiplier = 20f;
-    protected PickableObj_IntObj _heldObject;
+    protected PickableObj_IntObj _heldObject, _tempHeldObj;
+    protected bool _isAnimatingPickUpItemInteraction_PickUp, _isAnimatingPickUpItemInteraction_Throw;
+    private int _leanTweenID;
 
 
 
@@ -28,6 +30,8 @@ public class PlayableInteraction : MonoBehaviour
     public IInteractable CurrInteractable{get{return _currInteractable;}}
     public ISilentKillAble CurrSilentKillAble{get{return _currSilentKillAble;}}
     public bool IsHeldingObject {get{return _heldObject != null? true : false;}}
+    public bool IsAnimatingPickingUpItem {get {return _isAnimatingPickUpItemInteraction_PickUp;}}
+    public bool IsAnimatingThrowingItem {get {return _isAnimatingPickUpItemInteraction_Throw;} set {_isAnimatingPickUpItemInteraction_Throw = value;}}
     private void Awake() 
     {
         _thisObjInteractable = GetComponentInParent<IInteractable>();
@@ -43,6 +47,7 @@ public class PlayableInteraction : MonoBehaviour
         _currInteractable = GetClosestInteractables();
 
         _currSilentKillAble = GetClosestSilentkillable();
+
     }
     #region  Make Sound
 
@@ -226,26 +231,53 @@ public class PlayableInteraction : MonoBehaviour
     #region PickableObj
     public void PickUpObject(PickableObj_IntObj obj)
     {
-        if(_heldObject == obj)return;
+        if(_heldObject == obj || IsAnimatingThrowingItem)return;
         _playableCharacterIdentity.GetPlayableUseWeaponStateMachine.TellToTurnOffScope();
         _playableCharacterIdentity.GetPlayableUseWeaponStateMachine.ForceStopUseWeapon();
         _playableCharacterIdentity.GetPlayableMovementStateMachine.IsMustLookForward = true; //ini digantiu
+        
+        _tempHeldObj = obj;
+        _isAnimatingPickUpItemInteraction_PickUp = true;
+
+        _leanTweenID = LeanTween.value(1, 0, 0.1f).setOnUpdate((float value) =>
+        {
+            _playableCharacterIdentity.ChangeIsHoldingItemAnimationValue(value);
+        }).id;
+
+        _playableCharacterIdentity.DoPickUpInteractionAnimation();
+    }
+    public void AddHeldObject()
+    {
+        if(_tempHeldObj == null || _playableCharacterIdentity.IsDead) return;
+
         if(_heldObject != null)
         {
             _heldObject.RB.isKinematic = false;
-            _heldObject.transform.position = obj.transform.position;
-            _heldObject.transform.rotation = obj.transform.rotation;
+            _heldObject.transform.position = _tempHeldObj.transform.position;
+            _heldObject.transform.rotation = _tempHeldObj.transform.rotation;
             _heldObject.transform.SetParent(null);
         }
         
-        _heldObject = obj;
-        obj.RB.isKinematic = true;
-        obj.transform.position = _pickableObjPoint.position;
-        obj.transform.rotation = _pickableObjPoint.rotation;
-        obj.transform.SetParent(_pickableObjPoint);
+        _heldObject = _tempHeldObj;
+        _heldObject.RB.isKinematic = true;
+        _heldObject.transform.position = _pickableObjPoint.position;
+        _heldObject.transform.rotation = _pickableObjPoint.rotation;
+        _heldObject.transform.SetParent(_pickableObjPoint);
+
+        LeanTween.cancel(_leanTweenID);
+        _playableCharacterIdentity.ChangeIsHoldingItemAnimationValue(1);
+        _isAnimatingPickUpItemInteraction_PickUp = false;
+        _tempHeldObj = null;
+
+        _playableCharacterIdentity.StopPickUpInteractionAnimation();
     }
     public void RemoveHeldObject()
     {
+        _tempHeldObj = null;
+        _isAnimatingPickUpItemInteraction_PickUp = false;
+        _isAnimatingPickUpItemInteraction_Throw = false;
+        LeanTween.cancel(_leanTweenID);
+
         if(_heldObject == null)return;
         if(_heldObject != null)
         {
@@ -256,25 +288,34 @@ public class PlayableInteraction : MonoBehaviour
 
             KeybindUIHandler.OnChangeKeybind?.Invoke(KeybindUIType.General);
         }
+        _playableCharacterIdentity.StopPickUpInteractionAnimation();
+        _playableCharacterIdentity.ChangeIsHoldingItemAnimationValue(0);
     }
-    public void ThrowHeldObject()
+    public void ThrowObject()
     {
-        if(_heldObject == null)return;
+        if(_heldObject == null || _isAnimatingPickUpItemInteraction_PickUp)return;
         if(_heldObject.IsThrowAble)
         {
-            _playableCharacterIdentity.GetPlayableMovementStateMachine.IsMustLookForward = false;
-            _heldObject.RB.isKinematic = false;
-            _heldObject.transform.SetParent(null);
-            _heldObject.IsBeingThrown = true;
-            _heldObject.RB.AddForce(_mainCamera.transform.forward.normalized * _throwForceMultiplier, ForceMode.VelocityChange);
-            _heldObject = null;
-
-            KeybindUIHandler.OnChangeKeybind?.Invoke(KeybindUIType.General);
+            IsAnimatingThrowingItem = true;
+            _playableCharacterIdentity.DoThrowInteractionAnimation();
         }
         else
         {
             RemoveHeldObject();
         }
+    }
+    public void ThrowHeldObject()
+    {
+        _playableCharacterIdentity.GetPlayableMovementStateMachine.IsMustLookForward = false;
+        _heldObject.RB.isKinematic = false;
+        _heldObject.transform.SetParent(null);
+        _heldObject.IsBeingThrown = true;
+        _heldObject.RB.AddForce(_mainCamera.transform.forward.normalized * _throwForceMultiplier, ForceMode.VelocityChange);
+        _heldObject = null;
+
+        _playableCharacterIdentity.StopThrowInteractionAnimation();
+        _playableCharacterIdentity.ChangeIsHoldingItemAnimationValue(0);
+        KeybindUIHandler.OnChangeKeybind?.Invoke(KeybindUIType.General);
     }
     #endregion
 

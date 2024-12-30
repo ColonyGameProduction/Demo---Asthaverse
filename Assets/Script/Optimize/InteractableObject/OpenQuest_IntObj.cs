@@ -10,8 +10,10 @@ public class OpenQuest_IntObj : InteractableObject
     public override bool CanInteract {get{ return _canInteract;}}
     public override void Interact(PlayableCharacterIdentity characterIdentity)
     {
+        characterIdentity.DoNormalInteractionAnimation();
         _canInteract = false;
         Debug.Log("Open Next Quest");
+        characterIdentity.StopNormalInteractionAnimation();
         OnOpenQuest?.Invoke();
     }
 

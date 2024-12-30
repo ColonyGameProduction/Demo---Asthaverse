@@ -528,7 +528,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && _currPlayableInteraction.IsHeldingObject && !CurrPlayableChara.IsHoldingInteraction)
         {
-            _currPlayableInteraction.ThrowHeldObject();
+            _currPlayableInteraction.ThrowObject();
         }
     }
 
