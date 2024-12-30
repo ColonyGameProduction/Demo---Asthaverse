@@ -466,6 +466,39 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1752534585263246341, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
   m_PrefabInstance: {fileID: 8826742471684535084}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &91618512
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 91618513}
+  m_Layer: 7
+  m_Name: Rig Right Hand Rifle (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &91618513
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91618512}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.05630699, y: -0.45706582, z: -0.004865859, w: 0.8876355}
+  m_LocalPosition: {x: -0.08140693, y: -0.0056501026, z: 0.058107667}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2114044722}
+  - {fileID: 2106505071}
+  m_Father: {fileID: 699630037}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &119316651 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 582776595384740836, guid: 3ef58f3893275ab46bd3eff4ddd0b198, type: 3}
@@ -3060,6 +3093,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1468978279}
+  - {fileID: 91618513}
   - {fileID: 562824900}
   - {fileID: 1799474595}
   m_Father: {fileID: 1981413160}
@@ -8826,6 +8860,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3941195303297266321, guid: 59cb88159c413774089f477803e6887f, type: 3}
   m_PrefabInstance: {fileID: 7602486872115381370}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2106505070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2106505071}
+  m_Layer: 7
+  m_Name: Right Hand_hint_Rifle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2106505071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106505070}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.3271808, y: -0.36149776, z: -0.33384264, w: 0.8067349}
+  m_LocalPosition: {x: 0.00204001, y: -0.002054335, z: -0.10253163}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 91618513}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2114044721
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2114044722}
+  m_Layer: 7
+  m_Name: Right Hand_target_Rifle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2114044722
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114044721}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.18176931, y: -0.24875069, z: -0.65519315, w: 0.6897862}
+  m_LocalPosition: {x: 0.002850961, y: -0.0007854323, z: -0.10054499}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 91618513}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &722003210514216037
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21796,6 +21892,10 @@ PrefabInstance:
       value: 0.33355895
       objectReference: {fileID: 0}
     - target: {fileID: 7090022013679683779, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
+      propertyPath: _rig
+      value: 
+      objectReference: {fileID: 1285963531}
+    - target: {fileID: 7090022013679683779, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
       propertyPath: _chara
       value: 
       objectReference: {fileID: 2047355710}
@@ -21803,6 +21903,10 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 1368805879}
+    - target: {fileID: 7090022013679683779, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
+      propertyPath: target2
+      value: 
+      objectReference: {fileID: 306266546}
     - target: {fileID: 7090022013679683779, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
       propertyPath: _leftHandRig
       value: 

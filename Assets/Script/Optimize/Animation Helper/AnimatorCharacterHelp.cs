@@ -1,5 +1,5 @@
 using System;
-
+using UnityEngine.Animations.Rigging;
 using UnityEngine;
 
 public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
@@ -43,8 +43,11 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     [SerializeField] private Vector3 _magHandLocalPos, _magHandLocalEulerAngles;
     #endregion
     public GameObject target;
+    public GameObject target2, hand;
     public bool canDoIt;
     public GameObject _chara;
+    public Vector3 addedForGun;
+    public Rig _rig;
     
     private void Awake() 
     {
@@ -72,13 +75,28 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     }
     private void Update() {
         Debug.Log(_characterIdentity.transform.name + "IK RIGHT HAND POS Di Update" + _animator.GetIKPosition(AvatarIKGoal.RightHand));
-        if(target && canDoIt)
-        {
-            Vector3 dir = _chara.transform.forward;
-            dir.y = 0;
-            Vector3 pos = _animator.GetIKPosition(AvatarIKGoal.RightHand);
-            target.transform.position = pos + 1.5f *dir;
-        }
+        // if(target && canDoIt)
+        // {
+        //     _rig.weight = 0;
+        //     Transform forearm = _animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
+        //     Debug.Log(forearm.position + " INI TOLONG BGT YA");
+        //     target2.transform.position = forearm.transform.position;
+        //     // target2.transform.rotation = hand.transform.rotation;
+
+
+        //     Vector3 dir = _chara.transform.forward;
+        //     dir.y = 0;
+        //     // Vector3 pos = _animator.GetIKPosition(AvatarIKGoal.RightHand);
+        //     Vector3 pos = _animator.GetBoneTransform(HumanBodyBones.RightHand).position;
+            
+        //     target.transform.position = pos + addedForGun;
+
+        //     Debug.Log(forearm.transform.position + "FOREARM SEBELUM");
+
+        //     _rig.weight = 1;
+        //     Debug.Log(forearm.transform.position + "FOREARM SESUDAH");
+        //     // canDoIt = false;
+        // }
     }
 
     public void ChangeIsCrawling(bool value) => _isCrawl = value;
@@ -112,6 +130,33 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     public void OnAnimatorIK(int layerIndex) 
     {
         Debug.Log(_characterIdentity.transform.name + "IK RIGHT HAND POS Di ON ANIMATOR IK" + _animator.GetIKPosition(AvatarIKGoal.RightHand));
+
+        if(target && canDoIt)
+        {
+            // _rig.weight = 0;
+            // Transform forearm = _animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
+            // Debug.Log(forearm.position + " INI TOLONG BGT YA");
+            // target2.transform.position = forearm.transform.position;
+            // target2.transform.rotation = hand.transform.rotation;
+
+
+            Vector3 dir = _chara.transform.forward;
+            dir.y = 0;
+            Vector3 pos = _animator.GetIKPosition(AvatarIKGoal.RightHand);
+            // Vector3 pos = _animator.GetBoneTransform(HumanBodyBones.RightHand).position;
+            
+            target.transform.position = pos + addedForGun;
+
+            // Debug.Log(forearm.transform.position + "FOREARM SEBELUM");
+
+            // _rig.weight = 1;
+            // Debug.Log(forearm.transform.position + "FOREARM SESUDAH");
+            // canDoIt = false;
+        }
+
+
+
+
         FeetHandGroundControl();
 
 
