@@ -1,6 +1,5 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class WeaponLogicManager : MonoBehaviour
@@ -9,18 +8,19 @@ public class WeaponLogicManager : MonoBehaviour
     public bool DebugDrawBiasa = true;
     public static WeaponLogicManager Instance {get; private set;}
 
-
     [Header("Trail Renderer for now")]
     [SerializeField]private TrailRenderer _bulletTrailPrefab;
     [SerializeField]private ParticleSystem _impactParticleSystem;
     private bool isHitBody;
     private bool isHitAnything;
+
+    public Action<Transform, CharacterIdentity> OnCharacterGotHurt;
     private void Awake() 
     {
         Instance = this;
     }
     //Logic Shooting
-    public void ShootingPerformed(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask, float shootRecoil, Vector3 gunOriginShootPoint, bool isAIInput, bool isInsideWall, WeaponShootVFX weaponShootVFX)
+    public void ShootingPerformed(Transform shooter, Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask, float shootRecoil, Vector3 gunOriginShootPoint, bool isAIInput, bool isInsideWall, WeaponShootVFX weaponShootVFX)
     {       
         
         weaponStat.currBullet -= weaponStat.bulletPerTap;
@@ -28,23 +28,23 @@ public class WeaponLogicManager : MonoBehaviour
         {
             for(int i = 0; i < weaponStat.bulletPerTap; i++)
             {
-                BulletShoot(origin, direction, aimAccuracy, weaponStat, entityMask, shootRecoil, gunOriginShootPoint, isAIInput, isInsideWall, weaponShootVFX);
+                BulletShoot(shooter, origin, direction, aimAccuracy, weaponStat, entityMask, shootRecoil, gunOriginShootPoint, isAIInput, isInsideWall, weaponShootVFX);
             }
 
         }   
         else
         {
-            BulletShoot(origin, direction, aimAccuracy, weaponStat, entityMask, shootRecoil, gunOriginShootPoint, isAIInput, isInsideWall, weaponShootVFX);
+            BulletShoot(shooter, origin, direction, aimAccuracy, weaponStat, entityMask, shootRecoil, gunOriginShootPoint, isAIInput, isInsideWall, weaponShootVFX);
         }
 
     }
     
-    public void BulletShoot(Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask, float shootRecoil, Vector3 gunOriginShootPoint, bool isAIInput, bool isInsideWall, WeaponShootVFX weaponShootVFX)
+    public void BulletShoot(Transform shooter, Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask, float shootRecoil, Vector3 gunOriginShootPoint, bool isAIInput, bool isInsideWall, WeaponShootVFX weaponShootVFX)
     {
         float recoilMod = shootRecoil + ((100 - aimAccuracy) * shootRecoil / 100);
 
-        float x = Random.Range(-recoilMod*0.9F, recoilMod*0.9F);
-        float y = Random.Range(-recoilMod, recoilMod);
+        float x = UnityEngine.Random.Range(-recoilMod*0.9F, recoilMod*0.9F);
+        float y = UnityEngine.Random.Range(-recoilMod, recoilMod);
 
         Vector3 recoil = new Vector3(x, y, 0);
         Vector3 bulletDirection = (direction + recoil).normalized; 
@@ -85,7 +85,7 @@ public class WeaponLogicManager : MonoBehaviour
 
                             GameObject entityGameObject = hit.collider.gameObject;
                             // Debug.Log(entityGameObject.name + " di sini " + body);
-                            CalculateDamage(weaponStat, entityGameObject, body.bodyType);
+                            CalculateDamage(shooter, weaponStat, entityGameObject, body.bodyType);
                         }
                         else
                         {
@@ -115,7 +115,7 @@ public class WeaponLogicManager : MonoBehaviour
 
                             GameObject entityGameObject = hit.collider.gameObject;
                             // Debug.Log(entityGameObject.name + " di sini " + body);
-                            CalculateDamage(weaponStat, entityGameObject, body.bodyType);
+                            CalculateDamage(shooter, weaponStat, entityGameObject, body.bodyType);
                         }
                         else
                         {
@@ -137,7 +137,7 @@ public class WeaponLogicManager : MonoBehaviour
 
                     GameObject entityGameObject = hit.collider.gameObject;
                     // Debug.Log(entityGameObject.name + " di sini " + body);
-                    CalculateDamage(weaponStat, entityGameObject, body.bodyType);
+                    CalculateDamage(shooter, weaponStat, entityGameObject, body.bodyType);
                 }
                 else
                 {
@@ -164,10 +164,12 @@ public class WeaponLogicManager : MonoBehaviour
         StartCoroutine(SpawnTrail(weaponShootVFX.GetWeaponVFX(), gunOriginShootPoint, hit, weaponShootVFX));
     }
 
-    public void CalculateDamage(WeaponStatSO weapon, GameObject entityGameObject, bodyParts hitBodyPart)
+    public void CalculateDamage(Transform shooter, WeaponStatSO weapon, GameObject entityGameObject, bodyParts hitBodyPart)
     {
         IHealth _getHealthFunction =  entityGameObject.transform.GetComponentInParent<IHealth>();
 
+        CharacterIdentity character = entityGameObject.transform.GetComponentInParent<CharacterIdentity>();
+        OnCharacterGotHurt?.Invoke(shooter, character);
         // if(_getHealthFunction == null) _getHealthFunction = entityGameObject.transform.GetComponentInParent<IHealth>();
         // Debug.Log("Halooo????");
         if(_getHealthFunction != null)
@@ -228,7 +230,7 @@ public class WeaponLogicManager : MonoBehaviour
     }
     private IEnumerator SpawnParticle(ParticleSystem impactParticle, WeaponShootVFX weaponShootVFX)
     {
-        float timer = 0;
+        // float timer = 0;
         impactParticle.gameObject.SetActive(true);
         impactParticle.Play();
         // while(timer < 1)

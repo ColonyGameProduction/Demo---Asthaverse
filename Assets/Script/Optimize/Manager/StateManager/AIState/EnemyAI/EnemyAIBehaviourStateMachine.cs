@@ -31,6 +31,8 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
     private bool _switchingPath;
     private int _currPath;
 
+    public Action<float, float> OnAlertValueChanged;
+
     #region GETTERSETTER Variable
     public Transform CurrPOI {get { return _currPOI;} set { _currPOI = value;}}
     public EnemyAIManager EnemyAIManager { get { return _enemyAIManager;}}
@@ -40,8 +42,24 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
     public bool IsCheckingEnemyInHunt {get {return _isCheckingEnemyInHunt;} set{ _isCheckingEnemyInHunt = value;} }
     public bool IsGoingToLastPos {get {return _isGoingToLastPos;} set{ _isGoingToLastPos = value;} }
 
-    public float AlertValue {get {return _alertValue;} set { _alertValue = value;}}
-    public float MaxAlertValue {get {return _maxAlertValue;} set { _maxAlertValue = value;}}
+    public float AlertValue
+    {
+        get {return _alertValue;} 
+        set 
+        {
+            if(_alertValue != value) OnAlertValueChanged?.Invoke(value, MaxAlertValue);
+            _alertValue = value;
+        }
+    }
+    public float MaxAlertValue 
+    {
+        get {return _maxAlertValue;} 
+        set 
+        {
+            if(_maxAlertValue != value) OnAlertValueChanged?.Invoke(AlertValue, value);
+            _maxAlertValue = value;
+        }
+    }
     public float AlertValueCountMultiplier {get {return _alertValueCountMultiplier;}}
 
 
@@ -94,26 +112,26 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
         if(_fovMachine.VisibleTargets.Count > 0)
         {
             float oldmaxAlert = _maxAlertValue;
-            _maxAlertValue = _getFOVAdvancedData.GetMinimalPlayableStealth();
+            MaxAlertValue = _getFOVAdvancedData.GetMinimalPlayableStealth();
             if(oldmaxAlert != _maxAlertValue)
             {
                 if(IsAIHunted)
                 {
-                    if(_alertValue < _maxAlertValue/2) _alertValue = _maxAlertValue/2 + _alertValueCountMultiplier;
+                    if(AlertValue < _maxAlertValue/2) AlertValue = _maxAlertValue/2 + _alertValueCountMultiplier;
                 }
                 else if(IsAIEngage)
                 {
-                    if(_alertValue < _maxAlertValue) _alertValue = _maxAlertValue + _alertValueCountMultiplier;
+                    if(AlertValue < _maxAlertValue) AlertValue = _maxAlertValue + _alertValueCountMultiplier;
                 }
             }
-            if(_alertValue <= _maxAlertValue) _alertValue += Time.deltaTime * _alertValueCountMultiplier;
+            if(AlertValue <= _maxAlertValue) AlertValue += Time.deltaTime * _alertValueCountMultiplier;
         }
         else
         {
 
-            if(_alertValue >= 0 && _fovMachine.VisibleTargets.Count == 0 && _getFOVAdvancedData.OtherVisibleTargets.Count == 0 && (IsAIIdle || (!IsAIIdle &&GetMoveStateMachine.IsIdle && !_isCheckingEnemyInHunt && !_isTakingCover)))
+            if(AlertValue >= 0 && _fovMachine.VisibleTargets.Count == 0 && _getFOVAdvancedData.OtherVisibleTargets.Count == 0 && (IsAIIdle || (!IsAIIdle &&GetMoveStateMachine.IsIdle && !_isCheckingEnemyInHunt && !_isTakingCover)))
             {
-                _alertValue -= Time.deltaTime * _alertValueCountMultiplier;
+                AlertValue -= Time.deltaTime * _alertValueCountMultiplier;
             }
         }
     }
@@ -201,7 +219,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
             if(agentPos == GetFOVAdvancedData.EnemyCharalastSeenPosition && IsGoingToLastPos) 
             {
                 IsGoingToLastPos = false;
-                if(IsAIEngage)_alertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
+                if(IsAIEngage)AlertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
                 if(EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
                 {
                     // Debug.Log("TEsstt??");
@@ -215,7 +233,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
                 {
                     _currPOI = EnemyAIManager.GetClosestPOI(this);
                     _getFOVAdvancedData.IsCheckingEnemyLastPosition();
-                    _alertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
+                    AlertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
                     _isCheckingEnemyInHunt = true;
                 }
                 else
@@ -271,7 +289,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
             }
             if(MaxAlertValue == 0)MaxAlertValue = enemy.MaxAlertValue;
 
-            if(!IsAIEngage)_alertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
+            if(!IsAIEngage)AlertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
             Vector3 closestLastSeenPos = Vector3.zero;
             if(EnemyAIManager.EnemyCaptainList.Count == 0)closestLastSeenPos = enemy.GetFOVAdvancedData.EnemyCharalastSeenPosition;
             else closestLastSeenPos = EnemyAIManager.GetClosestLastSeenPosInfoFromCaptain(transform);
@@ -300,7 +318,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
         if(Vector3.Distance(enemy.transform.position, transform.position) <= EnemyAIManager.EnemyAnnouncementMaxRange || EnemyAIManager.EnemyHearAnnouncementList.Contains(this))
         {
             if(MaxAlertValue == 0)MaxAlertValue = enemy.MaxAlertValue;
-            _alertValue = MaxAlertValue + _alertValueCountMultiplier;
+            AlertValue = MaxAlertValue + _alertValueCountMultiplier;
 
             Vector3 closestLastSeenPos = Vector3.zero;
             if(EnemyAIManager.EnemyCaptainList.Count == 0)closestLastSeenPos = enemy.GetFOVAdvancedData.EnemyCharalastSeenPosition;
@@ -319,7 +337,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
         if(enemyLastPos != GetFOVAdvancedData.EnemyCharalastSeenPosition)return; // ->the problem is, krn 1 poi list sama yg lain, yg td ga disuru ke sini, bs ke sini...; tp kalo ga gini ntr yg lain ngejer apa, jg poi ikut ini
         if(_currPOI == null)_currPOI = EnemyAIManager.GetClosestPOI(this);
         _getFOVAdvancedData.IsCheckingEnemyLastPosition(); // make this false so it wont go to lastseenpos                      
-        _alertValue = MaxAlertValue/2 + 10f;
+        AlertValue = MaxAlertValue/2 + 10f;
     }
 
     public override void UnsubscribeEvent()
@@ -626,7 +644,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
         }
 
         if(MaxAlertValue == 0)MaxAlertValue = 25f;
-        if(!IsAIEngage)_alertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
+        if(!IsAIEngage)AlertValue = MaxAlertValue/2 + _alertValueCountMultiplier;
 
         GetFOVAdvancedData.GoToEnemyLastSeenPosition(soundOriginPos);
         if(CurrPOI != null)CurrPOI = null;

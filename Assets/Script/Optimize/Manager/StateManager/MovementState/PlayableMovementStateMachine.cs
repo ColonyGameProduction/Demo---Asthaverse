@@ -66,6 +66,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     public bool IsAskedToCrouchByPlayable{get {return _isAskedToCrouchByPlayable;} set{_isAskedToCrouchByPlayable = value;}}
     public bool IsAskedToRunByPlayable{get {return _isAskedToRunByPlayable;} set{_isAskedToRunByPlayable = value;}}
 
+    public Transform CharaGameObject {get {return _charaGameObject;}}
+
     public override bool IsRunning
     {
         get
@@ -177,7 +179,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     protected override void Update()
     {
-        
+        if(!_gm.IsGamePlaying()) _getPlayableMakeSFX.PlayStopSFX(AudioSFXName.NormalWalk, false);
         base.Update();
         GoingToTakeCover();
     }

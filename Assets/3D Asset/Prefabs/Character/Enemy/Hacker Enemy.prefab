@@ -653,11 +653,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   immortalized: 0
   _characterStatSO: {fileID: 11400000, guid: 39b2e1a08d768ac44afd216a51e00f2f, type: 2}
-  _moveStateMachine: {fileID: 5682153843784485649}
-  _useWeaponStateMachine: {fileID: 885792441604896857}
-  _animator: {fileID: 8264206705343470340}
   _charaName: 
   _totalHealth: 100
+  _currHealth: 0
+  _isDead: 0
   _weaponLists:
   - weaponStatSO: {fileID: 11400000, guid: a9d97bbad63f47d4a92e1eb934894ae8, type: 2}
     totalBullet: 0
@@ -668,6 +667,7 @@ MonoBehaviour:
   _currWeaponIdx: 0
   _regenScale: 0
   _regenTimerMax: 0.5
+  _regenCDTimer: 0
 --- !u!114 &5682153843784485649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -680,27 +680,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21922f4cdffb24e419d952e158ef2774, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 8264206705343470340}
   _isIdle: 1
   _isWalking: 0
   _isRun: 0
   _isCrouch: 0
+  _runSpeedMultiplier: 0
+  _crouchSpeedMultiplier: 0
+  _rotationSpeedAI: 180
   _idleAnimCycleTimeTarget:
   - 2
   - 6
   - 10
   _idleAnimCycleSpeed: 2
-  _runMultiplier: 2
-  _crouchMultiplier: 0.5
-  _faceDirCount: 0.9
+  _lookTargetDotMin: 0.9
   _crouchHeightCharaCon:
     center: {x: 0, y: 0.625, z: 0}
     radius: 0.5
     height: 1.25
-  _feetTransformPoint: {fileID: 2711732759650576754}
+  _feetBasePoint: {fileID: 0}
   _crouchPlatformLayer:
     serializedVersion: 2
     m_Bits: 131072
+  _crouchRayBuffer: 1.1
+  _crouchHeadHitAngleBuffer: 15
 --- !u!114 &885792441604896857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -713,21 +715,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98324d2f92aea754a815fb482ebcc3f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 8264206705343470340}
-  isGo: 0
-  isStop: 0
-  target: {fileID: 0}
   _isIdle: 1
   _isAiming: 0
   _isUsingWeapon: 0
   _isReloading: 0
   _rigController: {fileID: 1496541245507119120}
   _notAimSpamClickDelayTime: 0.1
-  _originShootPoint_AIContainer: {fileID: 5512513454661400233}
-  _gunOriginShootPoint: {fileID: 1731268542194716302}
   _charaEnemyMask:
     serializedVersion: 2
     m_Bits: 12480
+  _recoilCoolDownBuffer: 0.1
 --- !u!114 &4926444634365892946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -776,44 +773,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8977702fd2d5e64f9b037b2fe9c8f90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _takeCoverManager: {fileID: 0}
-  _fovMachine: {fileID: 0}
   _aimAIPoint: {fileID: 7934586891078678218}
-  _noEnemyToPointObj: {fileID: 0}
-  _leaveDirection: {x: 0, y: 0, z: 0}
   _isTakingCover: 0
   _isHiding: 0
   _isChecking: 0
   _isAtTakingCoverHidingPlace: 0
   _isAtTakingCoverCheckingPlace: 0
   _wallArrayNearChara: []
+  _wallTotal: 0
   _wallScannerDistance: 20
   _wallTakeCoverLayer:
     serializedVersion: 2
     m_Bits: 4096
-  _agent: {fileID: 0}
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
   _HideDotMin: 0
   _charaMaxTakeCoverDistance: 100
+  _wallTakeCoverPosBuffer: -1.5
   _charaHeadColl: {fileID: 4124743701791292856}
   _charaHeightBuffer: 0.15
   _charaWidthBuffer: 0.2
-  _buffer: -1.5
+  _currWall: {fileID: 0}
+  _currWallHeight: 0
+  _isWallTallerThanChara: 0
+  _takeCoverPosition: {x: 0, y: 0, z: 0}
+  _canTakeCoverInThePosition: 0
+  _leaveDirection: {x: 0, y: 0, z: 0}
   _enemyWhoSawAIList: []
   _enemyWhoSawAIListContainer: []
   _pastVisibleTargets: []
   _minEnemyMakeCharaFeelOverwhelmed: 3
+  _enemyMaxDistanceFromWalls: 10
   _gotDetectedByEnemy: 0
   _gotDetectedTimer: 0
   _gotDetectedTimerMax: 0.3
-  _enemyMaxDistanceFromWalls: 10
   _runAwayObstacleMask:
     serializedVersion: 2
     m_Bits: 12288
   _focusedBodyPartsToShoot: 1
   _isCheckingLastPosTimer: 0
   _isCheckingLastPosTimerMax: 1
-  _moveStateMachine: {fileID: 0}
-  _useWeaponStateMachine: {fileID: 0}
   _alertValue: 0
   _maxAlertValue: 0
   _alertValueCountMultiplier: 10
@@ -3377,6 +3377,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7636560246049360403, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fd89ac130a8be2944b8ab5935e66f12b, type: 2}
     - target: {fileID: -3865806159920447975, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -3385,6 +3389,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1371948134646777770, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 98cdbe7e3cc91544f904bdc172ec6933, type: 2}
+    - target: {fileID: 17161759166828611, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b241cb0754356f844b230977ebd6b97e, type: 2}
+    - target: {fileID: 236718768310909433, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2c83a6d12ed69cf479a564ca1095f919, type: 2}
     - target: {fileID: 919132149155446097, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
       propertyPath: m_Name
       value: c011_hackerEnemy
@@ -3393,6 +3409,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2700536562372594882, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4e75c66e1283a3445a730d49106b03e4, type: 2}
     - target: {fileID: 5866666021909216657, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
       propertyPath: m_Controller
       value: 
@@ -3401,6 +3421,14 @@ PrefabInstance:
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6758882269833077037, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e261a16070f81004180540b695df2787, type: 2}
+    - target: {fileID: 7825498609435198468, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7570d63e2b9d30643bb10db6ce382ffe, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -3674,8 +3702,6 @@ MonoBehaviour:
   _placeToWalkLayer:
     serializedVersion: 2
     m_Bits: 0
-  _magCurrGunTransform: {fileID: 0}
-  _magGunParent: {fileID: 0}
   _handReloadParent: {fileID: 0}
   _magHandLocalPos: {x: 0, y: 0, z: 0}
   _magHandLocalEulerAngles: {x: 0, y: 0, z: 0}
@@ -4035,11 +4061,6 @@ Transform:
 --- !u!4 &8090609458740359605 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6025068566154630944, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
-  m_PrefabInstance: {fileID: 2583599023229675157}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &8264206705343470340 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 2c989e015b9c0574e88bde0ac82c5737, type: 3}
   m_PrefabInstance: {fileID: 2583599023229675157}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8362035217810796150 stripped
@@ -6900,8 +6921,6 @@ MonoBehaviour:
   _placeToWalkLayer:
     serializedVersion: 2
     m_Bits: 64
-  _magCurrGunTransform: {fileID: 0}
-  _magGunParent: {fileID: 0}
   _handReloadParent: {fileID: 0}
   _magHandLocalPos: {x: 0, y: 0, z: 0}
   _magHandLocalEulerAngles: {x: 0, y: 0, z: 0}

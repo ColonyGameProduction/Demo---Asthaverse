@@ -30,7 +30,7 @@ public class ExecuteLogic : AILogic
     {
         GameManager gm = GameManager.instance;
         gm.playerGameObject[1].GetComponent<FriendsAI>().friendsID = 1;
-        gm.playerGameObject[2].GetComponent<FriendsAI>().friendsID = 2;
+        //gm.playerGameObject[2].GetComponent<FriendsAI>().friendsID = 2;
     }
 
     public void BreadcrumbsFollowPlayer(PlayerAction playerAction, ref int currBreadcrumbs)
@@ -133,6 +133,9 @@ public class ExecuteLogic : AILogic
         //ShowMouseCursor();
 
         PlayerAction playerAction = GetComponent<PlayerAction>();
+        ChangeKeybindsUI changeKeybind = FindObjectOfType<ChangeKeybindsUI>();
+
+        changeKeybind.isCommand = true;
 
         playerAction.isCommandActive = true;
         playerAction.command.SetActive(true);
@@ -142,6 +145,9 @@ public class ExecuteLogic : AILogic
     public void UnCommand()
     {
         PlayerAction playerAction = GetComponent<PlayerAction>();
+        ChangeKeybindsUI changeKeybind = FindObjectOfType<ChangeKeybindsUI>();
+
+        changeKeybind.isCommand = false;
 
         if (playerAction.isCommandActive == true)
         {
@@ -174,7 +180,7 @@ public class ExecuteLogic : AILogic
         }
     }
 
-    public void Interact()
+    public void Interact(PlayerAction playerAction, bool holdButton)
     {
         Vector3 rayOrigin = Camera.main.transform.position;
         Vector3 rayDirection = Camera.main.transform.forward.normalized;
@@ -183,7 +189,8 @@ public class ExecuteLogic : AILogic
 
         if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Interactable")))
         {
-            PlayerAction playerAction = GetComponent<PlayerAction>();
+
+            ChangeKeybindsUI changeKeybind = FindObjectOfType<ChangeKeybindsUI>();
 
             if (hit.collider.GetComponent<PickableItems>())
             {
@@ -193,6 +200,8 @@ public class ExecuteLogic : AILogic
 
                 if (playerAction.heldObject == null)
                 {
+                    changeKeybind.isPickUp = true;
+
                     playerAction.heldObject = newObject;
                     PickupObject(playerAction.heldObject);
                 }
@@ -203,9 +212,26 @@ public class ExecuteLogic : AILogic
                     PickupObject(playerAction.heldObject);
                 }
             }
-            else if (hit.collider.GetComponent<OpenableObject>())
+            else if(hit.collider.GetComponentInParent<DoorScript>())
+            {   
+                DoorScript door = hit.collider.GetComponentInParent<DoorScript>();
+                if(holdButton)
+                {
+                    door.DoorInteracted(playerAction.transform);
+                }
+            }
+            else if(hit.collider.GetComponentInChildren<HoldButtonInteract>())
             {
-                Debug.Log("Buka!");
+                HoldButtonInteract holdInteract = hit.collider.GetComponentInChildren<HoldButtonInteract>();
+                holdInteract.HoldInteraction(holdButton);
+            }
+            else if(hit.collider.GetComponentInChildren<KeyItem>())
+            {
+                KeyItem keyItem = hit.collider.GetComponentInChildren<KeyItem>();
+                if(holdButton)
+                {
+                    keyItem.KeyItemInteract();
+                }
             }
         }
     }
@@ -228,10 +254,13 @@ public class ExecuteLogic : AILogic
     public void ThrowObject()
     {
         PlayerAction playerAction = GetComponent<PlayerAction>();
+        ChangeKeybindsUI changeKeybind = FindObjectOfType<ChangeKeybindsUI>();
+
         Rigidbody rb = playerAction.heldObject.GetComponent<Rigidbody>();
 
         if (rb != null)
         {
+            changeKeybind.isPickUp = false;
             rb.isKinematic = false;
             rb.AddForce(Camera.main.transform.forward * 10f, ForceMode.VelocityChange);
 

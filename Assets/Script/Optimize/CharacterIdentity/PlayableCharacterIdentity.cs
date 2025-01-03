@@ -33,6 +33,9 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected float _stealthStatsFriend;
         #endregion
     
+    [Space(1)]
+    [Header("Hold Interaction")]
+    [ReadOnly(false), SerializeField] private bool _isHoldingInteraction;
 
     [Space(5)]
     [Header("No Inspector Variable")]
@@ -43,6 +46,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected PlayableInteraction _playableInteraction;
     protected PlayableSkill _playableSkill;
     protected PlayableMakeSFX _playableMakeSFX;
+    protected PlayableMinimapSymbolHandler _playableMinimapSymbolHandler;
 
     protected FriendAIBehaviourStateMachine _friendAIStateMachine;
     
@@ -52,7 +56,14 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [Header("Death Animation Component")]
     [ReadOnly(false), SerializeField] private bool _isAnimatingOtherAnimation;
 
+
+    [Space(1)]
+    [Header("Event")]
+    public Action OnPlayableDeath;
     public Action OnIsCrawlingChange;
+    public Action<float, float> OnPlayableHealthChange;
+    public Action OnSwitchWeapon;
+    public Action OnCancelInteractionButton;
 
     #region GETTERSETTER Variable
 
@@ -92,8 +103,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         }
     }
 
-    [Header("Event")]
-    public Action OnPlayableDeath;
+
     [HideInInspector]
     //Getter Setter
     public bool IsPlayerInput 
@@ -116,6 +126,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public PlayableInteraction GetPlayableInteraction {get {return _playableInteraction;}}
     public PlayableSkill GetPlayableSkill {get {return _playableSkill;}}
     public PlayableMakeSFX GetPlayableMakeSFX {get {return _playableMakeSFX;}}
+    public PlayableMinimapSymbolHandler GetPlayableMinimapSymbolHandler {get {return _playableMinimapSymbolHandler;}}
 
     public FriendAIBehaviourStateMachine GetFriendAIStateMachine {get { return _friendAIStateMachine;}}
     public FOVMachine GetFOVMachine{get { return _fovMachine;}}
@@ -128,6 +139,19 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public bool IsSilentKilling {get {return _playableUseWeaponStateMachine.IsSilentKill;} set { _playableUseWeaponStateMachine.IsSilentKill = value;}}
 
     public Transform GetFriendBeingRevivedPos {get {return _characterIdentityWhoBeingRevived.transform;}}
+
+    public bool IsHoldingInteraction 
+    {
+        get {return _isHoldingInteraction;}
+        set 
+        {
+            if(_isHoldingInteraction != value && !value)
+            {
+                OnCancelInteractionButton?.Invoke();
+            }
+            _isHoldingInteraction = value;
+        }
+    }
     
 
     #endregion
@@ -138,10 +162,15 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         if(_deadColl.activeSelf)_deadColl.gameObject.SetActive(false);
         _playableMovementStateMachine = _moveStateMachine as PlayableMovementStateMachine;
         _playableUseWeaponStateMachine = _useWeaponStateMachine as PlayableUseWeaponStateMachine;
+        
+        
+        
+
         _playableCamera = GetComponent<PlayableCamera>();
         _playableInteraction = GetComponentInChildren<PlayableInteraction>();
         _playableSkill = GetComponent<PlayableSkill>();
         _playableMakeSFX = GetComponentInChildren<PlayableMakeSFX>();
+        _playableMinimapSymbolHandler = GetComponentInChildren<PlayableMinimapSymbolHandler>();
         InitializeFriend();
 
 
@@ -151,6 +180,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected override void Start() 
     {
         base.Start();
+        _playableUseWeaponStateMachine.GetPlayerGunCollider = _weaponGameObjectDataContainer.GetPlayerGunCollide();
         EnemyAIManager.Instance.OnEnemyDead += DeleteEnemyFromList;
     }
 
@@ -195,7 +225,13 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public override void SetWeaponGameObjectDataContainer()
     {
         base.SetWeaponGameObjectDataContainer();
-        _playableUseWeaponStateMachine.GetPlayerGunCollider = _weaponGameObjectDataContainer.GetPlayerGunCollide();
+
+        if(_playableUseWeaponStateMachine != null)
+        {
+            if(_playableUseWeaponStateMachine.GetPlayerGunCollider != null) _playableUseWeaponStateMachine.GetPlayerGunCollider.ResetCollider();
+            _playableUseWeaponStateMachine.GetPlayerGunCollider = _weaponGameObjectDataContainer.GetPlayerGunCollide();
+
+        }
     }
     public override void ReloadWeapon()
     {
@@ -221,6 +257,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         SetWeaponGameObjectDataContainer();
         
         _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
+        OnSwitchWeapon?.Invoke();
     }
     protected void Regeneration()
     {
@@ -246,6 +283,28 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         }
     }
 
+    public override void Hurt(float Damage)
+    {
+        if(CurrHealth <= 0)return;
+        
+        _regenCDTimer = _regenTimerMax;
+        CurrHealth -= Damage;
+        
+        OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
+
+        if(CurrHealth <= 0)
+        {
+            CurrHealth = 0;
+            
+            if(!immortalized) Death();
+        }
+    }
+    public override void Heal(float Healing)
+    {
+        base.Heal(Healing);
+
+        OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
+    }
     public override void Death()
     {
         if(IsReviving)
@@ -297,6 +356,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _characterIdentityWhoReviving.StopRevivingFriend();
         _characterIdentityWhoReviving = null;
         _isDead = false;
+
+        OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
         _isAnimatingOtherAnimation = false;
         _animator.SetBool("BeingRevived", false);
         _animator.SetBool("Death", false);
