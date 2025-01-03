@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1030978311}
   - component: {fileID: 1030978312}
+  - component: {fileID: 3331033469540266565}
   m_Layer: 0
   m_Name: SM_Barrel_Stack_1
   m_TagString: Untagged
@@ -63,6 +64,27 @@ LODGroup:
     - renderer: {fileID: 1030978324}
     - renderer: {fileID: 0}
   m_Enabled: 1
+--- !u!65 &3331033469540266565
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1030978310}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.4400002, y: 1.2000002, z: 1.4400002}
+  m_Center: {x: -0.7200001, y: 0.5999996, z: 0.7200001}
 --- !u!1 &1030978314
 GameObject:
   m_ObjectHideFlags: 0
@@ -74,7 +96,6 @@ GameObject:
   - component: {fileID: 1030978315}
   - component: {fileID: 1030978316}
   - component: {fileID: 1030978317}
-  - component: {fileID: 3432962372452290045}
   m_Layer: 0
   m_Name: SM_Barrel_Stack_1_LOD0
   m_TagString: Untagged
@@ -148,27 +169,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030978314}
   m_Mesh: {fileID: 4300000, guid: abc00000000005294672946879587082, type: 3}
---- !u!65 &3432962372452290045
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1030978314}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.4400002, y: 1.2000002, z: 1.4400002}
-  m_Center: {x: -0.7200001, y: 0.5999996, z: 0.7200001}
 --- !u!1 &1030978318
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +180,6 @@ GameObject:
   - component: {fileID: 1030978319}
   - component: {fileID: 1030978320}
   - component: {fileID: 1030978321}
-  - component: {fileID: 2882943171372078502}
   m_Layer: 0
   m_Name: SM_Barrel_Stack_1_LOD1
   m_TagString: Untagged
@@ -254,27 +253,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030978318}
   m_Mesh: {fileID: 4300002, guid: abc00000000005294672946879587082, type: 3}
---- !u!65 &2882943171372078502
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1030978318}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.4400002, y: 1.2024708, z: 1.4400002}
-  m_Center: {x: -0.7200001, y: 0.6012349, z: 0.7200001}
 --- !u!1 &1030978322
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,7 +264,6 @@ GameObject:
   - component: {fileID: 1030978323}
   - component: {fileID: 1030978324}
   - component: {fileID: 1030978325}
-  - component: {fileID: 4090599957371775741}
   m_Layer: 0
   m_Name: SM_Barrel_Stack_1_LOD2
   m_TagString: Untagged
@@ -360,24 +337,3 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030978322}
   m_Mesh: {fileID: 4300004, guid: abc00000000005294672946879587082, type: 3}
---- !u!65 &4090599957371775741
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1030978322}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.4400002, y: 1.2074072, z: 1.4400002}
-  m_Center: {x: -0.7200001, y: 0.60370314, z: 0.7200001}
