@@ -21,6 +21,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [ReadOnly(true), SerializeField] protected bool _isWalking;
     [ReadOnly(true), SerializeField] protected bool _isRun;
     [ReadOnly(true), SerializeField] protected bool _isCrouch;
+    public Action OnStartRunning;
     
     [Space(1)]
     [Header("Move Speed - State Multiplier")]

@@ -26,7 +26,7 @@ public class WalkState : MovementState
         }
         else if((!_sm.IsAIInput && _playableData.InputMovement == Vector3.zero) || (_sm.IsAIInput && _sm.IsAIAtDirPos()))
         {
-            _sm.SwitchState(_factory.IdleState());
+            ChangeToIdleState();
         }
     }
     public override void ExitState()
@@ -43,5 +43,9 @@ public class WalkState : MovementState
     {
         if(_standData.IsCrouching)_sm.SwitchState(_factory.CrouchState());
         else if(_standData.IsRunning)_sm.SwitchState(_factory.RunState());
+    }
+    protected virtual void ChangeToIdleState()
+    {
+        _sm.SwitchState(_factory.IdleState());
     }
 }

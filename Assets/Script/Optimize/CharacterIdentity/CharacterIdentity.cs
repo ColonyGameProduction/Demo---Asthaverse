@@ -95,6 +95,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
         _animator = GetComponentInChildren<Animator>();
 
         _moveStateMachine = GetComponent<MovementStateMachine>();
+        _moveStateMachine.OnStartRunning += OnCharaStartRunning;
         _useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
         _useWeaponStateMachine.OnWasUsingGun += UseWeapon_OnWasUsingGun;
 
@@ -227,16 +228,16 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
             {   
                 if(!_moveStateMachine.IsAtCrouchPlatform)
                 {
-                    if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
-                    _useWeaponStateMachine.ForceStopUseWeapon();
+                    // if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
+                    // _useWeaponStateMachine.ForceStopUseWeapon();
                     _moveStateMachine.IsCrouching = false;
                     _moveStateMachine.IsRunning = isRunning;
                 }
             }
             else
             {
-                if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
-                _useWeaponStateMachine.ForceStopUseWeapon();
+                // if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
+                // _useWeaponStateMachine.ForceStopUseWeapon();
                 _moveStateMachine.IsRunning = isRunning;
             }
         }
@@ -279,6 +280,11 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
             Aiming(true);
         }
         _useWeaponStateMachine.IsUsingWeapon = isShooting;
+    }
+    protected virtual void OnCharaStartRunning()
+    {
+        if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
+        _useWeaponStateMachine.ForceStopUseWeapon();
     }
     #endregion
 

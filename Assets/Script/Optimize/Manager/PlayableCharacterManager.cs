@@ -604,14 +604,14 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
             }
         }
 
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction )
         {   
             if(_currPlayableMoveStateMachine.IsCrouching)
             {
                 if(!_currPlayableMoveStateMachine.IsHeadHitWhenUnCrouch())
                 {
                     if(_playableCharacterCameraManager.IsScope)_playableCharacterCameraManager.ResetScope();
-                    _playableCharacterCameraManager.ResetCameraHeight();
+                    // _playableCharacterCameraManager.ResetCameraHeight();
                     CurrPlayableChara.Run(true);
                 }
             }
@@ -679,7 +679,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         {
 
             CurrPlayableChara.Crouch(true);
-            _playableCharacterCameraManager.SetCameraCrouchHeight();
+            // _playableCharacterCameraManager.SetCameraCrouchHeight();
             foreach(PlayableCharacterIdentity chara in _charaIdentities)
             {
                 if(chara == CurrPlayableChara)continue;
@@ -716,7 +716,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
             if(!_currPlayableMoveStateMachine.IsHeadHitWhenUnCrouch())
             {
                 CurrPlayableChara.Crouch(false);
-                _playableCharacterCameraManager.ResetCameraHeight();
+                // _playableCharacterCameraManager.ResetCameraHeight();
             }
             
         }
@@ -725,7 +725,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
             if(_currPlayableMoveStateMachine.IsWallTallerThanChara)
             {
                 CurrPlayableChara.Crouch(false);
-                _playableCharacterCameraManager.ResetCameraHeight();
+                // _playableCharacterCameraManager.ResetCameraHeight();
             }
         }
         

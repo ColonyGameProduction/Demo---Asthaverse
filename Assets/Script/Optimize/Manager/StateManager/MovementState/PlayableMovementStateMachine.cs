@@ -81,7 +81,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             {
                 if(!value)
                 {
-                    if(IsAskedToRunByPlayable && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.IsAIEngage && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.GotDetectedbyEnemy && !IsAtCrouchPlatform)_isRun = IsAskedToCrouchByPlayable;
+                    if(IsAskedToRunByPlayable && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.IsAIEngage && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.GotDetectedbyEnemy && !IsAtCrouchPlatform)_isRun = IsAskedToRunByPlayable;
                     else _isRun = value;
                 }
                 else

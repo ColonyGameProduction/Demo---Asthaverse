@@ -483,8 +483,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         {
             if(isRunning)
             {
-                if(_playableMovementStateMachine.IsMustLookForward) _playableMovementStateMachine.IsMustLookForward = false;
-                _useWeaponStateMachine.ForceStopUseWeapon();
+                // if(_playableMovementStateMachine.IsMustLookForward) _playableMovementStateMachine.IsMustLookForward = false;
+                // _useWeaponStateMachine.ForceStopUseWeapon();
 
                 if(_moveStateMachine.IsCrouching)
                 {
@@ -613,6 +613,19 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         if(!_playableInteraction.IsHeldingObject && !_isDead) OnToggleLeftHandRig?.Invoke(true, true);
         _playableInteraction.IsAnimatingThrowingItem = false;
+    }
+
+    protected override void OnCharaStartRunning()
+    {
+        if(IsPlayerInput)
+        {
+            if(_playableMovementStateMachine.IsMustLookForward) _playableMovementStateMachine.IsMustLookForward = false;
+        }
+        else
+        {
+            if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
+        }
+        _useWeaponStateMachine.ForceStopUseWeapon();
     }
     #endregion
 
