@@ -8,8 +8,9 @@ public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent
     private DIalogInGameManager _dialogInGameManager;
     [SerializeField] private DialogCutsceneTitle _chosenTitleToPlay;
     private bool _isActivate;
-    private bool _isTestAfterDialogDone;
+    private bool _isTestAfterDialogDone, _canTriggerOnce;
     [SerializeField] private bool _canOnlyBeActivateOnce;
+    public Action<DialogCutsceneTitle> OnPlayerTriggerOnce;
     private void Start() 
     {
         _dialogInGameManager = DIalogInGameManager.Instance;
@@ -27,6 +28,12 @@ public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent
                 {
                     _dialogInGameManager.PlayDialogCutscene(_chosenTitleToPlay);
                     _isActivate = true;
+
+                    if(!_canTriggerOnce)
+                    {
+                        _canTriggerOnce = true;
+                        OnPlayerTriggerOnce?.Invoke(_chosenTitleToPlay);
+                    }
                 }
             }
         }
