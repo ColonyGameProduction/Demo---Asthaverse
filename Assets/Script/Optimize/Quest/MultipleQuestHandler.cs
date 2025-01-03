@@ -2,17 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MultipleQuestHandler : MonoBehaviour
+public class MultipleQuestHandler : QuestHandlerParent, IUnsubscribeEvent
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private List<SoloQuestHandler> _soloQuestList;
+
+    private void Awake() 
     {
-        
+        foreach(SoloQuestHandler quest in _soloQuestList)
+        {
+            quest.OnQuestCompleted += QuestComplete;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void ActivateQuest()
     {
-        
+        foreach(SoloQuestHandler quest in _soloQuestList)
+        {
+            quest.ActivateQuest();
+        }
+        base.ActivateQuest();
+    }
+    public override void DeactivateQuest()
+    {
+        foreach(SoloQuestHandler quest in _soloQuestList)
+        {
+            quest.DeactivateQuest();
+        }
+        base.DeactivateQuest();
+    }
+    protected override void QuestComplete()
+    {
+        foreach(SoloQuestHandler quest in _soloQuestList)
+        {
+            if(!quest.IsCompleted && !quest.IsOptional) return;
+        }
+
+        base.QuestComplete();
+        Debug.Log("Multiple Done NEXT");
+    }
+
+    public void UnsubscribeEvent()
+    {
+        foreach(SoloQuestHandler quest in _soloQuestList)
+        {
+            quest.OnQuestCompleted -= QuestComplete;
+        }
     }
 }

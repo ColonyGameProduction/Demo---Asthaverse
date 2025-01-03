@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerQuestHandler : MonoBehaviour
+public class TriggerQuestHandler : SoloQuestHandler
 {
-    // Start is called before the first frame update
-    void Start()
+    protected IConnectToQuest _triggerObject;
+    [SerializeField] private Collider _coll;
+    private void Awake()
     {
-        
+        _triggerObject = GetComponent<IConnectToQuest>();
+        _triggerObject.OnTriggerQuestComplete += QuestComplete;
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void ActivateQuest()
     {
-        
+        _isActivated = true;
+        _coll.enabled = true;
+    }
+    public override void DeactivateQuest()
+    {
+        _coll.enabled = false;
+        _isActivated = false;
     }
 }

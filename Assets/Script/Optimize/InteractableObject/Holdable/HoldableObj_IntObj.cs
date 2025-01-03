@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent
+public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent, IConnectToQuest
 {
     [SerializeField] protected float _totalValueToDoSomething;
     [SerializeField] protected float _valueFillSpeed;
@@ -14,6 +14,9 @@ public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent
     protected PlayableCharacterIdentity _currCharaInteracting;
     public override bool CanInteract {get{ return !_isComplete;}}
     public Action<float> OnValueChange;
+
+    public event Action OnTriggerQuestComplete;
+
     protected virtual void Update() 
     {
         if(_isComplete) return;
@@ -47,7 +50,7 @@ public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent
 
     protected virtual void WhenComplete()
     {
-        Debug.Log("This thing is finish");
+        OnTriggerQuestComplete?.Invoke();
     }
     
     protected virtual void ResetInteraction()

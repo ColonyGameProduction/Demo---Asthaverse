@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     [ReadOnly(false), SerializeField] private GamePauseState _currGamePauseState;
     private bool _isPause;
     private FadeBGUIHandler _fadeUIHandler;
+    private QuestManager _questManager;
 
     [Header("Checkpoint")]
     public bool startAtCheckPoint;
@@ -80,11 +81,13 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
         if(startAtCheckPoint) LoadCheckPoint();
         
         _fadeUIHandler = FadeBGUIHandler.Instance;
+        _questManager = QuestManager.Instance;
         _fadeUIHandler.HideBGStart(StartGame);
     }
     
     private void StartGame()
     {
+        _questManager.ActivateStartQuest();
         SetGameState(GameState.Play);
     }
 

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent
+public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent, IConnectToQuest
 {
     private DIalogInGameManager _dialogInGameManager;
     [SerializeField] private DialogCutsceneTitle _chosenTitleToPlay;
@@ -11,6 +11,9 @@ public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent
     private bool _isTestAfterDialogDone, _canTriggerOnce;
     [SerializeField] private bool _canOnlyBeActivateOnce;
     public Action<DialogCutsceneTitle> OnPlayerTriggerOnce;
+
+    public event Action OnTriggerQuestComplete;
+
     private void Start() 
     {
         _dialogInGameManager = DIalogInGameManager.Instance;
@@ -47,7 +50,7 @@ public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent
         if(!_isTestAfterDialogDone)
         {
             _isTestAfterDialogDone = true;
-            // Debug.Log(this.transform.name + " DONE");
+            OnTriggerQuestComplete?.Invoke();
         }
     }
 

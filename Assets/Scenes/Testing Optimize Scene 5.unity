@@ -1630,7 +1630,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalQuest: 0
   questList:
-  - {fileID: 1557083778}
+  - {fileID: 0}
   - {fileID: 630361241}
   - {fileID: 699840831}
   - {fileID: 1850441785}
@@ -3001,6 +3001,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5277834188542810884, guid: fbf0d84ea306672428319505da5cb7fb, type: 3}
   m_PrefabInstance: {fileID: 936485962564446021}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &615063325
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 615063326}
+  - component: {fileID: 615063327}
+  m_Layer: 0
+  m_Name: QuestManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &615063326
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 615063325}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1077971747}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &615063327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 615063325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36c5ec2dba4c9ac48b96e38063d843b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _questList: []
 --- !u!1 &625519607
 GameObject:
   m_ObjectHideFlags: 0
@@ -6570,6 +6615,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 849947678}
+  - {fileID: 615063326}
   m_Father: {fileID: 1887388950}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1077971748
@@ -9635,8 +9681,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1557083777}
   - component: {fileID: 1557083780}
-  - component: {fileID: 1557083779}
-  - component: {fileID: 1557083778}
+  - component: {fileID: 1557083781}
   m_Layer: 0
   m_Name: Position Trigger
   m_TagString: Untagged
@@ -9660,30 +9705,6 @@ Transform:
   - {fileID: 1085014266}
   m_Father: {fileID: 306045688}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1557083778
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1557083776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 700fb998e2f86cd499628096a5f89519, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1557083779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1557083776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cca75575688fa8144944caf6f3d01592, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1557083780
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9705,6 +9726,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1557083781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557083776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 873f9843dd9f84642a353c94b49fc416, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _questName: 3
+  _questDesc: Go to that position
+  _isActivated: 0
+  _isCompleted: 0
+  _isOptional: 0
+  _coll: {fileID: 0}
 --- !u!4 &1574054243 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 622738805832076257, guid: 64b5271e93fcfa04ba15c71be9d305a8, type: 3}

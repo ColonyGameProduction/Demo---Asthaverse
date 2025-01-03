@@ -74,3 +74,9 @@ public enum KeybindUIType
 {
     General, PickUp, Command 
 }
+
+[Serializable]
+public enum QuestName
+{
+    None, KillEnemy, Turn_Off_Alarm, Go_To_Position
+}
