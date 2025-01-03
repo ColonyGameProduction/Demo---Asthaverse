@@ -13,6 +13,8 @@ public class InGameUIHandler : MonoBehaviour
     int index;
 
     public List<int> nextQuestID = new List<int>();
+    public List<int> triggeringFailedQuest = new List<int>();
+
     public List<GameObject> characterUI = new List<GameObject>();
     public GameObject background;
     public Image faceImage;
@@ -282,19 +284,42 @@ public class InGameUIHandler : MonoBehaviour
 
         Debug.Log(canProceedToNextQuest);
 
-        for (int i = 0; i < nextQuestID.Count; i++)
+        if (canProceedToNextQuest)
         {
-            if (canProceedToNextQuest)
+            QuestHandler QH = QuestHandler.questHandler;
+
+            if (triggeringFailedQuest.Count > 0)
             {
-                QuestHandler QH = QuestHandler.questHandler;
+                for (int j = 0; j < triggeringFailedQuest.Count; j++)
+                {
+                    QH.questList[triggeringFailedQuest[j]].questActivate = false;
+                    QH.questList[triggeringFailedQuest[j]].gameObject.SetActive(false);
+                }
+            }
+            for (int i = 0; i < nextQuestID.Count; i++)
+            {
                 Quest quest = QH.questList[nextQuestID[i]];
                 quest.questActivate = true;
                 quest.gameObject.SetActive(true);
+
                 if (nextQuestID.Count > 1)
                 {
                     for (int j = 0; j < nextQuestID.Count; j++)
                     {
-                        quest.multiplyQuestAtOnce.Add(QH.questList[nextQuestID[j]]);
+                        if (!quest.isOptional)
+                        {
+                            if (!QH.questList[nextQuestID[j]].isOptional)
+                            {
+                                quest.multiplyQuestAtOnce.Add(QH.questList[nextQuestID[j]]);
+                            }
+                        }
+                        else
+                        {
+                            if (QH.questList[nextQuestID[j]].isOptional)
+                            {
+                                quest.multiplyQuestAtOnce.Add(QH.questList[nextQuestID[j]]);
+                            }
+                        }
                     }
                 }
             }
