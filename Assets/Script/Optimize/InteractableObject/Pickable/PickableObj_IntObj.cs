@@ -9,6 +9,7 @@ public class PickableObj_IntObj : InteractableObject
     [SerializeField]protected bool _isThrowAble = true;
     protected bool _isBeingThrown;
     protected PlayableCharacterIdentity _playerWhoHeldItem;
+    [SerializeField] protected ParticleSystem _sparkleParticle;
     public Rigidbody RB {get{return _rb;}}
     public bool IsThrowAble {get{return _isThrowAble;}}
     public bool IsBeingThrown {get{return _isBeingThrown;} set{_isBeingThrown = value;}}
@@ -16,6 +17,8 @@ public class PickableObj_IntObj : InteractableObject
     private void Awake()  
     {
         _rb = GetComponent<Rigidbody>();
+        _sparkleParticle = GetComponentInChildren<ParticleSystem>();
+        StartSparkleParticle();
     }
     public override void Interact(PlayableCharacterIdentity characterIdentity)
     {
@@ -47,5 +50,14 @@ public class PickableObj_IntObj : InteractableObject
             // IsBeingThrown = false;
         }
         
+    }
+
+    public void StartSparkleParticle()
+    {
+        _sparkleParticle.Play();
+    }
+    public void StopSparkleParticle()
+    {
+        _sparkleParticle.Stop();
     }
 }

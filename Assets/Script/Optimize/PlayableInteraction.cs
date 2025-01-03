@@ -256,6 +256,8 @@ public class PlayableInteraction : MonoBehaviour
             _heldObject.transform.position = _tempHeldObj.transform.position;
             _heldObject.transform.rotation = _tempHeldObj.transform.rotation;
             _heldObject.transform.SetParent(null);
+
+            _heldObject.StartSparkleParticle();
         }
         
         _heldObject = _tempHeldObj;
@@ -263,6 +265,8 @@ public class PlayableInteraction : MonoBehaviour
         _heldObject.transform.position = _pickableObjPoint.position;
         _heldObject.transform.rotation = _pickableObjPoint.rotation;
         _heldObject.transform.SetParent(_pickableObjPoint);
+
+        _heldObject.StopSparkleParticle();
 
         LeanTween.cancel(_leanTweenID);
         _playableCharacterIdentity.ChangeIsHoldingItemAnimationValue(1);
@@ -284,6 +288,8 @@ public class PlayableInteraction : MonoBehaviour
             _playableCharacterIdentity.GetPlayableMovementStateMachine.IsMustLookForward = false;
             _heldObject.RB.isKinematic = false;
             _heldObject.transform.SetParent(null);
+            _heldObject.StartSparkleParticle();
+            
             _heldObject = null;
 
             KeybindUIHandler.OnChangeKeybind?.Invoke(KeybindUIType.General);
