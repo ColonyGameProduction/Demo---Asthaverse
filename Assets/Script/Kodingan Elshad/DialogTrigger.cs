@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class DialogTrigger : MonoBehaviour
 {
     public List<int> nextQuestID = new List<int>();
+    public List<int> triggeringFailedQuest = new List<int>();
+
 
     public DialogCutsceneSO dialog;
     public InGameUIHandler inGameUIHandler;
@@ -33,6 +35,7 @@ public class DialogTrigger : MonoBehaviour
                     inGameUIHandler.dialogCutscene = dialog;
                     inGameUIHandler.dialougeQuest = dialouge;
                     inGameUIHandler.nextQuestID = nextQuestID;
+                    inGameUIHandler.triggeringFailedQuest = triggeringFailedQuest;
                     inGameUIHandler.DialogPlay();
                     isActivate = true;
                 }

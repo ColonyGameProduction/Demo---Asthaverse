@@ -5,7 +5,7 @@ using UnityEngine;
 public class QuestParent : MonoBehaviour
 {
     public string questName, questDescription;
-    public bool questActivate, questComplete;
+    public bool questActivate, questComplete, isOptional;
 
     public virtual void QuestIsntStarting()
     {

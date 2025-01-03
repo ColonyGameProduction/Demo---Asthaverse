@@ -5929,6 +5929,7 @@ MonoBehaviour:
   thisQuest: {fileID: 0}
   canProceedToNextQuest: 0
   nextQuestID: 01000000
+  triggeringFailedQuest: 
   stopMoving: 0
   enemyNavmesh: {fileID: 310354389}
   edgeResolveIteration: 10
@@ -5991,6 +5992,7 @@ MonoBehaviour:
   questDescription: kill this guy
   questActivate: 1
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!1 &312050264
@@ -6442,6 +6444,112 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 331932480}
   m_CullTransparentMesh: 1
+--- !u!1 &333357814
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 333357815}
+  - component: {fileID: 333357818}
+  - component: {fileID: 333357817}
+  - component: {fileID: 333357816}
+  m_Layer: 10
+  m_Name: Alarm (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &333357815
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333357814}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 21.09, y: 1.3281319, z: 14.255999}
+  m_LocalScale: {x: 0.19999999, y: 0.19999999, z: 0.19999999}
+  m_ConstrainProportionsScale: 1
+  m_Children:
+  - {fileID: 828886671}
+  m_Father: {fileID: 688114855}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &333357816
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333357814}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &333357817
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333357814}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &333357818
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333357814}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &333936763
 GameObject:
   m_ObjectHideFlags: 0
@@ -7273,6 +7381,7 @@ MonoBehaviour:
   questDescription: The player must go here
   questActivate: 0
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!114 &363874663
@@ -7288,6 +7397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextQuestID: 02000000
+  triggeringFailedQuest: 
   thisQuest: {fileID: 0}
   canProceedToNextQuest: 0
 --- !u!1 &368287977
@@ -7414,6 +7524,7 @@ MonoBehaviour:
   questDescription: SabotagingAlarm
   questActivate: 0
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!114 &369174289
@@ -7429,6 +7540,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextQuestID: 
+  triggeringFailedQuest: 0500000006000000
   questID: 0
   curValue: 0
   valueSpd: 5
@@ -7542,6 +7654,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextQuestID: 
+  triggeringFailedQuest: 
   questID: 0
   curValue: 0
   valueSpd: 2
@@ -7567,6 +7680,7 @@ MonoBehaviour:
   questDescription: PlacingTheTraps
   questActivate: 0
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!1 &394146495
@@ -8229,6 +8343,7 @@ MonoBehaviour:
   questDescription: SabotagingAlarm
   questActivate: 0
   questComplete: 0
+  isOptional: 1
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!114 &429385867
@@ -8244,6 +8359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextQuestID: 
+  triggeringFailedQuest: 
   questID: 0
   curValue: 0
   valueSpd: 5
@@ -8520,6 +8636,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextQuestID: 0400000005000000
+  triggeringFailedQuest: 
   questID: 0
   curValue: 0
   valueSpd: 5
@@ -8545,6 +8662,7 @@ MonoBehaviour:
   questDescription: SabotagingAlarm
   questActivate: 0
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!1 &439030859
@@ -9853,6 +9971,7 @@ MonoBehaviour:
   questDescription: kill this guy
   questActivate: 1
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!195 &505639514
@@ -9894,7 +10013,8 @@ MonoBehaviour:
   buffer: -1.5
   thisQuest: {fileID: 0}
   canProceedToNextQuest: 0
-  nextQuestID: 050000000600000007000000
+  nextQuestID: 05000000060000000700000008000000
+  triggeringFailedQuest: 
   stopMoving: 0
   enemyNavmesh: {fileID: 505639514}
   edgeResolveIteration: 10
@@ -11557,6 +11677,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextQuestID: 
+  triggeringFailedQuest: 
   canProceedToNextQuest: 0
   thisQuest: {fileID: 0}
 --- !u!114 &596891254
@@ -11575,6 +11696,7 @@ MonoBehaviour:
   questDescription: InteractingWithKeyItem
   questActivate: 0
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!1 &598168341
@@ -11838,6 +11960,7 @@ MonoBehaviour:
   questDescription: eavesdroping enemy
   questActivate: 0
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!65 &609902916
@@ -11874,6 +11997,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextQuestID: 020000000300000004000000
+  triggeringFailedQuest: 
   dialog: {fileID: 11400000, guid: 78717249c197dfe4894969dc7ac2908a, type: 2}
   inGameUIHandler: {fileID: 1997041997}
   dialouge: {fileID: 0}
@@ -14412,6 +14536,7 @@ Transform:
   - {fileID: 1762948797}
   - {fileID: 103908888}
   - {fileID: 1367621369}
+  - {fileID: 333357815}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &704183258
@@ -15116,6 +15241,7 @@ MonoBehaviour:
   questDescription: SabotagingAlarm
   questActivate: 0
   questComplete: 0
+  isOptional: 1
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!114 &727382074
@@ -15131,6 +15257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextQuestID: 
+  triggeringFailedQuest: 
   questID: 0
   curValue: 0
   valueSpd: 5
@@ -18813,6 +18940,81 @@ RectTransform:
   m_AnchoredPosition: {x: -5.0000153, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &828886670
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 828886671}
+  - component: {fileID: 828886673}
+  - component: {fileID: 828886672}
+  m_Layer: 10
+  m_Name: Alarm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &828886671
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828886670}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 333357815}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &828886672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828886670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 700fb998e2f86cd499628096a5f89519, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questName: SabotageAlarm
+  questDescription: SabotagingAlarm
+  questActivate: 0
+  questComplete: 0
+  isOptional: 0
+  theNextQuest: {fileID: 0}
+  multiplyQuestAtOnce: []
+--- !u!114 &828886673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828886670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40bef3585951a0441bdef49d43bc90bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextQuestID: 
+  triggeringFailedQuest: 0500000006000000
+  questID: 0
+  curValue: 0
+  valueSpd: 5
+  maxValue: 10
+  thisQuest: {fileID: 0}
+  canProceedToNextQuest: 0
+  isComplete: 0
+  holdingButton: 0
+  holdingInterface: {fileID: 777669003}
 --- !u!1 &834865313
 GameObject:
   m_ObjectHideFlags: 0
@@ -19499,6 +19701,7 @@ MonoBehaviour:
   - {fileID: 429385866}
   - {fileID: 727382073}
   - {fileID: 369174288}
+  - {fileID: 828886672}
 --- !u!1 &866824074
 GameObject:
   m_ObjectHideFlags: 0
@@ -23459,7 +23662,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1156905594
 Transform:
   m_ObjectHideFlags: 0
@@ -24082,6 +24285,7 @@ MonoBehaviour:
   questDescription: kill this guy
   questActivate: 1
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!195 &1196376425
@@ -24123,7 +24327,8 @@ MonoBehaviour:
   buffer: -1.5
   thisQuest: {fileID: 0}
   canProceedToNextQuest: 0
-  nextQuestID: 050000000600000007000000
+  nextQuestID: 05000000060000000700000008000000
+  triggeringFailedQuest: 
   stopMoving: 0
   enemyNavmesh: {fileID: 1196376425}
   edgeResolveIteration: 10
@@ -26647,6 +26852,7 @@ MonoBehaviour:
   questDescription: The player must go here
   questActivate: 1
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!114 &1339484071
@@ -26662,6 +26868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextQuestID: 01000000
+  triggeringFailedQuest: 
   thisQuest: {fileID: 0}
   canProceedToNextQuest: 0
 --- !u!65 &1339484072
@@ -33200,6 +33407,7 @@ MonoBehaviour:
   questDescription: kill this guy
   questActivate: 1
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!195 &1708855576
@@ -33241,7 +33449,8 @@ MonoBehaviour:
   buffer: -1.5
   thisQuest: {fileID: 0}
   canProceedToNextQuest: 0
-  nextQuestID: 050000000600000007000000
+  nextQuestID: 05000000060000000700000008000000
+  triggeringFailedQuest: 
   stopMoving: 0
   enemyNavmesh: {fileID: 1708855576}
   edgeResolveIteration: 10
@@ -35399,6 +35608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextQuestID: 03000000
+  triggeringFailedQuest: 
   dialog: {fileID: 11400000, guid: 78717249c197dfe4894969dc7ac2908a, type: 2}
   inGameUIHandler: {fileID: 1997041997}
   dialouge: {fileID: 0}
@@ -35455,6 +35665,7 @@ MonoBehaviour:
   questDescription: eavesdroping enemy
   questActivate: 0
   questComplete: 0
+  isOptional: 0
   theNextQuest: {fileID: 0}
   multiplyQuestAtOnce: []
 --- !u!1 &1850286051
@@ -37593,6 +37804,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextQuestID: 
+  triggeringFailedQuest: 
   characterUI:
   - {fileID: 171142145}
   - {fileID: 298918938}
