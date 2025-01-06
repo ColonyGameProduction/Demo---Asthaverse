@@ -3,22 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-
-
-public class SOAudioSFXList : ScriptableObject
+public class SOAudioBGMList : ScriptableObject
 {
     #if UNITY_EDITOR
-    [MenuItem("SO/SOAudioSFXList")]
+    [MenuItem("SO/SOAudioBGMList")]
     public static void QuickCreate()
     {
-        SOAudioSFXList asset = CreateInstance<SOAudioSFXList>();
+        SOAudioBGMList asset = CreateInstance<SOAudioBGMList>();
         string name =
-            AssetDatabase.GenerateUniqueAssetPath("Assets/ScriptableObject/Sound//AudioSFXList.asset");
+            AssetDatabase.GenerateUniqueAssetPath("Assets/ScriptableObject/Sound//AudioBGMList.asset");
         AssetDatabase.CreateAsset(asset, name);
         AssetDatabase.SaveAssets();
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = asset;
     }
     #endif
-    public List<AudioSFXData> audioSFX;
+    public List<AudioBGMData> audioBGM;
 }

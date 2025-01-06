@@ -2,11 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct Audio
-{
-    public AudioSFXName audioName;
-    public AudioSource audioSource;
-}
+
 public class PlayableMakeSFX : MonoBehaviour
 {
     // [Header("Foot sound")]
@@ -19,7 +15,7 @@ public class PlayableMakeSFX : MonoBehaviour
         _audioArray = new Audio[_playerSFXList.audioSFX.Count];
         for(int i = 0; i < _audioArray.Length ; i++)
         {
-            _audioArray[i].audioName = _playerSFXList.audioSFX[i].audioName;
+            _audioArray[i].audioName = _playerSFXList.audioSFX[i].audioName.ToString();
 
             _audioArray[i].audioSource = gameObject.AddComponent<AudioSource>();
             AudioSource source = _audioArray[i].audioSource;
@@ -57,7 +53,7 @@ public class PlayableMakeSFX : MonoBehaviour
 
     private AudioSource GetAudioSource(AudioSFXName name)
     {
-        Audio audio = System.Array.Find(_audioArray, audio => audio.audioName == name);
+        Audio audio = System.Array.Find(_audioArray, audio => audio.audioName == name.ToString());
         return audio.audioSource;
     }
 }
