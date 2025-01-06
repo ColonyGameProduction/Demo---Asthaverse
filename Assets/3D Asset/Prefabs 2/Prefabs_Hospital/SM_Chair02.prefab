@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1030973816}
   - component: {fileID: 1030973817}
+  - component: {fileID: 6406455068893910015}
   m_Layer: 0
   m_Name: SM_Chair02
   m_TagString: Untagged
@@ -63,6 +64,27 @@ LODGroup:
     - renderer: {fileID: 1030973829}
     - renderer: {fileID: 0}
   m_Enabled: 1
+--- !u!65 &6406455068893910015
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1030973815}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.78588593, y: 0.92862856, z: 2.5805569}
+  m_Center: {x: 0.00002297759, y: 0.4643101, z: 0.000000059604645}
 --- !u!1 &1030973819
 GameObject:
   m_ObjectHideFlags: 0
@@ -74,7 +96,6 @@ GameObject:
   - component: {fileID: 1030973820}
   - component: {fileID: 1030973821}
   - component: {fileID: 1030973822}
-  - component: {fileID: 8512019860229352249}
   m_Layer: 0
   m_Name: SM_Chair02_LOD0
   m_TagString: Untagged
@@ -147,27 +168,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030973819}
   m_Mesh: {fileID: 4300000, guid: abc00000000005439641053795818431, type: 3}
---- !u!65 &8512019860229352249
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1030973819}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.7855506, y: 0.92832017, z: 2.5805368}
-  m_Center: {x: 0.0000003874302, y: 0.46416003, z: 0}
 --- !u!1 &1030973823
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,7 +179,6 @@ GameObject:
   - component: {fileID: 1030973824}
   - component: {fileID: 1030973825}
   - component: {fileID: 1030973826}
-  - component: {fileID: 260057607873698566}
   m_Layer: 0
   m_Name: SM_Chair02_LOD1
   m_TagString: Untagged
@@ -252,27 +251,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030973823}
   m_Mesh: {fileID: 4300002, guid: abc00000000005439641053795818431, type: 3}
---- !u!65 &260057607873698566
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1030973823}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.78588593, y: 0.92862856, z: 2.5805569}
-  m_Center: {x: 0.00002297759, y: 0.4643101, z: 0.000000059604645}
 --- !u!1 &1030973827
 GameObject:
   m_ObjectHideFlags: 0
@@ -284,7 +262,6 @@ GameObject:
   - component: {fileID: 1030973828}
   - component: {fileID: 1030973829}
   - component: {fileID: 1030973830}
-  - component: {fileID: 5369539570236818944}
   m_Layer: 0
   m_Name: SM_Chair02_LOD2
   m_TagString: Untagged
@@ -357,24 +334,3 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030973827}
   m_Mesh: {fileID: 4300004, guid: abc00000000005439641053795818431, type: 3}
---- !u!65 &5369539570236818944
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1030973827}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.78747594, y: 0.9284654, z: 2.5826004}
-  m_Center: {x: -0.00077204406, y: 0.4641944, z: 0}

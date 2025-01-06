@@ -48,11 +48,15 @@ public class WeaponLogicHandler
 
             GameObject entityGameObject = hit.collider.gameObject;
 
-            if(hit.transform.gameObject.GetComponent<BodyParts>() != null)
+            if (hit.transform.gameObject.GetComponent<BodyParts>() != null)
             {
                 BodyParts body = hit.transform.gameObject.GetComponent<BodyParts>();
 
                 ElshadCalculateDamage(whoShoot, origin, weaponStat, entityStat, entityGameObject, body.bodyType);
+            }
+            else
+            {
+                DamageWithoutBodyParts(whoShoot, origin, weaponStat, entityStat, entityGameObject);
             }
             
             // Debug.Log(hit.point);
@@ -66,8 +70,36 @@ public class WeaponLogicHandler
         }
     }
 
+    public void DamageWithoutBodyParts(GameObject whoShoot, Vector3 origin, WeaponStatSO weapon, EntityStatSO entityStat, GameObject entityGameObject)
+    {
+        if (entityGameObject.CompareTag("Enemy"))
+        {
+            EnemyAI enemy = entityGameObject.GetComponentInParent<EnemyAI>();
+            float enemyHP = enemy.GetEnemyHP();
+            enemyHP -= weapon.baseDamage;
+            enemy.SetEnemyHP(enemyHP);
+            Debug.Log("Enemy Hit!");
+        }
+        else if (entityGameObject.CompareTag("Player"))
+        {
+            if (entityGameObject.GetComponentInParent<PlayerAction>().enabled)
+            {
+                PlayerAction player = entityGameObject.GetComponentInParent<PlayerAction>();
+                float playerHP = player.GetPlayerHP();
+                player.InstantiateArrowDamage(whoShoot);
+                player.SetPlayerHP(playerHP);
+            }
+            else
+            {
+                FriendsAI friends = entityGameObject.GetComponentInParent<FriendsAI>();
+                float friendsHP = friends.GetFriendHP();
+                friends.SetFriendsHP(friendsHP);
+            }
+        }
+    }
     public void ElshadCalculateDamage(GameObject whoShoot, Vector3 origin, WeaponStatSO weapon, EntityStatSO entityStat, GameObject entityGameObject, bodyParts parts)
     {
+        Debug.Log(entityGameObject);
          if(entityGameObject.CompareTag("Enemy"))
          {
             EnemyAI enemy = entityGameObject.GetComponentInParent<EnemyAI>(); 
@@ -89,6 +121,7 @@ public class WeaponLogicHandler
                 Debug.Log("Hit Leg");
             }
 
+            enemyHP -= weapon.baseDamage;
 
             enemy.SetEnemyHP(enemyHP);
             Debug.Log("Enemy Hit!");
