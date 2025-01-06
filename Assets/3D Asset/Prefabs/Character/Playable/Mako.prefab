@@ -150,8 +150,8 @@ MonoBehaviour:
     m_Root: {fileID: 6022252338770751327}
     m_Mid: {fileID: 8220526025506530375}
     m_Tip: {fileID: 7652168032913009366}
-    m_Target: {fileID: 0}
-    m_Hint: {fileID: 0}
+    m_Target: {fileID: 5869930105510243206}
+    m_Hint: {fileID: 5297935686431820848}
     m_TargetPositionWeight: 1
     m_TargetRotationWeight: 1
     m_HintWeight: 1
@@ -2473,8 +2473,8 @@ MonoBehaviour:
     m_Root: {fileID: 6022252338770751327}
     m_Mid: {fileID: 8220526025506530375}
     m_Tip: {fileID: 7652168032913009366}
-    m_Target: {fileID: 0}
-    m_Hint: {fileID: 0}
+    m_Target: {fileID: 582776595384740836}
+    m_Hint: {fileID: 6902410388919736123}
     m_TargetPositionWeight: 1
     m_TargetRotationWeight: 1
     m_HintWeight: 1
@@ -3723,6 +3723,30 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3207352903246084034, guid: 9026beb36d3467448acaa60001f21ac7, type: 3}
+      propertyPath: m_AABB.m_Center.x
+      value: 0.000013174489
+      objectReference: {fileID: 0}
+    - target: {fileID: 3207352903246084034, guid: 9026beb36d3467448acaa60001f21ac7, type: 3}
+      propertyPath: m_AABB.m_Center.y
+      value: -0.0069888122
+      objectReference: {fileID: 0}
+    - target: {fileID: 3207352903246084034, guid: 9026beb36d3467448acaa60001f21ac7, type: 3}
+      propertyPath: m_AABB.m_Center.z
+      value: -0.0000020458829
+      objectReference: {fileID: 0}
+    - target: {fileID: 3207352903246084034, guid: 9026beb36d3467448acaa60001f21ac7, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.0023542838
+      objectReference: {fileID: 0}
+    - target: {fileID: 3207352903246084034, guid: 9026beb36d3467448acaa60001f21ac7, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 0.004
+      objectReference: {fileID: 0}
+    - target: {fileID: 3207352903246084034, guid: 9026beb36d3467448acaa60001f21ac7, type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: 0.0019961065
+      objectReference: {fileID: 0}
+    - target: {fileID: 3207352903246084034, guid: 9026beb36d3467448acaa60001f21ac7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f56dc98114f22074cbf1e5e84730e53c, type: 2}
@@ -4229,6 +4253,7 @@ MonoBehaviour:
   _useWeaponStateMachine: {fileID: 0}
   _playableUseWeaponStateMachine: {fileID: 0}
   _weaponGameObjectDataContainer: {fileID: 0}
+  _playableInteraction: {fileID: 0}
   _distanceToGround: 0.12
   _raycastDownDistance: 1.5
   _leftRotationWeight: 1
@@ -4239,6 +4264,13 @@ MonoBehaviour:
   _handReloadParent: {fileID: 1481963607464828072}
   _magHandLocalPos: {x: 0.0002, y: 0.00096, z: 0.00034}
   _magHandLocalEulerAngles: {x: 38.645, y: 100.043, z: 5.526}
+  target: {fileID: 0}
+  target2: {fileID: 0}
+  hand: {fileID: 0}
+  canDoIt: 0
+  _chara: {fileID: 0}
+  addedForGun: {x: 0, y: 0, z: 0}
+  _rig: {fileID: 0}
 --- !u!114 &4423972662058010052
 MonoBehaviour:
   m_ObjectHideFlags: 0

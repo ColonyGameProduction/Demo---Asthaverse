@@ -1799,7 +1799,7 @@ GameObject:
   m_Component:
   - component: {fileID: 691860054200925561}
   m_Layer: 7
-  m_Name: SecondAimRig_hint_Pistol
+  m_Name: SecondAimRig_hint_Left Arm_Pistol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3273,7 +3273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7558058705620432022}
   m_Layer: 7
-  m_Name: SecondAimRig_hint_Rifle
+  m_Name: SecondAimRig_hint_Left Arm_Rifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3386,7 +3386,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -9149875854983829802, guid: c9b3a1d1282467b4093f856990444d59, type: 3}
       propertyPath: m_AABB.m_Extent.y
-      value: 0.0037931
+      value: 0.004
       objectReference: {fileID: 0}
     - target: {fileID: -9149875854983829802, guid: c9b3a1d1282467b4093f856990444d59, type: 3}
       propertyPath: m_AABB.m_Extent.z
@@ -4291,6 +4291,7 @@ MonoBehaviour:
   _useWeaponStateMachine: {fileID: 0}
   _playableUseWeaponStateMachine: {fileID: 0}
   _weaponGameObjectDataContainer: {fileID: 0}
+  _playableInteraction: {fileID: 0}
   _distanceToGround: 0.12
   _raycastDownDistance: 1.5
   _leftRotationWeight: 1
@@ -4301,6 +4302,13 @@ MonoBehaviour:
   _handReloadParent: {fileID: 2916396488811829735}
   _magHandLocalPos: {x: 0.0002, y: 0.00096, z: 0.00034}
   _magHandLocalEulerAngles: {x: 38.645, y: 100.043, z: 5.526}
+  target: {fileID: 0}
+  target2: {fileID: 0}
+  hand: {fileID: 0}
+  canDoIt: 0
+  _chara: {fileID: 0}
+  addedForGun: {x: 0, y: 0, z: 0}
+  _rig: {fileID: 0}
 --- !u!114 &1611782957493632719
 MonoBehaviour:
   m_ObjectHideFlags: 0
