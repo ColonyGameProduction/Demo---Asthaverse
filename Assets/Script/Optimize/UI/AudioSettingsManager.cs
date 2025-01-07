@@ -242,7 +242,7 @@ public class AudioSettingsManager : MonoBehaviour
         }
         else if(parameter == MIXER_MUSIC)
         {
-            _audioMixer.SetFloat(parameter, Mathf.Log10(currVol) * 20 - 1);
+            _audioMixer.SetFloat(parameter, Mathf.Log10(currVol) * 20 - 8);
         }
         else
         {
