@@ -90,6 +90,7 @@ public class IdleState : MovementState
                 _currTargetTime = _sm.IdleAnimCycleTimeTarget[1];
             }
             SetAnimParamActive(ANIMATION_MOVE_PARAMETER_CROUCH);
+            if(!_sm.IsAIInput)PlayableCharacterCameraManager.OnCrouchCameraHeight?.Invoke();
             
 
             if(_sm.IsAtCrouchPlatform && _sm.IsAIInput)
@@ -105,6 +106,7 @@ public class IdleState : MovementState
         else
         {
             SetAnimParamInactive(ANIMATION_MOVE_PARAMETER_CROUCH);
+            if(!_sm.IsAIInput)PlayableCharacterCameraManager.OnResetCameraHeight?.Invoke();
         }
     }
     private void StopMovementAnimation()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Rendering;
 
-public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffect
+public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffect, IUnsubscribeEvent
 {
     public static PlayableCharacterCameraManager Instance { get;private set; }
     
@@ -35,6 +36,10 @@ public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffe
     [SerializeField] private float _crouchHeight = -0.4f;
     private bool _isNormalHeight = true;
 
+    #region Event
+    public static Action OnResetCameraHeight, OnCrouchCameraHeight;
+    #endregion
+
     #region GETTER SETTER VARIABLE
     public bool IsScope {get { return _isScope;}}
     public bool IsNightVision {get { return _isNightVision;}}
@@ -46,6 +51,9 @@ public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffe
         Instance = this;
         _playableCameraList = FindObjectsOfType<PlayableCamera>().ToList();
         _controlsManager.OnSensValueChange += SetAllPlayableCameraSensitivityMultiplier;
+
+        OnResetCameraHeight += ResetCameraHeight;
+        OnCrouchCameraHeight += SetCameraCrouchHeight;
         
     }
     private void Start() 
@@ -123,5 +131,12 @@ public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffe
         {
             camera.SetCameraRotationMultiplier = value;
         }
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _controlsManager.OnSensValueChange -= SetAllPlayableCameraSensitivityMultiplier;
+        OnResetCameraHeight -= ResetCameraHeight;
+        OnCrouchCameraHeight -= SetCameraCrouchHeight;
     }
 }

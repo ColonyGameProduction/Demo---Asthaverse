@@ -5,27 +5,33 @@ using UnityEngine;
 public class SwitchingWeaponState : UseWeaponState
 {
     bool isDoSwitch;
+    int oldIdx = 0;
     public SwitchingWeaponState(UseWeaponStateMachine currStateMachine, UseWeaponStateFactory factory) : base(currStateMachine, factory)
     {
-
+        _activeStateAnimParamName = "SwitchWeapon";
     }
     public override void EnterState()
     {
         isDoSwitch = false;
-        
+        _sm.IsResetAnimTime = true;
         if(!_sm.IsAIInput)
         {
             _playableData.TellToTurnOffScope();
         }
+        oldIdx = _playableData.GetPlayableCharacterIdentity.CurrWeaponIdx;
 
         // Debug.Log("Swithc" + _stateMachine.gameObject.name);
     }
     public override void UpdateState()
     {
+        if(!_normalUse.IsAiming)SetAnimParamInactive("Aim");
+
         if(!isDoSwitch && _advancedUse.IsSwitchingWeapon)
         {
             isDoSwitch = true;
-            _advancedUse.SwitchWeapon();
+            _sm.IsResetAnimTime = true;
+            _sm.CharaIdentity.OnToggleLeftHandRig?.Invoke(false, false);
+            base.EnterState();
         }
         else if(isDoSwitch && !_advancedUse.IsSwitchingWeapon)
         {
@@ -67,6 +73,9 @@ public class SwitchingWeaponState : UseWeaponState
     }
     public override void ExitState()
     {
+        _playableData.GetPlayableCharacterIdentity.EnsureSwitchWeapon(oldIdx);
+        _sm.CharaIdentity.OnToggleLeftHandRig?.Invoke(true, false);
+
         _advancedUse.CanSwitchWeapon_Coroutine();
     }
 }

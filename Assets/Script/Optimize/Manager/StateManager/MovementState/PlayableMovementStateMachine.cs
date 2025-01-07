@@ -81,7 +81,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             {
                 if(!value)
                 {
-                    if(IsAskedToRunByPlayable && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.IsAIEngage && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.GotDetectedbyEnemy && !IsAtCrouchPlatform)_isRun = IsAskedToCrouchByPlayable;
+                    if(IsAskedToRunByPlayable && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.IsAIEngage && !_getPlayableCharacterIdentity.GetFriendAIStateMachine.GotDetectedbyEnemy && !IsAtCrouchPlatform)_isRun = IsAskedToRunByPlayable;
                     else _isRun = value;
                 }
                 else
@@ -133,6 +133,15 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get {return _getPlayableCharacterIdentity;}}
     public PlayableMakeSFX GetPlayableMakeSFX {get {return _getPlayableMakeSFX;}}
     public Action<bool> OnIsCrawlingChange;
+
+    public override float AgentRadius
+    {
+        get 
+        {
+            return IsTakingCoverAtWall ?  0.1f :  _agentNavMesh.radius;
+            
+        }
+    }
 
     #endregion
     protected override void Awake()

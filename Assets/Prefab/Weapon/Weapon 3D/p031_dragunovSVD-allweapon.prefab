@@ -96,7 +96,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890274604b13e114aa126eb4732ba288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  example: {fileID: 0}
+  _wallCollide: {fileID: 0}
+  _gunInWallLayer:
+    serializedVersion: 2
+    m_Bits: 524288
+  _normalGunLayer:
+    serializedVersion: 2
+    m_Bits: 32768
+  _gunSkin:
+  - {fileID: 2883009241868805813}
+  - {fileID: 6844797564522651786}
+  - {fileID: 869704620525913947}
 --- !u!1 &7739940797670480755
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,8 +245,23 @@ PrefabInstance:
       addedObject: {fileID: 4045455466877556963}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 535b5fc375ebb434dbbf5a2d9056333d, type: 3}
+--- !u!1 &869704620525913947 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6551238392589077143, guid: 535b5fc375ebb434dbbf5a2d9056333d, type: 3}
+  m_PrefabInstance: {fileID: 6267712317934980556}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2883009241868805813 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -73778861084972167, guid: 535b5fc375ebb434dbbf5a2d9056333d, type: 3}
+  m_PrefabInstance: {fileID: 6267712317934980556}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5868711862113643047 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 535b5fc375ebb434dbbf5a2d9056333d, type: 3}
+  m_PrefabInstance: {fileID: 6267712317934980556}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6844797564522651786 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8644949499853263546, guid: 535b5fc375ebb434dbbf5a2d9056333d, type: 3}
   m_PrefabInstance: {fileID: 6267712317934980556}
   m_PrefabAsset: {fileID: 0}

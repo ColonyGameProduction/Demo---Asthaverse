@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayableCharacterUIManager : MonoBehaviour
+public class PlayableCharacterUIManager : MonoBehaviour, IUnsubscribeEvent
 {
     private PlayableCharacterIdentity currPlayable;
     private WeaponLogicManager _weaponLogicManager;
@@ -82,4 +82,12 @@ public class PlayableCharacterUIManager : MonoBehaviour
         _playableCharacterManager.IsCrouchModeHold = change;
     }
 
+    public void UnsubscribeEvent()
+    {
+        _playableCharacterManager.OnPlayerSwitch -= _characterProfileUIHandler.UpdateHealthData;
+
+        _controlsManager.OnAimModeChange -= Settings_OnScopeModeChange;
+        _controlsManager.OnSprintModeChange -= Settings_OnSprintModeChange;
+        _controlsManager.OnCrouchModeChange -= Settings_OnCrouchModeChange;
+    }
 }

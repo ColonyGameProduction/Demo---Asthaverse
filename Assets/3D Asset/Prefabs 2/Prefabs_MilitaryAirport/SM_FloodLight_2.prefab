@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1030972053}
   - component: {fileID: 1030972054}
-  - component: {fileID: 1030972055}
+  - component: {fileID: 4303327797789738808}
   m_Layer: 0
   m_Name: SM_FloodLight_2
   m_TagString: Untagged
@@ -65,8 +65,8 @@ LODGroup:
     - renderer: {fileID: 1030972066}
     - renderer: {fileID: 0}
   m_Enabled: 1
---- !u!64 &1030972055
-MeshCollider:
+--- !u!136 &4303327797789738808
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -83,10 +83,11 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300006, guid: abc00000000002633289077502408672, type: 3}
+  serializedVersion: 2
+  m_Radius: 0.19347647
+  m_Height: 11.195529
+  m_Direction: 1
+  m_Center: {x: 0.0007417798, y: 5.5697827, z: -0.000000059604645}
 --- !u!1 &1030972056
 GameObject:
   m_ObjectHideFlags: 0
