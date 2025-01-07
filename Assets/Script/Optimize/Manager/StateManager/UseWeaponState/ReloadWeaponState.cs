@@ -15,7 +15,7 @@ public class ReloadWeaponState : UseWeaponState
         // mainkan animasi
         // _stateMachine.CharaAnimator.
         isDoReloading = false;
-        _sm.CurrAnimTime = 0;
+        _sm.IsResetAnimTime = true;
         if(!_sm.IsAIInput)
         {
             _playableData.TellToTurnOffScope();
@@ -29,12 +29,10 @@ public class ReloadWeaponState : UseWeaponState
         if(!_normalUse.IsAiming)SetAnimParamInactive("Aim");
 
 
-        
-
-
         if(!isDoReloading && _normalUse.IsReloading)
         {
             isDoReloading = true;
+            _sm.CharaIdentity.OnToggleLeftHandRig?.Invoke(false, false);
             base.EnterState();
         }
         else if(isDoReloading && !_normalUse.IsReloading)
@@ -73,6 +71,9 @@ public class ReloadWeaponState : UseWeaponState
     }
     public override void ExitState()
     {
+        _sm.CharaIdentity.OnToggleLeftHandRig?.Invoke(true, false);
+        _sm.EnsureReloadWeapon();
+
         _sm.CanReloadWeapon_Coroutine();
     }
 

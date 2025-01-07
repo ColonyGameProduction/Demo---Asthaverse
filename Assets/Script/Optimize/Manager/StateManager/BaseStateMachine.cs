@@ -10,6 +10,7 @@ public abstract class BaseStateMachine : MonoBehaviour
 {
     protected CharacterIdentity _charaIdentity;
     public bool IsCharacterDead { get {return _charaIdentity.IsDead;}}
+    public CharacterIdentity CharaIdentity {get {return _charaIdentity;}}
     //Switch to other state
     protected virtual void Awake()
     {

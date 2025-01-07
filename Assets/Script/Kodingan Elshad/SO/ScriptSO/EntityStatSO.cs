@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class EntityStatSO : ScriptableObject
 {
     public string entityName;
+    public bool isCharBoy;
     public float health;
     public float speed;
     public float armor;

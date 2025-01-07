@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MinimapCameraFollow : MonoBehaviour
+public class MinimapCameraFollow : MonoBehaviour, IUnsubscribeEvent
 {
     [SerializeField] private PlayableCharacterManager _playableCharaManager;
     private float cameraHeight;
@@ -10,7 +10,7 @@ public class MinimapCameraFollow : MonoBehaviour
     private void Awake()
     {
         cameraHeight = transform.position.y;
-        if(_playableCharaManager != null)_playableCharaManager.OnPlayerSwitch += ChangeTargetToFollow;
+        if(_playableCharaManager != null) _playableCharaManager.OnPlayerSwitch += ChangeTargetToFollow;
     }
 
     private void Update()
@@ -34,5 +34,10 @@ public class MinimapCameraFollow : MonoBehaviour
 
             transform.rotation = Quaternion.Euler(90f, targetRotation.eulerAngles.y, 0f);
         }
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _playableCharaManager.OnPlayerSwitch -= ChangeTargetToFollow;
     }
 }
