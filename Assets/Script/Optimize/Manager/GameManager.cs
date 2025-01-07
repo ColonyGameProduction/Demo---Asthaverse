@@ -126,6 +126,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
         if(_currGameState != GameState.Play && _currGameState != GameState.Pause) return;
         _isPause = !_isPause;
         OnPlayerPause?.Invoke(_isPause);
+        AudioManager.Instance.ChangeBGMVolumeWhenPause(_isPause);
         
         if(_isPause)
         {

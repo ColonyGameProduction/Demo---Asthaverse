@@ -18,6 +18,7 @@ public class AudioManager : MonoBehaviour
     [Header("Start BGM of This Scene")]
     [SerializeField] private AudioBGMName _startudioBGMName;
     [SerializeField] private float _startBGMDuration = 1f, _stopBGMDuration = 0.5f;
+    private float _currMaxVol = 0;
     
     private int _leanTweenBGMID;
     public const string BGM_AUDIOSOURCE_NAME = "BGM";
@@ -122,6 +123,7 @@ public class AudioManager : MonoBehaviour
         audioSource.playOnAwake = bgmData.playOnAwake;
         audioSource.loop = bgmData.loop;
         audioSource.volume = bgmData.volume;
+        _currMaxVol = audioSource.volume;
         audioSource.pitch = bgmData.pitch;
 
         PlayBGM();
@@ -154,6 +156,15 @@ public class AudioManager : MonoBehaviour
                 if(startAnotherBGM != AudioBGMName.None) SetBGM(startAnotherBGM);
             }
         ).id;
+    }
+    public void ChangeBGMVolumeWhenPause(bool isPause)
+    {
+        AudioSource audioSource = GetAudioSource(BGM_AUDIOSOURCE_NAME);
+        float vol = 0;
+        if(isPause) vol = audioSource.volume * 0.5f;
+        else vol = _currMaxVol;
+
+        audioSource.volume = vol;
     }
 
     #endregion
