@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     
     private void StartGame()
     {
-        _questManager.ActivateStartQuest();
+        _questManager.ActivateQuest();
         SetGameState(GameState.Play);
     }
 

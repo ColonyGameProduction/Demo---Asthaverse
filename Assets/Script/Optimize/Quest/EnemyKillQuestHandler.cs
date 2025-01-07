@@ -8,6 +8,7 @@ public class EnemyKillQuestHandler : SoloQuestHandler
     protected EnemyAIManager _enemyAIManager;
     [SerializeField]protected List<Transform> _enemyTargetList;
     protected int _totalTarget, _totalTargetDied;
+    private string _questDescRaw;
 
     #region GETTER SETTER
     public int TotalTarget {get {return _totalTarget;}}
@@ -17,6 +18,8 @@ public class EnemyKillQuestHandler : SoloQuestHandler
     {
         _totalTarget = _enemyTargetList.Count;
         _totalTargetDied = 0;
+        _questDescRaw = _questDesc;
+        ChangeDesc();
     }
     protected override void Start()
     {
@@ -27,16 +30,12 @@ public class EnemyKillQuestHandler : SoloQuestHandler
 
     private void TargetDied(Transform transform)
     {
-        foreach(Transform target in _enemyTargetList)
+        if(_enemyTargetList.Contains(transform))
         {
-            if(_enemyTargetList.Contains(target))
-            {
-                _enemyTargetList.Remove(target);
-                _totalTargetDied++;
-                break;
-            }
+            _enemyTargetList.Remove(transform);
+            _totalTargetDied++;
         }
-
+        ChangeDesc();
         if(_totalTargetDied == _totalTarget) QuestComplete();
     }
 
@@ -48,8 +47,16 @@ public class EnemyKillQuestHandler : SoloQuestHandler
 
     protected override void QuestComplete()
     {
+        
         if(_totalTargetDied < _totalTarget) return;
 
         base.QuestComplete();
+    }
+
+    private void ChangeDesc()
+    {
+        string questDescFinal = _questDescRaw + " (" + _totalTargetDied + "/" + TotalTarget +")";
+        _questDesc = questDescFinal;
+        OnChangeDescBeforeComplete?.Invoke();
     }
 }
