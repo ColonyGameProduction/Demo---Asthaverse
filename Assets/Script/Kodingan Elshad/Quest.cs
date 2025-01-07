@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class Quest : QuestParent
 {
+    public QuestUIHandler QUH;
     public Quest theNextQuest;
     public List<Quest> multiplyQuestAtOnce = new List<Quest>();
     public bool canProceedToNextQuest;
     public List<int> nextQuestID = new List<int>();
     public List<int> triggeringFailedQuest = new List<int>();
+
+    private void Start()
+    {
+        QUH = QuestUIHandler.instance;
+    }
 
     public override void CompletedTheQuest()
     {
@@ -17,12 +23,11 @@ public class Quest : QuestParent
         questComplete = true;
     }
 
-    public override void ActivatingTheNextQuest()
+    public override void ActivatingTheNextQuest(Quest currQuest)
     {
-        base.ActivatingTheNextQuest();
+        base.ActivatingTheNextQuest(currQuest);
 
         
-    
         questComplete = true;
 
         if (multiplyQuestAtOnce.Count > 0)
@@ -49,7 +54,9 @@ public class Quest : QuestParent
 
         if (canProceedToNextQuest)
         {
+
             QuestHandler QH = QuestHandler.questHandler;
+            QUH.RemovingQuestUI(currQuest.questName, currQuest);
 
             if (triggeringFailedQuest.Count > 0)
             {
@@ -64,6 +71,8 @@ public class Quest : QuestParent
                 Quest quest = QH.questList[nextQuestID[i]];
                 quest.questActivate = true;
                 quest.gameObject.SetActive(true);
+
+                QUH.CreatingQuestUI(quest.questName, quest);
 
                 if (nextQuestID.Count > 1)
                 {

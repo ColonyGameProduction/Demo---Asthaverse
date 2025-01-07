@@ -12,6 +12,7 @@ public class EnemyAI : ExecuteLogic
     EnemyManager EM;
 
     public Quest thisQuest;
+    public QuestUIHandler QUH;
 
     private StealthBar stealth;
 
@@ -92,6 +93,7 @@ public class EnemyAI : ExecuteLogic
     {
         thisQuest = GetComponent<Quest>();
 
+        QUH = QuestUIHandler.instance;
         EM = EnemyManager.instance;
 
         EM.enemyHunted += CombatStateHunted;
@@ -111,6 +113,10 @@ public class EnemyAI : ExecuteLogic
         StartCoroutine(FindTargetWithDelay(.2f));
         enemyHP = enemyStat.health + enemyStat.armor;
         weapon = enemyStat.weaponStat[0];
+        if(thisQuest.questActivate)
+        {
+            QUH.CreatingQuestUI(thisQuest.questName, thisQuest);
+        }
     }
         
     private void LateUpdate()
@@ -244,7 +250,7 @@ public class EnemyAI : ExecuteLogic
             {
                 if(thisQuest != null)
                 {
-                    thisQuest.ActivatingTheNextQuest();
+                    thisQuest.ActivatingTheNextQuest(thisQuest);
                     thisQuest.questActivate = false;
                 }
 

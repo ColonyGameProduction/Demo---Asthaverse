@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class DialogTrigger : MonoBehaviour
 {
+    QuestUIHandler QUH;
     public DialogCutsceneSO dialog;
     public InGameUIHandler inGameUIHandler;
     public Quest dialouge;
@@ -13,10 +14,15 @@ public class DialogTrigger : MonoBehaviour
 
     private void Start()
     {
+        QUH = QuestUIHandler.instance;
         dialouge = GetComponent<Quest>();
         if(!dialouge.questActivate)
         {
             gameObject.SetActive(false);
+        }
+        else
+        {
+            QUH.CreatingQuestUI(dialouge.questName, dialouge);
         }
     }
 

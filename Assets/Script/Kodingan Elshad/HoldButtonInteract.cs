@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class HoldButtonInteract : MonoBehaviour
 {
+    public QuestUIHandler QUH;
     public int questID;
 
     public float curValue = 0;
@@ -23,11 +24,16 @@ public class HoldButtonInteract : MonoBehaviour
 
     private void Start()
     {
+        QUH = QuestUIHandler.instance;
         thisQuest = GetComponent<Quest>();
 
         if(!thisQuest.questActivate && thisQuest != null)
         {
             gameObject.SetActive(false);
+        }
+        else
+        {
+            QUH.CreatingQuestUI(thisQuest.questName, thisQuest);
         }
     }
 
@@ -45,7 +51,7 @@ public class HoldButtonInteract : MonoBehaviour
                 if(!isComplete)
                 {
                     holdingInterface.SetActive(false);
-                    thisQuest.ActivatingTheNextQuest();
+                    thisQuest.ActivatingTheNextQuest(thisQuest);
                 }
                 isComplete = true;
             }

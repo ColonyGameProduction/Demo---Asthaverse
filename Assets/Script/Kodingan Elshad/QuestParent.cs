@@ -22,7 +22,7 @@ public class QuestParent : MonoBehaviour
 
     }
 
-    public virtual void ActivatingTheNextQuest()
+    public virtual void ActivatingTheNextQuest(Quest currQuest)
     {
 
     }

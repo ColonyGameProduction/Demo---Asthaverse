@@ -231,7 +231,7 @@ public class InGameUIHandler : MonoBehaviour
             LeanTween.alpha(faceImage.gameObject.GetComponent<RectTransform>(), 0, .1f);
             if (dialougeQuest != null)
             {
-                dialougeQuest.ActivatingTheNextQuest();
+                dialougeQuest.ActivatingTheNextQuest(dialougeQuest);
 
             }
             background.gameObject.SetActive(false);
