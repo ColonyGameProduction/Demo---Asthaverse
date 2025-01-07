@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -16,12 +17,16 @@ public class AudioManager : MonoBehaviour
 
     [Header("Start BGM of This Scene")]
     [SerializeField] private AudioBGMName _startudioBGMName;
+    [SerializeField] private float _startBGMDuration = 1f, _stopBGMDuration = 0.5f;
+    
+    private int _leanTweenBGMID;
+    public const string BGM_AUDIOSOURCE_NAME = "BGM";
     public static Action<AudioBGMName> OnChangeBGM;
     private void Awake() 
     {
         if(Instance != null)
         {
-            // OnChangeBGM?.Invoke();
+            OnChangeBGM?.Invoke(_startudioBGMName);
             Destroy(gameObject);
             return;
         }
@@ -31,25 +36,12 @@ public class AudioManager : MonoBehaviour
 
         InitializeAudioSource();
         
-        for(int i = 0; i < _audioBGMList.audioBGM.Count ; i++)
-        {
-            _audioArray[i].audioName = _audioBGMList.audioBGM[i].audioName.ToString();
-
-            _audioArray[i].audioSource = gameObject.AddComponent<AudioSource>();
-            AudioSource source = _audioArray[i].audioSource;
-
-            source.clip = _audioBGMList.audioBGM[i].audioClip;
-            source.outputAudioMixerGroup = _audioBGMList.audioBGM[i].audioMixerGroup;
-            source.playOnAwake = _audioBGMList.audioBGM[i].playOnAwake;
-            source.loop = _audioBGMList.audioBGM[i].loop;
-            source.volume = _audioBGMList.audioBGM[i].volume;
-            source.pitch = _audioBGMList.audioBGM[i].pitch;
-        }
+        OnChangeBGM += SetBGM;
     }
 
     private void InitializeAudioSource()
     {
-        _audioArray = new Audio[_audioSFXList.audioSFX.Count + _audioBGMList.audioBGM.Count];
+        _audioArray = new Audio[_audioSFXList.audioSFX.Count + 1];
 
         for(int i = 0; i < _audioSFXList.audioSFX.Count ; i++)
         {
@@ -67,9 +59,14 @@ public class AudioManager : MonoBehaviour
             source.volume = _audioSFXList.audioSFX[i].volume;
             source.pitch = _audioSFXList.audioSFX[i].pitch;
         }
+
+        int idx = _audioSFXList.audioSFX.Count;
+        _audioArray[idx].audioName = BGM_AUDIOSOURCE_NAME;
+
+        _audioArray[idx].audioSource = gameObject.AddComponent<AudioSource>();
+        AudioSource source2 = _audioArray[idx].audioSource;
+        SetBGM(_startudioBGMName);
     }
-
-
 
     private void Update() 
     {
@@ -107,13 +104,56 @@ public class AudioManager : MonoBehaviour
     #endregion
 
     #region BGM Method Helper
-    private void PlayBGM(AudioBGMName name)
+    private void SetBGM(AudioBGMName name)
     {
+        AudioSource audioSource = GetAudioSource(BGM_AUDIOSOURCE_NAME);
 
+        if(audioSource.isPlaying && name != AudioBGMName.None)
+        {
+            StopBGM(name);
+            return;
+        }
+
+        AudioBGMData bgmData = _audioBGMList.GetAudioBGMData(name);
+        if(bgmData == null) return;
+
+        audioSource.clip = bgmData.audioClip;
+        audioSource.outputAudioMixerGroup = bgmData.audioMixerGroup;
+        audioSource.playOnAwake = bgmData.playOnAwake;
+        audioSource.loop = bgmData.loop;
+        audioSource.volume = bgmData.volume;
+        audioSource.pitch = bgmData.pitch;
+
+        PlayBGM();
     }
-    private void StopBGM()
+    private void PlayBGM()
     {
+        AudioSource audioSource = GetAudioSource(BGM_AUDIOSOURCE_NAME);
+        float finalVolume = audioSource.volume;
 
+        audioSource.volume = 0;
+        audioSource.Play();
+
+        LeanTween.cancel(_leanTweenBGMID);
+        _leanTweenBGMID = LeanTween.value(0, finalVolume, _startBGMDuration).setIgnoreTimeScale(true).setOnUpdate((float value) => {
+            audioSource.volume = value;
+        }).id;
+    }
+    private void StopBGM(AudioBGMName startAnotherBGM)
+    {
+        AudioSource audioSource = GetAudioSource(BGM_AUDIOSOURCE_NAME);
+        float startVolume = audioSource.volume;
+        
+        LeanTween.cancel(_leanTweenBGMID);
+        _leanTweenBGMID = LeanTween.value(startVolume, 0, _stopBGMDuration).setIgnoreTimeScale(true).setOnUpdate((float value) => {
+            audioSource.volume = value;
+        }).setOnComplete(
+            ()=>
+            {
+                audioSource.Stop();
+                if(startAnotherBGM != AudioBGMName.None) SetBGM(startAnotherBGM);
+            }
+        ).id;
     }
 
     #endregion
@@ -139,7 +179,7 @@ public class AudioManager : MonoBehaviour
         audioSource.maxDistance = audioData.maxDistance;
 
         audioSource.Play();
-        // Object.Destroy(gameObject, audioData.audioClip.length * ((Time.timeScale < 0.01f) ? 0.01f : Time.timeScale));
+        Destroy(gameObject, audioData.audioClip.length * ((Time.timeScale < 0.01f) ? 0.01f : Time.timeScale));
     }
     private AudioSFXData GetAudioSFXData(AudioSFXName name)
     {

@@ -13,11 +13,14 @@ public struct Audio
 
 public enum AudioSFXName
 {
-    None, NormalWalk, Whistle, BrokenItem, Alarm, DoorRotate, DoorSlide
+    None, NormalWalk, Whistle, FireGun,
+    BrokenItem, Alarm, 
+    DoorRotate, DoorSlide
 }
 public enum AudioBGMName
 {
-    None, Team1_Ambience, Team1_Battle, 
+    None, MainMenu,
+    Team1_Ambience, Team1_Battle, 
     Team2_Ambience, Team2_Battle
 }
 [Serializable]
@@ -34,7 +37,7 @@ public class AudioSFXData : AudioData
     [Tooltip("For Audio Manager checker Only - true this if you want to play the clip at other place so there's spatial blend")]
     public bool useSpatialBlend = true;
 }
-
+[Serializable]
 public class AudioBGMData : AudioData
 {
     public AudioBGMName audioName;

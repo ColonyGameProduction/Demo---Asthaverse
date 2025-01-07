@@ -19,4 +19,13 @@ public class SOAudioBGMList : ScriptableObject
     }
     #endif
     public List<AudioBGMData> audioBGM;
+
+    public AudioBGMData GetAudioBGMData(AudioBGMName name)
+    {
+        foreach(AudioBGMData data in audioBGM)
+        {
+            if(data.audioName == name) return data;
+        }   
+        return null;
+    }
 }
