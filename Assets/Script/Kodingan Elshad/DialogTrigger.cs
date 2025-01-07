@@ -6,10 +6,7 @@ using UnityEngine.UI;
 
 public class DialogTrigger : MonoBehaviour
 {
-    public List<int> nextQuestID = new List<int>();
-    public List<int> triggeringFailedQuest = new List<int>();
-
-
+    QuestUIHandler QUH;
     public DialogCutsceneSO dialog;
     public InGameUIHandler inGameUIHandler;
     public Quest dialouge;
@@ -17,10 +14,15 @@ public class DialogTrigger : MonoBehaviour
 
     private void Start()
     {
+        QUH = QuestUIHandler.instance;
         dialouge = GetComponent<Quest>();
         if(!dialouge.questActivate)
         {
             gameObject.SetActive(false);
+        }
+        else
+        {
+            QUH.CreatingQuestUI(dialouge.questName, dialouge);
         }
     }
 
@@ -34,8 +36,8 @@ public class DialogTrigger : MonoBehaviour
                 {
                     inGameUIHandler.dialogCutscene = dialog;
                     inGameUIHandler.dialougeQuest = dialouge;
-                    inGameUIHandler.nextQuestID = nextQuestID;
-                    inGameUIHandler.triggeringFailedQuest = triggeringFailedQuest;
+                    inGameUIHandler.nextQuestID = dialouge.nextQuestID;
+                    inGameUIHandler.triggeringFailedQuest = dialouge.triggeringFailedQuest;
                     inGameUIHandler.DialogPlay();
                     isActivate = true;
                 }
