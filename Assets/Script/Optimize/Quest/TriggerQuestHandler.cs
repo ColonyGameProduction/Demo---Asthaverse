@@ -6,6 +6,7 @@ public class TriggerQuestHandler : SoloQuestHandler, IUnsubscribeEvent
 {
     protected IConnectToQuest _triggerObject;
     [SerializeField] private Collider _coll;
+    [SerializeField] private GameObject _checkerInMap;
     private void Awake()
     {
         _triggerObject = GetComponent<IConnectToQuest>();
@@ -16,11 +17,13 @@ public class TriggerQuestHandler : SoloQuestHandler, IUnsubscribeEvent
     {
         _isActivated = true;
         _coll.enabled = true;
+        _checkerInMap.SetActive(true);
     }
     public override void DeactivateQuest()
     {
         _coll.enabled = false;
         _isActivated = false;
+        _checkerInMap.SetActive(false);
     }
 
     public void UnsubscribeEvent()

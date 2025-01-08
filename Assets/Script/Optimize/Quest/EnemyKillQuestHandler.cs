@@ -9,6 +9,7 @@ public class EnemyKillQuestHandler : SoloQuestHandler
     [SerializeField]protected List<Transform> _enemyTargetList;
     protected int _totalTarget, _totalTargetDied;
     private string _questDescRaw;
+    [SerializeField] private GameObject _checkerInMap;
 
     #region GETTER SETTER
     public int TotalTarget {get {return _totalTarget;}}
@@ -42,9 +43,16 @@ public class EnemyKillQuestHandler : SoloQuestHandler
     public override void ActivateQuest()
     {
         _isActivated = true;
+        _checkerInMap.SetActive(true);
         QuestComplete();
     }
 
+    public override void DeactivateQuest()
+    {
+        _checkerInMap.SetActive(false);
+        base.DeactivateQuest();
+    }
+    
     protected override void QuestComplete()
     {
         
