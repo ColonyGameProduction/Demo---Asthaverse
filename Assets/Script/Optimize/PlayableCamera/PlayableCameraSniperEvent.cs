@@ -6,7 +6,9 @@ public class PlayableCameraSniperEvent : PlayableCamera
 {
     private SniperShootingEvent _sniperShootingEvent;
     private float recoilX, recoilY;
-    [SerializeField] private float _recoilDelayMax = 0.2f, _recoilDelay;
+    private bool _goback;
+    [SerializeField] private float _recoilDelayMax = 0.2f, _gobackDelayMax = 0.25f;
+    private float _recoilDelay, _gobackDelay;
     
     private void Awake() 
     {
@@ -21,9 +23,11 @@ public class PlayableCameraSniperEvent : PlayableCamera
     public void GiveRecoilToCamera()
     {
         float recoilMod = _sniperShootingEvent.FinalCountRecoil + ((100 - _sniperShootingEvent.AimAccuracy) * _sniperShootingEvent.FinalCountRecoil / 100);
-        recoilX = UnityEngine.Random.Range(-recoilMod*0.9F, recoilMod*0.9F);
+        recoilX = UnityEngine.Random.Range(-recoilMod * 0.25F, recoilMod * 0.25F);
         recoilY = UnityEngine.Random.Range(-recoilMod, recoilMod);
         _recoilDelay = 0;
+        _gobackDelay = 0;
+        _goback = true;
         HandleCameraMovement();
     }
     private void DelayRecoil()
@@ -34,8 +38,22 @@ public class PlayableCameraSniperEvent : PlayableCamera
         }
         else
         {
-            recoilX = 0;
-            recoilY = 0;
+            if(_goback)
+            {
+                _goback = false;
+                recoilX = -recoilX;
+                recoilY = -recoilY;
+            }
+            if(_gobackDelay < _gobackDelayMax)
+            {
+                _gobackDelay += Time.deltaTime;
+            }
+            else
+            {
+                recoilX = 0;
+                recoilY = 0;
+            }
+            
         }
     }
     protected override void HandleCameraMovement()

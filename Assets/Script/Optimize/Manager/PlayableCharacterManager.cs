@@ -614,8 +614,13 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
     private void GameInput_Movement()
     {
-        if(!_gm.IsGamePlaying() || !_gm.IsNormalGamePlayMode()) return;
+        if(!_gm.IsGamePlaying()) return;
 
+        if(!_gm.IsNormalGamePlayMode())
+        {
+            _currPlayableMoveStateMachine.InputMovement = Vector2.zero;
+            return;
+        }
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsHoldingInteraction)_currPlayableMoveStateMachine.InputMovement = _gameInputManager.Movement();
     }
     private void GameInput_OnRunPerformed()

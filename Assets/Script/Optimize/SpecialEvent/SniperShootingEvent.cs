@@ -151,6 +151,9 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     }
     public void UnsubscribeEvent()
     {
+        _questToStartEvent.OnQuestCompleted -= TriggerStartEvent;
+        _questToStopEvent.OnQuestCompleted -= TriggerStopEvent;
+
         _gameInputManager.OnShootingPerformed -= GameInputManager_OnShootingPerformed;
         _gameInputManager.OnShootingCanceled -= GameInputManager_OnShootingCanceled;
         _gameInputManager.OnReloadPerformed -= GameInputManager_OnReloadPerformed;

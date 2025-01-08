@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerQuestHandler : SoloQuestHandler
+public class TriggerQuestHandler : SoloQuestHandler, IUnsubscribeEvent
 {
     protected IConnectToQuest _triggerObject;
     [SerializeField] private Collider _coll;
@@ -21,5 +21,10 @@ public class TriggerQuestHandler : SoloQuestHandler
     {
         _coll.enabled = false;
         _isActivated = false;
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _triggerObject.OnTriggerQuestComplete -= QuestComplete;
     }
 }

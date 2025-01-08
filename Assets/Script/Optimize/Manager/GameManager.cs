@@ -151,6 +151,10 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
             SetGameState(GameState.Play);
         }
     }
+    public void GameCompleted()
+    {
+        SetGameState(GameState.Finish);
+    }
     public void GameOver()
     {
         SetGameState(GameState.GameOver);

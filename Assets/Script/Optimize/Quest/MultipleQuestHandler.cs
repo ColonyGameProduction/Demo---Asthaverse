@@ -107,6 +107,7 @@ public class MultipleQuestHandler : QuestHandlerParent, IUnsubscribeEvent
         foreach(SoloQuestHandler quest in _soloQuestList)
         {
             quest.OnQuestCompleted -= QuestComplete;
+            quest.OnSoloQuestComplete -= SoloQuestComplete_ChangeVisual;
         }
     }
 
