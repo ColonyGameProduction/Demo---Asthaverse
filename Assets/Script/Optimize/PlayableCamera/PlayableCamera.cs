@@ -5,22 +5,22 @@ using UnityEngine;
 
 public class PlayableCamera : MonoBehaviour
 {
-    private GameManager _gm;
+    protected GameManager _gm;
 
     [Header("Cinemachine Camera")]
-    [SerializeField] private CinemachineVirtualCamera _followCamera;
+    [SerializeField] protected CinemachineVirtualCamera _followCamera;
     [Header("Reference to Follow Target")]
-    [SerializeField] private Transform _followTarget;
+    [SerializeField] protected Transform _followTarget;
 
     [Header("Adjust Camera Rotation Speed")]
-    [SerializeField] private float _cameraRotationSpeed = 200f;
-    private float _cameraRotationMultiplier = 1f;
+    [SerializeField] protected float _cameraRotationSpeed = 200f;
+    protected float _cameraRotationMultiplier = 1f;
     
 
     [Header("Camera Height Variable")]
-    [SerializeField] private float _changeCameraHeightSpeed = 2f;
-    private bool _isChangingCameraHeight;
-    private float _currTargetHeight;
+    [SerializeField] protected float _changeCameraHeightSpeed = 2f;
+    protected bool _isChangingCameraHeight;
+    protected float _currTargetHeight;
     const float EPSILON = 0.0001f;
     #region GETTER SETTER VARIABLE
 
@@ -29,11 +29,11 @@ public class PlayableCamera : MonoBehaviour
     public float SetCameraRotationMultiplier {set {_cameraRotationMultiplier = value;}}
     #endregion
 
-    private void Start() 
+    protected virtual void Start() 
     {
         _gm = GameManager.instance;
     }
-    private void Update()
+    protected virtual void Update()
     {
         if(!_gm.IsGamePlaying())return;
         
@@ -41,7 +41,7 @@ public class PlayableCamera : MonoBehaviour
         ChangingHeight();
     }
 
-    private void HandleCameraMovement()
+    protected virtual void HandleCameraMovement()
     {
         // mouse input declaration
         float mouseX = Input.GetAxis("Mouse X") * (_cameraRotationSpeed * _cameraRotationMultiplier) * Time.deltaTime;

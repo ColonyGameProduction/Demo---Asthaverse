@@ -47,7 +47,7 @@ public enum FOVDistState
     middle,
     close
 }
-
+[Serializable]
 public enum GameState
 {
     BeforeStart,
@@ -57,6 +57,12 @@ public enum GameState
     Finish,
     GameOver
 }
+[Serializable]
+public enum GamePlayMode
+{
+    Normal, Event, Switching
+}
+[Serializable]
 public enum GamePauseState
 {
     None,
