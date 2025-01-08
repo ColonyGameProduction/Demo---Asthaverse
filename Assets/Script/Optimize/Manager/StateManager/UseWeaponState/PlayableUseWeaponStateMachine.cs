@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.Serialization;
 
 public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUseWeaponData, IPlayableUseWeaponDataNeeded, IUnsubscribeEvent
 {
@@ -22,8 +23,13 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
 
     [Space(1)]
     [Header("Additional Animation Component")]
-    [SerializeField] private MultiAimConstraint _bodyRigConstraintData;
-    [SerializeField] private MultiAimConstraint _aimRigConstraintData;
+    [SerializeField] protected Rig _rigControllerPistol;
+    [SerializeField] protected Rig _rigHandFollowRifle, _rigHandFollowPistol;
+    [SerializeField] private MultiAimConstraint _bodyRigConstraintDataRifle;
+    [SerializeField] private MultiAimConstraint _aimRigConstraintDataRifle;
+    [SerializeField] private MultiAimConstraint _bodyRigConstraintDataPistol;
+    [SerializeField] private MultiAimConstraint _aimRigConstraintDataPistol;
+    private bool _isChangeInUpdate, _isChangeInUpdateMultiAimConstraint;
 
     [Space(1)]
     [Header("Saving other component data")]
@@ -38,11 +44,14 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected PlayableCharacterIdentity _getPlayableCharacterIdentity;
     protected PlayerGunCollide _getPlayerGunCollide;
     [Header("Recoil Data Advanced")]
-    protected float _movingMaxRecoil, _currRecoilMod, _recoilAddMultiplier;
     [SerializeField] protected float _movingMaxRecoilOnScopeNotIdleBuffer = 0.5f, _movingMaxRecoilNotOnScopeIdleCrouch = 0.5f;
     [SerializeField] protected float _currRecoilModBufferOnScopeNotIdle = 0.25f, _currRecoilModBufferNotOnScopeNotIdle = 0.5f, _currRecoildModNotOnScopeIdleCrouch = 0.25f;
     [SerializeField] protected float _recoildAddMultiplierOnScopeNotIdle = 1.5f, _recoildAddMultiplierNotOnScopeNotIdle = 3f, _recoilAddMultiplierNotOnScopeIdleCrouch = 1.5f;
+    protected float _movingMaxRecoil, _currRecoilMod, _recoilAddMultiplier;
 
+
+    public const string ANIMATION_MOVE_PARAMETER_SWITCHWEAPON= "SwitchWeapon";
+    public const string ANIMATION_GUN_COUNTER_PARAMETER = "GunCounter"; 
     #endregion
     #region GETTERSETTER Variable
     public override float CharaAimAccuracy
@@ -100,6 +109,21 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         _charaCameraManager = PlayableCharacterCameraManager.Instance;
         base.Start();
     }
+    protected override void Update()
+    {
+        base.Update();
+
+        if(_isChangeInUpdate)
+        {
+            _isChangeInUpdate = false;
+            SetRigHandFollow();
+        }
+        if(_isChangeInUpdateMultiAimConstraint)
+        {
+            _isChangeInUpdateMultiAimConstraint = false;
+            SetConstraintData();
+        }
+    }
     #region  Weapon
     public void SilentKill()
     {
@@ -139,6 +163,24 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         IsSwitchingWeapon = false;
         
     }
+    public void SwitchWeaponAnimationFinished()
+    {
+        if(!IsSwitchingWeapon) return;
+        _animator.SetBool(ANIMATION_MOVE_PARAMETER_SWITCHWEAPON, false);
+        _isResetAnimTime = true;
+        
+        // _getCanSwitchWeapon.SwitchWeapon();
+        if(_currWeapon == _charaIdentity.CurrWeapon)
+        {
+            _getCanSwitchWeapon.SwitchWeapon();
+        }
+        _getPlayableCharacterIdentity.SwitchAnimatorGunCounterToCurr();
+        SetCurrWeapon();
+        
+
+        CanSwitchWeapon = false;
+        IsSwitchingWeapon = false;
+    }
     public void CanSwitchWeapon_Coroutine()
     {
         StartCoroutine(CanSwitchWeaponNow());
@@ -174,7 +216,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         else if(_currState == _states.SwitchingWeaponState() && IsSwitchingWeapon && CanSwitchWeapon)
         {
             if(IsSilentKill)IsSilentKill = false;
-            if(IsSwitchingWeapon)IsSwitchingWeapon = false;
+            if(IsReloading)IsReloading = false;
         }
     }
     
@@ -206,23 +248,72 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
             _currOriginShootPoint = _mainCamera.transform;
             _currDirectionShootPoint = _mainCamera.transform;
 
-            var sourceObjectsData =_aimRigConstraintData.data.sourceObjects;
-            sourceObjectsData.SetWeight(0, 1f);
-            sourceObjectsData.SetWeight(1, 0f);
-            _aimRigConstraintData.data.sourceObjects = sourceObjectsData;
-            _bodyRigConstraintData.data.sourceObjects = sourceObjectsData;
+            SetConstraintData();
         }
         else
         {
             _currOriginShootPoint = _originShootPoint_AIContainer;
             _currDirectionShootPoint = _currChosenTarget;
 
-            var sourceObjectsData =_aimRigConstraintData.data.sourceObjects;
-            sourceObjectsData.SetWeight(0, 0f);
-            sourceObjectsData.SetWeight(1, 1f);
-            _aimRigConstraintData.data.sourceObjects = sourceObjectsData;
-            _bodyRigConstraintData.data.sourceObjects = sourceObjectsData;
+            SetConstraintData();
         }
+        Debug.Log("Halo ini OnisPlayerInput ga kepanggil???" + transform.name + " " + obj);
+    }
+    private void SetConstraintData()
+    {
+        
+        var sourceObjectsData =_aimRigConstraintDataRifle.data.sourceObjects;
+        sourceObjectsData.SetWeight(0, IsAIInput ? 0 : 1);
+        sourceObjectsData.SetWeight(1, IsAIInput ? 1 : 0);
+
+        _aimRigConstraintDataRifle.data.sourceObjects = sourceObjectsData;
+        _bodyRigConstraintDataRifle.data.sourceObjects = sourceObjectsData;
+        if(_aimRigConstraintDataPistol)_aimRigConstraintDataPistol.data.sourceObjects = sourceObjectsData;
+        if(_bodyRigConstraintDataPistol)_bodyRigConstraintDataPistol.data.sourceObjects = sourceObjectsData;
+
+        _isChangeInUpdateMultiAimConstraint = true;
+        // _aimRigConstraintDataRifle.upd
+        // Debug.Log("Halo ini OnisPlayerInput ga kepanggil???" + _aimRigConstraintDataRifle.data.sourceObjects.GetWeight(0) + " " + transform.name + " " + IsAIInput);
+    }
+    public override void SetCurrWeapon()
+    {
+        base.SetCurrWeapon();
+        SetRigHandFollow();
+        _isChangeInUpdate = true;
+        
+    }
+    private void SetRigHandFollow()
+    {
+        Debug.Log(transform.name + "Masuk sini " + _getPlayableCharacterIdentity.CurrWeaponIdx);
+        if(_getPlayableCharacterIdentity.CurrWeaponIdx == 0)
+        {
+            if(_rigHandFollowRifle) _rigHandFollowRifle.weight = 1;
+            if(_rigHandFollowPistol) _rigHandFollowPistol.weight = 0;
+        }
+        else
+        {
+            if(_rigHandFollowRifle) _rigHandFollowRifle.weight = 0;
+            if(_rigHandFollowPistol) _rigHandFollowPistol.weight = 1;
+        }
+    }
+
+    public override void ActivateRigAim()
+    {
+        if(_getPlayableCharacterIdentity.CurrWeaponIdx == 0)
+        {
+            base.ActivateRigAim();
+            if(_rigControllerPistol)_rigControllerPistol.weight = 0;
+        }
+        else
+        {
+            base.DeactivateRigAim();
+            if(_rigControllerPistol)_rigControllerPistol.weight = 1;
+        }
+    }
+    public override void DeactivateRigAim()
+    {
+        base.DeactivateRigAim();
+        if(_rigControllerPistol)_rigControllerPistol.weight = 0;
     }
 
     public void TellToTurnOffScope()

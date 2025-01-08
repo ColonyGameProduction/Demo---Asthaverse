@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -63,3 +64,19 @@ public enum GamePauseState
     Settings
 }
 
+[Serializable]
+public enum DialogCutsceneTitle
+{
+    None, Test1, Test2
+}
+
+public enum KeybindUIType
+{
+    General, PickUp, Command 
+}
+
+[Serializable]
+public enum QuestName
+{
+    None, KillEnemy, Turn_Off_Alarm, Go_To_Position
+}

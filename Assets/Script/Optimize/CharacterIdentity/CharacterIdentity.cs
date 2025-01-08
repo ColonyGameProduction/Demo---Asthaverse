@@ -58,6 +58,14 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     [SerializeField] protected float _regenTimerMax = 0.5f;
     [ReadOnly(false), SerializeField] protected float _regenCDTimer;
 
+    [Header("Rigging")]
+    public Action<bool, bool> OnToggleLeftHandRig;
+    #endregion
+
+    #region const
+    public const string ANIMATION_DEATH_PARAMETER = "Death"; 
+    public const string ANIMATION_DEATH_TRIGGER_PARAMETER = "DeathTrigger";
+    public const string ANIMATION_IsBoyChara_PARAMETER = "IsBoyChara";
     #endregion
 
     #region GETTERSETTER Variable
@@ -87,6 +95,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
         _animator = GetComponentInChildren<Animator>();
 
         _moveStateMachine = GetComponent<MovementStateMachine>();
+        _moveStateMachine.OnStartRunning += OnCharaStartRunning;
         _useWeaponStateMachine = GetComponent<UseWeaponStateMachine>();
         _useWeaponStateMachine.OnWasUsingGun += UseWeapon_OnWasUsingGun;
 
@@ -132,11 +141,12 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     public virtual void Death()
     {
         if(_isDead)return;
+        OnToggleLeftHandRig?.Invoke(false, false);
 
         _isDead = true;
         _regenCDTimer = 0f;
-        _animator.SetBool("Death", true);
-        _animator.SetTrigger("DeathTrigger");
+        _animator.SetBool(ANIMATION_DEATH_PARAMETER, true);
+        _animator.SetTrigger(ANIMATION_DEATH_TRIGGER_PARAMETER);
         _useWeaponStateMachine.ForceStopUseWeapon();
         _moveStateMachine.ForceStopMoving();
         
@@ -154,6 +164,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
         }
 
         _charaName = _characterStatSO.entityName;
+        _animator.SetFloat(ANIMATION_IsBoyChara_PARAMETER, !_characterStatSO.isCharBoy? 0 : 1);
 
         _totalHealth = _characterStatSO.health;
         _currHealth = _totalHealth;
@@ -217,16 +228,16 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
             {   
                 if(!_moveStateMachine.IsAtCrouchPlatform)
                 {
-                    if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
-                    _useWeaponStateMachine.ForceStopUseWeapon();
+                    // if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
+                    // _useWeaponStateMachine.ForceStopUseWeapon();
                     _moveStateMachine.IsCrouching = false;
                     _moveStateMachine.IsRunning = isRunning;
                 }
             }
             else
             {
-                if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
-                _useWeaponStateMachine.ForceStopUseWeapon();
+                // if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
+                // _useWeaponStateMachine.ForceStopUseWeapon();
                 _moveStateMachine.IsRunning = isRunning;
             }
         }
@@ -269,6 +280,11 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
             Aiming(true);
         }
         _useWeaponStateMachine.IsUsingWeapon = isShooting;
+    }
+    protected virtual void OnCharaStartRunning()
+    {
+        if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
+        _useWeaponStateMachine.ForceStopUseWeapon();
     }
     #endregion
 

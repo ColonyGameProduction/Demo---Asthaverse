@@ -56,7 +56,21 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [Header("Death Animation Component")]
     [ReadOnly(false), SerializeField] private bool _isAnimatingOtherAnimation;
 
+    #region const
+    public const string ANIMATION_RIFLE_KNOCK_OUT_NAME = "Rifle_Knock_Out"; 
+    public const string ANIMATION_KNOCK_TRIGGER_PARAMETER = "KnockTrigger"; 
+    public const string ANIMATION_REVIVING_PARAMETER = "Reviving"; 
+    public const string ANIMATION_BEING_REVIVED_PARAMETER = "BeingRevived"; 
+    public const string ANIMATION_GUN_COUNTER_PARAMETER = "GunCounter"; 
+    public const string ANIMATION_IS_NORMALINTERACTION_PARAMETER = "IsNormalInteraction"; 
+    public const string ANIMATION_IS_PICKUPINTERACTION_PARAMETER = "IsPickUpInteraction"; 
+    public const string ANIMATION_NORMALINTERACTION_TRIGGER_PARAMETER = "NormalInteractionTrigger";
+    public const string ANIMATION_STAND_TAKE_ITEM_CLIP = "Stand_Take_Item";
+    public const string ANIMATION_IS_HOLDING_ITEM_PARAMETER = "IsHoldingItem";
+    public const string ANIMATION_IS_THROWING_PARAMETER = "IsThrowing";
+    #endregion
 
+    private bool _isHoldSwitchState;
     [Space(1)]
     [Header("Event")]
     public Action OnPlayableDeath;
@@ -152,18 +166,21 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             _isHoldingInteraction = value;
         }
     }
-    
+    public int CurrWeaponIdx {get{return _currWeaponIdx;}}
+    public bool IsHoldSwitchState {get {return _isHoldSwitchState;} set {_isHoldSwitchState = value;}}
 
     #endregion
     protected override void Awake()
     {
         base.Awake();
+        SwitchAnimatorGunCounterToCurr();
         
         if(_deadColl.activeSelf)_deadColl.gameObject.SetActive(false);
         _playableMovementStateMachine = _moveStateMachine as PlayableMovementStateMachine;
         _playableUseWeaponStateMachine = _useWeaponStateMachine as PlayableUseWeaponStateMachine;
         
-        
+        if(_playableUseWeaponStateMachine.GetPlayerGunCollider != null) _playableUseWeaponStateMachine.GetPlayerGunCollider.ResetCollider();
+        _playableUseWeaponStateMachine.GetPlayerGunCollider = _weaponGameObjectDataContainer.GetPlayerGunCollide();
         
 
         _playableCamera = GetComponent<PlayableCamera>();
@@ -226,6 +243,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         base.SetWeaponGameObjectDataContainer();
 
+        
+        // Debug.Log("KOK INI GA KEPANGGIL ????? + " + _animator.GetFloat(ANIMATION_GUN_COUNTER_PARAMETER));
         if(_playableUseWeaponStateMachine != null)
         {
             if(_playableUseWeaponStateMachine.GetPlayerGunCollider != null) _playableUseWeaponStateMachine.GetPlayerGunCollider.ResetCollider();
@@ -258,6 +277,24 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         
         _weaponShootVFX.CurrWeaponIdx = _currWeaponIdx;
         OnSwitchWeapon?.Invoke();
+    }
+    public void EnsureSwitchWeapon(int oldIdx)
+    {
+        if(oldIdx == _currWeaponIdx)
+        {
+            SwitchWeapon();
+            SwitchAnimatorGunCounterToCurr();
+            GetPlayableUseWeaponStateMachine.SetCurrWeapon();
+        }
+        else
+        {
+            SetWeaponGameObjectDataContainer();
+            // OnSwitchWeapon?.Invoke();
+        }
+    }
+    public void SwitchAnimatorGunCounterToCurr()
+    {
+        _animator.SetFloat(ANIMATION_GUN_COUNTER_PARAMETER, (float)_currWeaponIdx);
     }
     protected void Regeneration()
     {
@@ -312,7 +349,15 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             if(_characterIdentityWhoBeingRevived) _characterIdentityWhoBeingRevived.CutOutFromBeingRevived();
             StopRevivingFriend();
         }
+        _isHoldSwitchState = false;
         base.Death();
+
+        if(IsHoldingInteraction) IsHoldingInteraction = false;
+        if(_playableInteraction.IsHeldingObject) _playableInteraction.RemoveHeldObject();
+        StopNormalInteractionAnimation();
+        StopPickUpInteractionAnimation();
+        StopThrowInteractionAnimation();
+
         _isAnimatingOtherAnimation = true;
     }
 
@@ -321,7 +366,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         if(_isPlayerInput) OnPlayableDeath?.Invoke();
         _playableMovementStateMachine.SetCharaGameObjRotationToNormal();
         _moveStateMachine.IsCrouching = false;
-        _animator.SetTrigger("KnockTrigger");
+        _animator.SetTrigger(ANIMATION_KNOCK_TRIGGER_PARAMETER);
     }
 
     public void AfterFinishKnockOutAnimation()
@@ -340,7 +385,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _deadColl.SetActive(false);
         _isAnimatingOtherAnimation = true;
 
-        _animator.SetBool("BeingRevived", true);
+        _animator.SetBool(ANIMATION_BEING_REVIVED_PARAMETER, true);
 
         _characterIdentityWhoReviving = characterIdentityWhoReviving;
         _isBeingRevived = true;
@@ -351,6 +396,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _isBeingRevived = false;
         _fovMachine.enabled = true;
 
+        OnToggleLeftHandRig?.Invoke(true, true);
+
         if(_playableMovementStateMachine.IsCrawling) _playableMovementStateMachine.IsCrawling = false;
         ResetHealth();
         _characterIdentityWhoReviving.StopRevivingFriend();
@@ -359,8 +406,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
         OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
         _isAnimatingOtherAnimation = false;
-        _animator.SetBool("BeingRevived", false);
-        _animator.SetBool("Death", false);
+        _animator.SetBool(ANIMATION_BEING_REVIVED_PARAMETER, false);
+        _animator.SetBool(ANIMATION_DEATH_PARAMETER, false);
     }
     public void CutOutFromBeingRevived()
     {
@@ -368,11 +415,11 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
         _isBeingRevived = false;
         _isAnimatingOtherAnimation = false;
-        _animator.SetBool("BeingRevived", false);
-        _animator.Play("Rifle_Knock_Out");
+        _animator.SetBool(ANIMATION_BEING_REVIVED_PARAMETER, false);
+        _animator.Play(ANIMATION_RIFLE_KNOCK_OUT_NAME);
         _isDead = true;
         _fovMachine.enabled = false;
-        _animator.SetBool("Death", true);
+        _animator.SetBool(ANIMATION_DEATH_PARAMETER, true);
         
         _deadColl.SetActive(true);
         if(!_playableMovementStateMachine.IsCrawling)
@@ -436,8 +483,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         {
             if(isRunning)
             {
-                if(_playableMovementStateMachine.IsMustLookForward) _playableMovementStateMachine.IsMustLookForward = false;
-                _useWeaponStateMachine.ForceStopUseWeapon();
+                // if(_playableMovementStateMachine.IsMustLookForward) _playableMovementStateMachine.IsMustLookForward = false;
+                // _useWeaponStateMachine.ForceStopUseWeapon();
 
                 if(_moveStateMachine.IsCrouching)
                 {
@@ -512,7 +559,9 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         }
         IsReviving = true;
         _characterIdentityWhoBeingRevived = characterIdentityWhoBeingRevived;
-        _animator.SetBool("Reviving", true);
+
+        OnToggleLeftHandRig?.Invoke(false, false);
+        _animator.SetBool(ANIMATION_REVIVING_PARAMETER, true);
         _playableUseWeaponStateMachine.TellToTurnOffScope();
         ForceStopAllStateMachine();
     }
@@ -520,8 +569,65 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     {
         IsReviving = false;
         _characterIdentityWhoBeingRevived = null;
-        _animator.SetBool("Reviving", false);
+        _animator.SetBool(ANIMATION_REVIVING_PARAMETER, false);
+        
+        if(!_playableInteraction.IsHeldingObject) OnToggleLeftHandRig?.Invoke(true, true);
     }
+
+    #region Interaction animation
+    public void DoNormalInteractionAnimation()
+    {
+        OnToggleLeftHandRig?.Invoke(false, false);
+        _animator.SetBool(ANIMATION_IS_NORMALINTERACTION_PARAMETER, true);
+        _animator.SetTrigger(ANIMATION_NORMALINTERACTION_TRIGGER_PARAMETER);
+    }
+    public void StopNormalInteractionAnimation()
+    {
+        if(!_playableInteraction.IsHeldingObject && !_isDead) OnToggleLeftHandRig?.Invoke(true, false);
+        _animator.SetBool(ANIMATION_IS_NORMALINTERACTION_PARAMETER, false);
+    }
+    public void DoPickUpInteractionAnimation()
+    {
+        OnToggleLeftHandRig?.Invoke(false, false);
+        _animator.SetBool(ANIMATION_IS_PICKUPINTERACTION_PARAMETER, true);
+        _animator.Play(ANIMATION_STAND_TAKE_ITEM_CLIP);
+    }
+    public void StopPickUpInteractionAnimation()
+    {
+        if(!_playableInteraction.IsHeldingObject && !_isDead) OnToggleLeftHandRig?.Invoke(true, true);
+        _animator.SetBool(ANIMATION_IS_PICKUPINTERACTION_PARAMETER, false);
+    }
+    public void ChangeIsHoldingItemAnimationValue(float value)
+    {
+        _animator.SetFloat(ANIMATION_IS_HOLDING_ITEM_PARAMETER, value);
+    }
+    public void DoThrowInteractionAnimation()
+    {
+        _animator.SetBool(ANIMATION_IS_THROWING_PARAMETER, true);
+    }
+    public void StopThrowInteractionAnimation()
+    {
+        _animator.SetBool(ANIMATION_IS_THROWING_PARAMETER, false);
+    }
+    public void ExitThrowInteractionAnimation()
+    {
+        if(!_playableInteraction.IsHeldingObject && !_isDead) OnToggleLeftHandRig?.Invoke(true, true);
+        _playableInteraction.IsAnimatingThrowingItem = false;
+    }
+
+    protected override void OnCharaStartRunning()
+    {
+        if(IsPlayerInput)
+        {
+            if(_playableMovementStateMachine.IsMustLookForward) _playableMovementStateMachine.IsMustLookForward = false;
+        }
+        else
+        {
+            if(_moveStateMachine.AllowLookTarget) _moveStateMachine.AllowLookTarget = false;
+        }
+        _useWeaponStateMachine.ForceStopUseWeapon();
+    }
+    #endregion
 
     public override void UnsubscribeEvent()
     {
