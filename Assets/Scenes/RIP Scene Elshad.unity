@@ -6063,17 +6063,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700fb998e2f86cd499628096a5f89519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questName: kill him
-  questDescription: kill this guy
-  questActivate: 1
-  questComplete: 0
-  isOptional: 0
-  QUH: {fileID: 0}
-  theNextQuest: {fileID: 0}
-  multiplyQuestAtOnce: []
-  canProceedToNextQuest: 0
-  nextQuestID: 
-  triggeringFailedQuest: 
 --- !u!1 &312050264
 GameObject:
   m_ObjectHideFlags: 0
@@ -7456,17 +7445,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700fb998e2f86cd499628096a5f89519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questName: go Here
-  questDescription: The player must go here
-  questActivate: 0
-  questComplete: 0
-  isOptional: 0
-  QUH: {fileID: 0}
-  theNextQuest: {fileID: 0}
-  multiplyQuestAtOnce: []
-  canProceedToNextQuest: 0
-  nextQuestID: 
-  triggeringFailedQuest: 
 --- !u!114 &363874663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7479,9 +7457,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cca75575688fa8144944caf6f3d01592, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  QUH: {fileID: 0}
-  thisQuest: {fileID: 0}
-  canProceedToNextQuest: 0
 --- !u!1 &368287977
 GameObject:
   m_ObjectHideFlags: 0
@@ -7760,17 +7735,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700fb998e2f86cd499628096a5f89519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questName: PlacingTraps
-  questDescription: PlacingTheTraps
-  questActivate: 0
-  questComplete: 0
-  isOptional: 0
-  QUH: {fileID: 0}
-  theNextQuest: {fileID: 0}
-  multiplyQuestAtOnce: []
-  canProceedToNextQuest: 0
-  nextQuestID: 
-  triggeringFailedQuest: 
 --- !u!1 &394146495
 GameObject:
   m_ObjectHideFlags: 0
@@ -8748,17 +8712,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700fb998e2f86cd499628096a5f89519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questName: SabotageAlarm
-  questDescription: SabotagingAlarm
-  questActivate: 0
-  questComplete: 0
-  isOptional: 0
-  QUH: {fileID: 0}
-  theNextQuest: {fileID: 0}
-  multiplyQuestAtOnce: []
-  canProceedToNextQuest: 0
-  nextQuestID: 
-  triggeringFailedQuest: 
 --- !u!1 &439030859
 GameObject:
   m_ObjectHideFlags: 0
@@ -11786,17 +11739,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700fb998e2f86cd499628096a5f89519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questName: KeyItemInteract
-  questDescription: InteractingWithKeyItem
-  questActivate: 0
-  questComplete: 0
-  isOptional: 0
-  QUH: {fileID: 0}
-  theNextQuest: {fileID: 0}
-  multiplyQuestAtOnce: []
-  canProceedToNextQuest: 0
-  nextQuestID: 
-  triggeringFailedQuest: 
 --- !u!1 &598168341
 GameObject:
   m_ObjectHideFlags: 0
@@ -15537,6 +15479,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 737144355}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &739872641
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 739872642}
+  m_Layer: 0
+  m_Name: Stage1Quest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &739872642
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739872641}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &740560483
 GameObject:
   m_ObjectHideFlags: 0
@@ -35901,17 +35874,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700fb998e2f86cd499628096a5f89519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questName: eavesdrop
-  questDescription: eavesdroping enemy
-  questActivate: 0
-  questComplete: 0
-  isOptional: 0
-  QUH: {fileID: 0}
-  theNextQuest: {fileID: 0}
-  multiplyQuestAtOnce: []
-  canProceedToNextQuest: 0
-  nextQuestID: 
-  triggeringFailedQuest: 
 --- !u!1 &1850286051
 GameObject:
   m_ObjectHideFlags: 0
@@ -40998,3 +40960,4 @@ SceneRoots:
   - {fileID: 846990033}
   - {fileID: 523450234}
   - {fileID: 688114855}
+  - {fileID: 739872642}
