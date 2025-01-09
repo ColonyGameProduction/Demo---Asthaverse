@@ -355,10 +355,12 @@ public class PlayerAction : ExecuteLogic
         if (nightVision.enabled)
         {
             nightVision.enabled = false;
+            nightVision.weight = 0;
         }
         else
         {
             nightVision.enabled = true;
+            nightVision.weight = 1;
         }
     }
 
