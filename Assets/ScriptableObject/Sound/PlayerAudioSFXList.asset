@@ -13,25 +13,19 @@ MonoBehaviour:
   m_Name: PlayerAudioSFXList
   m_EditorClassIdentifier: 
   audioSFX:
-  - audioName: 1
-    audioClip: {fileID: 8300000, guid: c4848d05c03aea94d94f1481c786d126, type: 3}
-    audioMixerGroup: {fileID: 8769221379756121172, guid: 6ca987a78fd8ec34db9aba564f7c545b, type: 2}
-    playOnAwake: 0
-    loop: 1
-    volume: 1
-    pitch: 1
-    spatialBlend: 1
-    minDistance: 1
-    maxDistance: 25
+  - audioType: 2
     useSpatialBlend: 1
-  - audioName: 2
-    audioClip: {fileID: 8300000, guid: ca32c38ac39f80941895b95ed68d81f6, type: 3}
-    audioMixerGroup: {fileID: 8769221379756121172, guid: 6ca987a78fd8ec34db9aba564f7c545b, type: 2}
-    playOnAwake: 0
-    loop: 0
-    volume: 1
-    pitch: 1
-    spatialBlend: 1
-    minDistance: 1
-    maxDistance: 25
+    audioSFX:
+    - audioClip: {fileID: 0}
+      audioMixerGroup: {fileID: 0}
+      playOnAwake: 0
+      loop: 0
+      volume: 0
+      pitch: 0
+      audioName: 0
+      spatialBlend: 0
+      minDistance: 0
+      maxDistance: 0
+  - audioType: 0
     useSpatialBlend: 1
+    audioSFX: []

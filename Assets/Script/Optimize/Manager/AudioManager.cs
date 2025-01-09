@@ -5,15 +5,15 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : AudioHandler
 {
     public static AudioManager Instance {get; private set;}
     [Header("TEST")]
     public bool isTest;
     public Vector3 pos;
-    [SerializeField] private SOAudioSFXList _audioSFXList;
+
+    [Space(1)]
     [SerializeField] private SOAudioBGMList _audioBGMList;
-    private Audio[] _audioArray;
 
     [Header("Start BGM of This Scene")]
     [SerializeField] private AudioBGMName _startudioBGMName;
@@ -21,9 +21,13 @@ public class AudioManager : MonoBehaviour
     private float _currMaxVol = 0;
     
     private int _leanTweenBGMID;
-    public const string BGM_AUDIOSOURCE_NAME = "BGM";
     public static Action<AudioBGMName> OnChangeBGM;
-    private void Awake() 
+
+    #region Getter Setter Variable
+    protected override int TotalAudioArray {get {return _audioSFXList.audioSFX.Count + 1;}}
+    #endregion
+
+    protected override void Awake()
     {
         if(Instance != null)
         {
@@ -35,38 +39,9 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(Instance);
 
-        InitializeAudioSource();
-        
+        base.Awake();
+
         OnChangeBGM += SetBGM;
-    }
-
-    private void InitializeAudioSource()
-    {
-        _audioArray = new Audio[_audioSFXList.audioSFX.Count + 1];
-
-        for(int i = 0; i < _audioSFXList.audioSFX.Count ; i++)
-        {
-            if(_audioSFXList.audioSFX[i].useSpatialBlend)continue;
-
-            _audioArray[i].audioName = _audioSFXList.audioSFX[i].audioName.ToString();
-
-            _audioArray[i].audioSource = gameObject.AddComponent<AudioSource>();
-            AudioSource source = _audioArray[i].audioSource;
-
-            source.clip = _audioSFXList.audioSFX[i].audioClip;
-            source.outputAudioMixerGroup = _audioSFXList.audioSFX[i].audioMixerGroup;
-            source.playOnAwake = _audioSFXList.audioSFX[i].playOnAwake;
-            source.loop = _audioSFXList.audioSFX[i].loop;
-            source.volume = _audioSFXList.audioSFX[i].volume;
-            source.pitch = _audioSFXList.audioSFX[i].pitch;
-        }
-
-        int idx = _audioSFXList.audioSFX.Count;
-        _audioArray[idx].audioName = BGM_AUDIOSOURCE_NAME;
-
-        _audioArray[idx].audioSource = gameObject.AddComponent<AudioSource>();
-        AudioSource source2 = _audioArray[idx].audioSource;
-        SetBGM(_startudioBGMName);
     }
 
     private void Update() 
@@ -78,36 +53,11 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    #region Play Audio at AudioManager position
-    public void PlayStopSFX(AudioSFXName name, bool playSound)
-    {
-        AudioSource audioSource = GetAudioSource(name.ToString());
-        if(playSound)
-        {
-            if(!audioSource.isPlaying)audioSource.Play();
-        }
-        else
-        {
-            if(audioSource.isPlaying)audioSource.Stop();
-        }
-    }
-    public void PlaySFXOnce(AudioSFXName name)
-    {
-        AudioSource audioSource = GetAudioSource(name.ToString());
-        audioSource.Play();
-    }
-
-    private AudioSource GetAudioSource(string name)
-    {
-        Audio audio = System.Array.Find(_audioArray, audio => audio.audioName == name);
-        return audio.audioSource;
-    }
-    #endregion
 
     #region BGM Method Helper
     private void SetBGM(AudioBGMName name)
     {
-        AudioSource audioSource = GetAudioSource(BGM_AUDIOSOURCE_NAME);
+        AudioSource audioSource = GetAudioSource(AudioType.BGM);
 
         if(audioSource.isPlaying && name != AudioBGMName.None)
         {
@@ -118,19 +68,13 @@ public class AudioManager : MonoBehaviour
         AudioBGMData bgmData = _audioBGMList.GetAudioBGMData(name);
         if(bgmData == null) return;
 
-        audioSource.clip = bgmData.audioClip;
-        audioSource.outputAudioMixerGroup = bgmData.audioMixerGroup;
-        audioSource.playOnAwake = bgmData.playOnAwake;
-        audioSource.loop = bgmData.loop;
-        audioSource.volume = bgmData.volume;
-        _currMaxVol = audioSource.volume;
-        audioSource.pitch = bgmData.pitch;
+        SetAudioClipToSource(audioSource, bgmData);
 
         PlayBGM();
     }
     private void PlayBGM()
     {
-        AudioSource audioSource = GetAudioSource(BGM_AUDIOSOURCE_NAME);
+        AudioSource audioSource = GetAudioSource(AudioType.BGM);
         float finalVolume = audioSource.volume;
 
         audioSource.volume = 0;
@@ -143,7 +87,7 @@ public class AudioManager : MonoBehaviour
     }
     private void StopBGM(AudioBGMName startAnotherBGM)
     {
-        AudioSource audioSource = GetAudioSource(BGM_AUDIOSOURCE_NAME);
+        AudioSource audioSource = GetAudioSource(AudioType.BGM);
         float startVolume = audioSource.volume;
         
         LeanTween.cancel(_leanTweenBGMID);
@@ -159,7 +103,8 @@ public class AudioManager : MonoBehaviour
     }
     public void ChangeBGMVolumeWhenPause(bool isPause)
     {
-        AudioSource audioSource = GetAudioSource(BGM_AUDIOSOURCE_NAME);
+        AudioSource audioSource = GetAudioSource(AudioType.BGM);
+
         float vol = 0;
         if(isPause) vol = audioSource.volume * 0.5f;
         else vol = _currMaxVol;
@@ -180,6 +125,7 @@ public class AudioManager : MonoBehaviour
         GameObject gameObject = new GameObject("One shot audio");
         gameObject.transform.position = position;
         AudioSource audioSource = (AudioSource)gameObject.AddComponent(typeof(AudioSource));
+
         audioSource.clip = audioData.audioClip;
         audioSource.outputAudioMixerGroup = audioData.audioMixerGroup;
         audioSource.volume = audioData.volume;
@@ -194,8 +140,23 @@ public class AudioManager : MonoBehaviour
     }
     private AudioSFXData GetAudioSFXData(AudioSFXName name)
     {
-        AudioSFXData audio = _audioSFXList.audioSFX.Find(audio => audio.audioName == name);
-        return audio;
+        var audio = _audioSFXList.GetAudioSFXData(name);
+
+        return audio.audioSFXData;
+    }
+    #endregion
+
+    #region override
+    protected override void InitializeAudioSource()
+    {
+        base.InitializeAudioSource();
+
+        int idx = _audioSFXList.audioSFX.Count;
+        _audioArray[idx].audioType = AudioType.BGM;
+
+        _audioArray[idx].audioSource = gameObject.AddComponent<AudioSource>();
+        AudioSource source2 = _audioArray[idx].audioSource;
+        SetBGM(_startudioBGMName);
     }
     #endregion
 }

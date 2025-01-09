@@ -20,5 +20,21 @@ public class SOAudioSFXList : ScriptableObject
         Selection.activeObject = asset;
     }
     #endif
-    public List<AudioSFXData> audioSFX;
+    public List<AudioSFXTypeGroup> audioSFX;
+    public (AudioType audioType, AudioSFXData audioSFXData) GetAudioSFXData(AudioSFXName audioName)
+    {
+        foreach(AudioSFXTypeGroup audioSFXGroup in audioSFX)
+        {
+            // currAudioType = 
+            foreach(AudioSFXData audioSFXData in audioSFXGroup.audioSFX)
+            {
+                if(audioName == audioSFXData.audioName)
+                {
+                    return (audioSFXGroup.audioType, audioSFXData);
+                }
+            }
+        }
+
+        return (AudioType.None, null);
+    }
 }

@@ -7,15 +7,25 @@ using UnityEngine.Audio;
 [Serializable]
 public struct Audio
 {
-    public string audioName;
+    public AudioType audioType;
     public AudioSource audioSource;
 }
 
+public enum AudioType
+{
+    None, BGM, Movement, SwitchWeapon, Reload, NightVision, UI
+}
 public enum AudioSFXName
 {
     None, NormalWalk, Whistle, FireGun,
+    Walk_Dirt, Run_Dirt, Crouch_Dirt,
+    SwitchWeapon_Start, SwitchWeapon_End,
+    Reload_Rifle, Reload_Pistol,
+    NightVision_On, NightVision_Off,
     BrokenItem, Alarm, 
-    DoorRotate, DoorSlide
+    DoorRotate, DoorSlide,
+    UI_Click,
+
 }
 public enum AudioBGMName
 {
@@ -34,8 +44,7 @@ public class AudioSFXData : AudioData
     public float maxDistance;
     // public bool _needSpecificParent;
 
-    [Tooltip("For Audio Manager checker Only - true this if you want to play the clip at other place so there's spatial blend")]
-    public bool useSpatialBlend = true;
+    
 }
 [Serializable]
 public class AudioBGMData : AudioData
@@ -51,4 +60,15 @@ public abstract class AudioData
     [Range(0,1)]public float volume;
     [Range(-3,3)]public float pitch = 1;
 
+}
+
+[Serializable]
+public class AudioSFXTypeGroup
+{
+    public AudioType audioType;
+
+    [Tooltip("For Audio Manager checker Only - true this if you want to play the clip at other place so there's spatial blend")]
+    public bool useSpatialBlend = true;
+    public List<AudioSFXData> audioSFX;
+    
 }

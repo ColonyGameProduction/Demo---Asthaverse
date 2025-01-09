@@ -567,7 +567,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsHoldingInteraction)
         {
             _worldSoundManager.MakeSound(WorldSoundName.Whistle, CurrPlayableChara.transform.position, CurrPlayableChara.GetFOVMachine.CharaEnemyMask);
-            _currPlayableMakeSFX.PlaySFXOnce(AudioSFXName.Whistle);
+            _currPlayableMakeSFX.PlayWhistleSFX();
         }
     }
 
