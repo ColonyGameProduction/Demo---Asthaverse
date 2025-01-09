@@ -12,8 +12,9 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     public PlayableCharacterIdentity _chose;
 
     [Header("Manager Variable")]
-    GameManager _gm;
-    GameInputManager _gameInputManager;
+    private GameManager _gm;
+    private GameInputManager _gameInputManager;
+    private AudioManager _am;
 
     [Header("Character")]
     [SerializeField] private List<PlayableCharacterIdentity> _charaIdentities = new List<PlayableCharacterIdentity>();
@@ -76,6 +77,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     public static bool IsHoldInPlaceFriend { get { return _isHoldInPlaceFriend;}}
 
     public PlayableCharacterIdentity CurrPlayableChara { get { return _charaIdentities[_currCharaidx];}}
+    public void SetCurrPlayableSkill(PlayableSkill skill) => _currPlayableSkill = skill;
     public bool IsScopeModeHold 
     {
         get {return _isScopeModeHold;} 
@@ -139,6 +141,8 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     }
     void Start()
     {
+        _am = AudioManager.Instance;
+
         _gm = GameManager.instance;
         _gm.OnPlayerPause += GameManager_OnPlayerPause;
         _gm.OnChangeGamePlayModeToEvent += GameManager_OnChangeGamePlayModeToEvent;
@@ -599,6 +603,8 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
             {
                 _playableCharacterCameraManager.NightVision();
             }
+
+            _am.PlayNighVision(_playableCharacterCameraManager.IsNightVision);
         }
     }
     private void GameInput_OnSkillPerformed()

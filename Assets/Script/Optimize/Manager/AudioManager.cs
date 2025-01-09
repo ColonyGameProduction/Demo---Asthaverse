@@ -149,7 +149,17 @@ public class AudioManager : AudioHandler
     #region override
     protected override void InitializeAudioSource()
     {
-        base.InitializeAudioSource();
+        _audioArray = new Audio[TotalAudioArray];
+        for(int i = 0; i < _audioSFXList.audioSFX.Count ; i++)
+        {
+            if(_audioSFXList.audioSFX[i].useSpatialBlend)continue;
+
+            _audioArray[i].audioType = _audioSFXList.audioSFX[i].audioType;
+
+            _audioArray[i].audioSource = gameObject.AddComponent<AudioSource>();
+            AudioSource source = _audioArray[i].audioSource;
+
+        }
 
         int idx = _audioSFXList.audioSFX.Count;
         _audioArray[idx].audioType = AudioType.BGM;
@@ -157,6 +167,18 @@ public class AudioManager : AudioHandler
         _audioArray[idx].audioSource = gameObject.AddComponent<AudioSource>();
         AudioSource source2 = _audioArray[idx].audioSource;
         SetBGM(_startudioBGMName);
+    }
+    #endregion
+
+    #region PlaySFX
+    public void PlayNighVision(bool isNightVisionOn)
+    {
+        if(isNightVisionOn) PlaySFXOnce(AudioSFXName.NightVision_On);
+        else PlaySFXOnce(AudioSFXName.NightVision_Off);
+    }
+    public void PlayUIClick()
+    {
+        PlaySFXOnce(AudioSFXName.UI_Click);
     }
     #endregion
 }

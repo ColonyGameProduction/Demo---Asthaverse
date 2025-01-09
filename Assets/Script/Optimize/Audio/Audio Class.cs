@@ -13,7 +13,7 @@ public struct Audio
 
 public enum AudioType
 {
-    None, BGM, Movement, SwitchWeapon, Reload, NightVision, UI
+    None, BGM, Movement, Whistle, SwitchWeapon, Reload, NightVision, UI
 }
 public enum AudioSFXName
 {

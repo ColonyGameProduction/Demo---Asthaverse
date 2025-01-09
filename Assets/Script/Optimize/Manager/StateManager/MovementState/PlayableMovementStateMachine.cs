@@ -215,7 +215,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         {
             _getPlayableMakeSFX.PlayWalkSFX();
         }
-        else
+        else if(IsCrouching)
         {
             _getPlayableMakeSFX.PlayCrouchSFX();
         }

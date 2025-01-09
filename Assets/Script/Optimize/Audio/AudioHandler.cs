@@ -17,13 +17,10 @@ public abstract class AudioHandler : MonoBehaviour
         _audioArray = new Audio[TotalAudioArray];
         for(int i = 0; i < _audioSFXList.audioSFX.Count ; i++)
         {
-            if(_audioSFXList.audioSFX[i].useSpatialBlend)continue;
-
             _audioArray[i].audioType = _audioSFXList.audioSFX[i].audioType;
 
             _audioArray[i].audioSource = gameObject.AddComponent<AudioSource>();
             AudioSource source = _audioArray[i].audioSource;
-
         }
     }
 

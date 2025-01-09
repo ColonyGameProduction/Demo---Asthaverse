@@ -18,6 +18,8 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     private GameManager _gm;
     private WeaponShootVFX _weaponShootVFX;
     private FadeBGUIHandler _fadeUIHandler;
+    private PlayableCharacterManager _playableCharacterManager;
+    private PlayableSkill _playableSkill;
     #endregion
     [Header("Shooting Variable")]
     [ReadOnly(false), SerializeField] private WeaponData _currWeaponData;
@@ -83,6 +85,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
         _playableCamera = GetComponent<PlayableCameraSniperEvent>();
         _weaponShootVFX = GetComponent<WeaponShootVFX>();
         _cameraTransform = Camera.main.transform;
+        _playableSkill = GetComponent<PlayableSkill>();
 
         _questToStartEvent.OnQuestCompleted += TriggerStartEvent;
         _questToStopEvent.OnQuestCompleted += TriggerStopEvent;
@@ -105,6 +108,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     {
         _weaponLogicManager = WeaponLogicManager.Instance;
         _gameInputManager = GameInputManager.Instance;
+        _playableCharacterManager = PlayableCharacterManager.Instance;
         
         SubscribeToGameInputManager();
 
@@ -191,6 +195,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     public void StartSniperShootingEvent()
     {
         _gm.OnChangeGamePlayModeToEvent?.Invoke();
+        _playableCharacterManager.SetCurrPlayableSkill(_playableSkill);
         _shootingGameObjectContainer.SetActive(true);
 
         _fadeUIHandler.FadeBG(0, 0.2f, ()=> _gm.SetToEventGamePlayMode());
@@ -198,6 +203,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     public void StopSniperShootingEvent()
     {
         _gm.OnChangeGamePlayModeToNormal?.Invoke();
+        _playableCharacterManager.SetCurrPlayableSkill(null);
         _shootingGameObjectContainer.SetActive(false);
 
         IsShooting = false;

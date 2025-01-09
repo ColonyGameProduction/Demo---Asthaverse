@@ -16847,6 +16847,7 @@ GameObject:
   - component: {fileID: 1637629094}
   - component: {fileID: 1637629093}
   - component: {fileID: 1637629095}
+  - component: {fileID: 1637629096}
   m_Layer: 0
   m_Name: Special Event Sniping
   m_TagString: Untagged
@@ -16933,6 +16934,20 @@ MonoBehaviour:
   _changeCameraHeightSpeed: 2
   _recoilDelayMax: 0.2
   _gobackDelayMax: 0.25
+--- !u!114 &1637629096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637629090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17c07be9af0faa64eb4de449ebc613e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _skillDuration: 3
+  Pipeline: {fileID: 11400000, guid: 4a92c2fac66ba294480e02548bb0efd2, type: 2}
 --- !u!4 &1669112384 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4809182527612941609, guid: af5adfa5e70d4d84485541d8d41d7828, type: 3}
@@ -27879,14 +27894,6 @@ PrefabInstance:
     - target: {fileID: 3728759513829729309, guid: ac07d4d8dca3616429d5be81293f5b86, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3852001047181008165, guid: ac07d4d8dca3616429d5be81293f5b86, type: 3}
-      propertyPath: m_Priority
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3852001047181008165, guid: ac07d4d8dca3616429d5be81293f5b86, type: 3}
-      propertyPath: m_Lens.FieldOfView
-      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 3880433947455688480, guid: ac07d4d8dca3616429d5be81293f5b86, type: 3}
       propertyPath: _charaGameObject

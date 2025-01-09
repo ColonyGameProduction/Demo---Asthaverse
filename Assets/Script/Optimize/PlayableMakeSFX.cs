@@ -27,7 +27,7 @@ public class PlayableMakeSFX : AudioHandler
     }
     public void PlayCrouchSFX()
     {
-        AudioSFXName audioName = _isOnDirt ? AudioSFXName.Run_Dirt : AudioSFXName.None;
+        AudioSFXName audioName = _isOnDirt ? AudioSFXName.Crouch_Dirt : AudioSFXName.None;
         PlaySFX(audioName);
     }
     public void StopMovementTypeSFX()
