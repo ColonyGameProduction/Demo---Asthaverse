@@ -8,6 +8,7 @@ public class EntityStatSO : ScriptableObject
 {
     public string entityName;
     public bool isCharBoy;
+    // public bool isSpecialEventChara;
     public float health;
     public float speed;
     public float armor;

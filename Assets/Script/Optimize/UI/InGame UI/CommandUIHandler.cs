@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class CommandUIHandler : MonoBehaviour
 {
     private GameInputManager _gameInputManager;
+    private AudioManager _am;
     [SerializeField] private List<Button> _commandButton = new List<Button>();
 
     private int _currentIDX = 0;
@@ -15,6 +16,12 @@ public class CommandUIHandler : MonoBehaviour
     private void Start() 
     {
         _gameInputManager = GameInputManager.Instance;
+
+        _am = AudioManager.Instance;
+        foreach(Button button in _commandButton)
+        {
+            button.onClick.AddListener(_am.PlayUIClick);
+        }
     }
     void Update()
     {
@@ -75,5 +82,7 @@ public class CommandUIHandler : MonoBehaviour
     public void SelectButton(int index)
     {
         EventSystem.current.SetSelectedGameObject(_commandButton[index].gameObject);
+
+        _am.PlayUIClick();
     }
 }

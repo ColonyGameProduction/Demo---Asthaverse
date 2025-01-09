@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour, IUnsubscribeEvent
 {
+    private AudioManager _am;
     [ReadOnly(false), SerializeField] private bool _isClickingStartExitButton;
     [ReadOnly(false), SerializeField] private bool _isAnimatingButton;
     private SettingUIHandler _settingUIHandler;
@@ -16,6 +18,7 @@ public class MainMenuUI : MonoBehaviour, IUnsubscribeEvent
     private SceneManagementManager _sceneManagementManager;
     private PlayerActionInput _inputActions;
     
+    private Button[] _buttons;
     
 
     private void Awake() 
@@ -27,12 +30,20 @@ public class MainMenuUI : MonoBehaviour, IUnsubscribeEvent
         _settingUIHandler.HideSettingsUI();
 
         _inputActions.Enable();
+
+        _buttons = _mainMenuContainer.GetComponentsInChildren<Button>();
     }
 
     private void Start() 
     {
         _fadeUIHandler = FadeBGUIHandler.Instance;
         _sceneManagementManager = SceneManagementManager.Instance;
+
+        _am = AudioManager.Instance;
+        foreach(Button button in _buttons)
+        {
+            button.onClick.AddListener(_am.PlayUIClick);
+        }
     }
 
 

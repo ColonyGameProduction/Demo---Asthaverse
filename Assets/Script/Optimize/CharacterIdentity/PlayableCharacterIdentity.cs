@@ -322,7 +322,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     public override void Hurt(float Damage)
     {
-        if(CurrHealth <= 0)return;
+        if(CurrHealth <= 0 || !_gm.IsNormalGamePlayMode())return;
         
         _regenCDTimer = _regenTimerMax;
         CurrHealth -= Damage;

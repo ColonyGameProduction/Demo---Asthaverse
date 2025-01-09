@@ -335,21 +335,6 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     {
         if(!_getPlayableCharacterIdentity.GetPlayableMovementStateMachine.IsIdle)
         {
-            if(_charaCameraManager.IsScope)
-            {
-                _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil * _movingMaxRecoilOnScopeNotIdleBuffer;
-                _currRecoilMod = _currWeapon.weaponStatSO.recoil * _currRecoilModBufferOnScopeNotIdle;
-                _recoilAddMultiplier = _recoildAddMultiplierOnScopeNotIdle;
-            }
-            else
-            {
-                _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil;
-                _currRecoilMod = _currWeapon.weaponStatSO.recoil * _currRecoilModBufferNotOnScopeNotIdle;
-                _recoilAddMultiplier = _recoildAddMultiplierNotOnScopeNotIdle;
-            }
-        }
-        else
-        {
             if(_getPlayableCharacterIdentity.GetPlayableMovementStateMachine.IsCrouching)
             {
                 if(_charaCameraManager.IsScope)
@@ -367,10 +352,28 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
             }
             else
             {
-                _movingMaxRecoil = 0;
-                _currRecoilMod = 0;
-                _recoilAddMultiplier = 0;
+                if(_charaCameraManager.IsScope)
+                {
+                    _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil * _movingMaxRecoilOnScopeNotIdleBuffer;
+                    _currRecoilMod = _currWeapon.weaponStatSO.recoil * _currRecoilModBufferOnScopeNotIdle;
+                    _recoilAddMultiplier = _recoildAddMultiplierOnScopeNotIdle;
+                }
+                else
+                {
+                    _movingMaxRecoil = _currWeapon.weaponStatSO.recoil + _currWeapon.weaponStatSO.recoil;
+                    _currRecoilMod = _currWeapon.weaponStatSO.recoil * _currRecoilModBufferNotOnScopeNotIdle;
+                    _recoilAddMultiplier = _recoildAddMultiplierNotOnScopeNotIdle;
+                }
             }
+            
+        }
+        else
+        {
+
+            _movingMaxRecoil = 0;
+            _currRecoilMod = 0;
+            _recoilAddMultiplier = 0;
+
         }
     }
     
@@ -405,10 +408,14 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
                         _currRecoil += Time.deltaTime * _currWeapon.weaponStatSO.recoil;
                     }
                 }
+                else
+                {
+                    _currRecoil = _maxRecoil;
+                }
             }
             else
             {
-                _currRecoil = _currWeapon.weaponStatSO.recoil;;
+                _currRecoil = 0;
             }
 
         }
