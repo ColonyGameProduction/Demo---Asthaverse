@@ -43,13 +43,13 @@ public class EnemyKillQuestHandler : SoloQuestHandler
     public override void ActivateQuest()
     {
         _isActivated = true;
-        _checkerInMap.SetActive(true);
+        if(_checkerInMap)_checkerInMap.SetActive(true);
         QuestComplete();
     }
 
     public override void DeactivateQuest()
     {
-        _checkerInMap.SetActive(false);
+        if(_checkerInMap)_checkerInMap.SetActive(false);
         base.DeactivateQuest();
     }
     

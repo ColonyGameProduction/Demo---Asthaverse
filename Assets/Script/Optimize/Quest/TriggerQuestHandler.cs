@@ -17,13 +17,13 @@ public class TriggerQuestHandler : SoloQuestHandler, IUnsubscribeEvent
     {
         _isActivated = true;
         _coll.enabled = true;
-        _checkerInMap.SetActive(true);
+        if(_checkerInMap) _checkerInMap.SetActive(true);
     }
     public override void DeactivateQuest()
     {
         _coll.enabled = false;
         _isActivated = false;
-        _checkerInMap.SetActive(false);
+        if(_checkerInMap) _checkerInMap.SetActive(false);
     }
 
     public void UnsubscribeEvent()
