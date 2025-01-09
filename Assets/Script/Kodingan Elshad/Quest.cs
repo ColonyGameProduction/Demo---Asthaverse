@@ -10,6 +10,8 @@ public class Quest : QuestParent
     public bool canProceedToNextQuest;
     public List<int> nextQuestID = new List<int>();
     public List<int> triggeringFailedQuest = new List<int>();
+    bool onceItFalse = false;
+
 
     private void Start()
     {
@@ -30,18 +32,26 @@ public class Quest : QuestParent
         
         questComplete = true;
 
+
         if (multiplyQuestAtOnce.Count > 0)
         {
             for (int i = 0; i < multiplyQuestAtOnce.Count; i++)
             {
                 if (multiplyQuestAtOnce[i].questComplete == true)
                 {
-                    canProceedToNextQuest = true;
+                    if(onceItFalse)
+                    {
+                        canProceedToNextQuest = false;
+                    }
+                    else
+                    {
+                        canProceedToNextQuest = true;
+                    }
+                    QUH.RemovingQuestUI(currQuest.questName, currQuest);
                 }
                 else
                 {
-                    canProceedToNextQuest = false;
-                    break;
+                    onceItFalse = true;
                 }
             }
         }
@@ -54,7 +64,7 @@ public class Quest : QuestParent
 
         if (canProceedToNextQuest)
         {
-
+            onceItFalse = false;
             QuestHandler QH = QuestHandler.questHandler;
             QUH.RemovingQuestUI(currQuest.questName, currQuest);
 

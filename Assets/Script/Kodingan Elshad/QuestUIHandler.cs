@@ -37,6 +37,7 @@ public class QuestUIHandler : MonoBehaviour
 
         if (!currQuest.isOptional)
         {
+            Debug.Log(questText.text);
             mainQuest.Add(questText);
             if (questText.text == mainQuestTempWords)
             {
@@ -47,6 +48,7 @@ public class QuestUIHandler : MonoBehaviour
             }
             else
             {
+                mainQuestTempWords = "";
                 mainQuestCounter = 1;
             }
             mainQuestTempWords = questText.text;
@@ -92,21 +94,18 @@ public class QuestUIHandler : MonoBehaviour
         {
             foreach (var item in mainQuest)
             {
-                if (!item.text.Contains("(optional)"))
+                if (item.text.Contains(checker))
                 {
-                    if (item.text.Contains(checker))
+                    LeanTween.value(1, 0, 1f).setOnUpdate((float value) =>
                     {
-                        LeanTween.value(1, 0, 1f).setOnUpdate((float value) =>
-                        {
-                            Color color = item.color;
-                            color.a = value;
-                            item.color = color;
-                        }).setOnComplete(() =>
-                        {
-                            mainQuest.Remove(item);
-                            Destroy(item.transform.parent.gameObject);
-                        });
-                    }
+                        Color color = item.color;
+                        color.a = value;
+                        item.color = color;
+                    }).setOnComplete(() =>
+                    {
+                        mainQuest.Remove(item);
+                        Destroy(item.transform.parent.gameObject);
+                    });
                 }
             }
         }
