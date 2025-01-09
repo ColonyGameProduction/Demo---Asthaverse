@@ -49,7 +49,7 @@ public class MultipleQuest
     }
     public void AddCurrTotalQuestCompleted()
     {
-        currTotalQuestCompleted++;
+        if(currTotalQuestCompleted < totalQuest)currTotalQuestCompleted++;
         ChangeDesc();
     }
 }
@@ -138,6 +138,7 @@ public class MultipleQuestHandler : QuestHandlerParent, IUnsubscribeEvent
     }
     private void SoloQuestComplete_ChangeVisual(QuestName name, bool isOptional)
     {
+        Debug.Log(name + " INI TOLONG MULTIPLE KENAPA");
         foreach(MultipleQuest data in _multipleQuestData)
         {
             if(name == data.questName && data.isOptional == isOptional)

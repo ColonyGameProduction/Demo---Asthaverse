@@ -36,8 +36,8 @@ public class QuestManager : MonoBehaviour, IUnsubscribeEvent
     //Handle UI yg list in di sini yaa
     public void ActivateQuest()
     {
-        CurrQuest.ActivateQuest();
         CurrQuest.CallQuestContainerUI();
+        CurrQuest.ActivateQuest();
     }
 
     private void NextQuest()
