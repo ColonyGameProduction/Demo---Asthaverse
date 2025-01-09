@@ -1,21 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameOverUIHandler : MonoBehaviour, IUnsubscribeEvent
 {
     private GameManager _gm;
+    private AudioManager _am;
     [SerializeField] private GameObject _gameOverContainer, _buttonsContainer;
     [SerializeField] private CanvasGroup _gameOverImageCanvasGroup;
     [SerializeField] private float _showDuration = 0.5f;
+    private Button[] _buttons;
     private void Awake() 
     {
+        _buttons = _buttonsContainer.GetComponentsInChildren<Button>();
+
         HideGameOverUI();
     }
     private void Start() 
     {
         _gm = GameManager.instance;
         _gm.OnGameOver += ShowGameOverUI;
+
+        _am = AudioManager.Instance;
+        foreach(Button button in _buttons)
+        {
+            button.onClick.AddListener(_am.PlayUIClick);
+        }
     }
 
     public void ShowGameOverUI()

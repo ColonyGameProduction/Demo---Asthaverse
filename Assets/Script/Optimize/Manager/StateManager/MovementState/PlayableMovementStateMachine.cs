@@ -188,7 +188,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     protected override void Update()
     {
-        if(!_gm.IsGamePlaying()) _getPlayableMakeSFX.PlayStopSFX(AudioSFXName.NormalWalk, false);
+        if(!_gm.IsGamePlaying()) _getPlayableMakeSFX.StopMovementTypeSFX();
+
         base.Update();
         GoingToTakeCover();
     }
@@ -203,15 +204,20 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             else MovePlayableOnWall(movement);
         }
         else base.Move();
+
         if(IsRunning)
         {
             // Debug.Log(transform.position + " produce walk sound");
             _worldSoundManager.MakeSound(WorldSoundName.Walk, transform.position, _fovMachine.CharaEnemyMask);
-            _getPlayableMakeSFX.PlayStopSFX(AudioSFXName.NormalWalk, true);
+            _getPlayableMakeSFX.PlayRunSFX();
         }
-        else
+        else if(IsWalking)
         {
-            _getPlayableMakeSFX.PlayStopSFX(AudioSFXName.NormalWalk, false);
+            _getPlayableMakeSFX.PlayWalkSFX();
+        }
+        else if(IsCrouching)
+        {
+            _getPlayableMakeSFX.PlayCrouchSFX();
         }
     }
     /// <summary>

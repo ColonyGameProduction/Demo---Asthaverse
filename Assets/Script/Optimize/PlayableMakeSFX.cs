@@ -3,57 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PlayableMakeSFX : MonoBehaviour
+public class PlayableMakeSFX : AudioHandler
 {
-    // [Header("Foot sound")]
-    // private Transform _footSoundParent;
-    // public staticv
-    [SerializeField]private SOAudioSFXList _playerSFXList;
-    private Audio[] _audioArray;
-    private void Awake() 
+    [Header("Walk SFX")]
+    private bool _isOnDirt = true;
+    public bool IsOnDirt 
     {
-        _audioArray = new Audio[_playerSFXList.audioSFX.Count];
-        for(int i = 0; i < _audioArray.Length ; i++)
+        set
         {
-            _audioArray[i].audioName = _playerSFXList.audioSFX[i].audioName.ToString();
-
-            _audioArray[i].audioSource = gameObject.AddComponent<AudioSource>();
-            AudioSource source = _audioArray[i].audioSource;
-            source.clip = _playerSFXList.audioSFX[i].audioClip;
-            source.outputAudioMixerGroup = _playerSFXList.audioSFX[i].audioMixerGroup;
-            source.playOnAwake = _playerSFXList.audioSFX[i].playOnAwake;
-            source.loop = _playerSFXList.audioSFX[i].loop;
-            source.volume = _playerSFXList.audioSFX[i].volume;
-            source.pitch = _playerSFXList.audioSFX[i].pitch;
-
-            source.spatialBlend = _playerSFXList.audioSFX[i].spatialBlend;
-            source.minDistance = _playerSFXList.audioSFX[i].minDistance;
-            source.maxDistance = _playerSFXList.audioSFX[i].maxDistance;
-
-        }
-
-    }
-    public void PlayStopSFX(AudioSFXName name, bool playSound)
-    {
-        AudioSource audioSource = GetAudioSource(name);
-        if(playSound)
-        {
-            if(!audioSource.isPlaying)audioSource.Play();
-        }
-        else
-        {
-            if(audioSource.isPlaying)audioSource.Stop();
+            _isOnDirt = value;
         }
     }
-    public void PlaySFXOnce(AudioSFXName name)
+
+    public void PlayWalkSFX()
     {
-        AudioSource audioSource = GetAudioSource(name);
-        audioSource.Play();
+        AudioSFXName audioName = _isOnDirt ? AudioSFXName.Walk_Dirt : AudioSFXName.None;
+        PlaySFX(audioName);
+    }
+    public void PlayRunSFX()
+    {
+        AudioSFXName audioName = _isOnDirt ? AudioSFXName.Run_Dirt : AudioSFXName.None;
+        PlaySFX(audioName);
+    }
+    public void PlayCrouchSFX()
+    {
+        AudioSFXName audioName = _isOnDirt ? AudioSFXName.Crouch_Dirt : AudioSFXName.None;
+        PlaySFX(audioName);
+    }
+    public void StopMovementTypeSFX()
+    {
+        StopSFX(AudioType.Movement);
     }
 
-    private AudioSource GetAudioSource(AudioSFXName name)
+    public void PlayWhistleSFX()
     {
-        Audio audio = System.Array.Find(_audioArray, audio => audio.audioName == name.ToString());
-        return audio.audioSource;
+        PlaySFXOnce(AudioSFXName.Whistle);
     }
+
+
+    #region overide
+    protected override void SetAudioClipToSource(AudioSource source, AudioData audioData)
+    {
+        base.SetAudioClipToSource(source, audioData);
+
+        AudioSFXData data = audioData as AudioSFXData;
+
+        source.spatialBlend = data.spatialBlend;
+        source.minDistance = data.minDistance;
+        source.maxDistance = data.maxDistance;
+    }
+    #endregion
+
 }

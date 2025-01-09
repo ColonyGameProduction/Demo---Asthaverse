@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     
     [Header("States")]
     [ReadOnly(false), SerializeField] private GameState _currGameState;
+    [ReadOnly(false), SerializeField] private GamePlayMode _currGamePlayMode;
     [ReadOnly(false), SerializeField] private GamePauseState _currGamePauseState;
     private bool _isPause;
     private FadeBGUIHandler _fadeUIHandler;
@@ -49,12 +50,14 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
 
     [Header("Event")]
     public Action<bool> OnPlayerPause;
+    public Action OnChangeGamePlayModeToEvent, OnChangeGamePlayModeToNormal;
     public Action OnGameOver;
     public Action OnQuitSettings;
 
 
     #region GETTER SETTER VARIABLE
     public GameState GetCurrGameState { get { return _currGameState; } }
+    public GamePlayMode GetCurrGamePlayMode { get { return _currGamePlayMode; } }
     public GamePauseState GetCurrGamePauseState { get { return _currGamePauseState; } }
     #endregion
     #endregion
@@ -87,8 +90,9 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     
     private void StartGame()
     {
-        _questManager.ActivateStartQuest();
+        _questManager.ActivateQuest();
         SetGameState(GameState.Play);
+        
     }
 
     public void FollowCamerasRefrence()
@@ -126,6 +130,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
         if(_currGameState != GameState.Play && _currGameState != GameState.Pause) return;
         _isPause = !_isPause;
         OnPlayerPause?.Invoke(_isPause);
+        // AudioManager.Instance.ChangeBGMVolumeWhenPause(_isPause);
         
         if(_isPause)
         {
@@ -145,6 +150,10 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
             Time.timeScale = 1f;
             SetGameState(GameState.Play);
         }
+    }
+    public void GameCompleted()
+    {
+        SetGameState(GameState.Finish);
     }
     public void GameOver()
     {
@@ -181,6 +190,18 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     private void SetGamePauseState(GamePauseState newState) => _currGamePauseState = newState;
     private bool CheckGamePauseState(GamePauseState state) => _currGamePauseState == state;
     #endregion
+
+    #region GamePlayMode
+    public void SetToSwitchGamePlayMode() => SetGamePlayMode(GamePlayMode.Switching);
+    public void SetToNormalGamePlayMode() => SetGamePlayMode(GamePlayMode.Normal);
+    public void SetToEventGamePlayMode() => SetGamePlayMode(GamePlayMode.Event);
+
+    public bool IsNormalGamePlayMode() => CheckGamePlayMode(GamePlayMode.Normal);
+    public bool IsEventGamePlayMode() => CheckGamePlayMode(GamePlayMode.Event);
+    private void SetGamePlayMode(GamePlayMode newMode) => _currGamePlayMode = newMode;
+    private bool CheckGamePlayMode(GamePlayMode mode) => _currGamePlayMode == mode;
+    #endregion
+
     private void SubscribeToGameInputManager()
     {
         if(_gameInput != null)_gameInput.OnPauseGamePerformed += PauseGame;

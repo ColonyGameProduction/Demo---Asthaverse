@@ -13,6 +13,7 @@ public abstract class QuestHandlerParent : MonoBehaviour
     [ReadOnly(false), SerializeField] protected bool _isActivated, _isCompleted;
 
     protected QuestManager _questManager;
+    protected QuestGameUIHandler _questGameUIHandler;
 
     public Action OnQuestCompleted;
 
@@ -20,12 +21,13 @@ public abstract class QuestHandlerParent : MonoBehaviour
     public bool IsActivated {get {return _isActivated;}}
     public bool IsCompleted {get {return _isCompleted;}}
     public QuestName QuestName {get {return _questName;}}
-    public string QuestDesc {get {return _questDesc;}}
+    public string QuestDesc {get {return _questDesc;} set{_questDesc = value;}}
     #endregion
 
     protected virtual void Start() 
     {
         _questManager = QuestManager.Instance;
+        _questGameUIHandler = QuestGameUIHandler.Instance;
     }
     public virtual void ActivateQuest()
     {
@@ -44,5 +46,8 @@ public abstract class QuestHandlerParent : MonoBehaviour
         _isCompleted = true;
         OnQuestCompleted?.Invoke();
     }
+
+    public abstract void CallQuestContainerUI();
+    public abstract void EndedCallQuestContainerUI();
     
 }

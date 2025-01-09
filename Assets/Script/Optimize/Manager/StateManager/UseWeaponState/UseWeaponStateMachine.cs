@@ -63,7 +63,8 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
 
     [Header("Recoil Data")]
     [SerializeField]protected float _recoilCoolDownBuffer = 0.1f;
-    protected float _currRecoil, _maxRecoil, _recoilCoolDown, _finalCountRecoil;
+    [ReadOnly(false), SerializeField] protected float _currRecoil, _maxRecoil, _recoilCoolDown;
+    [ReadOnly(false), SerializeField] protected float _finalCountRecoil;
     
     public const string ANIMATION_MOVE_PARAMETER_RELOAD = "Reload";
     
@@ -233,7 +234,6 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         //DoAnimation
         yield return new WaitForSeconds(reloadTime);
         ReloadAnimationFinished();
-        
     }
     public void ReloadAnimationFinished()
     {
@@ -303,7 +303,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         }
         else
         {
-            _currRecoil = _currWeapon.weaponStatSO.recoil;
+            _currRecoil = 0;
         }
     }
     #endregion

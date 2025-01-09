@@ -5,6 +5,8 @@ using UnityEngine.Audio;
 
 public class AudioSettingsManager : MonoBehaviour
 {   
+    private AudioManager _am;
+
     [Header("Audio Mixer")]
     [SerializeField] private AudioMixer _audioMixer;
 
@@ -65,6 +67,7 @@ public class AudioSettingsManager : MonoBehaviour
     {
         LoadPref();
 
+        _am = AudioManager.Instance;
         // Add listeners to buttons
         _masterLeftButton.onClick.AddListener(() => ChangeMasterVolumeButton(-_stepSize)); // Decrease volume
         _masterRightButton.onClick.AddListener(() => ChangeMasterVolumeButton(_stepSize)); // Increase volume
@@ -242,7 +245,7 @@ public class AudioSettingsManager : MonoBehaviour
         }
         else if(parameter == MIXER_MUSIC)
         {
-            _audioMixer.SetFloat(parameter, Mathf.Log10(currVol) * 20 - 1);
+            _audioMixer.SetFloat(parameter, Mathf.Log10(currVol) * 20 - 8);
         }
         else
         {

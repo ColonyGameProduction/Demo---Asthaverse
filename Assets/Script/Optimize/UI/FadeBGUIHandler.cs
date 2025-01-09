@@ -59,6 +59,7 @@ public class FadeBGUIHandler : MonoBehaviour
         if(to > 0)
         {
             if(!_fadeBG.gameObject.activeSelf) _fadeBG.gameObject.SetActive(true);
+            LeanTween.cancel(_fadeBG.gameObject);
             LeanTween.alphaCanvas(_fadeBG, to, duration).setOnComplete(
                 ()=>
                 {
@@ -69,6 +70,7 @@ public class FadeBGUIHandler : MonoBehaviour
         }
         else
         {
+            LeanTween.cancel(_fadeBG.gameObject);
             LeanTween.alphaCanvas(_fadeBG, to, duration).setOnComplete(
                 ()=>
                 {
