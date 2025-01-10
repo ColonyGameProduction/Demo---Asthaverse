@@ -14,6 +14,7 @@ public class GameTimer : MonoBehaviour
             if (timeRemaining > 0)
             {
                 timeRemaining -= Time.deltaTime;
+                timeRemaining = Mathf.Max(timeRemaining, 0);
                 UpdateTimerDisplay();
             }
             else
