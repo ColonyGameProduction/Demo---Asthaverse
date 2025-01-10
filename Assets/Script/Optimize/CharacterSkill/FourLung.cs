@@ -23,8 +23,9 @@ public class FourLung : PlayableSkill
     #endregion
 
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         isXray = false;
 
         SwitchToNormalRenderer();
@@ -66,6 +67,7 @@ public class FourLung : PlayableSkill
 
     public override void UseSkill()
     {
+        if(!_gm.IsEventGamePlayMode()) return;
         if(!isXray)
         {
             StartCoroutine(SkillTime(_skillDuration));

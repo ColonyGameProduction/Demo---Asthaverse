@@ -1,15 +1,19 @@
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PauseUIHandler : MonoBehaviour, IUnsubscribeEvent
 {
     private GameManager _gm;
+    private AudioManager _am;
     [SerializeField] private GameObject _pauseUIContainer;
     private SceneManagementManager _sceneManagementManager;
     private SettingUIHandler _settingsUIHandler;
+    private Button[] _buttons;
     private void Awake() 
     {
         _settingsUIHandler = GetComponent<SettingUIHandler>();
+        _buttons = _pauseUIContainer.GetComponentsInChildren<Button>();
 
         _pauseUIContainer.SetActive(false);
     }
@@ -20,6 +24,12 @@ public class PauseUIHandler : MonoBehaviour, IUnsubscribeEvent
         _gm.OnPlayerPause += TogglePauseUI;
         _gm.OnQuitSettings += CloseSettingsUI;
         _sceneManagementManager = SceneManagementManager.Instance;
+
+        _am = AudioManager.Instance;
+        foreach(Button button in _buttons)
+        {
+            button.onClick.AddListener(_am.PlayUIClick);
+        }
     }
 
     #region  Pause UI

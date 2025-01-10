@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayableCharacterUIManager : MonoBehaviour, IUnsubscribeEvent
 {
+    private GameManager _gm;
     private PlayableCharacterIdentity currPlayable;
     private WeaponLogicManager _weaponLogicManager;
     private PlayableCharacterManager _playableCharacterManager;
@@ -12,6 +13,8 @@ public class PlayableCharacterUIManager : MonoBehaviour, IUnsubscribeEvent
     [SerializeField] private DamageUIHandler _dmgUIHandler;
     [SerializeField] private CharacterProfileUIHandler _characterProfileUIHandler;
     [SerializeField] private ControlsManager _controlsManager;
+    [Space(1)]
+    [SerializeField] private GameObject[] _uiContainersCloseWhenEvent;
     
     public CharacterProfileUIHandler GetCharacterProfileUIHandler {get {return _characterProfileUIHandler;}}
 
@@ -34,6 +37,10 @@ public class PlayableCharacterUIManager : MonoBehaviour, IUnsubscribeEvent
 
         _enemyAIManager = EnemyAIManager.Instance;
         _enemyAIManager.OnEnemyDead += _dmgUIHandler.StoreArrowBasedOnShooter;
+
+        _gm = GameManager.instance;
+        _gm.OnChangeGamePlayModeToNormal += ShowUIAfterEvent;
+        _gm.OnChangeGamePlayModeToEvent += HideUIWhenEvent;
     }
     public void ConnectUIHandler(PlayableCharacterIdentity curr)
     {
@@ -82,6 +89,21 @@ public class PlayableCharacterUIManager : MonoBehaviour, IUnsubscribeEvent
         _playableCharacterManager.IsCrouchModeHold = change;
     }
 
+    private void HideUIWhenEvent()
+    {
+        foreach(GameObject go in _uiContainersCloseWhenEvent)
+        {
+            go.SetActive(false);
+        }
+    }
+    private void ShowUIAfterEvent()
+    {
+        foreach(GameObject go in _uiContainersCloseWhenEvent)
+        {
+            go.SetActive(true);
+        }
+    }
+
     public void UnsubscribeEvent()
     {
         _playableCharacterManager.OnPlayerSwitch -= _characterProfileUIHandler.UpdateHealthData;
@@ -89,5 +111,7 @@ public class PlayableCharacterUIManager : MonoBehaviour, IUnsubscribeEvent
         _controlsManager.OnAimModeChange -= Settings_OnScopeModeChange;
         _controlsManager.OnSprintModeChange -= Settings_OnSprintModeChange;
         _controlsManager.OnCrouchModeChange -= Settings_OnCrouchModeChange;
+        _gm.OnChangeGamePlayModeToNormal -= ShowUIAfterEvent;
+        _gm.OnChangeGamePlayModeToEvent -= HideUIWhenEvent;
     }
 }

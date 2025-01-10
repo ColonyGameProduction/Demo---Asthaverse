@@ -316,6 +316,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 79168
   _recoilCoolDownBuffer: 0.1
+  _currRecoil: 0
+  _maxRecoil: 0
+  _recoilCoolDown: 0
+  _finalCountRecoil: 0
   _isSwitchingWeapon: 0
   _switchWeaponDuration: 0.2
   _isSilentKill: 0
@@ -2883,7 +2887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b9685c66848944cb545eebd51898f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerSFXList: {fileID: 11400000, guid: 9ff6aa5be9731cf4abdffa09b7cd4581, type: 2}
+  _audioSFXList: {fileID: 11400000, guid: 9ff6aa5be9731cf4abdffa09b7cd4581, type: 2}
 --- !u!1 &6968912798748777678
 GameObject:
   m_ObjectHideFlags: 0
