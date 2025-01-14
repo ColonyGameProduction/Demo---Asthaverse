@@ -88,6 +88,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
         _enemyAIManager.OnCaptainsStartHunting += EnemyAIManager_OnCaptainsStartHunting;
         _enemyAIManager.OnCaptainsStartEngaging += EnemyAIManager_OnCaptainsStartEngaging;
         _enemyAIManager.OnGoToClosestPOI += EnemyAIManager_OnGoToClosestPOI;
+        _enemyAIManager.OnRemovedPlayable += DeleteRemovedPlayerFromList;
         
         SwitchState(_states.AI_IdleState());
     }
@@ -650,5 +651,11 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
         if(CurrPOI != null)CurrPOI = null;
 
         // EnemyAIManager.EditEnemyHearAnnouncementList(this, true); perlua keluarin dr list ga ya hm
+    }
+
+    public void DeleteRemovedPlayerFromList(Transform transform)
+    {
+        if(_fovMachine.VisibleTargets.Contains(transform)) _fovMachine.VisibleTargets.Remove(transform);
+        DeleteKilledEnemyFromList(transform);
     }
 }

@@ -24,7 +24,7 @@ public class EnemyAIManager : MonoBehaviour, IUnsubscribeEvent
     public Action<Vector3> OnGoToClosestPOI;
     public Action OnEnemyisEngaging;
     public Action OnEnemyStopEngaging;
-    public Action<Transform> OnEnemyDead;
+    public Action<Transform> OnEnemyDead, OnRemovedPlayable;
 
     [Header("Engage timer for telling")]
     [SerializeField] protected float _isEngageTimer;

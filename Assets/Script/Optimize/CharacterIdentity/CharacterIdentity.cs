@@ -59,6 +59,10 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     [SerializeField] protected float _regenTimerMax = 0.5f;
     [ReadOnly(false), SerializeField] protected float _regenCDTimer;
 
+    [Header("Silent Kill")]
+    protected float _silentKillAnimationIdx = 0;
+
+
     [Header("Rigging")]
     public Action<bool, bool> OnToggleLeftHandRig;
     public Action<bool, bool> OnToggleFollowHandRig;
@@ -68,6 +72,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     public const string ANIMATION_DEATH_PARAMETER = "Death"; 
     public const string ANIMATION_DEATH_TRIGGER_PARAMETER = "DeathTrigger";
     public const string ANIMATION_IsBoyChara_PARAMETER = "IsBoyChara";
+    public string ANIMATION_PARAMETER_SILENTKILLCOUNTER = "SilentKillCounter";
     #endregion
 
     #region GETTERSETTER Variable
@@ -91,6 +96,9 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
     public EntityStatSO GetCharaStatSO {get {return _characterStatSO;}}
     public bool IgnoreThisCharacter{get {return _ignoreThisCharacter;} set{_ignoreThisCharacter = value;}}
+
+    public float SilentKillIdx {get {return _silentKillAnimationIdx;} set {_silentKillAnimationIdx = value;}}
+
 
     #endregion
     protected virtual void Awake()
@@ -123,7 +131,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     #region Health
     public virtual void Hurt(float Damage)
     {
-        if(CurrHealth <= 0)return;
+        if(CurrHealth <= 0 || _ignoreThisCharacter)return;
         
         _regenCDTimer = _regenTimerMax;
         CurrHealth -= Damage;

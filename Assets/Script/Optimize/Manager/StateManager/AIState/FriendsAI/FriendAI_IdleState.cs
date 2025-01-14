@@ -27,12 +27,17 @@ public class FriendAI_IdleState : FriendAIState
         }
         
 
-        if(_sm.IsAIEngage && !_sm.IsCharacterDead)
+        if(_sm.IsAIEngage && !_sm.IsCharacterDead && !_sm.CharaIdentity.IgnoreThisCharacter)
         {
             _sm.SwitchState(_factory.AI_EngageState());
             if(_sm.IsToldHold)_sm.IsToldHold = false;
             _sm.FriendsCommandDirection.position = _sm.FriendsDefaultDirection.position;
 
+            return;
+        }
+        if(_sm.CharaIdentity.IgnoreThisCharacter)
+        {
+            _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
             return;
         }
         
