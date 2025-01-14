@@ -5,16 +5,21 @@ using UnityEngine;
 public class SilentKillState : UseWeaponState
 {
     bool isDoSilentKill;
+    float silentKillCounter = 0;
+    const string ANIMATION_PARAMETER_SILENTKILLCOUNTER = "SilentKillCounter";
     public SilentKillState(UseWeaponStateMachine currStateMachine, UseWeaponStateFactory factory) : base(currStateMachine, factory)
     {
-
+        _activeStateAnimParamName = "SilentKill";
     }
     public override void EnterState()
     {
         // base.EnterState(); mainkan animasi
 
         isDoSilentKill = false;
+
+        _sm.CharaAnimator.SetFloat(ANIMATION_PARAMETER_SILENTKILLCOUNTER, silentKillCounter);
         
+        silentKillCounter = silentKillCounter == 1 ? 0 : 1;
         //hrsnya gaperlu krn gabisa silentkill pas scope
         // if(_stateMachine.IsInputPlayer)
         // {
@@ -28,7 +33,10 @@ public class SilentKillState : UseWeaponState
         if(!isDoSilentKill && _advancedUse.IsSilentKill)
         {
             isDoSilentKill = true;
-            _advancedUse.SilentKill();
+            _sm.CharaIdentity.OnToggleFollowHandRig?.Invoke(false, false);
+            // _advancedUse.SilentKill();
+            base.EnterState();
+            _playableData.SilentKilledEnemyAnimation();
         }
         else if(isDoSilentKill && !_advancedUse.IsSilentKill)
         {
@@ -64,6 +72,7 @@ public class SilentKillState : UseWeaponState
     }
     public override void ExitState()
     {
+        _sm.CharaIdentity.OnToggleFollowHandRig?.Invoke(true, false);
         _advancedUse.CanSilentKill_Coroutine();
     }
 }

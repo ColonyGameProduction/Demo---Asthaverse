@@ -2058,6 +2058,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 79040
   _recoilCoolDownBuffer: 0.1
+  _currRecoil: 0
+  _maxRecoil: 0
+  _recoilCoolDown: 0
+  _finalCountRecoil: 0
 --- !u!114 &2401869571015996941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3300,6 +3304,7 @@ MonoBehaviour:
   _useWeaponStateMachine: {fileID: 0}
   _playableUseWeaponStateMachine: {fileID: 0}
   _weaponGameObjectDataContainer: {fileID: 0}
+  _playableInteraction: {fileID: 0}
   _distanceToGround: 0.12
   _raycastDownDistance: 1.5
   _leftRotationWeight: 1
@@ -3310,6 +3315,13 @@ MonoBehaviour:
   _handReloadParent: {fileID: 3277362527193406734}
   _magHandLocalPos: {x: 0.0002, y: 0.00096, z: 0.00034}
   _magHandLocalEulerAngles: {x: 38.645, y: 100.043, z: 5.526}
+  target: {fileID: 0}
+  target2: {fileID: 0}
+  hand: {fileID: 0}
+  canDoIt: 0
+  _chara: {fileID: 0}
+  addedForGun: {x: 0, y: 0, z: 0}
+  _rig: {fileID: 0}
 --- !u!114 &3176681800231347481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3324,6 +3336,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _leftHandRigs:
   - {fileID: 8705114957450505190}
+  _followHandRigs:
+  - {fileID: 5153336315309234642}
 --- !u!114 &2186083164366460253
 MonoBehaviour:
   m_ObjectHideFlags: 0

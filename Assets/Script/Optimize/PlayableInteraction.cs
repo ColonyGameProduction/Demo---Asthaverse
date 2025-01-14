@@ -47,6 +47,7 @@ public class PlayableInteraction : MonoBehaviour
         _currInteractable = GetClosestInteractables();
 
         _currSilentKillAble = GetClosestSilentkillable();
+        KeybindUIHandler.OnShowSilentTakeDownKeybind(_currSilentKillAble == null ? false : true);
 
     }
     #region  Make Sound

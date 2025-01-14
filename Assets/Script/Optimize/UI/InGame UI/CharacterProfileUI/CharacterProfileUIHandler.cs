@@ -64,4 +64,13 @@ public class CharacterProfileUIHandler : MonoBehaviour
             characterProfileUI.UpdateHealthData();
         }
     }
+    public void RemoveCharaProfileUI(int idx)
+    {
+        Debug.Log("Emang indxnya apa" + idx);
+        if(_charaProfileUIList[idx] == null) return;
+
+        CharacterProfileUI deleteProfile = _charaProfileUIList[idx];
+        _charaProfileUIList.Remove(deleteProfile);
+        Destroy(deleteProfile.gameObject);
+    }
 }
