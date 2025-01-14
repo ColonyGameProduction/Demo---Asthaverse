@@ -16,6 +16,7 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
     private Sprite curSprite;
     public CutsceneMouthSO cutsceneMouth;
     public DialogCutsceneSO curCutsceneDialog;
+    public DialogCutsceneSOList cutsceneList;
     public TextMeshProUGUI leftName;
     public TextMeshProUGUI rightName;
     public TextMeshProUGUI text;
@@ -26,10 +27,13 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
 
     private int startCharID;
     private int index;
+    private int cutsceneIndex = 0;
     private bool first;
 
     private void Start()
     {
+        curCutsceneDialog = cutsceneList.dialogCutsceneSOList[cutsceneIndex];
+
         leftName.text = string.Empty;
         rightName.text = string.Empty;
         text.text = string.Empty;
