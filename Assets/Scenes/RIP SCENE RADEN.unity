@@ -178,6 +178,10 @@ MonoBehaviour:
   stopView: 1
   walls: []
   buffer: -1.5
+  thisQuest: {fileID: 0}
+  canProceedToNextQuest: 0
+  nextQuestID: 
+  triggeringFailedQuest: 
   stopMoving: 0
   enemyNavmesh: {fileID: 2227551}
   edgeResolveIteration: 10
@@ -3244,6 +3248,10 @@ MonoBehaviour:
   stopView: 1
   walls: []
   buffer: -1.5
+  thisQuest: {fileID: 0}
+  canProceedToNextQuest: 0
+  nextQuestID: 
+  triggeringFailedQuest: 
   stopMoving: 0
   enemyNavmesh: {fileID: 310354389}
   edgeResolveIteration: 10
@@ -3450,6 +3458,10 @@ MonoBehaviour:
   stopView: 1
   walls: []
   buffer: -1.5
+  thisQuest: {fileID: 0}
+  canProceedToNextQuest: 0
+  nextQuestID: 
+  triggeringFailedQuest: 
   stopMoving: 0
   enemyNavmesh: {fileID: 324495346}
   edgeResolveIteration: 10
@@ -12862,10 +12874,13 @@ MonoBehaviour:
   canSwitch: 0
   scope: 0
   breadcrumbsGameObject: []
-  _currGameState: 0
-  _currGamePauseState: 0
   gameIsPaused: 0
   isAtSetting: 0
+  _currGameState: 0
+  _currGamePauseState: 0
+  startAtCheckPoint: 0
+  _checkPointList: []
+  _friendOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &1084814696
 GameObject:
   m_ObjectHideFlags: 0
@@ -14106,7 +14121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b1539bc77e4c0c45b79b1c86fd6a6d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeRemaining: 60
+  timeRemaining: 4
   timerText: {fileID: 150477915}
 --- !u!4 &1245127175
 Transform:
@@ -17143,6 +17158,10 @@ MonoBehaviour:
   stopView: 0
   walls: []
   buffer: -1.5
+  thisQuest: {fileID: 0}
+  canProceedToNextQuest: 0
+  nextQuestID: 
+  triggeringFailedQuest: 
   stopMoving: 0
   enemyNavmesh: {fileID: 1525295030}
   edgeResolveIteration: 10
@@ -19139,6 +19158,10 @@ MonoBehaviour:
   stopView: 0
   walls: []
   buffer: -1.5
+  thisQuest: {fileID: 0}
+  canProceedToNextQuest: 0
+  nextQuestID: 
+  triggeringFailedQuest: 
   stopMoving: 0
   enemyNavmesh: {fileID: 1775165108}
   edgeResolveIteration: 10
@@ -19815,8 +19838,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5425d945fd224ca40ab8012464e764c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextQuestID: 
+  triggeringFailedQuest: 
   dialog: {fileID: 11400000, guid: 78717249c197dfe4894969dc7ac2908a, type: 2}
   inGameUIHandler: {fileID: 1997041997}
+  dialouge: {fileID: 0}
 --- !u!4 &1847031424
 Transform:
   m_ObjectHideFlags: 0
@@ -20729,6 +20755,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a287fcd0142ae894594c8087258078fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextQuestID: 
+  triggeringFailedQuest: 
   characterUI:
   - {fileID: 1871807966}
   - {fileID: 1452488440}
@@ -20739,6 +20767,8 @@ MonoBehaviour:
   charName: {fileID: 0}
   dialogCutscene: {fileID: 11400000, guid: 78717249c197dfe4894969dc7ac2908a, type: 2}
   video: {fileID: 1729144195}
+  dialougeQuest: {fileID: 0}
+  canProceedToNextQuest: 0
 --- !u!1 &1999881232
 GameObject:
   m_ObjectHideFlags: 0
@@ -21763,6 +21793,10 @@ MonoBehaviour:
   stopView: 0
   walls: []
   buffer: -1.5
+  thisQuest: {fileID: 0}
+  canProceedToNextQuest: 0
+  nextQuestID: 
+  triggeringFailedQuest: 
   stopMoving: 0
   enemyNavmesh: {fileID: 2105910114}
   edgeResolveIteration: 10
