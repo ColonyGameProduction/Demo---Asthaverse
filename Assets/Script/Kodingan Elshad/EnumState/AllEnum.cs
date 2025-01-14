@@ -89,5 +89,7 @@ public enum KeybindUIType
 [Serializable]
 public enum QuestName
 {
-    None, KillEnemy, Turn_Off_Alarm, Go_To_Position, Eavesdrop
+    None, KillEnemy, Turn_Off_Alarm, Go_To_Position, Eavesdrop, Investigate_Truck_Schedule, Investigate_Patrol_Schedule, 
+    Sabotage_Truck, Sabotage_Training_Equipment, Investigate_Barrack_Schedule, Investigate_Vehicle_Depot, Investigate_Abbandon_Village,
+    Investigate_Training_Camp, Disable_Alarm, Lay_Traps, Investigate_Barracks
 }
