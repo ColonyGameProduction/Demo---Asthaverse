@@ -2012,6 +2012,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1752534585263246341, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
   m_PrefabInstance: {fileID: 8826742471684535084}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &82841387 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4635284202739011185, guid: 3ef58f3893275ab46bd3eff4ddd0b198, type: 3}
+  m_PrefabInstance: {fileID: 8804789048055833199}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &91618512
 GameObject:
   m_ObjectHideFlags: 0
@@ -7296,7 +7301,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7556632317939767522, guid: 3ef58f3893275ab46bd3eff4ddd0b198, type: 3}
   m_PrefabInstance: {fileID: 8804789048055833199}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 82841387}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e18892f13798866408103a2d16e06911, type: 3}
@@ -9808,6 +9813,53 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &931776979
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 931776981}
+  - component: {fileID: 931776980}
+  m_Layer: 0
+  m_Name: Special Event Split
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &931776980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931776979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 400d28886eabd3e4daabed1e09de3346, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chosenSplitTeammates: {fileID: 743586309}
+  _newPlaceToGo: {fileID: 0}
+  _go: 0
+--- !u!4 &931776981
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931776979}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 23.401169, y: -0.2043916, z: -39.929413}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &943216442
 GameObject:
   m_ObjectHideFlags: 0
@@ -10771,6 +10823,7 @@ MonoBehaviour:
   playerGameObject:
   - {fileID: 79967579}
   - {fileID: 309991833}
+  - {fileID: 82841387}
   followCameras:
   - {fileID: 0}
   - {fileID: 0}
@@ -12015,7 +12068,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 961864163010323059, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.032106474
+      value: 0.03210646
       objectReference: {fileID: 0}
     - target: {fileID: 961864163010323059, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalRotation.y
@@ -12371,7 +12424,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3412995039024442839, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.008579226
+      value: 0.008579225
       objectReference: {fileID: 0}
     - target: {fileID: 3412995039024442839, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalRotation.w
@@ -13866,7 +13919,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 961864163010323059, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.032106474
+      value: 0.03210646
       objectReference: {fileID: 0}
     - target: {fileID: 961864163010323059, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalRotation.y
@@ -14222,7 +14275,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3412995039024442839, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.008579226
+      value: 0.008579225
       objectReference: {fileID: 0}
     - target: {fileID: 3412995039024442839, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalRotation.w
@@ -15646,7 +15699,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 961864163010323059, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.032106474
+      value: 0.03210646
       objectReference: {fileID: 0}
     - target: {fileID: 961864163010323059, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalRotation.y
@@ -16002,7 +16055,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3412995039024442839, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.008579226
+      value: 0.008579225
       objectReference: {fileID: 0}
     - target: {fileID: 3412995039024442839, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalRotation.w
@@ -17292,7 +17345,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 961864163010323059, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.032106474
+      value: 0.03210646
       objectReference: {fileID: 0}
     - target: {fileID: 961864163010323059, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalRotation.y
@@ -17648,7 +17701,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3412995039024442839, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.008579226
+      value: 0.008579225
       objectReference: {fileID: 0}
     - target: {fileID: 3412995039024442839, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalRotation.w
@@ -21852,7 +21905,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 961864163010323059, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.032106474
+      value: 0.03210646
       objectReference: {fileID: 0}
     - target: {fileID: 961864163010323059, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalRotation.y
@@ -22208,7 +22261,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3412995039024442839, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.008579226
+      value: 0.008579225
       objectReference: {fileID: 0}
     - target: {fileID: 3412995039024442839, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_LocalRotation.w
@@ -28701,7 +28754,13 @@ PrefabInstance:
       objectReference: {fileID: 1149176761}
     - target: {fileID: 2812994784912648343, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_WarningMessage
-      value: 
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
+        'soldier:RightHandIndex2'\n\tTransform 'soldier:RightHandIndex1'\n\tTransform
+        'soldier:Spine'\n\tTransform 'soldier:RightForeArm'\n\tTransform 'soldier:RightHand'\n\tTransform
+        'soldier:RightHandIndex3'\n\tTransform 'soldier:Hips'\n\tTransform 'soldier:LeftArm'\n\tand
+        more ..."
       objectReference: {fileID: 0}
     - target: {fileID: 3067475522566628003, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_Weight
@@ -31604,6 +31663,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2390621918019994252, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2498062891820982738, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -34156,7 +34219,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4635284202739011185, guid: 3ef58f3893275ab46bd3eff4ddd0b198, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4788177443906377557, guid: 3ef58f3893275ab46bd3eff4ddd0b198, type: 3}
       propertyPath: m_LocalPosition.x
@@ -36561,7 +36624,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7631056032823686761, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
       propertyPath: m_WarningMessage
-      value: 
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
+        'soldier:RightHandIndex2'\n\tTransform 'soldier:RightHandIndex1'\n\tTransform
+        'soldier:Spine'\n\tTransform 'soldier:RightArm'\n\tTransform 'soldier:RightForeArm'\n\tTransform
+        'soldier:RightHand'\n\tTransform 'soldier:RightHandIndex3'\n\tTransform 'soldier:Hips'\n\tand
+        more ..."
       objectReference: {fileID: 0}
     - target: {fileID: 8250768466188025528, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
       propertyPath: m_LocalPosition.x
@@ -36687,3 +36756,4 @@ SceneRoots:
   - {fileID: 1960122205}
   - {fileID: 306045688}
   - {fileID: 1637629092}
+  - {fileID: 931776981}

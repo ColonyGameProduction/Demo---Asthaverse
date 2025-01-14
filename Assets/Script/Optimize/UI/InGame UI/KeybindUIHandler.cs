@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.iOS;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class KeybindUIHandler : MonoBehaviour, IUnsubscribeEvent
 {
+    [Header("Keybind General")]
     private KeybindUIType _currType;
     [SerializeField] private Image _keybindImage;
 
@@ -13,10 +16,24 @@ public class KeybindUIHandler : MonoBehaviour, IUnsubscribeEvent
     [SerializeField] private Sprite _pickUpSprite;
     [SerializeField] private Sprite _commandSprite;
     public static Action<KeybindUIType> OnChangeKeybind;
+
+    [Header("Keybind Floating")]
+    [SerializeField] private GameObject _silentTakeDownContainer;
+    public static Action<bool> OnShowSilentTakeDownKeybind;
+
     private void Awake() 
     {
+        ToggleSilentTakeDownKeybindContainer(false);
+
         OnChangeKeybind += ChangeKeybindUI;
         ChangeKeybindUI(KeybindUIType.General);
+
+        OnShowSilentTakeDownKeybind += ToggleSilentTakeDownKeybindContainer;
+    }
+
+    private void ToggleSilentTakeDownKeybindContainer(bool show)
+    {
+        _silentTakeDownContainer.SetActive(show);
     }
     
     private void ChangeKeybindUI(KeybindUIType newType)
@@ -41,5 +58,6 @@ public class KeybindUIHandler : MonoBehaviour, IUnsubscribeEvent
     public void UnsubscribeEvent()
     {
         OnChangeKeybind -= ChangeKeybindUI;
+        OnShowSilentTakeDownKeybind -= ToggleSilentTakeDownKeybindContainer;
     }
 }

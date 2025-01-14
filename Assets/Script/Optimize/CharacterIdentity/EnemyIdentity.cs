@@ -9,6 +9,8 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     private bool _canBeKill = true;
     private bool _isSilentKilled;
 
+    private const string ANIMATION_PARAMETER_SILENTKILLED = "SilentKilled";
+
     public Transform GetSilentKillAbleTransform {get{return transform;}}
     public bool CanBeKill {get{return _canBeKill;}}
     public bool IsSilentKilled {get{return _isSilentKilled;}}
@@ -31,6 +33,17 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     }
     public override void AfterFinishDeathAnimation()
     {
+        if(_isSilentKilled)
+        {
+            _isDead = true;
+            if(_fovMachine.enabled) _fovMachine.StopFOVMachine();
+            _fovMachine.enabled = false;
+
+            EnemyAIManager.Instance.EditEnemyCaptainList(_enemyAIStateMachine, false);
+            EnemyAIManager.Instance.EditEnemyHearAnnouncementList(_enemyAIStateMachine, false);
+            EnemyAIManager.Instance.OnEnemyDead?.Invoke(this.transform);
+            _enemyAIStateMachine.enabled = false;
+        }
         _enemyAIStateMachine.UnsubscribeEvent();
         Destroy(this.gameObject, 0.5f);
     }
@@ -47,5 +60,16 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     public void GotSilentKilled()
     {
         Hurt(CurrHealth);
+    }
+
+    public override void Hurt(float Damage)
+    {
+        if(_isSilentKilled) return;
+        base.Hurt(Damage);
+    }
+    public void StartSilentKilled()
+    {
+        _animator.SetBool(ANIMATION_PARAMETER_SILENTKILLED, true);
+        OnToggleFollowHandRig?.Invoke(false, false);
     }
 }

@@ -19,6 +19,8 @@ public class MainMenuUI : MonoBehaviour, IUnsubscribeEvent
     private PlayerActionInput _inputActions;
     
     private Button[] _buttons;
+
+    [SerializeField] private DialogCutsceneSceneSOList _resetSO;
     
 
     private void Awake() 
@@ -58,6 +60,7 @@ public class MainMenuUI : MonoBehaviour, IUnsubscribeEvent
         if(!CanClickButton()) return;
 
         _isClickingStartExitButton = true;
+        _resetSO.currIdx = 0;
         _sceneManagementManager.SaveLoadSceneName(levelToLoad);
         StartCoroutine(DelayButtonAnimation(StartGame));
     }

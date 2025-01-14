@@ -58,7 +58,6 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
         _playableUseWeaponStateMachine = _useWeaponStateMachine as PlayableUseWeaponStateMachine;
         _characterIdentity = GetComponentInParent<CharacterIdentity>();
         
-
         _playableCharaIdentity = _characterIdentity as PlayableCharacterIdentity;
         
         // Debug.Log(transform.name + "Apakah adayg namanya interaksi " + _playableInteraction);
@@ -389,6 +388,21 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     {
         ChangeMagParentToNormal();
         ShowMag();
+    }
+    #endregion
+    #region Silent Kill Methods
+    public void SilentKillFinished()
+    {
+        _playableUseWeaponStateMachine.SilentKillAnimationFinished();
+        ShowCurrWeapon();
+    }
+    public void ShowCurrWeapon()
+    {
+        _weaponGameObjectDataContainer.ShowCurrWeapon();
+    }
+    public void SilentKilledFinished()
+    {
+        _characterIdentity.AfterFinishDeathAnimation();
     }
     #endregion
 

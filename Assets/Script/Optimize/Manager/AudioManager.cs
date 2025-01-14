@@ -17,6 +17,7 @@ public class AudioManager : AudioHandler
 
     [Header("Start BGM of This Scene")]
     [SerializeField] private AudioBGMName _startudioBGMName;
+    private AudioBGMName _currBGMName;
     [SerializeField] private float _startBGMDuration = 1f, _stopBGMDuration = 0.5f;
     private float _currMaxVol = 0;
     
@@ -57,9 +58,10 @@ public class AudioManager : AudioHandler
     #region BGM Method Helper
     private void SetBGM(AudioBGMName name)
     {
+        Debug.Log("SetBGM" + name);
         AudioSource audioSource = GetAudioSource(AudioType.BGM);
 
-        if(audioSource.isPlaying && name != AudioBGMName.None)
+        if(audioSource.isPlaying && name != AudioBGMName.None && name != _currBGMName)
         {
             StopBGM(name);
             return;
@@ -68,14 +70,17 @@ public class AudioManager : AudioHandler
         AudioBGMData bgmData = _audioBGMList.GetAudioBGMData(name);
         if(bgmData == null) return;
 
+        _currBGMName = name;
         SetAudioClipToSource(audioSource, bgmData);
 
         PlayBGM();
     }
     private void PlayBGM()
     {
+
         AudioSource audioSource = GetAudioSource(AudioType.BGM);
         float finalVolume = audioSource.volume;
+        Debug.Log("PlayBGM" + audioSource.clip + " " + finalVolume);
 
         audioSource.volume = 0;
         audioSource.Play();
@@ -87,6 +92,7 @@ public class AudioManager : AudioHandler
     }
     private void StopBGM(AudioBGMName startAnotherBGM)
     {
+        Debug.Log("StopBGM" + startAnotherBGM);
         AudioSource audioSource = GetAudioSource(AudioType.BGM);
         float startVolume = audioSource.volume;
         

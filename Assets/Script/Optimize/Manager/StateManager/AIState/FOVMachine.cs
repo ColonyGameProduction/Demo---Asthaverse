@@ -339,6 +339,7 @@ public class FOVMachine : MonoBehaviour
 
                     CharacterIdentity chara = targetTransform.GetComponent<CharacterIdentity>();
                     if(chara != null && chara.IsDead)continue;
+                    if(chara.IgnoreThisCharacter) continue;
                     
                     _visibleTargets.Add(targetTransform);
                 }
