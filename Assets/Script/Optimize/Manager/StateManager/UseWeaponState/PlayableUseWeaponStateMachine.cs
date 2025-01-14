@@ -51,6 +51,8 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
 
 
     public const string ANIMATION_MOVE_PARAMETER_SWITCHWEAPON= "SwitchWeapon";
+    public const string ANIMATION_MOVE_PARAMETER_SILENTKILL= "SilentKill";
+    
     public const string ANIMATION_GUN_COUNTER_PARAMETER = "GunCounter"; 
     #endregion
     #region GETTERSETTER Variable
@@ -137,6 +139,14 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         CanSilentKill = false;
         IsSilentKill = false;
         
+    }
+    public void SilentKillAnimationFinished()
+    {
+        if(!IsSilentKill) return;
+        _animator.SetBool(ANIMATION_MOVE_PARAMETER_SILENTKILL, false);
+        // _silentKilledEnemy.GotSilentKilled(); //gatau msh perlu ga
+        CanSilentKill = false;
+        IsSilentKill = false;
     }
     public void CanSilentKill_Coroutine()
     {
@@ -328,6 +338,10 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     public void SetSilentKilledEnemy(EnemyIdentity enemy)
     {
         _silentKilledEnemy = enemy;
+    }
+    public void SilentKilledEnemyAnimation()
+    {
+        _silentKilledEnemy.StartSilentKilled();
     }
     #region Recoil
 

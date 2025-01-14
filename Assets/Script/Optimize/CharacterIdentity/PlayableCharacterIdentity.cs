@@ -55,6 +55,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [ReadOnly(false), SerializeField] protected PlayableCharacterIdentity _characterIdentityWhoReviving, _characterIdentityWhoBeingRevived;
     [Header("Death Animation Component")]
     [ReadOnly(false), SerializeField] private bool _isAnimatingOtherAnimation;
+    
 
     #region const
     public const string ANIMATION_RIFLE_KNOCK_OUT_NAME = "Rifle_Knock_Out"; 
@@ -153,6 +154,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public bool IsSilentKilling {get {return _playableUseWeaponStateMachine.IsSilentKill;} set { _playableUseWeaponStateMachine.IsSilentKill = value;}}
 
     public Transform GetFriendBeingRevivedPos {get {return _characterIdentityWhoBeingRevived.transform;}}
+    
 
     public bool IsHoldingInteraction 
     {
@@ -322,6 +324,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     public override void Hurt(float Damage)
     {
+        if(IsSilentKilling) return;
         if(CurrHealth <= 0 || !_gm.IsNormalGamePlayMode())return;
         
         _regenCDTimer = _regenTimerMax;

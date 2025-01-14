@@ -15,8 +15,8 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
     public VideoPlayer curVideo;
     private Sprite curSprite;
     public CutsceneMouthSO cutsceneMouth;
-    public DialogCutsceneSO curCutsceneDialog;
-    public DialogCutsceneSOList cutsceneList;
+    public DialogCutsceneSceneSOList dialogCutsceneSceneSOList;
+    private DialogCutsceneSO curCutsceneDialog;
     public TextMeshProUGUI leftName;
     public TextMeshProUGUI rightName;
     public TextMeshProUGUI text;
@@ -27,13 +27,18 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
 
     private int startCharID;
     private int index;
-    private int cutsceneIndex = 0;
     private bool first;
+
+    [Header("Move scene")]
+    public SceneManagementManager _sceneManagementManager;
+    public bool alreadyGoToNextScene;
+    public bool GoToSceneA;
+    public string scene1;
+    public string scene2;
 
     private void Start()
     {
-        curCutsceneDialog = cutsceneList.dialogCutsceneSOList[cutsceneIndex];
-
+        _sceneManagementManager = SceneManagementManager.Instance;
         leftName.text = string.Empty;
         rightName.text = string.Empty;
         text.text = string.Empty;
@@ -45,6 +50,9 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
         }
 
         first = true;
+
+        curCutsceneDialog = dialogCutsceneSceneSOList.GetLatestDialogScene();
+
         AssigningTheFace();
         AddingTheWord();
     }
@@ -212,7 +220,19 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
         else if(index ==  curCutsceneDialog.dialogSentence.Count - 1)
         {
             Debug.Log("Cutscene Clear");
+            GoToMainScene();
         }
+    }
+    public void GoToMainScene()
+    {
+        if(alreadyGoToNextScene) return;
+        alreadyGoToNextScene = true;
+        if(GoToSceneA)
+        {
+            _sceneManagementManager.SaveLoadSceneName(scene1);
+        }
+        else _sceneManagementManager.SaveLoadSceneName(scene2);
+        _sceneManagementManager.GoToOtherScene();
     }
 
     public void AddingTheWord()

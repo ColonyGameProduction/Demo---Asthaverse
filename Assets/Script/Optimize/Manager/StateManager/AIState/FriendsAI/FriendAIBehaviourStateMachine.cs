@@ -120,7 +120,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         _currPlayableIdentity = currPlayable;
         
         _currPlayable = currPlayable.transform;
-        // Debug.Log("Apa error di sini ?>" + _currPlayableIdentity);
+        
         _friendsDefaultDirection = _currPlayable.transform;
 
         _friendsCommandDirection = commandPos;
@@ -214,6 +214,13 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         if(_enemyWhoSawAIList.Contains(enemy))_enemyWhoSawAIList.Remove(enemy);
         if(_enemyWhoSawAIListContainer.Contains(enemy))_enemyWhoSawAIListContainer.Remove(enemy);
         if(_enemyWhoSawAIListContainer.Count == 0)NotDetectedAnymore();
+    }
+
+    public void ChangeFriendDefaultDirectionWhenSplit(Transform newPos)
+    {
+        _currPlayable = null;
+        _charaIdentity.IgnoreThisCharacter = true;
+        _friendsDefaultDirection = newPos;
     }
     
 }

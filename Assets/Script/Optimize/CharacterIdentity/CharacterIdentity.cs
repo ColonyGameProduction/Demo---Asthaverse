@@ -15,6 +15,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     #region Normal Variable
     [Header("CHARACTER SCRIPTABLE OBJECT STAT")]
     [SerializeField] protected EntityStatSO _characterStatSO;
+    private bool _ignoreThisCharacter;
 
     [Header("Manager/Machine")]
     //Untuk ambil bool
@@ -60,6 +61,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
 
     [Header("Rigging")]
     public Action<bool, bool> OnToggleLeftHandRig;
+    public Action<bool, bool> OnToggleFollowHandRig;
     #endregion
 
     #region const
@@ -88,6 +90,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     public List<WeaponData> WeaponLists {get { return _weaponLists; } }
     public WeaponData CurrWeapon {get { return _weaponLists[_currWeaponIdx]; } }
     public EntityStatSO GetCharaStatSO {get {return _characterStatSO;}}
+    public bool IgnoreThisCharacter{get {return _ignoreThisCharacter;} set{_ignoreThisCharacter = value;}}
 
     #endregion
     protected virtual void Awake()
