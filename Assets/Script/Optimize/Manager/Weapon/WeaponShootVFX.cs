@@ -49,9 +49,11 @@ public class WeaponShootVFX : MonoBehaviour
         for(int i=0; i < total + _totalBuffer; i++)
         {
             TrailRenderer trail = Instantiate(_bulletTrailPrefab, originShootPoint, Quaternion.identity, trailParent);
+            trail.name = trail.name + " " + transform.name;
             trail.gameObject.SetActive(false);
 
             ParticleSystem particle = Instantiate(_impactParticlePrefab, originShootPoint, Quaternion.identity, trailParent);
+            particle.name = particle.name + " " + transform.name;
             particle.gameObject.SetActive(false);
             particle.Stop();
             

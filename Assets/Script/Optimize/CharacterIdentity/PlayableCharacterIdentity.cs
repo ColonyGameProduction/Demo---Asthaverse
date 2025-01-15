@@ -77,6 +77,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public Action OnPlayableDeath;
     public Action OnIsCrawlingChange;
     public Action<float, float> OnPlayableHealthChange;
+    public Action OnPlayableBulletChange;
     public Action OnSwitchWeapon;
     public Action OnCancelInteractionButton;
 
@@ -267,6 +268,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             CurrWeapon.currBullet += CurrWeapon.totalBullet;
             CurrWeapon.totalBullet = 0;
         } 
+        OnPlayableBulletChange?.Invoke();
     }
     public void SwitchWeapon()
     {
