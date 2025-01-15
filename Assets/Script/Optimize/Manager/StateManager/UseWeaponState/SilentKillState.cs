@@ -5,8 +5,7 @@ using UnityEngine;
 public class SilentKillState : UseWeaponState
 {
     bool isDoSilentKill;
-    float silentKillCounter = 0;
-    const string ANIMATION_PARAMETER_SILENTKILLCOUNTER = "SilentKillCounter";
+
     public SilentKillState(UseWeaponStateMachine currStateMachine, UseWeaponStateFactory factory) : base(currStateMachine, factory)
     {
         _activeStateAnimParamName = "SilentKill";
@@ -17,9 +16,9 @@ public class SilentKillState : UseWeaponState
 
         isDoSilentKill = false;
 
-        _sm.CharaAnimator.SetFloat(ANIMATION_PARAMETER_SILENTKILLCOUNTER, silentKillCounter);
         
-        silentKillCounter = silentKillCounter == 1 ? 0 : 1;
+        
+        
         //hrsnya gaperlu krn gabisa silentkill pas scope
         // if(_stateMachine.IsInputPlayer)
         // {
@@ -72,6 +71,8 @@ public class SilentKillState : UseWeaponState
     }
     public override void ExitState()
     {
+        _sm.CharaIdentity.SilentKillIdx = _sm.CharaIdentity.SilentKillIdx == 1 ? 0 : 1;
+        
         _sm.CharaIdentity.OnToggleFollowHandRig?.Invoke(true, false);
         _advancedUse.CanSilentKill_Coroutine();
     }

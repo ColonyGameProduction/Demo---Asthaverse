@@ -32,7 +32,7 @@ public class FriendAI_TakingCoverState : FriendAIState
     public override void UpdateState()
     {
         
-        if(!_sm.IsAIEngage || PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || !_sm.IsAIInput || _sm.GetPlayableCharaIdentity.IsAnimatingOtherAnimation || _sm.GetPlayableCharaIdentity.IsReviving || _sm.GetPlayableCharaIdentity.IsSilentKilling || _sm.IsCharacterDead || _sm.IsCurrTakeCoverAlreadyOccupied())
+        if(!_sm.IsAIEngage || PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || !_sm.IsAIInput || _sm.GetPlayableCharaIdentity.IsAnimatingOtherAnimation || _sm.GetPlayableCharaIdentity.IsReviving || _sm.GetPlayableCharaIdentity.IsSilentKilling || _sm.IsCharacterDead || _sm.IsCurrTakeCoverAlreadyOccupied() || _sm.GetPlayableCharaIdentity.IgnoreThisCharacter)
         {
             _sm.SwitchState(_factory.AI_EngageState());
             return;

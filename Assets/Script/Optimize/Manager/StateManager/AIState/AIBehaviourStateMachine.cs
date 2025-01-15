@@ -965,4 +965,10 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
         _charaIdentity.Shooting(false);
     }
 
+    public void DeleteKilledEnemyFromList(Transform enemy)
+    {
+        if(_enemyWhoSawAIList.Contains(enemy))_enemyWhoSawAIList.Remove(enemy);
+        if(_enemyWhoSawAIListContainer.Contains(enemy))_enemyWhoSawAIListContainer.Remove(enemy);
+        if(_enemyWhoSawAIListContainer.Count == 0)NotDetectedAnymore();
+    }
 }

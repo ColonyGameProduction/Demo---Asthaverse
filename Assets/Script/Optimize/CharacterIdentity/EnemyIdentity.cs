@@ -8,6 +8,7 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
 
     private bool _canBeKill = true;
     private bool _isSilentKilled;
+    [SerializeField] private Transform _enemyGameObject;
 
     private const string ANIMATION_PARAMETER_SILENTKILLED = "SilentKilled";
 
@@ -18,6 +19,7 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     protected override void Awake() {
         base.Awake();
         _enemyAIStateMachine = _aiStateMachine as EnemyAIBehaviourStateMachine;
+        _enemyGameObject = _animator.gameObject.transform;
     }
     public override void ReloadWeapon()
     {
@@ -50,6 +52,9 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
 
     public void GotSilentKill(PlayableCharacterIdentity characterIdentityWhoKilling)
     {
+        _silentKillAnimationIdx = characterIdentityWhoKilling.SilentKillIdx;        
+        _animator.SetFloat(ANIMATION_PARAMETER_SILENTKILLCOUNTER, _silentKillAnimationIdx);
+
         characterIdentityWhoKilling.GetPlayableMovementStateMachine.ForceStopMoving();
         characterIdentityWhoKilling.GetPlayableUseWeaponStateMachine.SetSilentKilledEnemy(this);
         characterIdentityWhoKilling.IsSilentKilling = true;
@@ -67,9 +72,13 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
         if(_isSilentKilled) return;
         base.Hurt(Damage);
     }
-    public void StartSilentKilled()
+    public void StartSilentKilled(Transform silentKillerTransform)
     {
         _animator.SetBool(ANIMATION_PARAMETER_SILENTKILLED, true);
+
+        _enemyGameObject.position = silentKillerTransform.position;
+        _enemyGameObject.rotation = silentKillerTransform.rotation;
+        
         OnToggleFollowHandRig?.Invoke(false, false);
     }
 }
