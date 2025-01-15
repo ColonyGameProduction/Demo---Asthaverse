@@ -16,14 +16,18 @@ public class DialogTrigger : MonoBehaviour
     {
         QUH = QuestUIHandler.instance;
         dialouge = GetComponent<Quest>();
-        if(!dialouge.questActivate)
+        if (dialouge != null)
         {
-            gameObject.SetActive(false);
+            if (!dialouge.questActivate)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                QUH.CreatingQuestUI(dialouge.questName, dialouge);
+            }
         }
-        else
-        {
-            QUH.CreatingQuestUI(dialouge.questName, dialouge);
-        }
+        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -35,11 +39,15 @@ public class DialogTrigger : MonoBehaviour
                 if (!isActivate)
                 {
                     inGameUIHandler.dialogCutscene = dialog;
-                    inGameUIHandler.dialougeQuest = dialouge;
-                    inGameUIHandler.nextQuestID = dialouge.nextQuestID;
-                    inGameUIHandler.triggeringFailedQuest = dialouge.triggeringFailedQuest;
                     inGameUIHandler.DialogPlay();
                     isActivate = true;
+
+                    if (dialouge != null)
+                    {
+                        inGameUIHandler.dialougeQuest = dialouge;
+                        inGameUIHandler.nextQuestID = dialouge.nextQuestID;
+                        inGameUIHandler.triggeringFailedQuest = dialouge.triggeringFailedQuest;
+                    }
                 }
             }
         }

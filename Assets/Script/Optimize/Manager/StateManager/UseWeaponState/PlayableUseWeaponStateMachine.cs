@@ -20,6 +20,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected bool _canSilentKill = true;
     [SerializeField] protected float _silentKillDuration; // ini sementara ampe ada animasi
     private EnemyIdentity _silentKilledEnemy;
+    [SerializeField] protected Transform _enemySilentKillTransformPos;
 
     [Space(1)]
     [Header("Additional Animation Component")]
@@ -51,6 +52,8 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
 
 
     public const string ANIMATION_MOVE_PARAMETER_SWITCHWEAPON= "SwitchWeapon";
+    public const string ANIMATION_MOVE_PARAMETER_SILENTKILL= "SilentKill";
+    
     public const string ANIMATION_GUN_COUNTER_PARAMETER = "GunCounter"; 
     #endregion
     #region GETTERSETTER Variable
@@ -90,6 +93,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get {return _getPlayableCharacterIdentity;}}
     public PlayerGunCollide GetPlayerGunCollider {get {return _getPlayerGunCollide;} set { _getPlayerGunCollide = value;}} 
 
+    public Transform EnemySilentKillTransformPos {get {return _enemySilentKillTransformPos;}}
     #endregion
     public event Action OnTurningOffScope;// ini dipanggil kalo misal lg input player dan reload - yg subs adalah playablecharamanager
     protected override void Awake()
@@ -137,6 +141,14 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         CanSilentKill = false;
         IsSilentKill = false;
         
+    }
+    public void SilentKillAnimationFinished()
+    {
+        if(!IsSilentKill) return;
+        _animator.SetBool(ANIMATION_MOVE_PARAMETER_SILENTKILL, false);
+        // _silentKilledEnemy.GotSilentKilled(); //gatau msh perlu ga
+        CanSilentKill = false;
+        IsSilentKill = false;
     }
     public void CanSilentKill_Coroutine()
     {
@@ -328,6 +340,11 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     public void SetSilentKilledEnemy(EnemyIdentity enemy)
     {
         _silentKilledEnemy = enemy;
+        CharaAnimator.SetFloat(_charaIdentity.ANIMATION_PARAMETER_SILENTKILLCOUNTER, _charaIdentity.SilentKillIdx);
+    }
+    public void SilentKilledEnemyAnimation()
+    {
+        _silentKilledEnemy.StartSilentKilled(_enemySilentKillTransformPos);
     }
     #region Recoil
 

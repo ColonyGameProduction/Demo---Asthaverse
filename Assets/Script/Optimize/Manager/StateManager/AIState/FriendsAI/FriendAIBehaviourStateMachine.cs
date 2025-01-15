@@ -120,7 +120,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         _currPlayableIdentity = currPlayable;
         
         _currPlayable = currPlayable.transform;
-        // Debug.Log("Apa error di sini ?>" + _currPlayableIdentity);
+        
         _friendsDefaultDirection = _currPlayable.transform;
 
         _friendsCommandDirection = commandPos;
@@ -209,11 +209,11 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     //     _useWeaponStateMachine.GiveChosenTarget(null);
     //     _charaIdentity.Shooting(false);
     // }
-    public void DeleteKilledEnemyFromList(Transform enemy)
+    
+
+    public void ChangeFriendDefaultDirectionWhenSplit(Transform newPos)
     {
-        if(_enemyWhoSawAIList.Contains(enemy))_enemyWhoSawAIList.Remove(enemy);
-        if(_enemyWhoSawAIListContainer.Contains(enemy))_enemyWhoSawAIListContainer.Remove(enemy);
-        if(_enemyWhoSawAIListContainer.Count == 0)NotDetectedAnymore();
+        _friendsDefaultDirection = newPos;
     }
     
 }

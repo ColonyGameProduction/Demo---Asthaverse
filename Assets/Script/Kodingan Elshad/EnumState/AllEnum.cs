@@ -73,7 +73,15 @@ public enum GamePauseState
 [Serializable]
 public enum DialogCutsceneTitle
 {
-    None, Test1, Test2
+    None, Test1, Test2, Cutscene1, 
+    Ext_Compound1, Int_Compound, Int_Tourism1, 
+    Int_tourism2, Int_tourism3, Int_tourism4, 
+    Int_tourism5, Ext_Tourism, Ext_CommandCentre, 
+    Int_CommandCentre, Armory, Qst_Eavesdrop,
+
+    Int_AbbandonVillage1, Int_AbbandonVillage2, Int_AbbandonVillage3,
+    Ext_Compound2, Int_VehicleDepot1, Int_VehicleDepot2, Int_TrainingArea1,
+    Int_TrainingArea2, Int_Barracks, Ext_HQ1, Ext_HQ2, Ext_HQ3
 }
 
 public enum KeybindUIType
@@ -84,5 +92,7 @@ public enum KeybindUIType
 [Serializable]
 public enum QuestName
 {
-    None, KillEnemy, Turn_Off_Alarm, Go_To_Position, 
+    None, KillEnemy, Turn_Off_Alarm, Go_To_Position, Eavesdrop, Investigate_Truck_Schedule, Investigate_Patrol_Schedule, 
+    Sabotage_Truck, Sabotage_Training_Equipment, Investigate_Barrack_Schedule, Investigate_Vehicle_Depot, Investigate_Abbandon_Village,
+    Investigate_Training_Camp, Disable_Alarm, Lay_Traps, Investigate_Barracks
 }

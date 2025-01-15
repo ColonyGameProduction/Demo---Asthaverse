@@ -79,5 +79,9 @@ public class WeaponGameObjectDataContainer : MonoBehaviour
     {
         _currWeaponGameObjectData?.gunGameObject.SetActive(false);
     }
+    public void ShowCurrWeapon()
+    {
+        _currWeaponGameObjectData?.gunGameObject.SetActive(true);
+    }
 }
 

@@ -1642,6 +1642,8 @@ MonoBehaviour:
   _regenScale: 0
   _regenTimerMax: 0.5
   _regenCDTimer: 0
+  ANIMATION_PARAMETER_SILENTKILLCOUNTER: SilentKillCounter
+  _enemyGameObject: {fileID: 8208354642904707821}
 --- !u!114 &2683807129647845418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1699,6 +1701,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 79040
   _recoilCoolDownBuffer: 0.1
+  _currRecoil: 0
+  _maxRecoil: 0
+  _recoilCoolDown: 0
+  _finalCountRecoil: 0
 --- !u!114 &1412898242623657193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3129,6 +3135,7 @@ MonoBehaviour:
   _useWeaponStateMachine: {fileID: 0}
   _playableUseWeaponStateMachine: {fileID: 0}
   _weaponGameObjectDataContainer: {fileID: 0}
+  _playableInteraction: {fileID: 0}
   _distanceToGround: 0.12
   _raycastDownDistance: 1.5
   _leftRotationWeight: 1
@@ -3139,6 +3146,13 @@ MonoBehaviour:
   _handReloadParent: {fileID: 7392141992628799257}
   _magHandLocalPos: {x: 0.0002, y: 0.00096, z: 0.00034}
   _magHandLocalEulerAngles: {x: 38.645, y: 100.043, z: 5.526}
+  target: {fileID: 0}
+  target2: {fileID: 0}
+  hand: {fileID: 0}
+  canDoIt: 0
+  _chara: {fileID: 0}
+  addedForGun: {x: 0, y: 0, z: 0}
+  _rig: {fileID: 0}
 --- !u!114 &2299584382041292837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3153,6 +3167,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _leftHandRigs:
   - {fileID: 6803079468978195422}
+  _followHandRigs:
+  - {fileID: 3184210393756578274}
 --- !u!114 &6590331281672860985
 MonoBehaviour:
   m_ObjectHideFlags: 0

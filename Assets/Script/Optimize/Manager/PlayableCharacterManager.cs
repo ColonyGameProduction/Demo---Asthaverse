@@ -394,14 +394,18 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _isAddingRemovingCharacter = true;
         ForceStopAllCharacterState();
 
+        _chosenChara.IgnoreThisCharacter = true;
         _chosenChara.TurnOnOffFriendAI(false);
         if(_chosenChara.GetFriendAIStateMachine.IsToldHold) _chosenChara.GetFriendAIStateMachine.IsToldHold = false;
 
 
+        _playableCharacterUIManager.GetCharacterProfileUIHandler.RemoveCharaProfileUI(_charaIdentities.IndexOf(_chosenChara));
         _charaIdentities.Remove(_chosenChara);
 
         SettingCharacterFriends_AddingRemoving();
         _isAddingRemovingCharacter = false;
+
+        //bikin event yg delete in dr fov enemy kek enemydead
     }
 
     private void SettingCharacterFriends_AddingRemoving()
@@ -410,13 +414,14 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         int nextCharaidx = _currCharaidx + 1;
         for(int i=1; i <= _charaIdentities.Count - 1; i++)
         {
-
             if(nextCharaidx == _charaIdentities.Count)nextCharaidx = 0;
             
             _charaIdentities[nextCharaidx].FriendID = i;
+            _charaIdentities[nextCharaidx].GetPlayableMinimapSymbolHandler.ChangeSymbolColorToFriend();
             //Di sini nanti jg taro di AI controllernya, posisi update mereka yang biasa
+            // Debug.Log(CurrPlayableChara + " AAAAAA" + _currCharaidx);
             _charaIdentities[nextCharaidx].GetFriendAIStateMachine.GiveUpdateFriendDirection(CurrPlayableChara, _friendsCommandPosition[i-1].transform);
-
+            if(!_charaIdentities[nextCharaidx].IsDead)_charaIdentities[nextCharaidx].ResetHealth();
             if(_charaIdentities[nextCharaidx].GetFriendAIStateMachine.IsToldHold)
             {
                 _friendsCommandPosition[i-1].transform.position = _charaIdentities[nextCharaidx].transform.position;
@@ -622,11 +627,12 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying()) return;
 
-        if(!_gm.IsNormalGamePlayMode())
+        if(!_gm.IsNormalGamePlayMode() || CurrPlayableChara.IsHoldingInteraction)
         {
             _currPlayableMoveStateMachine.InputMovement = Vector2.zero;
             return;
         }
+
         if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsHoldingInteraction)_currPlayableMoveStateMachine.InputMovement = _gameInputManager.Movement();
     }
     private void GameInput_OnRunPerformed()
@@ -781,6 +787,10 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         if(!_gm.IsGamePlaying() || !_gm.IsNormalGamePlayMode()) return;
 
         //pas silent kill gabole ganti?
+        ChangePlayer();
+    }
+    public void ChangePlayer()
+    {
         if(CanDoThisFunction())SwitchCharacter(_currCharaidx + 1);
     }
     private void GameInput_OnChangeWeaponPerformed()
