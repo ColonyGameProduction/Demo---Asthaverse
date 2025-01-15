@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     private GameInputManager _gameInput;
     
     [Header("States")]
-    [ReadOnly(false), SerializeField] private GameState _currGameState;
+    [ReadOnly(true), SerializeField] private GameState _currGameState;
     [ReadOnly(false), SerializeField] private GamePlayMode _currGamePlayMode;
     [ReadOnly(false), SerializeField] private GamePauseState _currGamePauseState;
     private bool _isPause;

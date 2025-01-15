@@ -7,11 +7,13 @@ public class SplitTeammatesEvent : MonoBehaviour
     [SerializeField] private PlayableCharacterIdentity _chosenSplitTeammates;
     [SerializeField] private Transform _newPlaceToGo;
     private PlayableCharacterManager _playableCharacterManager;
+    private EnemyAIManager _enemyAIManager;
     public bool _go;
 
     private void Start() 
     {
         _playableCharacterManager = PlayableCharacterManager.Instance;
+        _enemyAIManager = EnemyAIManager.Instance;
     }
     private void Update() 
     {
@@ -28,6 +30,8 @@ public class SplitTeammatesEvent : MonoBehaviour
             _playableCharacterManager.ChangePlayer();
         }
         _playableCharacterManager.RemovePlayableCharacter(_chosenSplitTeammates);
+        _enemyAIManager.OnRemovedPlayable?.Invoke(_chosenSplitTeammates.transform);
+
         if(_newPlaceToGo != null) _chosenSplitTeammates.GetFriendAIStateMachine.ChangeFriendDefaultDirectionWhenSplit(_newPlaceToGo);
     }
 }

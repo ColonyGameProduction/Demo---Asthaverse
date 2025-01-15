@@ -118,10 +118,11 @@ public class PlayableInteraction : MonoBehaviour
     }
     private ISilentKillAble GetClosestSilentkillable()
     {
-        if(_silentKillAbleList.Count == 0)return null;
+        if(_silentKillAbleList.Count == 0 || _playableCharacterIdentity.IsSilentKilling)return null;
         float closestDistance = Mathf.Infinity;
         // float smallestDotProduct = -1;
         ISilentKillAble chosen = null;
+
         foreach(ISilentKillAble interactable in _silentKillAbleList)
         {
             if(interactable == null)continue;
