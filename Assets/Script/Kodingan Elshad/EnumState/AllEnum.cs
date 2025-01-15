@@ -74,11 +74,14 @@ public enum GamePauseState
 public enum DialogCutsceneTitle
 {
     None, Test1, Test2, Cutscene1, 
-    Ext_Compound, Int_Compound, Int_Tourism1, 
+    Ext_Compound1, Int_Compound, Int_Tourism1, 
     Int_tourism2, Int_tourism3, Int_tourism4, 
     Int_tourism5, Ext_Tourism, Ext_CommandCentre, 
-    Int_CommandCentre, Armory, Qst_Eavesdrop
+    Int_CommandCentre, Armory, Qst_Eavesdrop,
 
+    Int_AbbandonVillage1, Int_AbbandonVillage2, Int_AbbandonVillage3,
+    Ext_Compound2, Int_VehicleDepot1, Int_VehicleDepot2, Int_TrainingArea1,
+    Int_TrainingArea2, Int_Barracks, Ext_HQ1, Ext_HQ2, Ext_HQ3
 }
 
 public enum KeybindUIType
