@@ -7296,7 +7296,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7556632317939767522, guid: 3ef58f3893275ab46bd3eff4ddd0b198, type: 3}
   m_PrefabInstance: {fileID: 8804789048055833199}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1515364506}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e18892f13798866408103a2d16e06911, type: 3}
@@ -10819,6 +10819,7 @@ MonoBehaviour:
   playerGameObject:
   - {fileID: 79967579}
   - {fileID: 309991833}
+  - {fileID: 1515364506}
   followCameras:
   - {fileID: 0}
   - {fileID: 0}
@@ -19266,6 +19267,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4541556776204725267, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
   m_PrefabInstance: {fileID: 8826742471684535084}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1515364506 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4635284202739011185, guid: 3ef58f3893275ab46bd3eff4ddd0b198, type: 3}
+  m_PrefabInstance: {fileID: 8804789048055833199}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1557083776
 GameObject:
@@ -28811,13 +28817,7 @@ PrefabInstance:
       objectReference: {fileID: 1149176761}
     - target: {fileID: 2812994784912648343, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
-        'soldier:RightHandIndex2'\n\tTransform 'soldier:RightHandIndex1'\n\tTransform
-        'soldier:Spine'\n\tTransform 'soldier:RightForeArm'\n\tTransform 'soldier:RightHand'\n\tTransform
-        'soldier:RightHandIndex3'\n\tTransform 'soldier:Hips'\n\tTransform 'soldier:LeftArm'\n\tand
-        more ..."
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3067475522566628003, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
       propertyPath: m_Weight
@@ -31828,6 +31828,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 5284381324104560999, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6894715505150827654, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -34284,7 +34288,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4635284202739011185, guid: 3ef58f3893275ab46bd3eff4ddd0b198, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4788177443906377557, guid: 3ef58f3893275ab46bd3eff4ddd0b198, type: 3}
       propertyPath: m_LocalPosition.x
@@ -36687,19 +36691,17 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.31553346
       objectReference: {fileID: 0}
+    - target: {fileID: 7538669964806263368, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
+      propertyPath: _enemySilentKillTransformPos
+      value: 
+      objectReference: {fileID: 1335988646}
     - target: {fileID: 7596239048254286310, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
       propertyPath: immortalized
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7631056032823686761, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
-        'soldier:RightHandIndex2'\n\tTransform 'soldier:RightHandIndex1'\n\tTransform
-        'soldier:Spine'\n\tTransform 'soldier:RightArm'\n\tTransform 'soldier:RightForeArm'\n\tTransform
-        'soldier:RightHand'\n\tTransform 'soldier:RightHandIndex3'\n\tTransform 'soldier:Hips'\n\tand
-        more ..."
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8250768466188025528, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
       propertyPath: m_LocalPosition.x
