@@ -2178,9 +2178,12 @@ MonoBehaviour:
   _questDesc: Turn Off The Alarm
   _isActivated: 0
   _isCompleted: 0
-  _isOptional: 1
-  _coll: {fileID: 1697142229}
-  _checkerInMap: {fileID: 0}
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
+  _checkerInMaps: []
+  _colls:
+  - {fileID: 1697142229}
 --- !u!114 &108812955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2261,9 +2264,12 @@ MonoBehaviour:
   _questDesc: Go to that position
   _isActivated: 0
   _isCompleted: 0
-  _isOptional: 0
-  _coll: {fileID: 118424740}
-  _checkerInMap: {fileID: 0}
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
+  _checkerInMaps: []
+  _colls:
+  - {fileID: 118424740}
 --- !u!65 &118424740
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4131,9 +4137,12 @@ MonoBehaviour:
   _questDesc: Turn Off The Alarm
   _isActivated: 0
   _isCompleted: 0
-  _isOptional: 1
-  _coll: {fileID: 752596821}
-  _checkerInMap: {fileID: 0}
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
+  _checkerInMaps: []
+  _colls:
+  - {fileID: 752596821}
 --- !u!114 &172320314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5352,12 +5361,14 @@ MonoBehaviour:
   _questDesc: Kill The Enemy Around This Area
   _isActivated: 0
   _isCompleted: 0
-  _isOptional: 0
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
+  _checkerInMaps: []
   _enemyTargetList:
   - {fileID: 1201134793}
   - {fileID: 983949225}
   - {fileID: 1291671314}
-  _checkerInMap: {fileID: 0}
 --- !u!4 &399082852
 Transform:
   m_ObjectHideFlags: 0
@@ -5376,6 +5387,17 @@ Transform:
   - {fileID: 1291671314}
   m_Father: {fileID: 518321864}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &403238891 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3416589412685007346, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+  m_PrefabInstance: {fileID: 8075121102877346483}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41ea6b00b2ad45f4986d974fbc4a9816, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &417459417
 GameObject:
   m_ObjectHideFlags: 0
@@ -5845,16 +5867,63 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _questName: 0
-  _questDesc: 
+  _questDesc: Investigat Thie plasj kshfasdf
   _isActivated: 0
   _isCompleted: 0
-  _soloQuestList:
-  - {fileID: 118424739}
-  - {fileID: 108812954}
-  - {fileID: 172320313}
-  - {fileID: 1813112028}
-  - {fileID: 1629021189}
-  - {fileID: 399082851}
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
+  _multipleQuestData:
+  - soloQuestsSameTitle:
+    - {fileID: 399082851}
+    isQuestShownAfterOtherQuest: 0
+    otherMultipleQuestArrayIndexToShowThisQuestIdx: 0
+    isOptional: 0
+    soloQuestHead: {fileID: 0}
+    questName: 0
+    questDescRaw: 
+    totalQuest: 0
+    currTotalQuestCompleted: 0
+    questGameUIHandler: {fileID: 0}
+    multipleQuestHandler: {fileID: 0}
+  - soloQuestsSameTitle:
+    - {fileID: 108812954}
+    - {fileID: 172320313}
+    isQuestShownAfterOtherQuest: 1
+    otherMultipleQuestArrayIndexToShowThisQuestIdx: 0
+    isOptional: 1
+    soloQuestHead: {fileID: 0}
+    questName: 0
+    questDescRaw: 
+    totalQuest: 0
+    currTotalQuestCompleted: 0
+    questGameUIHandler: {fileID: 0}
+    multipleQuestHandler: {fileID: 0}
+  - soloQuestsSameTitle:
+    - {fileID: 1813112028}
+    - {fileID: 1629021189}
+    isQuestShownAfterOtherQuest: 1
+    otherMultipleQuestArrayIndexToShowThisQuestIdx: 3
+    isOptional: 0
+    soloQuestHead: {fileID: 0}
+    questName: 0
+    questDescRaw: 
+    totalQuest: 0
+    currTotalQuestCompleted: 0
+    questGameUIHandler: {fileID: 0}
+    multipleQuestHandler: {fileID: 0}
+  - soloQuestsSameTitle:
+    - {fileID: 118424739}
+    isQuestShownAfterOtherQuest: 0
+    otherMultipleQuestArrayIndexToShowThisQuestIdx: 0
+    isOptional: 0
+    soloQuestHead: {fileID: 0}
+    questName: 0
+    questDescRaw: 
+    totalQuest: 0
+    currTotalQuestCompleted: 0
+    questGameUIHandler: {fileID: 0}
+    multipleQuestHandler: {fileID: 0}
 --- !u!1001 &519722753
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7382,11 +7451,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e18892f13798866408103a2d16e06911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &749003208 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2786314758787900164, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
-  m_PrefabInstance: {fileID: 8075121102877346483}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &752596819
 GameObject:
   m_ObjectHideFlags: 0
@@ -9496,7 +9560,7 @@ MonoBehaviour:
   _characterProfileUIHandler: {fileID: 8075121102877346486}
   _controlsManager: {fileID: 353130722}
   _uiContainersCloseWhenEvent:
-  - {fileID: 749003208}
+  - {fileID: 8075121102877346488}
   - {fileID: 1470485723}
 --- !u!1 &863942042
 GameObject:
@@ -9671,8 +9735,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee684374e30de434a970dce67666e5e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _chosenTitleToPlay: 1
+  _chosenTitleToPlay: 6
   _canOnlyBeActivateOnce: 1
+  OnTriggerEventEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &879877537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9689,9 +9756,12 @@ MonoBehaviour:
   _questDesc: Dialog
   _isActivated: 0
   _isCompleted: 0
-  _isOptional: 0
-  _coll: {fileID: 879877533}
-  _checkerInMap: {fileID: 2035483236}
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
+  _checkerInMaps: []
+  _colls:
+  - {fileID: 879877533}
 --- !u!1 &896024677
 GameObject:
   m_ObjectHideFlags: 0
@@ -9863,9 +9933,12 @@ MonoBehaviour:
   _questDesc: Go to this position
   _isActivated: 0
   _isCompleted: 0
-  _isOptional: 0
-  _coll: {fileID: 911695137}
-  _checkerInMap: {fileID: 0}
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
+  _checkerInMaps: []
+  _colls:
+  - {fileID: 911695137}
   _pauseUIHandler: {fileID: 8075121102877346487}
 --- !u!65 &911695137
 BoxCollider:
@@ -10290,12 +10363,14 @@ MonoBehaviour:
   _questDesc: Kill The Enemy Around This Area
   _isActivated: 0
   _isCompleted: 0
-  _isOptional: 0
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
+  _checkerInMaps: []
   _enemyTargetList:
   - {fileID: 127484073}
   - {fileID: 754360471}
   - {fileID: 74178332}
-  _checkerInMap: {fileID: 0}
 --- !u!4 &983949225 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7703416838481275185, guid: 03b6198dc9cdb474d83a1cc9d4050f96, type: 3}
@@ -10943,7 +11018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5213727cc95cecc4494f076732481665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Debugs: 1
+  Debugs: 0
   DebugDrawBiasa: 1
 --- !u!114 &1077971751
 MonoBehaviour:
@@ -11167,8 +11242,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee684374e30de434a970dce67666e5e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _chosenTitleToPlay: 2
+  _chosenTitleToPlay: 8
   _canOnlyBeActivateOnce: 0
+  OnTriggerEventEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1095561126
 GameObject:
   m_ObjectHideFlags: 0
@@ -17208,11 +17286,25 @@ MonoBehaviour:
   _questDesc: Kill The Enemy Around This Area
   _isActivated: 0
   _isCompleted: 0
-  _isOptional: 0
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 403238891}
+        m_TargetAssemblyTypeName: DIalogInGameManager, Assembly-CSharp
+        m_MethodName: PlayDialogCutsceneString
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Ext_Tourism
+          m_BoolArgument: 0
+        m_CallState: 2
+  _checkerInMaps: []
   _enemyTargetList:
   - {fileID: 1420940930}
   - {fileID: 1250703634}
-  _checkerInMap: {fileID: 0}
 --- !u!1 &1406690842
 GameObject:
   m_ObjectHideFlags: 0
@@ -19418,9 +19510,12 @@ MonoBehaviour:
   _questDesc: Go to that position
   _isActivated: 0
   _isCompleted: 0
-  _isOptional: 0
-  _coll: {fileID: 1557083780}
-  _checkerInMap: {fileID: 1085014265}
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
+  _checkerInMaps: []
+  _colls:
+  - {fileID: 1557083780}
 --- !u!114 &1557083782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20065,9 +20160,12 @@ MonoBehaviour:
   _questDesc: Turn Off The Alarm
   _isActivated: 0
   _isCompleted: 0
-  _isOptional: 0
-  _coll: {fileID: 627883217}
-  _checkerInMap: {fileID: 0}
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
+  _checkerInMaps: []
+  _colls:
+  - {fileID: 627883217}
 --- !u!114 &1629021190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21112,9 +21210,12 @@ MonoBehaviour:
   _questDesc: Turn Off The Alarm
   _isActivated: 0
   _isCompleted: 0
-  _isOptional: 0
-  _coll: {fileID: 1502007454}
-  _checkerInMap: {fileID: 0}
+  OnQuestCompletedEventFromOutside:
+    m_PersistentCalls:
+      m_Calls: []
+  _checkerInMaps: []
+  _colls:
+  - {fileID: 1502007454}
 --- !u!114 &1813112029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31801,6 +31902,34 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 749867017596623538, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -126.1001
+      objectReference: {fileID: 0}
+    - target: {fileID: 749867017596623538, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 251.30005
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336410008103159348, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336410008103159348, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336410008103159348, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336410008103159348, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336410008103159348, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1999908361883276691, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -31845,6 +31974,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: PauseUIHandler, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 2650505341300095489, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2843872068737498119, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -31856,6 +31989,14 @@ PrefabInstance:
     - target: {fileID: 3493551071734532188, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4796100321980928573, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4796100321980928573, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -55
       objectReference: {fileID: 0}
     - target: {fileID: 5172873011507565873, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -31909,6 +32050,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5774073428491285024, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5774073428491285024, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5774073428491285024, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 450
+      objectReference: {fileID: 0}
+    - target: {fileID: 5774073428491285024, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6469116261441224458, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -31917,8 +32074,40 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6532922842604225043, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: _soloQuestFont
+      value: 
+      objectReference: {fileID: 11400000, guid: 9b2096c18411bdc4e9bdd26a0d5d1e66, type: 2}
+    - target: {fileID: 6532922842604225043, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: _multipleQuestFont
+      value: 
+      objectReference: {fileID: 11400000, guid: 2acb8cff1c0fe534eade2121ba9af872, type: 2}
     - target: {fileID: 6894715505150827654, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950887753144791466, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950887753144791466, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950887753144791466, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950887753144791466, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950887753144791466, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950887753144791466, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7820542051638038026, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
@@ -32017,6 +32206,26 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8374931302332890934, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8374931302332890934, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8374931302332890934, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8374931302332890934, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8374931302332890934, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9119327059756549645, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -32077,6 +32286,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 992eafb5c91646e41b86d2cc24c83e10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8075121102877346488 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7558762549098989126, guid: 5100fe76f62ac934091baa02100475f5, type: 3}
+  m_PrefabInstance: {fileID: 8075121102877346483}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8406141847172396756
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35322,6 +35536,10 @@ PrefabInstance:
     - target: {fileID: 759629366429767808, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 818737792172782874, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
+      propertyPath: _interactDistance
+      value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 870821235765327081, guid: 9bd7c25f985aa3e4d96a720f8b092f01, type: 3}
       propertyPath: m_LocalPosition.x

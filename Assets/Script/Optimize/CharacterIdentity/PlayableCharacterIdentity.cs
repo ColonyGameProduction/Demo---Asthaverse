@@ -306,7 +306,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     }
     protected void RegenerationTimer()
     {
-        if(CurrHealth <= TotalHealth && !IsDead)
+        if(CurrHealth <= TotalHealth && !IsDead && !IsSilentKilling)
         {
             if(_friendAIStateMachine.EnemyWhoSawAIList.Count > 0)
             {

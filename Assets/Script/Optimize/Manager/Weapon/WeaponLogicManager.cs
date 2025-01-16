@@ -220,7 +220,7 @@ public class WeaponLogicManager : MonoBehaviour
             particle.transform.rotation = Quaternion.LookRotation(hit.normal);
             StartCoroutine(SpawnParticle(particle, weaponShootVFX));
         }
-        Debug.DrawRay(hit.point, hit.normal * 50, Color.red, 0.2f, false);
+        if(DebugDrawBiasa)Debug.DrawRay(hit.point, hit.normal * 50, Color.red, 0.2f, false);
         // Debug.LogError("Stop");
         // Destroy(trail.gameObject, trail.time);
         weaponShootVFX.SetVFXBackToNormal(trail.transform);

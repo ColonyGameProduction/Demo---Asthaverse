@@ -197,7 +197,7 @@ public class CharacterProfileUI : MonoBehaviour, IUnsubscribeEvent
         }
 
         _weaponImageContainer.gameObject.SetActive(isCurrPlayable);
-        _charaNameContainer.gameObject.SetActive(isCurrPlayable);
+        // _charaNameContainer.gameObject.SetActive(isCurrPlayable);
         _suppressContainer.SetActive(isCurrPlayable);
     }
 

@@ -10,7 +10,7 @@ public class PlayableInteraction : MonoBehaviour
     [SerializeField] private IInteractable _currInteractable;
     [SerializeField] private ISilentKillAble _currSilentKillAble;
     [SerializeField] private LayerMask _interactableLayerMask;
-    [SerializeField] private float _interactDistance = 5f;
+    [SerializeField] private float _interactDistances = 7.5f;
 
     [Space(1)]
     [Header("TakeItem")]
@@ -73,7 +73,7 @@ public class PlayableInteraction : MonoBehaviour
         else
         {
             // Debug.DrawRay(_originInteract.position, _directionInteract.forward.normalized * 100f, Color.magenta, 2f);
-            if(Physics.Raycast(_originInteract.position, _directionInteract.forward.normalized, out RaycastHit hit, _interactDistance, _interactableLayerMask))
+            if(Physics.Raycast(_originInteract.position, _directionInteract.forward.normalized, out RaycastHit hit, _interactDistances, _interactableLayerMask))
             {
                 IInteractable temp = hit.collider.GetComponent<IInteractable>();
                 IInteractable interactable =  temp != null ? temp : hit.collider.GetComponentInParent<IInteractable>();

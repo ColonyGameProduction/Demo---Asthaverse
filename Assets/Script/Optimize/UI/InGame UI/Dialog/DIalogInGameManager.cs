@@ -32,7 +32,14 @@ public class DIalogInGameManager : MonoBehaviour
         Instance = this;
         _faceImageRectTransform = _faceImage.gameObject.GetComponent<RectTransform>();
     }
-    public void PlayDialogCutscene(DialogCutsceneTitle title)
+    public void PlayDialogCutsceneString(string titleSameAsEnum)
+    {
+        StopCurrDialog();
+        _chosenDialog = _dialogCutsceneList.SearchDialogCutSceneString(titleSameAsEnum);
+        _currDialogIdx = 0;
+        if(_chosenDialog != null) PlayDialog();
+    }
+    public void PlayDialogCutsceneTitle(DialogCutsceneTitle title)
     {
         StopCurrDialog();
         _chosenDialog = _dialogCutsceneList.SearchDialogCutScene(title);

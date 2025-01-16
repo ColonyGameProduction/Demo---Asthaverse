@@ -3,26 +3,36 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
+[Serializable]
 public class QuestContainerUI
 {
-    public QuestContainerUI(GameObject parent, TextMeshProUGUI textUI, string questOptionalSentences)
+    public QuestContainerUI(GameObject parent, Image bg, Image strip, TextMeshProUGUI textUI, string questOptionalSentences)
     {
-        textParent = parent;
+        containerParent = parent;
+        containerBG = bg;
+        stripPointContainer = strip.gameObject;
+
         text = textUI;
         questOptionalText = questOptionalSentences;
 
     }
-    public GameObject textParent;
+    public GameObject containerParent;
     public TextMeshProUGUI text;
-    public SoloQuestHandler quest;
+    public Image containerBG;
+    public GameObject stripPointContainer;
+    public QuestHandlerParent quest;
+    public bool isMultipleQuest;
+    public bool isOptional;
     private string questOptionalText;
     public void ChangeText()
     {
         if(quest == null) return;
 
-        text.text = "- " + quest.QuestDesc;
-        if(quest.IsOptional) text.text += " " + questOptionalText;
+        text.text = quest.QuestDesc;
+
+        if(isOptional) text.text += " " + questOptionalText;
     }
 
 
@@ -39,14 +49,16 @@ public class QuestGameUIHandler : MonoBehaviour
     [Header("Data")]
     [SerializeField] private Color _startColor;
     [SerializeField] private Color _completeColor;
+    [SerializeField] private TMP_FontAsset _soloQuestFont, _multipleQuestFont;
+    [SerializeField] private float _soloQuestFontSize, _multipleQuestFontSize;
     [SerializeField] private float _changeTextAlphaDuration = 0.5f;
     [TextArea(2,3)][SerializeField] private string _questOptionalText;
-    private int _currIdx;
+    private int _currActivatedChildIdx;
     private void Awake() 
     {
         Instance = this;
         CreateQuestContainers();
-        _currIdx = 0;
+        _currActivatedChildIdx = 0;
     }
 
     public void ShowQuestContainerUI()
@@ -66,36 +78,66 @@ public class QuestGameUIHandler : MonoBehaviour
             GameObject newQuestContainer = Instantiate(_questContainerPrefab, _questContainerParent.transform);
             newQuestContainer.SetActive(false);
 
+            Image bgContainer = newQuestContainer.GetComponent<Image>();
+            Image stripPoint = newQuestContainer.transform.GetChild(0).GetComponent<Image>();
+
             TextMeshProUGUI text = newQuestContainer.GetComponentInChildren<TextMeshProUGUI>();
             text.color = _startColor;
 
-            QuestContainerUI questContainerUI = new QuestContainerUI(newQuestContainer, text, _questOptionalText);
+
+            QuestContainerUI questContainerUI = new QuestContainerUI(newQuestContainer, bgContainer, stripPoint, text, _questOptionalText);
             _questContainerList.Add(questContainerUI);
         }
     }
 
-    public void CallQuestContainer(SoloQuestHandler quest)
+    public void CallQuestContainer(QuestHandlerParent quest, bool isMultipleQuest, bool isOptional)
     {
         QuestContainerUI questContainerUI = GetUnusedContainer();
         if(questContainerUI == null) return;
 
         questContainerUI.quest = quest;
-        quest.OnChangeDescBeforeComplete += questContainerUI.ChangeText;
+        questContainerUI.isMultipleQuest = isMultipleQuest;
+        questContainerUI.isOptional = isOptional;
+        questContainerUI.text.font = isMultipleQuest ? _multipleQuestFont : _soloQuestFont;
+        questContainerUI.text.fontSize = isMultipleQuest ? _multipleQuestFontSize : _soloQuestFontSize;
+
+        if(!isMultipleQuest)
+        {
+            SoloQuestHandler soloQuest = quest as SoloQuestHandler;
+            soloQuest.OnChangeDescBeforeComplete += questContainerUI.ChangeText;
+
+        }
+        else
+        {
+            questContainerUI.containerBG.enabled = false;
+        }
+        
 
         ChangeTextAlphaValue(questContainerUI.text, 1);
         questContainerUI.text.color = _startColor;
         questContainerUI.ChangeText();
 
-        questContainerUI.textParent.SetActive(true);
+        questContainerUI.containerParent.transform.SetSiblingIndex(_currActivatedChildIdx);
+        _currActivatedChildIdx++;
+        questContainerUI.containerParent.SetActive(true);
+        
+        // questContainerUI.stripPointContainer.SetActive(isMultipleQuest ? false : true);
     }
 
-    public void HideCompletedQuestContainer(SoloQuestHandler quest)
+    public void HideCompletedQuestContainer(QuestHandlerParent quest)
     {
         QuestContainerUI questContainerUI = GetUsedContainer(quest);
         if(questContainerUI == null) return;
 
-        quest.OnChangeDescBeforeComplete -= questContainerUI.ChangeText;
+        if(!questContainerUI.isMultipleQuest)
+        {
+            SoloQuestHandler soloQuest = quest as SoloQuestHandler;
+            soloQuest.OnChangeDescBeforeComplete -= questContainerUI.ChangeText;
+        }
         questContainerUI.quest = null;
+        questContainerUI.isMultipleQuest = false;
+        questContainerUI.isOptional = false;
+        questContainerUI.containerBG.enabled = false;
         
         questContainerUI.text.color = _completeColor;
     
@@ -106,7 +148,9 @@ public class QuestGameUIHandler : MonoBehaviour
         setOnComplete(
             ()=>
             {
-                questContainerUI.textParent.SetActive(false);
+                questContainerUI.containerParent.SetActive(false);
+                questContainerUI.containerBG.enabled = true;
+                questContainerUI.stripPointContainer.SetActive(true);
             }
         );
     }
@@ -115,11 +159,11 @@ public class QuestGameUIHandler : MonoBehaviour
         // QuestContainerUI container = _que
         foreach(QuestContainerUI container in _questContainerList)
         {
-            if(container.quest == null && !container.textParent.activeSelf) return container;
+            if(container.quest == null && !container.containerParent.activeSelf) return container;
         }
         return null;
     }
-    private QuestContainerUI GetUsedContainer(SoloQuestHandler quest)
+    private QuestContainerUI GetUsedContainer(QuestHandlerParent quest)
     {
         foreach(QuestContainerUI container in _questContainerList)
         {
@@ -135,4 +179,9 @@ public class QuestGameUIHandler : MonoBehaviour
         text.color = color;
     }
 
+    public void ResetCurrActivatedChildIdx()
+    {
+        Debug.Log("Hayooo");
+        _currActivatedChildIdx = 0;
+    }
 }

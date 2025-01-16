@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public abstract class QuestHandlerParent : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public abstract class QuestHandlerParent : MonoBehaviour
     protected QuestGameUIHandler _questGameUIHandler;
 
     public Action OnQuestCompleted;
+    public UnityEvent OnQuestCompletedEventFromOutside;
 
     #region  Getter Setter
     public bool IsActivated {get {return _isActivated;}}
@@ -45,6 +47,7 @@ public abstract class QuestHandlerParent : MonoBehaviour
         DeactivateQuest();
         _isCompleted = true;
         OnQuestCompleted?.Invoke();
+        OnQuestCompletedEventFromOutside?.Invoke();
     }
 
     public abstract void CallQuestContainerUI();
