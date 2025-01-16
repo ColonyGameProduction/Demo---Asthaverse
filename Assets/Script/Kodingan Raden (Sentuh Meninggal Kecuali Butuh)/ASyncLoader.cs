@@ -64,15 +64,20 @@ public class ASyncLoader : MonoBehaviour
         AsyncOperation loadOperation = SceneManager.LoadSceneAsync(levelToLoad);
         loadOperation.allowSceneActivation = false;
 
+        float displayedProgress = 0f;
+
         while (!loadOperation.isDone)
         {
-            float progressValue = Mathf.Clamp01(loadOperation.progress / 0.9f);
+            float targetProgress = Mathf.Clamp01(loadOperation.progress / 0.9f);
 
-            logoFillImage.fillAmount = progressValue;
+            displayedProgress = Mathf.Lerp(displayedProgress, targetProgress, Time.deltaTime * 2f); // -> nilai 2f ini bisa di ganti kalo mau lebih cepet ato lebih lambat kecepetan progressnya
+
+            logoFillImage.fillAmount = displayedProgress;
 
             if (loadOperation.progress >= 0.9f)
             {
                 pressAnyKeyPrompt.SetActive(true);
+
                 if (Input.anyKeyDown)
                 {
                     isReadyToProceed = true;
