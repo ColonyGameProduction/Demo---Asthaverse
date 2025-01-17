@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 612e70f49e5124da0a95111a57250300, type: 3}
   m_Name: New Volumetric Fog Profile
   m_EditorClassIdentifier: 
-  raymarchQuality: 5
+  raymarchQuality: 16
   raymarchMinStep: 1
   jittering: 1
   dithering: 1
@@ -33,9 +33,9 @@ MonoBehaviour:
   border: 0.05
   verticalOffset: 0
   distance: 1
-  distanceFallOff: 0
-  maxDistance: 100
-  maxDistanceFallOff: 0
+  distanceFallOff: 1
+  maxDistance: 500
+  maxDistanceFallOff: 1
   terrainFit: 0
   terrainFitResolution: 128
   terrainLayerMask:
@@ -114,7 +114,7 @@ MonoBehaviour:
   specularThreshold: 0.637
   specularIntensity: 0.5
   turbulence: 1
-  windDirection: {x: 0.025, y: 0, z: 0}
+  windDirection: {x: 0.025, y: 0, z: 0.025}
   useCustomDetailNoiseWindDirection: 0
   detailNoiseWindDirection: {x: 0.02, y: 0, z: 0}
   dayNightCycle: 1
