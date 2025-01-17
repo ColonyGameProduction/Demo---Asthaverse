@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5461045489713187449
 RectTransform:
   m_ObjectHideFlags: 0
@@ -31,9 +31,9 @@ RectTransform:
   - {fileID: 6905861213984333038}
   m_Father: {fileID: 2403942209448065160}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -200, y: -200}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 526, y: -76}
   m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2970376491038696979
@@ -68,9 +68,9 @@ RectTransform:
   - {fileID: 7387295512070527917}
   m_Father: {fileID: 1781250304172753496}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -960, y: -540}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 960, y: -540}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4261018255551909642
@@ -124,12 +124,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _questContainerObject: {fileID: 2970376491038696979}
   _questContainerParent: {fileID: 8054060778153153894}
-  _questContainerPrefab: {fileID: 6622433835244869086, guid: ab01452bdc8c0d94f8754572a640abf3, type: 3}
+  _questContainerPrefab: {fileID: 52284950471441383, guid: 2e1d6fe50eb2cb34ea3b9d0309c4248c, type: 3}
   _totalQuestContainerNeeded: 10
-  _startColor: {r: 1, g: 1, b: 1, a: 1}
-  _completeColor: {r: 0.53333336, g: 0.7529412, b: 0.5411765, a: 1}
+  _startTextColor: {r: 1, g: 1, b: 1, a: 1}
+  _completeTextColor: {r: 0.53333336, g: 0.7529412, b: 0.5411765, a: 1}
+  _soloQuestFont: {fileID: 11400000, guid: 9b2096c18411bdc4e9bdd26a0d5d1e66, type: 2}
+  _multipleQuestFont: {fileID: 11400000, guid: 2acb8cff1c0fe534eade2121ba9af872, type: 2}
+  _soloQuestFontSize: 30
+  _multipleQuestFontSize: 35
   _changeTextAlphaDuration: 0.5
   _questOptionalText: <color=orange>[OPTIONAL]</color>
+  _startBGColor: {r: 1, g: 1, b: 1, a: 1}
+  _completeBGColor: {r: 0, g: 1, b: 0.03529412, a: 1}
 --- !u!1 &8054060778153153894
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,11 +168,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2403942209448065160}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1, y: -228.5802}
-  m_SizeDelta: {x: 400, y: 0}
-  m_Pivot: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 325, y: -55}
+  m_SizeDelta: {x: 500, y: 0}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &3343345283814314205
 MonoBehaviour:
   m_ObjectHideFlags: 0

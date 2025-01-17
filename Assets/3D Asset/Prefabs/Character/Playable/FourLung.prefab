@@ -31,6 +31,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2523690796859373270}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &435682185204009629
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2450229963683156579}
+  m_Layer: 7
+  m_Name: EnemyPosWhenSilentKill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2450229963683156579
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 435682185204009629}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.02424959, z: -0, w: 0.999706}
+  m_LocalPosition: {x: -0.05603302, y: 0, z: 0.7980355}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3111907464028235512}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &491586236901406992
 GameObject:
   m_ObjectHideFlags: 0
@@ -683,9 +714,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ed36a91f4a9e9141842faba30ee0597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gm: {fileID: 0}
   _interactableLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  _interactDistances: 7.5
   _pickableObjPoint: {fileID: 111681881980494903}
   _throwForceMultiplier: 20
 --- !u!54 &1596390510361684359
@@ -1265,6 +1298,7 @@ MonoBehaviour:
   _regenScale: 0.2
   _regenTimerMax: 0.5
   _regenCDTimer: 0
+  ANIMATION_PARAMETER_SILENTKILLCOUNTER: SilentKillCounter
   _isPlayerInput: 0
   _friendStatSO: {fileID: 11400000, guid: 7f20233d54db12d48afa332d6b19085a, type: 2}
   _totalHealthFriend: 0
@@ -1358,6 +1392,7 @@ MonoBehaviour:
   _switchWeaponDuration: 0.2
   _isSilentKill: 0
   _silentKillDuration: 0.2
+  _enemySilentKillTransformPos: {fileID: 2450229963683156579}
   _rigControllerPistol: {fileID: 2134795609806209306}
   _rigHandFollowRifle: {fileID: 7282935877891455174}
   _rigHandFollowPistol: {fileID: 6389823594417893526}
@@ -1520,7 +1555,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3728759513829729309}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.4
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -1529,7 +1564,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 1
+  m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -1674,7 +1709,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CollideAgainst:
     serializedVersion: 2
-    m_Bits: 77889
+    m_Bits: 78913
   m_IgnoreTag: Player
   m_TransparentLayers:
     serializedVersion: 2
@@ -4513,6 +4548,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: c2d28a25e83da274eaec764b0419c7dc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 16084004802124792}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: c2d28a25e83da274eaec764b0419c7dc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2450229963683156579}
     - targetCorrespondingSourceObject: {fileID: -6114664639470354, guid: c2d28a25e83da274eaec764b0419c7dc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8814719733261765012}

@@ -129,6 +129,11 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
         }
     }
     #region  Weapon
+    protected override void UseBullet()
+    {
+        CurrWeapon.currBullet -= 1;
+        _getPlayableCharacterIdentity.OnPlayableBulletChange?.Invoke();
+    }
     public void SilentKill()
     {
         StartCoroutine(SilentKillActive(_silentKillDuration));
@@ -432,7 +437,8 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
             }
             else
             {
-                _currRecoil = 0;
+                if(_currWeapon.weaponStatSO.bulletPerTap > 1) _currRecoil = _currWeapon.weaponStatSO.recoil;
+                else _currRecoil = 0;
             }
 
         }
