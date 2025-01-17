@@ -97,7 +97,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
     
     private void Update() 
     {
-        if(!_gm.IsGamePlaying()) return;
+        if(!_gm.IsGamePlaying() || _charaIdentity.IsDead) return;
 
         _fovMachine.FOVJob();
         CalculateAlertValue();

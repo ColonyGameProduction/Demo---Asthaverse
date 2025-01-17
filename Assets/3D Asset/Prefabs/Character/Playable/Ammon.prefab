@@ -1789,7 +1789,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CollideAgainst:
     serializedVersion: 2
-    m_Bits: 77889
+    m_Bits: 78913
   m_IgnoreTag: Player
   m_TransparentLayers:
     serializedVersion: 2
@@ -1953,6 +1953,37 @@ MonoBehaviour:
       x: 1
       y: 1
       z: 1
+--- !u!1 &6228114072921870399
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4313357822494988731}
+  m_Layer: 7
+  m_Name: EnemyPosWhenSilentKill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4313357822494988731
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6228114072921870399}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.02424959, z: -0, w: 0.999706}
+  m_LocalPosition: {x: -0.05603302, y: 0, z: 0.7980355}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8230146354003609116}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6328245835290925547
 GameObject:
   m_ObjectHideFlags: 0
@@ -2151,6 +2182,7 @@ MonoBehaviour:
   _regenScale: 0.2
   _regenTimerMax: 0.5
   _regenCDTimer: 0
+  ANIMATION_PARAMETER_SILENTKILLCOUNTER: SilentKillCounter
   _isPlayerInput: 0
   _friendStatSO: {fileID: 11400000, guid: f81fe461a29266540868cd75ae4260aa, type: 2}
   _totalHealthFriend: 0
@@ -2244,6 +2276,7 @@ MonoBehaviour:
   _switchWeaponDuration: 0.2
   _isSilentKill: 0
   _silentKillDuration: 0.2
+  _enemySilentKillTransformPos: {fileID: 4313357822494988731}
   _rigControllerPistol: {fileID: 4417251638729722822}
   _rigHandFollowRifle: {fileID: 7122057504193453208}
   _rigHandFollowPistol: {fileID: 5425318992181866500}
@@ -2406,7 +2439,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 6405660892747392425}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.4
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -2415,7 +2448,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 1
+  m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -2906,9 +2939,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ed36a91f4a9e9141842faba30ee0597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gm: {fileID: 0}
   _interactableLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  _interactDistances: 7.5
   _pickableObjPoint: {fileID: 4210636730047672642}
   _throwForceMultiplier: 20
 --- !u!54 &5443729031611629045
@@ -4498,6 +4533,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: d762d90664217764aa2dd60b79f88485, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8212588172403771915}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: d762d90664217764aa2dd60b79f88485, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4313357822494988731}
     - targetCorrespondingSourceObject: {fileID: -6114664639470354, guid: d762d90664217764aa2dd60b79f88485, type: 3}
       insertIndex: -1
       addedObject: {fileID: 964669266491000216}

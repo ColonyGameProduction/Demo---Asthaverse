@@ -186,7 +186,7 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
             RecoilHandler();
             SetShootPosition();
             _weaponLogicManager.ShootingPerformed(this.transform, _originShootPosition, _directionShootPosition, CharaAimAccuracy, CurrWeapon.weaponStatSO, _charaEnemyMask, _finalCountRecoil, _gunOriginShootPosition, IsAIInput, isGunInsideWall, _weaponShootVFX);
-            CurrWeapon.currBullet -= 1;
+            UseBullet();
             if(!CurrWeapon.weaponStatSO.allowHoldDownButton)IsUsingWeapon = false;
             StartCoroutine(FireRate(CurrWeapon.weaponStatSO.fireRate));
             if (CurrWeapon.currBullet == 0)
@@ -204,6 +204,10 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
             }
             
         }
+    }
+    protected virtual void UseBullet()
+    {
+        CurrWeapon.currBullet -= 1;
     }
     protected virtual void SetShootPosition()
     {
@@ -303,7 +307,8 @@ public class UseWeaponStateMachine : CharacterStateMachine, IUseWeapon, INormalU
         }
         else
         {
-            _currRecoil = 0;
+            if(_currWeapon.weaponStatSO.bulletPerTap > 1) _currRecoil = _currWeapon.weaponStatSO.recoil;
+            else _currRecoil = 0;
         }
     }
     #endregion

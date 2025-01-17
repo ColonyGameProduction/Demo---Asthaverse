@@ -5,8 +5,7 @@ using UnityEngine;
 public class TriggerQuestHandler : SoloQuestHandler, IUnsubscribeEvent
 {
     protected IConnectToQuest _triggerObject;
-    [SerializeField] private Collider _coll;
-    [SerializeField] private GameObject _checkerInMap;
+    [SerializeField] private Collider[] _colls;
     private void Awake()
     {
         _triggerObject = GetComponent<IConnectToQuest>();
@@ -15,19 +14,25 @@ public class TriggerQuestHandler : SoloQuestHandler, IUnsubscribeEvent
 
     public override void ActivateQuest()
     {
-        _isActivated = true;
-        _coll.enabled = true;
-        if(_checkerInMap) _checkerInMap.SetActive(true);
+        base.ActivateQuest();
+        ToggleCollider(true);
+        
     }
     public override void DeactivateQuest()
     {
-        _coll.enabled = false;
-        _isActivated = false;
-        if(_checkerInMap) _checkerInMap.SetActive(false);
+        ToggleCollider(false);
+        base.DeactivateQuest();
     }
 
     public void UnsubscribeEvent()
     {
         _triggerObject.OnTriggerQuestComplete -= QuestComplete;
+    }
+    public virtual void ToggleCollider(bool isActivate)
+    {
+        foreach(Collider coll in _colls)
+        {
+            coll.enabled = isActivate;
+        }
     }
 }
