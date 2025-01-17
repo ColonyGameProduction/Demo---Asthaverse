@@ -44,7 +44,7 @@ public class QuestManager : MonoBehaviour, IUnsubscribeEvent
     {
         Debug.Log("NEXT QUEST");
         CurrQuest.EndedCallQuestContainerUI();
-        _questGameUIHandler.ResetCurrActivatedChildIdx();
+        
         if(_currQuestIdx == _questList.Count - 1)
         {
             Debug.Log("Level Completed");
@@ -54,6 +54,7 @@ public class QuestManager : MonoBehaviour, IUnsubscribeEvent
         }
 
         _currQuestIdx++;
+        _questGameUIHandler.ResetCurrActivatedChildIdx();
         ActivateQuest();
     }
 

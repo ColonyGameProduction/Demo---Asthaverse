@@ -3,9 +3,17 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
+[Serializable]
+public class EventAfterDialogFinishFromInspector
+{
+    public DialogCutsceneTitle title;
+    [ReadOnly(false)] public bool isDone;
+    public UnityEvent action;
+}
 public class DIalogInGameManager : MonoBehaviour
 {
     public static DIalogInGameManager Instance {get; private set;}
@@ -23,6 +31,8 @@ public class DIalogInGameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _charName;
     [SerializeField] private VideoPlayer _video;
     [ReadOnly(false), SerializeField] private bool _canNextDialog;
+    [Header("Event from inspector")]
+    [SerializeField] private EventAfterDialogFinishFromInspector[] _eventAfterDialogFinishFromInspectors;
 
     #region event
     public Action<DialogCutsceneTitle> OnDialogFinish;
@@ -110,6 +120,7 @@ public class DIalogInGameManager : MonoBehaviour
             else
             {
                 OnDialogFinish?.Invoke(_chosenDialog.title);
+                CheckEventFromInspectorAfterDialogFinish(_chosenDialog.title);
                 StopCurrDialog();
             }
         });
@@ -121,5 +132,16 @@ public class DIalogInGameManager : MonoBehaviour
         Color colorChosen = chosen.color;
         colorChosen.a = to;
         chosen.color = colorChosen;
+    }
+    private void CheckEventFromInspectorAfterDialogFinish(DialogCutsceneTitle title)
+    {
+        foreach(EventAfterDialogFinishFromInspector eventDialog in _eventAfterDialogFinishFromInspectors)
+        {
+            if(title == eventDialog.title && !eventDialog.isDone)
+            {
+                eventDialog.isDone = true;
+                eventDialog.action?.Invoke();
+            }
+        }
     }
 }

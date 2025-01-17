@@ -341,13 +341,13 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             if(!immortalized) Death();
         }
     }
-    public override void Heal(float Healing)
+    protected override void HandleHeal(float Healing)
     {
-        base.Heal(Healing);
+        base.HandleHeal(Healing);
 
         OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
     }
-    public override void Death()
+    protected override void HandleDeath()
     {
         if(IsReviving)
         {
@@ -355,7 +355,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             StopRevivingFriend();
         }
         _isHoldSwitchState = false;
-        base.Death();
+        base.HandleDeath();
 
         if(IsHoldingInteraction) IsHoldingInteraction = false;
         if(_playableInteraction.IsHeldingObject) _playableInteraction.RemoveHeldObject();

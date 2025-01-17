@@ -12,7 +12,7 @@ public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent, IConnectToQ
     private bool _isTestAfterDialogDone, _canTriggerOnce;
     [SerializeField] private bool _canOnlyBeActivateOnce;
     public Action<DialogCutsceneTitle> OnPlayerTriggerOnce;
-    public UnityEvent OnTriggerEventEventFromOutside;
+    // public UnityEvent OnTriggerEventEventFromOutside;
     public event Action OnTriggerQuestComplete;
 
     private void Start() 
@@ -52,7 +52,7 @@ public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent, IConnectToQ
         {
             _isTestAfterDialogDone = true;
             OnTriggerQuestComplete?.Invoke();
-            OnTriggerEventEventFromOutside?.Invoke();
+            // OnTriggerEventEventFromOutside?.Invoke();
         }
     }
 

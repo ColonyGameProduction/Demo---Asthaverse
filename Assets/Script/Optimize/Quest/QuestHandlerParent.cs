@@ -40,10 +40,14 @@ public abstract class QuestHandlerParent : MonoBehaviour
         _isActivated = false;
     }
 
-    protected virtual void QuestComplete()
+    protected void QuestComplete()
     {
         if(!_isActivated) return;
 
+        HandleQuestComplete();
+    }
+    protected virtual void HandleQuestComplete()
+    {
         DeactivateQuest();
         _isCompleted = true;
         OnQuestCompleted?.Invoke();
@@ -52,5 +56,6 @@ public abstract class QuestHandlerParent : MonoBehaviour
 
     public abstract void CallQuestContainerUI();
     public abstract void EndedCallQuestContainerUI();
+    
     
 }

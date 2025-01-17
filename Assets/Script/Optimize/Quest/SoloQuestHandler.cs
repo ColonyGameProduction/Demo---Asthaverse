@@ -39,9 +39,9 @@ public class SoloQuestHandler : QuestHandlerParent
     {
         _questGameUIHandler.HideCompletedQuestContainer(this);
     }
-    protected override void QuestComplete()
+    protected override void HandleQuestComplete()
     {
-        base.QuestComplete();
+        base.HandleQuestComplete();
         OnSoloQuestComplete?.Invoke(QuestName, this);
     }
     public virtual void ToggleCheckerInMap(bool isActivate)

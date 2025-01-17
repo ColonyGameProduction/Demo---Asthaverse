@@ -141,7 +141,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     protected virtual void Update() 
     {
-        if(!_gm.IsGamePlaying()) return;
+        if(!_gm.IsGamePlaying() || !this.gameObject.activeSelf) return;
 
         _currState?.UpdateState();
     }
@@ -211,6 +211,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     }
     public bool IsAIAtDirPos()
     {
+        if(!this.gameObject.activeSelf) return false;
         if(AgentNavMesh.destination != CurrAIDirPos)
         {
 

@@ -50,12 +50,12 @@ public class EnemyKillQuestHandler : SoloQuestHandler
         base.DeactivateQuest();
     }
     
-    protected override void QuestComplete()
+    protected override void HandleQuestComplete()
     {
         
         if(_totalTargetDied < _totalTarget) return;
 
-        base.QuestComplete();
+        base.HandleQuestComplete();
     }
 
     private void ChangeDesc()
@@ -64,4 +64,5 @@ public class EnemyKillQuestHandler : SoloQuestHandler
         _questDesc = questDescFinal;
         OnChangeDescBeforeComplete?.Invoke();
     }
+
 }

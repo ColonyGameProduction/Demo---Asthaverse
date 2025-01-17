@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [Serializable]
@@ -47,18 +48,23 @@ public class QuestGameUIHandler : MonoBehaviour
     private List<QuestContainerUI> _questContainerList = new List<QuestContainerUI>();
 
     [Header("Data")]
-    [SerializeField] private Color _startColor;
-    [SerializeField] private Color _completeColor;
+    [Header("Text")]
+    [FormerlySerializedAs("_startColor")][SerializeField] private Color _startTextColor;
+    [FormerlySerializedAs("_completeColor")][SerializeField] private Color _completeTextColor;
     [SerializeField] private TMP_FontAsset _soloQuestFont, _multipleQuestFont;
     [SerializeField] private float _soloQuestFontSize, _multipleQuestFontSize;
     [SerializeField] private float _changeTextAlphaDuration = 0.5f;
     [TextArea(2,3)][SerializeField] private string _questOptionalText;
+
+    [Header("Container BG")]
+    [SerializeField] private Color _startBGColor;
+    [SerializeField] private Color _completeBGColor;
     private int _currActivatedChildIdx;
     private void Awake() 
     {
         Instance = this;
         CreateQuestContainers();
-        _currActivatedChildIdx = 0;
+        ResetCurrActivatedChildIdx();
     }
 
     public void ShowQuestContainerUI()
@@ -82,7 +88,7 @@ public class QuestGameUIHandler : MonoBehaviour
             Image stripPoint = newQuestContainer.transform.GetChild(0).GetComponent<Image>();
 
             TextMeshProUGUI text = newQuestContainer.GetComponentInChildren<TextMeshProUGUI>();
-            text.color = _startColor;
+            text.color = _startTextColor;
 
 
             QuestContainerUI questContainerUI = new QuestContainerUI(newQuestContainer, bgContainer, stripPoint, text, _questOptionalText);
@@ -109,12 +115,14 @@ public class QuestGameUIHandler : MonoBehaviour
         }
         else
         {
-            questContainerUI.containerBG.enabled = false;
+            ChangeImageAlphaValue(questContainerUI.containerBG, 0);
+            questContainerUI.stripPointContainer.SetActive(false);
         }
         
 
         ChangeTextAlphaValue(questContainerUI.text, 1);
-        questContainerUI.text.color = _startColor;
+        questContainerUI.text.color = _startTextColor;
+        questContainerUI.containerBG.color = _startBGColor;
         questContainerUI.ChangeText();
 
         questContainerUI.containerParent.transform.SetSiblingIndex(_currActivatedChildIdx);
@@ -137,9 +145,10 @@ public class QuestGameUIHandler : MonoBehaviour
         questContainerUI.quest = null;
         questContainerUI.isMultipleQuest = false;
         questContainerUI.isOptional = false;
-        questContainerUI.containerBG.enabled = false;
-        
-        questContainerUI.text.color = _completeColor;
+    
+
+        questContainerUI.containerBG.color = _completeTextColor;
+        questContainerUI.text.color = _completeTextColor;
     
         LeanTween.value(1, 0, _changeTextAlphaDuration).setOnUpdate((float value) =>
         {
@@ -149,7 +158,7 @@ public class QuestGameUIHandler : MonoBehaviour
             ()=>
             {
                 questContainerUI.containerParent.SetActive(false);
-                questContainerUI.containerBG.enabled = true;
+                ChangeImageAlphaValue(questContainerUI.containerBG, 1);
                 questContainerUI.stripPointContainer.SetActive(true);
             }
         );
@@ -177,6 +186,18 @@ public class QuestGameUIHandler : MonoBehaviour
         Color color = text.color;
         color.a = value;
         text.color = color;
+    }
+    private void ChangeImageAlphaValue(Image image, float value)
+    {
+        Color color = image.color;
+        color.a = value;
+        image.color = color;
+
+        if(value == 0 || value == 1)
+        {
+            _startBGColor.a = value;
+            _completeBGColor.a = value;
+        }
     }
 
     public void ResetCurrActivatedChildIdx()

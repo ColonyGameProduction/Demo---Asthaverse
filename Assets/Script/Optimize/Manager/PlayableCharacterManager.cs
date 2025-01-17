@@ -169,9 +169,10 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
     private void GameManager_OnChangeGamePlayModeToNormal()
     {
-        foreach(GameObject player in _gm.playerGameObject)
+        foreach(PlayableCharacterIdentity player in _charaIdentities)
         {
-            player.SetActive(true);
+            // if(player.)
+            player.IgnoreThisCharacter = false;
         }
     }
 
@@ -187,9 +188,9 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         StartCoroutine(CameraDelay());
 
-        foreach(GameObject player in _gm.playerGameObject)
+        foreach(PlayableCharacterIdentity player in _charaIdentities)
         {
-            player.SetActive(false);
+            player.IgnoreThisCharacter = true;
         }
     }
 
@@ -584,7 +585,12 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying() || !_gm.IsNormalGamePlayMode()) return;
         //Ntr kasi syarat lain
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction) _currPlayableInteraction.Interact();
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
+        {
+            
+            _currPlayableInteraction.Interact();
+        }
+        
     }
     private void GameInput_OnInteractCanceled()
     {
@@ -870,8 +876,9 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying() || !_gm.IsNormalGamePlayMode()) return;
 
-        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
+        if(CanDoThisFunction() && !_currPlayableUseWeaponStateMachine.IsSilentKill && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
         {
+            if(_currPlayableInteraction.IsHeldingObject)_currPlayableInteraction.RemoveHeldObject();
             _currPlayableInteraction.SilentKill();
         }
     }

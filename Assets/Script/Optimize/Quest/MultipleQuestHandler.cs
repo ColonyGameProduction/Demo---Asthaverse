@@ -30,7 +30,7 @@ public class MultipleQuest
     [ReadOnly(false)] public int currTotalQuestCompleted;
     [HideInInspector] public QuestGameUIHandler questGameUIHandler;
     [HideInInspector] public MultipleQuestHandler multipleQuestHandler;
-    public Action OnMultipleQuestCompleted;
+    public Action OnMultipleQuestCompleted; // JANGAN LUPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     public void SetData()
     {
         soloQuestHead = soloQuestsSameTitle[0];
@@ -47,7 +47,7 @@ public class MultipleQuest
             if(currTotalQuestCompleted == totalQuest)
             {
                 QuestGameUIHandler.Instance.HideCompletedQuestContainer(soloQuestHead);
-                OnMultipleQuestCompleted?.Invoke();
+                OnMultipleQuestCompleted?.Invoke(); 
             }
             return;
         }
@@ -75,7 +75,6 @@ public class MultipleQuest
     }
     public void ActivateAllQuest_IsQuestShownAfterOtherQuest()
     {
-        Debug.Log("ini saha yg manggil");
         if(soloQuestHead.IsActivated || multipleQuestHandler.IsCompleted) return;
 
         CallQuestContainerUI();
@@ -125,34 +124,27 @@ public class MultipleQuest
 }
 public class MultipleQuestHandler : QuestHandlerParent, IUnsubscribeEvent
 {
-    // [SerializeField] private List<SoloQuestHandler> _soloQuestList;
-
     [Header("Solo Quest Array inside IS SAME TITLE ONLY - SAME TITLE DIFFERENT ISOPTIONAL IS ALSO DIFFERENT TITLE")]
     [SerializeField] private List<MultipleQuest> _multipleQuestData = new List<MultipleQuest>();
 
     private void Awake() 
     {
-        // foreach(SoloQuestHandler quest in _soloQuestList)
-        // {
-        //     quest.OnQuestCompleted += QuestComplete;
-        //     quest.OnSoloQuestComplete += SoloQuestComplete_ChangeVisual;
-
-        //     MultipleQuest data = GetMultipleQuest(quest.QuestName, quest.IsOptional);
-        //     if(data != null) data.AddTotalQuest();
-        //     else
-        //     {
-        //         data = new MultipleQuest(quest);
-        //         _multipleQuestData.Add(data);
-        //     }
-        // }
-        foreach(MultipleQuest multipleQuest in _multipleQuestData)
+        for(int i=0; i < _multipleQuestData.Count; i++)
         {
+            MultipleQuest multipleQuest = _multipleQuestData[i];
             multipleQuest.SetData();
             multipleQuest.multipleQuestHandler = this;
             foreach(SoloQuestHandler quest in multipleQuest.soloQuestsSameTitle)
             {
                 quest.OnQuestCompleted += QuestComplete;
                 quest.OnSoloQuestComplete += SoloQuestComplete_ChangeVisual;
+                if(multipleQuest.isQuestShownAfterOtherQuest)
+                {
+                    if(multipleQuest.otherMultipleQuestArrayIndexToShowThisQuestIdx < _multipleQuestData.Count)
+                    {
+                        _multipleQuestData[multipleQuest.otherMultipleQuestArrayIndexToShowThisQuestIdx].OnMultipleQuestCompleted += multipleQuest.ActivateAllQuest_IsQuestShownAfterOtherQuest;
+                    }
+                }
             }
         }
     }
@@ -178,13 +170,6 @@ public class MultipleQuestHandler : QuestHandlerParent, IUnsubscribeEvent
                     quest.ActivateQuest();
                 }
             }
-            else
-            {
-                if(i > 0)
-                {
-                    _multipleQuestData[multipleQuest.otherMultipleQuestArrayIndexToShowThisQuestIdx].OnMultipleQuestCompleted += multipleQuest.ActivateAllQuest_IsQuestShownAfterOtherQuest;
-                }
-            }
         }
 
         base.ActivateQuest();
@@ -197,35 +182,28 @@ public class MultipleQuestHandler : QuestHandlerParent, IUnsubscribeEvent
         }
         base.DeactivateQuest();
     }
-    protected override void QuestComplete()
+    protected override void HandleQuestComplete()
     {
         foreach(MultipleQuest multipleQuest in _multipleQuestData)
         {
             if(!multipleQuest.IsAllQuestCompleted()) return;
         }
 
-        base.QuestComplete();
-        Debug.Log("Multiple Done NEXT");
+        base.HandleQuestComplete();
     }
 
     public void UnsubscribeEvent()
     {
-        foreach(MultipleQuest multipleQuest in _multipleQuestData)
+        for(int i=0; i < _multipleQuestData.Count; i++)
         {
+            MultipleQuest multipleQuest = _multipleQuestData[i];
             foreach(SoloQuestHandler quest in multipleQuest.soloQuestsSameTitle)
             {
                 quest.OnQuestCompleted -= QuestComplete;
                 quest.OnSoloQuestComplete -= SoloQuestComplete_ChangeVisual;
-            }
-        }
-        for(int i=0; i < _multipleQuestData.Count; i++)
-        {
-            MultipleQuest multipleQuest = _multipleQuestData[i];
-            if(multipleQuest.isQuestShownAfterOtherQuest)
-            {
-                if(i > 0)
+                if(multipleQuest.isQuestShownAfterOtherQuest)
                 {
-                    _multipleQuestData[i-1].OnMultipleQuestCompleted -= multipleQuest.ActivateAllQuest_IsQuestShownAfterOtherQuest;
+                    _multipleQuestData[multipleQuest.otherMultipleQuestArrayIndexToShowThisQuestIdx].OnMultipleQuestCompleted -= multipleQuest.ActivateAllQuest_IsQuestShownAfterOtherQuest;
                 }
             }
         }
@@ -250,17 +228,17 @@ public class MultipleQuestHandler : QuestHandlerParent, IUnsubscribeEvent
     }
 
     #region MultipleQuestData Function
-    private MultipleQuest GetMultipleQuest(QuestName name, bool isOptional)
-    {
-        foreach(MultipleQuest data in _multipleQuestData)
-        {
-            if(name == data.questName && data.isOptional == isOptional) return data;
-        }
-        return null;
-    }
+    // private MultipleQuest GetMultipleQuest(QuestName name, bool isOptional)
+    // {
+    //     foreach(MultipleQuest data in _multipleQuestData)
+    //     {
+    //         if(name == data.questName && data.isOptional == isOptional) return data;
+    //     }
+    //     return null;
+    // }
     private void SoloQuestComplete_ChangeVisual(QuestName name, SoloQuestHandler quest)
     {
-        Debug.Log(name + " INI TOLONG MULTIPLE KENAPA");
+        // Debug.Log(name + " INI TOLONG MULTIPLE KENAPA" + quest + " " + quest.transform.name);
         foreach(MultipleQuest data in _multipleQuestData)
         {
             if(name == data.questName && data.IsFromThisMultipleQuestData(quest))

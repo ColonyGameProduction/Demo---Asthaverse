@@ -84,6 +84,10 @@ public class PlayableInteraction : MonoBehaviour
                     interactable.Interact(_playableCharacterIdentity);
                 }
             }
+            else
+            {
+                if(IsHeldingObject) RemoveHeldObject();
+            }
         }
 
         

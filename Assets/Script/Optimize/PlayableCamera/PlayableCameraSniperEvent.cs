@@ -9,6 +9,7 @@ public class PlayableCameraSniperEvent : PlayableCamera
     private bool _goback;
     [SerializeField] private float _recoilDelayMax = 0.2f, _gobackDelayMax = 0.25f;
     private float _recoilDelay, _gobackDelay;
+    public bool isChangingPlaceToFace;
     
     private void Awake() 
     {
@@ -58,6 +59,7 @@ public class PlayableCameraSniperEvent : PlayableCamera
     }
     protected override void HandleCameraMovement()
     {
+        if(isChangingPlaceToFace) return;
         // mouse input declaration
         float mouseX = Input.GetAxis("Mouse X") * (_cameraRotationSpeed * _cameraRotationMultiplier) * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * (_cameraRotationSpeed * _cameraRotationMultiplier) * Time.deltaTime;
@@ -86,9 +88,14 @@ public class PlayableCameraSniperEvent : PlayableCamera
         {
             angles.x = 40;
         }
-
+        Debug.Log("Sniper camera angle now" + angles);
         _followTarget.localEulerAngles = angles;
         
 
+    }
+    public void SetCameraToLookAt(Transform newPos)
+    {
+        // isChangingPlaceToFace = true;
+        _followTarget.rotation = Quaternion.LookRotation(newPos.position - _followTarget.position, Vector3.up);
     }
 }
