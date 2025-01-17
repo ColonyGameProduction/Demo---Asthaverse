@@ -231,6 +231,7 @@ MonoBehaviour:
   _regenScale: 0.2
   _regenTimerMax: 0.5
   _regenCDTimer: 0
+  ANIMATION_PARAMETER_SILENTKILLCOUNTER: SilentKillCounter
   _isPlayerInput: 0
   _friendStatSO: {fileID: 11400000, guid: 9254350915655064f9d4728f87e1d1c0, type: 2}
   _totalHealthFriend: 0
@@ -324,6 +325,7 @@ MonoBehaviour:
   _switchWeaponDuration: 0.2
   _isSilentKill: 0
   _silentKillDuration: 0.2
+  _enemySilentKillTransformPos: {fileID: 175055479037067107}
   _rigControllerPistol: {fileID: 4814758479858158168}
   _rigHandFollowRifle: {fileID: 5296533087439728066}
   _rigHandFollowPistol: {fileID: 7353323525237191381}
@@ -486,7 +488,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1050425792980538826}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.4
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -495,7 +497,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 1
+  m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -1276,9 +1278,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ed36a91f4a9e9141842faba30ee0597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gm: {fileID: 0}
   _interactableLayerMask:
     serializedVersion: 2
     m_Bits: 1024
+  _interactDistances: 7.5
   _pickableObjPoint: {fileID: 5378941265763607128}
   _throwForceMultiplier: 20
 --- !u!54 &4587147607533735347
@@ -2623,6 +2627,37 @@ MonoBehaviour:
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0}
     m_Visible: 1
+--- !u!1 &6042809705262349933
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 175055479037067107}
+  m_Layer: 7
+  m_Name: EnemyPosWhenSilentKill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &175055479037067107
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6042809705262349933}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.02424959, z: -0, w: 0.999706}
+  m_LocalPosition: {x: -0.05603302, y: 0, z: 0.7980355}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1863866972526224336}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6236921928744636964
 GameObject:
   m_ObjectHideFlags: 0
@@ -3189,7 +3224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_CollideAgainst:
     serializedVersion: 2
-    m_Bits: 77889
+    m_Bits: 78913
   m_IgnoreTag: Player
   m_TransparentLayers:
     serializedVersion: 2
@@ -3957,6 +3992,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5d77ddb24b2bf8048bcbfdb3bf263c0b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 381384905829409417}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5d77ddb24b2bf8048bcbfdb3bf263c0b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 175055479037067107}
     - targetCorrespondingSourceObject: {fileID: -6114664639470354, guid: 5d77ddb24b2bf8048bcbfdb3bf263c0b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 647444956338011774}

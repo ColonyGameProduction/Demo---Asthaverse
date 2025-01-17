@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,14 @@ public class DialogCutsceneSOList : ScriptableObject
         foreach(DialogCutsceneSO dialog in dialogCutsceneSOList)
         {
             if(dialog.title == title) return dialog;
+        }
+        return null;
+    }
+    public DialogCutsceneSO SearchDialogCutSceneString(String title)
+    {
+        foreach(DialogCutsceneSO dialog in dialogCutsceneSOList)
+        {
+            if(dialog.title.ToString() == title) return dialog;
         }
         return null;
     }

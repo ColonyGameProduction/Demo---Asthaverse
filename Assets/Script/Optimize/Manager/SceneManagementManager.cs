@@ -54,5 +54,10 @@ public class SceneManagementManager : MonoBehaviour
 
         Debug.Log("Application Quit!");
     }
+    public void GoToScene(string sceneName)
+    {
+        SaveLoadSceneName(sceneName);
+        GoToOtherScene();
+    }
     
 }

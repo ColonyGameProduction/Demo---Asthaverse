@@ -8,11 +8,6 @@ public class WeaponLogicManager : MonoBehaviour
     public bool DebugDrawBiasa = true;
     public static WeaponLogicManager Instance {get; private set;}
 
-    [Header("Trail Renderer for now")]
-    [SerializeField]private TrailRenderer _bulletTrailPrefab;
-    [SerializeField]private ParticleSystem _impactParticleSystem;
-    private bool isHitBody;
-    private bool isHitAnything;
 
     public Action<Transform, CharacterIdentity> OnCharacterGotHurt;
     private void Awake() 
@@ -41,6 +36,8 @@ public class WeaponLogicManager : MonoBehaviour
     
     public void BulletShoot(Transform shooter, Vector3 origin, Vector3 direction, float aimAccuracy, WeaponStatSO weaponStat, LayerMask entityMask, float shootRecoil, Vector3 gunOriginShootPoint, bool isAIInput, bool isInsideWall, WeaponShootVFX weaponShootVFX)
     {
+        bool isHitBody = false;
+        bool isHitAnything = false;
         float recoilMod = shootRecoil + ((100 - aimAccuracy) * shootRecoil / 100);
 
         float x = UnityEngine.Random.Range(-recoilMod*0.9F, recoilMod*0.9F);
@@ -65,8 +62,6 @@ public class WeaponLogicManager : MonoBehaviour
 
         weaponShootVFX.CallGunFlash(gunOriginShootPoint);
 
-        isHitBody = false;
-        isHitAnything = false;
         if (Physics.Raycast(origin, bulletDirection, out hit, weaponStat.range, entityMask))
         {
             isHitAnything = true;
@@ -161,7 +156,9 @@ public class WeaponLogicManager : MonoBehaviour
         // TrailRenderer trail = Instantiate(_bulletTrailPrefab, gunOriginShootPoint, Quaternion.identity);
 
         // if(isInsideWall)gunOriginShootPoint = origin;
-        StartCoroutine(SpawnTrail(weaponShootVFX.GetWeaponVFX(), gunOriginShootPoint, hit, weaponShootVFX));
+        StartCoroutine(SpawnTrail(weaponShootVFX.GetWeaponVFX(), gunOriginShootPoint, hit, weaponShootVFX, isHitBody, isHitAnything));
+        Vector3 dir = (hit.point - gunOriginShootPoint).normalized;
+        if(DebugDrawBiasa)Debug.DrawRay(gunOriginShootPoint, dir * 100f, Color.red, 1f, false);
     }
 
     public void CalculateDamage(Transform shooter, WeaponStatSO weapon, GameObject entityGameObject, bodyParts hitBodyPart)
@@ -195,7 +192,7 @@ public class WeaponLogicManager : MonoBehaviour
         }
  
     }
-    private IEnumerator SpawnTrail(WeaponVFX weaponVFX, Vector3 origin, RaycastHit hit, WeaponShootVFX weaponShootVFX)
+    private IEnumerator SpawnTrail(WeaponVFX weaponVFX, Vector3 origin, RaycastHit hit, WeaponShootVFX weaponShootVFX, bool isHitBody, bool isHitAnything)
     {
         float timer = 0;
         TrailRenderer trail = weaponVFX.bulletTrail;
@@ -223,7 +220,7 @@ public class WeaponLogicManager : MonoBehaviour
             particle.transform.rotation = Quaternion.LookRotation(hit.normal);
             StartCoroutine(SpawnParticle(particle, weaponShootVFX));
         }
-        // Debug.DrawRay(hit.point, hit.normal * 50, Color.red, 0.2f, false);
+        if(DebugDrawBiasa)Debug.DrawRay(hit.point, hit.normal * 50, Color.red, 0.2f, false);
         // Debug.LogError("Stop");
         // Destroy(trail.gameObject, trail.time);
         weaponShootVFX.SetVFXBackToNormal(trail.transform);

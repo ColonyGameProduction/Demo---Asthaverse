@@ -141,17 +141,26 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
             if(!immortalized) Death();
         }
     }
-    public virtual void Heal(float Healing)
+    public void Heal(float Healing)
     {
         if(CurrHealth == TotalHealth) return;
 
+        HandleHeal(Healing);
+    }
+    protected virtual void HandleHeal(float Healing)
+    {
         CurrHealth += Healing;
         if(CurrHealth >= TotalHealth) CurrHealth = TotalHealth;
     }
 
-    public virtual void Death()
+    public void Death()
     {
         if(_isDead)return;
+        HandleDeath();
+    }
+
+    protected virtual void HandleDeath()
+    {
         OnToggleLeftHandRig?.Invoke(false, false);
 
         _isDead = true;

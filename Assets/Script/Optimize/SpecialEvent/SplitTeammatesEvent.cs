@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SplitTeammatesEvent : MonoBehaviour
+public class SplitTeammatesEvent : MonoBehaviour, IUnsubscribeEvent
 {
     [SerializeField] private PlayableCharacterIdentity _chosenSplitTeammates;
     [SerializeField] private Transform _newPlaceToGo;
@@ -14,6 +14,7 @@ public class SplitTeammatesEvent : MonoBehaviour
     {
         _playableCharacterManager = PlayableCharacterManager.Instance;
         _enemyAIManager = EnemyAIManager.Instance;
+        
     }
     private void Update() 
     {
@@ -25,6 +26,7 @@ public class SplitTeammatesEvent : MonoBehaviour
     }
     public void SplitEvent()
     {
+        _chosenSplitTeammates.GetMovementStateMachine.OnIsTheSamePosition += Gone;
         if(_playableCharacterManager.CurrPlayableChara == _chosenSplitTeammates)
         {
             _playableCharacterManager.ChangePlayer();
@@ -33,5 +35,20 @@ public class SplitTeammatesEvent : MonoBehaviour
         _enemyAIManager.OnRemovedPlayable?.Invoke(_chosenSplitTeammates.transform);
 
         if(_newPlaceToGo != null) _chosenSplitTeammates.GetFriendAIStateMachine.ChangeFriendDefaultDirectionWhenSplit(_newPlaceToGo);
+    }
+    private void Gone(Vector3 pos)
+    {
+        if(!_chosenSplitTeammates.gameObject.activeSelf) return;
+
+        if(pos == _newPlaceToGo.position)
+        {
+            _chosenSplitTeammates.gameObject.SetActive(false);
+            UnsubscribeEvent();
+        }
+    }
+
+    public void UnsubscribeEvent()
+    {
+        _chosenSplitTeammates.GetMovementStateMachine.OnIsTheSamePosition -= Gone;
     }
 }

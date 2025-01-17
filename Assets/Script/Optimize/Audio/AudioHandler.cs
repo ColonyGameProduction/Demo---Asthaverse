@@ -38,7 +38,7 @@ public abstract class AudioHandler : MonoBehaviour
         {
             if(audioSource.isPlaying) audioSource.Stop();
 
-            SetAudioClipToSource(audioSource, audio.audioSFXData);
+            ApplyAudioClipToSource(audioSource, audio.audioSFXData);
         }
         
         if(!audioSource.isPlaying) audioSource.Play();
@@ -61,7 +61,7 @@ public abstract class AudioHandler : MonoBehaviour
 
         AudioSource audioSource = GetAudioSource(audio.audioType);
 
-        SetAudioClipToSource(audioSource, audio.audioSFXData);
+        ApplyAudioClipToSource(audioSource, audio.audioSFXData);
             
         audioSource.Play();
     }
@@ -71,10 +71,14 @@ public abstract class AudioHandler : MonoBehaviour
 
         return audio.audioSource;
     }
-    protected virtual void SetAudioClipToSource(AudioSource source, AudioData audioData)
+    protected void ApplyAudioClipToSource(AudioSource source, AudioData audioData)
     {
         if(source.clip == audioData.audioClip) return;
 
+        SetAudioClipToSource(source, audioData);
+    }
+    protected virtual void SetAudioClipToSource(AudioSource source, AudioData audioData)
+    {
         source.clip = audioData.audioClip;
         source.outputAudioMixerGroup = audioData.audioMixerGroup;
         source.playOnAwake = audioData.playOnAwake;

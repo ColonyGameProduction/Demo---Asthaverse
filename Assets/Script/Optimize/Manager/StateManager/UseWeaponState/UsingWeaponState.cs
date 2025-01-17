@@ -65,9 +65,11 @@ public class UsingWeaponState : UseWeaponState
         {
             if(_sm.IsAIInput)
             {
-                if(_sm.ChosenTarget != null && !_sm.ChosenTarget.GetComponentInParent<CharacterIdentity>().IsDead)
+                if(_sm.ChosenTarget != null)
                 {
-                    _sm.UseWeapon();
+                    CharacterIdentity chara = _sm.ChosenTarget.GetComponentInParent<CharacterIdentity>();
+                    if(chara != null && !chara.IsDead) _sm.UseWeapon();
+                    
                 }
                 else 
                 {
