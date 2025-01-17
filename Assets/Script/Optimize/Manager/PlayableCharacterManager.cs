@@ -67,6 +67,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     public Action<bool, int> OnCommandingBoolChange;
     public Action OnRegroupOneFriendInput, OnCommandUnHoldInput;
     public Action<Transform> OnPlayerSwitch;
+    public static Action OnFinishReviveAnimation;
     #endregion
 
     #region GETTERSETTER Variable
@@ -1006,5 +1007,13 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _gameInputManager.OnThrowPerformed -= GameInput_OnThrowPerformed;
         _gameInputManager.OnTakeCoverPerformed -= GameInput_OnTakeCoverPerformed;
         _gameInputManager.OnExitTakeCoverPerformed -= GameInput_OnExitTakeCoverPerformed;
+    }
+    public bool IsEveryoneAlive()
+    {
+        foreach(PlayableCharacterIdentity chara in _charaIdentities)
+        {
+            if(chara.IsDead) return false;
+        }
+        return true;
     }
 }

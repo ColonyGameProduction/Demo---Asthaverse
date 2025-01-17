@@ -154,6 +154,8 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     public void GameCompleted()
     {
         SetGameState(GameState.Finish);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
     public void GameOver()
     {

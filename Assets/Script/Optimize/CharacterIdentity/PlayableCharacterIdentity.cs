@@ -80,6 +80,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public Action OnPlayableBulletChange;
     public Action OnSwitchWeapon;
     public Action OnCancelInteractionButton;
+    
 
     #region GETTERSETTER Variable
 
@@ -413,6 +414,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _isAnimatingOtherAnimation = false;
         _animator.SetBool(ANIMATION_BEING_REVIVED_PARAMETER, false);
         _animator.SetBool(ANIMATION_DEATH_PARAMETER, false);
+        PlayableCharacterManager.OnFinishReviveAnimation?.Invoke();
     }
     public void CutOutFromBeingRevived()
     {
