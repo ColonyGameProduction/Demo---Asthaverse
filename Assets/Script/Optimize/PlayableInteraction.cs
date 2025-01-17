@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PlayableInteraction : MonoBehaviour
 {
-
+    [SerializeField] private GameManager _gm;
     [SerializeField] private List<IInteractable> _interactablesList = new List<IInteractable>();
     [SerializeField] private List<ISilentKillAble> _silentKillAbleList = new List<ISilentKillAble>();
     [SerializeField] private IInteractable _currInteractable;
     [SerializeField] private ISilentKillAble _currSilentKillAble;
     [SerializeField] private LayerMask _interactableLayerMask;
+    [SerializeField] private float _interactDistances = 7.5f;
 
     [Space(1)]
     [Header("TakeItem")]
@@ -41,8 +42,13 @@ public class PlayableInteraction : MonoBehaviour
         _directionInteract = _mainCamera.transform;
     }
 
+    private void Start() 
+    {
+        _gm = GameManager.instance;
+    }
     private void Update() 
     {
+        if(!_gm.IsGamePlaying()) return;
         if(!_playableCharacterIdentity.IsPlayerInput)return;
         _currInteractable = GetClosestInteractables();
 
@@ -67,7 +73,7 @@ public class PlayableInteraction : MonoBehaviour
         else
         {
             // Debug.DrawRay(_originInteract.position, _directionInteract.forward.normalized * 100f, Color.magenta, 2f);
-            if(Physics.Raycast(_originInteract.position, _directionInteract.forward.normalized, out RaycastHit hit, 100f, _interactableLayerMask))
+            if(Physics.Raycast(_originInteract.position, _directionInteract.forward.normalized, out RaycastHit hit, _interactDistances, _interactableLayerMask))
             {
                 IInteractable temp = hit.collider.GetComponent<IInteractable>();
                 IInteractable interactable =  temp != null ? temp : hit.collider.GetComponentInParent<IInteractable>();
@@ -77,6 +83,10 @@ public class PlayableInteraction : MonoBehaviour
                     if(interactable == _thisObjInteractable) return;
                     interactable.Interact(_playableCharacterIdentity);
                 }
+            }
+            else
+            {
+                if(IsHeldingObject) RemoveHeldObject();
             }
         }
 
@@ -118,7 +128,7 @@ public class PlayableInteraction : MonoBehaviour
     }
     private ISilentKillAble GetClosestSilentkillable()
     {
-        if(_silentKillAbleList.Count == 0 || _playableCharacterIdentity.IsSilentKilling)return null;
+        if(_silentKillAbleList.Count == 0 || _playableCharacterIdentity.IsSilentKilling || _playableCharacterIdentity.GetFriendAIStateMachine.GotDetectedbyEnemy)return null;
         float closestDistance = Mathf.Infinity;
         // float smallestDotProduct = -1;
         ISilentKillAble chosen = null;
@@ -159,6 +169,11 @@ public class PlayableInteraction : MonoBehaviour
         {
             ISilentKillAble temp = other.gameObject.GetComponent<ISilentKillAble>();
             ISilentKillAble silentKillAble =  temp != null ? temp : other.gameObject.GetComponentInParent<ISilentKillAble>();
+
+            EnemyIdentity enemyIdentity = other.gameObject.GetComponent<EnemyIdentity>();
+            enemyIdentity = enemyIdentity != null ? enemyIdentity : other.gameObject.GetComponentInParent<EnemyIdentity>();
+
+            if(enemyIdentity != null && enemyIdentity.IsDead) return;
 
             // if(silentKillAble != null)Debug.Log(silentKillAble.SilentKillAbleTransform.name + " in1");
             if(silentKillAble != null && !_silentKillAbleList.Contains(silentKillAble) && silentKillAble.CanBeKill)

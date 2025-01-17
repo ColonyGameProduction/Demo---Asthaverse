@@ -6,7 +6,7 @@ using UnityEngine;
 public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
 {
     // [Header("Test")]
-    // public bool StartEvent, StopEvent;
+    public bool StartEvent, StopEvent;
     [Space(1)]
     [SerializeField] private GameObject _shootingGameObjectContainer;
     [SerializeField] private EntityStatSO _specialCharaStatSO;
@@ -40,6 +40,10 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     [Space(1)]
     [SerializeField] private QuestHandlerParent _questToStartEvent;
     [SerializeField] private QuestHandlerParent _questToStopEvent;
+
+    [Header("Place to Look")]
+    [SerializeField] private List<Transform> _placeToLookList;
+    [ReadOnly(true)] private int _currPlaceToLookIdx = 0;
 
     #region Getter Setter
     public float FinalCountRecoil
@@ -115,19 +119,15 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
         _gm = GameManager.instance;
         _fadeUIHandler = FadeBGUIHandler.Instance;
     }
-    // private void Update() 
-    // {
-    //     if(StartEvent && !_gm.IsEventGamePlayMode())
-    //     {
-    //         StartEvent = false;
-    //         TriggerStartEvent();
-    //     }
-    //     if(StopEvent && _gm.IsEventGamePlayMode())
-    //     {
-    //         StopEvent = false;
-    //         TriggerStopEvent();
-    //     }
-    // }
+    private void Update() 
+    {
+        if(StartEvent)
+        {
+            StartEvent = false;
+            SetCameraPosToLook();
+        }
+
+    }
     private void FixedUpdate()
     {
         if(!_gm.IsGamePlaying() || !_gm.IsEventGamePlayMode()) return;
@@ -194,6 +194,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     }
     public void StartSniperShootingEvent()
     {
+        SetCameraPosToLook();
         _gm.OnChangeGamePlayModeToEvent?.Invoke();
         _playableCharacterManager.SetCurrPlayableSkill(_playableSkill);
         _shootingGameObjectContainer.SetActive(true);
@@ -320,6 +321,11 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
         {
             _currRecoil = _currWeaponData.weaponStatSO.recoil;
         }
+    }
+    private void SetCameraPosToLook()
+    {
+        _playableCamera.SetCameraToLookAt(_placeToLookList[_currPlaceToLookIdx]);
+        _currPlaceToLookIdx++;
     }
     
 }

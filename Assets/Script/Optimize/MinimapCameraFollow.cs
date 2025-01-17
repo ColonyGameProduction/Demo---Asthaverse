@@ -4,8 +4,9 @@ public class MinimapCameraFollow : MonoBehaviour, IUnsubscribeEvent
 {
     [SerializeField] private PlayableCharacterManager _playableCharaManager;
     private float cameraHeight;
-    [SerializeField] private Transform targetToFollow;
+    [ReadOnly(false),SerializeField] private Transform targetToFollow;
     [SerializeField] private bool rotateWithTheTarget = true;
+    
 
     private void Awake()
     {

@@ -16,7 +16,8 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     public bool CanBeKill {get{return _canBeKill;}}
     public bool IsSilentKilled {get{return _isSilentKilled;}}
 
-    protected override void Awake() {
+    protected override void Awake() 
+    {
         base.Awake();
         _enemyAIStateMachine = _aiStateMachine as EnemyAIBehaviourStateMachine;
         _enemyGameObject = _animator.gameObject.transform;
@@ -25,9 +26,9 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     {
         CurrWeapon.currBullet = CurrWeapon.weaponStatSO.magSize;
     }
-    public override void Death()
+    protected override void HandleDeath()
     {
-        base.Death();
+        base.HandleDeath();
         EnemyAIManager.Instance.EditEnemyCaptainList(_enemyAIStateMachine, false);
         EnemyAIManager.Instance.EditEnemyHearAnnouncementList(_enemyAIStateMachine, false);
         EnemyAIManager.Instance.OnEnemyDead?.Invoke(this.transform);
@@ -37,7 +38,6 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     {
         if(_isSilentKilled)
         {
-            _isDead = true;
             if(_fovMachine.enabled) _fovMachine.StopFOVMachine();
             _fovMachine.enabled = false;
 
@@ -59,6 +59,7 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
         characterIdentityWhoKilling.GetPlayableUseWeaponStateMachine.SetSilentKilledEnemy(this);
         characterIdentityWhoKilling.IsSilentKilling = true;
         _isSilentKilled = true;
+        _isDead = true;
         _moveStateMachine.ForceStopMoving();
         _useWeaponStateMachine.ForceStopUseWeapon();
     }
