@@ -240,4 +240,5 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
         PlayerPrefs.SetInt(CHECK_POINT_PREF, idx);
     }
     #endregion
+
 }
