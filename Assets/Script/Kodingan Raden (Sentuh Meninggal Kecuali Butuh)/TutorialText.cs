@@ -4,30 +4,50 @@ using TMPro;
 
 public class TutorialText : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI textComponent;
-    [TextArea][SerializeField] private string fullText;
-    [SerializeField] private float typingSpeed = 0.05f;
+    [SerializeField] private TextMeshProUGUI textMeshPro;
     [SerializeField] private float textDuration = 3f;
+    [SerializeField] private float fadeDuration = 0.5f;
 
-    private Coroutine typingCoroutine;
+    private Coroutine timerCoroutine;
 
-    private void Start()
+    private void OnEnable()
     {
-        if (typingCoroutine != null) StopCoroutine(typingCoroutine);
-        typingCoroutine = StartCoroutine(TypeTextEffect());
+        SetTextAlpha(0);
+
+        LeanTween.value(gameObject, 0, 1, fadeDuration)
+            .setOnUpdate(SetTextAlpha)
+            .setOnComplete(() =>
+            {
+                if (timerCoroutine != null) StopCoroutine(timerCoroutine);
+                timerCoroutine = StartCoroutine(TextTimer());
+            });
     }
 
-    private IEnumerator TypeTextEffect()
+    private void OnDisable()
     {
-        textComponent.text = "";
-        foreach (char c in fullText.ToCharArray())
-        {
-            textComponent.text += c;
-            yield return new WaitForSeconds(typingSpeed);
-        }
+        if (timerCoroutine != null) StopCoroutine(timerCoroutine);
+        LeanTween.cancel(gameObject);
+    }
 
+    private IEnumerator TextTimer()
+    {
         yield return new WaitForSeconds(textDuration);
 
-        textComponent.text = "";
+        LeanTween.value(gameObject, 1, 0, fadeDuration)
+            .setOnUpdate(SetTextAlpha)
+            .setOnComplete(() =>
+            {
+                gameObject.SetActive(false);
+            });
+    }
+
+    private void SetTextAlpha(float alpha)
+    {
+        if (textMeshPro != null)
+        {
+            Color color = textMeshPro.color;
+            color.a = alpha;
+            textMeshPro.color = color;
+        }
     }
 }
