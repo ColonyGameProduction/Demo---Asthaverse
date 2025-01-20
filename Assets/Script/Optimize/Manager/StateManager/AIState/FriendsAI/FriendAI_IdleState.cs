@@ -37,7 +37,23 @@ public class FriendAI_IdleState : FriendAIState
         }
         if(_sm.CharaIdentity.IgnoreThisCharacter)
         {
-            _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
+            if(_sm.GetPlayableCharaIdentity.IsStillPlayable)
+            {
+                if(_sm.IsToldHold)
+                {
+                    _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
+                }
+                else if(!_sm.IsFriendAlreadyAtDefaultDistance()) _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
+                else
+                {
+                    _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
+                }
+            }
+            else
+            {
+                _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
+            }
+            
             return;
         }
         

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
@@ -38,8 +39,9 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
 
     [Header("Quest Connecting with Event")]
     [Space(1)]
-    [SerializeField] private QuestHandlerParent _questToStartEvent;
-    [SerializeField] private QuestHandlerParent _questToStopEvent;
+    [SerializeField] private QuestHandlerParent[] _questToStartEvent;
+    [SerializeField] private QuestHandlerParent[] _questToStopEvent;
+    [ReadOnly(true)] private int _currQuestIdx = 0;
 
     [Header("Place to Look")]
     [SerializeField] private List<Transform> _placeToLookList;
@@ -91,8 +93,12 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
         _cameraTransform = Camera.main.transform;
         _playableSkill = GetComponent<PlayableSkill>();
 
-        _questToStartEvent.OnQuestCompleted += TriggerStartEvent;
-        _questToStopEvent.OnQuestCompleted += TriggerStopEvent;
+        for(int i=0; i<_questToStartEvent.Length; i++) // krn onquestcompleted br akan kepanggil kalo emg aktif :D
+        {
+            _questToStartEvent[i].OnQuestCompleted += TriggerStartEvent;
+            _questToStopEvent[i].OnQuestCompleted += TriggerStopEvent;
+        }
+
         InitializeGunData();
     }
     private void InitializeGunData()
@@ -155,8 +161,11 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     }
     public void UnsubscribeEvent()
     {
-        _questToStartEvent.OnQuestCompleted -= TriggerStartEvent;
-        _questToStopEvent.OnQuestCompleted -= TriggerStopEvent;
+        for(int i=0; i<_questToStartEvent.Length; i++)
+        {
+            _questToStartEvent[i].OnQuestCompleted -= TriggerStartEvent;
+            _questToStopEvent[i].OnQuestCompleted -= TriggerStopEvent;
+        }
 
         _gameInputManager.OnShootingPerformed -= GameInputManager_OnShootingPerformed;
         _gameInputManager.OnShootingCanceled -= GameInputManager_OnShootingCanceled;
@@ -196,8 +205,13 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     {
         SetCameraPosToLook();
         _gm.OnChangeGamePlayModeToEvent?.Invoke();
+
+        EnemyKillQuestHandler killQuest = _questToStopEvent[_currQuestIdx] as EnemyKillQuestHandler;
+        if(killQuest != null) killQuest.ShowSnipingUITarget();
+
         _playableCharacterManager.SetCurrPlayableSkill(_playableSkill);
         _shootingGameObjectContainer.SetActive(true);
+        _playableCamera.SetUICameraSnipingFOV();
 
         _fadeUIHandler.FadeBG(0, 0.2f, ()=> _gm.SetToEventGamePlayMode());
     }
@@ -206,6 +220,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
         _gm.OnChangeGamePlayModeToNormal?.Invoke();
         _playableCharacterManager.SetCurrPlayableSkill(null);
         _shootingGameObjectContainer.SetActive(false);
+        _playableCamera.SetUICameraNormalFOV();
 
         IsShooting = false;
         IsReloading = false;
@@ -213,6 +228,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
         _canReload = true;
         _finalCountRecoil = 0;
 
+        _currQuestIdx++;
         _fadeUIHandler.FadeBG(0, 0.2f, ()=> _gm.SetToNormalGamePlayMode());
 
     }

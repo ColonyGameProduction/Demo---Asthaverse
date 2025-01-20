@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class PlayableCameraSniperEvent : PlayableCamera
 {
+    [SerializeField] private Camera _mainUICam;
     private SniperShootingEvent _sniperShootingEvent;
     private float recoilX, recoilY;
     private bool _goback;
     [SerializeField] private float _recoilDelayMax = 0.2f, _gobackDelayMax = 0.25f;
+    [SerializeField] private float _cameraRotateYClamp = 45f;
+    [ReadOnly(false), SerializeField]private float _startCameraRotateY, _maxLeftCameraRotateY, _maxRightCameraRotateY;
     private float _recoilDelay, _gobackDelay;
-    public bool isChangingPlaceToFace;
+    private float _oldFOV;
     
     private void Awake() 
     {
@@ -59,7 +62,6 @@ public class PlayableCameraSniperEvent : PlayableCamera
     }
     protected override void HandleCameraMovement()
     {
-        if(isChangingPlaceToFace) return;
         // mouse input declaration
         float mouseX = Input.GetAxis("Mouse X") * (_cameraRotationSpeed * _cameraRotationMultiplier) * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * (_cameraRotationSpeed * _cameraRotationMultiplier) * Time.deltaTime;
@@ -78,24 +80,82 @@ public class PlayableCameraSniperEvent : PlayableCamera
         Vector3 angles = _followTarget.localEulerAngles;
         angles.z = 0f;
 
-        float angle = _followTarget.localEulerAngles.x;
+        float angleX = _followTarget.localEulerAngles.x;
+        float angleY = _followTarget.localEulerAngles.y;
 
-        if (angle > 180 && angle < 340)
+        if (angleX > 180 && angleX < 340)
         {
             angles.x = 340;
         }
-        else if (angle < 180 && angle > 40)
+        else if (angleX < 180 && angleX > 40)
         {
             angles.x = 40;
+        }
+
+        // if(angleY > _startCameraRotateY && angleY < _maxLeftCameraRotateY)
+        // {
+        //     angles.y = _maxLeftCameraRotateY;
+        // }
+        // else if(angleY < _startCameraRotateY && angleY > _maxRightCameraRotateY)
+        // {
+        //     angles.y = _maxRightCameraRotateY;
+        // }
+
+        if(angleY > _maxRightCameraRotateY && angleY < _maxLeftCameraRotateY)
+        {
+            if(angleY <= _startCameraRotateY) angles.y = _maxRightCameraRotateY;
+            else angles.y = _maxLeftCameraRotateY;
+        }
+        else if((angleY > _maxLeftCameraRotateY && angleY > _maxRightCameraRotateY) || (angleY < _maxLeftCameraRotateY && angleY < _maxRightCameraRotateY)) 
+        {
+            if(_maxLeftCameraRotateY > _startCameraRotateY)
+            {
+                if(angleY > _maxRightCameraRotateY || (angleY < _maxLeftCameraRotateY && angleY < _startCameraRotateY)) angles.y = _maxRightCameraRotateY;
+                else if(angleY < _maxLeftCameraRotateY && angleY >= _startCameraRotateY) angles.y = _maxLeftCameraRotateY;
+            }
+            else
+            {
+                if(angleY > _maxRightCameraRotateY && angleY < _startCameraRotateY) angles.y = _maxRightCameraRotateY;
+                else angles.y = _maxLeftCameraRotateY;
+            }
         }
         Debug.Log("Sniper camera angle now" + angles);
         _followTarget.localEulerAngles = angles;
         
 
     }
+
     public void SetCameraToLookAt(Transform newPos)
     {
         // isChangingPlaceToFace = true;
-        _followTarget.rotation = Quaternion.LookRotation(newPos.position - _followTarget.position, Vector3.up);
+        Quaternion lookRot = Quaternion.LookRotation(newPos.position - _followTarget.position, Vector3.up);
+        _followTarget.rotation = lookRot;
+        Debug.Log("Start Sniper camera angle now" + lookRot);
+        _startCameraRotateY = _followTarget.eulerAngles.y;
+        _maxRightCameraRotateY = _startCameraRotateY + _cameraRotateYClamp;
+        if(_maxRightCameraRotateY > 360)
+        {
+            _maxRightCameraRotateY = _maxRightCameraRotateY - 360;
+        }
+
+        _maxLeftCameraRotateY = _startCameraRotateY - _cameraRotateYClamp;
+        if(_maxLeftCameraRotateY < 0)
+        {
+            _maxLeftCameraRotateY = 360 + _maxLeftCameraRotateY;
+        }
+
+        _startCameraRotateY = Mathf.Abs(180 - _startCameraRotateY);
+        
+    }
+    public void SetUICameraSnipingFOV()
+    {
+        // Debug.Log("FOV now" + Camera.main.fieldOfView);
+        _oldFOV = Camera.main.fieldOfView;
+        _mainUICam.fieldOfView = 6.5f;
+        
+    }
+    public void SetUICameraNormalFOV()
+    {
+        _mainUICam.fieldOfView = _oldFOV;
     }
 }
