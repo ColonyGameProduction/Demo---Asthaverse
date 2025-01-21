@@ -9,6 +9,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [ReadOnly(false), SerializeField] protected bool _isPlayerInput;
     public event Action<bool> OnIsPlayerInputChange;
     private bool _isStillPlayable;
+    [SerializeField] private InteractObjType _intObjType;
+    
 
     [Header("Friend Data Helper")]
     protected int _friendID;
@@ -158,6 +160,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
 
     public Transform GetFriendBeingRevivedPos {get {return _characterIdentityWhoBeingRevived.transform;}}
     public bool IsStillPlayable {get {return _isStillPlayable;} set{_isStillPlayable = value;}}
+    public InteractObjType InteractObjType {get {return _intObjType;}}
 
     public bool IsHoldingInteraction 
     {

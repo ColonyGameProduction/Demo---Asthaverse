@@ -20,20 +20,44 @@ public class KeybindUIHandler : MonoBehaviour, IUnsubscribeEvent
     [Header("Keybind Floating")]
     [SerializeField] private GameObject _silentTakeDownContainer;
     public static Action<bool> OnShowSilentTakeDownKeybind;
+    [SerializeField] private GameObject _interactContainer;
+    public static Action<bool> OnShowInteractKeybind;
+    [SerializeField] private GameObject _pickUpContainer;
+    public static Action<bool> OnShowPickUpKeybind;
+    [SerializeField] private GameObject _reviveContainer;
+    public static Action<bool> OnShowReviveKeybind;
 
     private void Awake() 
     {
         ToggleSilentTakeDownKeybindContainer(false);
+        ToggleInteractKeybindContainer(false);
+        TogglePickUpKeybindContainer(false);
+        ToggleReviveKeybindContainer(false);
 
         OnChangeKeybind += ChangeKeybindUI;
         ChangeKeybindUI(KeybindUIType.General);
 
         OnShowSilentTakeDownKeybind += ToggleSilentTakeDownKeybindContainer;
+        OnShowInteractKeybind += ToggleInteractKeybindContainer;
+        OnShowPickUpKeybind += TogglePickUpKeybindContainer;
+        OnShowReviveKeybind += ToggleReviveKeybindContainer;
     }
 
     private void ToggleSilentTakeDownKeybindContainer(bool show)
     {
         _silentTakeDownContainer.SetActive(show);
+    }
+    private void ToggleInteractKeybindContainer(bool show)
+    {
+        _interactContainer.SetActive(show);
+    }
+    private void TogglePickUpKeybindContainer(bool show)
+    {
+        _pickUpContainer.SetActive(show);
+    }
+    private void ToggleReviveKeybindContainer(bool show)
+    {
+        _reviveContainer.SetActive(show);
     }
     
     private void ChangeKeybindUI(KeybindUIType newType)
@@ -59,5 +83,8 @@ public class KeybindUIHandler : MonoBehaviour, IUnsubscribeEvent
     {
         OnChangeKeybind -= ChangeKeybindUI;
         OnShowSilentTakeDownKeybind -= ToggleSilentTakeDownKeybindContainer;
+        OnShowInteractKeybind -= ToggleInteractKeybindContainer;
+        OnShowPickUpKeybind -= TogglePickUpKeybindContainer;
+        OnShowReviveKeybind -= ToggleReviveKeybindContainer;
     }
 }

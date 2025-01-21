@@ -7,7 +7,7 @@ public class PlayableInteraction : MonoBehaviour
     [SerializeField] private GameManager _gm;
     [SerializeField] private List<IInteractable> _interactablesList = new List<IInteractable>();
     [SerializeField] private List<ISilentKillAble> _silentKillAbleList = new List<ISilentKillAble>();
-    [SerializeField] private IInteractable _currInteractable;
+    [SerializeField] private IInteractable _currInteractable, _currInteractableRaycast;
     [SerializeField] private ISilentKillAble _currSilentKillAble;
     [SerializeField] private LayerMask _interactableLayerMask;
     [SerializeField] private float _interactDistances = 7.5f;
@@ -51,6 +51,39 @@ public class PlayableInteraction : MonoBehaviour
         if(!_gm.IsGamePlaying()) return;
         if(!_playableCharacterIdentity.IsPlayerInput)return;
         _currInteractable = GetClosestInteractables();
+        SearchRaycastInteractable();
+        if(_playableCharacterIdentity.IsHoldingInteraction)
+        {
+            KeybindUIHandler.OnShowInteractKeybind(false);
+            KeybindUIHandler.OnShowPickUpKeybind(false);
+            KeybindUIHandler.OnShowReviveKeybind(false);
+        }
+        else
+        {
+            if(_currInteractable != null)
+            {
+                KeybindUIHandler.OnShowReviveKeybind(true);
+                KeybindUIHandler.OnShowInteractKeybind(false);
+                KeybindUIHandler.OnShowPickUpKeybind(false);
+            }
+            else
+            {
+                if(_currInteractableRaycast != null)
+                {
+                    KeybindUIHandler.OnShowReviveKeybind(_currInteractableRaycast.InteractObjType == InteractObjType.Revive ? true : false);   
+                    KeybindUIHandler.OnShowPickUpKeybind(_currInteractableRaycast.InteractObjType == InteractObjType.Pick_up ? true : false);   
+                    KeybindUIHandler.OnShowInteractKeybind(_currInteractableRaycast.InteractObjType == InteractObjType.Interact ? true : false);   
+                    
+                    
+                }
+                else
+                {
+                    KeybindUIHandler.OnShowInteractKeybind(false);
+                    KeybindUIHandler.OnShowPickUpKeybind(false);
+                    KeybindUIHandler.OnShowReviveKeybind(false);
+                }
+            }
+        }
 
         _currSilentKillAble = GetClosestSilentkillable();
         KeybindUIHandler.OnShowSilentTakeDownKeybind(_currSilentKillAble == null ? false : true);
@@ -72,17 +105,10 @@ public class PlayableInteraction : MonoBehaviour
         }
         else
         {
-            // Debug.DrawRay(_originInteract.position, _directionInteract.forward.normalized * 100f, Color.magenta, 2f);
-            if(Physics.Raycast(_originInteract.position, _directionInteract.forward.normalized, out RaycastHit hit, _interactDistances, _interactableLayerMask))
+            if(_currInteractableRaycast != null)
             {
-                IInteractable temp = hit.collider.GetComponent<IInteractable>();
-                IInteractable interactable =  temp != null ? temp : hit.collider.GetComponentInParent<IInteractable>();
-                
-                if(interactable != null && !_interactablesList.Contains(interactable) && interactable.CanInteract)
-                {
-                    if(interactable == _thisObjInteractable) return;
-                    interactable.Interact(_playableCharacterIdentity);
-                }
+                if(_currInteractableRaycast == _thisObjInteractable) return;
+                _currInteractableRaycast.Interact(_playableCharacterIdentity);
             }
             else
             {
@@ -146,6 +172,25 @@ public class PlayableInteraction : MonoBehaviour
             }
         }
         return chosen;
+    }
+    private void SearchRaycastInteractable()
+    {
+        if(Physics.Raycast(_originInteract.position, _directionInteract.forward.normalized, out RaycastHit hit, _interactDistances, _interactableLayerMask))
+        {
+            IInteractable temp = hit.collider.GetComponent<IInteractable>();
+            IInteractable interactable =  temp != null ? temp : hit.collider.GetComponentInParent<IInteractable>();
+            
+            if(interactable != null && !_interactablesList.Contains(interactable) && interactable.CanInteract)
+            {
+                // if(interactable == _thisObjInteractable) return;
+                // interactable.Interact(_playableCharacterIdentity);
+                _currInteractableRaycast = interactable;
+            }
+        }
+        else
+        {
+            _currInteractableRaycast = null;
+        }
     }
 
     private void OnTriggerEnter(Collider other) 

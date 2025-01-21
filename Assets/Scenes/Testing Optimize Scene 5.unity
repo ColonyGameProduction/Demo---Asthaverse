@@ -192,6 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e529f0be1641f2b44868f73fbcc2dc44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 2
   _canInteract: 1
   _isThrowAble: 1
   _sparkleParticle: {fileID: 0}
@@ -2042,6 +2043,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d57caf8ec1aec9646abdaa5c3f2f062d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 3
   _totalValueToDoSomething: 10
   _valueFillSpeed: 5
   _value: 0
@@ -3748,6 +3750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edabb9f79f102f94ba9aa2a06c848a70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 3
   _isOpen: 0
   _animationOpenTimer: 0.5
   _openObj: {fileID: 131616880}
@@ -3896,6 +3899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d57caf8ec1aec9646abdaa5c3f2f062d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 3
   _totalValueToDoSomething: 10
   _valueFillSpeed: 5
   _value: 0
@@ -8697,152 +8701,6 @@ MonoBehaviour:
   - {fileID: 518321865}
   - {fileID: 911695136}
   _currQuestIdx: 0
---- !u!1 &625519607
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 625519613}
-  - component: {fileID: 625519612}
-  - component: {fileID: 625519611}
-  - component: {fileID: 625519610}
-  - component: {fileID: 625519609}
-  - component: {fileID: 625519614}
-  m_Layer: 10
-  m_Name: Open
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!54 &625519609
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625519607}
-  serializedVersion: 4
-  m_Mass: 10
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!65 &625519610
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625519607}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &625519611
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625519607}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &625519612
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625519607}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &625519613
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625519607}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 16.294, y: 0.972, z: 21.123}
-  m_LocalScale: {x: 0.5, y: 2, z: 0.5}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1960122205}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &625519614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625519607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13fb755c27cbab548aae0601b21a8751, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &627883215
 GameObject:
   m_ObjectHideFlags: 0
@@ -12870,6 +12728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af1ca87b7bc61534e918f93b0d63a4ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 3
   _totalValueToDoSomething: 10
   _valueFillSpeed: 2
   _value: 0
@@ -13654,6 +13513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d57caf8ec1aec9646abdaa5c3f2f062d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 3
   _totalValueToDoSomething: 10
   _valueFillSpeed: 5
   _value: 0
@@ -15621,6 +15481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e529f0be1641f2b44868f73fbcc2dc44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 2
   _canInteract: 1
   _isThrowAble: 1
   _sparkleParticle: {fileID: 0}
@@ -21185,6 +21046,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cd100e06502779409a563122e69e92b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 3
   _canInteract: 1
 --- !u!1 &1586255742
 GameObject:
@@ -21324,6 +21186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e529f0be1641f2b44868f73fbcc2dc44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 2
   _canInteract: 1
   _isThrowAble: 1
   _sparkleParticle: {fileID: 0}
@@ -21624,6 +21487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d57caf8ec1aec9646abdaa5c3f2f062d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 3
   _totalValueToDoSomething: 10
   _valueFillSpeed: 5
   _value: 0
@@ -21706,6 +21570,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57f87d7859faeb145867a01aeb88efba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 3
   _isOpen: 0
   _animationOpenTimer: 0.5
   _openObj: {fileID: 1613373875}
@@ -22454,6 +22319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d57caf8ec1aec9646abdaa5c3f2f062d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _intObjType: 3
   _totalValueToDoSomething: 10
   _valueFillSpeed: 5
   _value: 0
@@ -22984,7 +22850,6 @@ Transform:
   - {fileID: 1600997974}
   - {fileID: 60633638}
   - {fileID: 1306140906}
-  - {fileID: 625519613}
   - {fileID: 131616881}
   - {fileID: 1669338442}
   - {fileID: 1143878555}

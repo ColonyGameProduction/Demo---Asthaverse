@@ -218,8 +218,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 79168
   _recoilCoolDownBuffer: 0.1
-  _questToStartEvent: {fileID: 0}
-  _questToStopEvent: {fileID: 0}
+  _questToStartEvent:
+  - {fileID: 0}
+  _questToStopEvent:
+  - {fileID: 0}
   _placeToLookList: []
 --- !u!114 &3755499065177399780
 MonoBehaviour:
@@ -252,9 +254,13 @@ MonoBehaviour:
   _followTarget: {fileID: 7636388805092006585}
   _cameraRotationSpeed: 25
   _changeCameraHeightSpeed: 2
+  _mainUICam: {fileID: 0}
   _recoilDelayMax: 0.2
   _gobackDelayMax: 0.25
-  isChangingPlaceToFace: 0
+  _cameraRotateYClamp: 45
+  _startCameraRotateY: 0
+  _maxLeftCameraRotateY: 0
+  _maxRightCameraRotateY: 0
 --- !u!114 &7048015461342798756
 MonoBehaviour:
   m_ObjectHideFlags: 0
