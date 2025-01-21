@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class TutorialText : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI textMeshPro;
+    [SerializeField] private Image tutorialTextImage;
     [SerializeField] private float textDuration = 3f;
     [SerializeField] private float fadeDuration = 0.5f;
 
@@ -43,11 +44,11 @@ public class TutorialText : MonoBehaviour
 
     private void SetTextAlpha(float alpha)
     {
-        if (textMeshPro != null)
+        if (tutorialTextImage != null)
         {
-            Color color = textMeshPro.color;
+            Color color = tutorialTextImage.color;
             color.a = alpha;
-            textMeshPro.color = color;
+            tutorialTextImage.color = color;
         }
     }
 }
