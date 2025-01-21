@@ -395,8 +395,12 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         _isAddingRemovingCharacter = true;
         ForceStopAllCharacterState();
+        _chosenChara.GetPlayableMovementStateMachine.IsAskedToRunByPlayable = false;
+        _chosenChara.GetPlayableMovementStateMachine.IsAskedToCrouchByPlayable = false;
+        _chosenChara.Crouch(false);
 
         _chosenChara.IgnoreThisCharacter = true;
+        _chosenChara.IsStillPlayable = false;
         _chosenChara.TurnOnOffFriendAI(false);
         if(_chosenChara.GetFriendAIStateMachine.IsToldHold) _chosenChara.GetFriendAIStateMachine.IsToldHold = false;
 

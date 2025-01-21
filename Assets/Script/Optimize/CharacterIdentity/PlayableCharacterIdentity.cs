@@ -8,6 +8,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [Header("Input Control Now")]
     [ReadOnly(false), SerializeField] protected bool _isPlayerInput;
     public event Action<bool> OnIsPlayerInputChange;
+    private bool _isStillPlayable;
 
     [Header("Friend Data Helper")]
     protected int _friendID;
@@ -156,7 +157,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public bool IsSilentKilling {get {return _playableUseWeaponStateMachine.IsSilentKill;} set { _playableUseWeaponStateMachine.IsSilentKill = value;}}
 
     public Transform GetFriendBeingRevivedPos {get {return _characterIdentityWhoBeingRevived.transform;}}
-    
+    public bool IsStillPlayable {get {return _isStillPlayable;} set{_isStillPlayable = value;}}
 
     public bool IsHoldingInteraction 
     {

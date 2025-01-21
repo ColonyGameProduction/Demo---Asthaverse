@@ -32,6 +32,9 @@ public class EnemyKillQuestHandler : SoloQuestHandler
     {
         if(_enemyTargetList.Contains(transform))
         {
+            EnemySnipingEventUIHandler snipingUI = transform.GetComponentInChildren<EnemySnipingEventUIHandler>();
+            if(snipingUI != null) snipingUI.HideUI();
+
             _enemyTargetList.Remove(transform);
             _totalTargetDied++;
         }
@@ -63,6 +66,14 @@ public class EnemyKillQuestHandler : SoloQuestHandler
         string questDescFinal = _questDescRaw + " (" + _totalTargetDied + "/" + TotalTarget +")";
         _questDesc = questDescFinal;
         OnChangeDescBeforeComplete?.Invoke();
+    }
+    public void ShowSnipingUITarget()
+    {
+        foreach(Transform target in _enemyTargetList)
+        {
+            EnemySnipingEventUIHandler snipingUI = target.GetComponentInChildren<EnemySnipingEventUIHandler>();
+            if(snipingUI != null) snipingUI.ShowUI();
+        }
     }
 
 }
