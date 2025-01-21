@@ -9,7 +9,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     #region  Normal Variable
     [Space(2)]
     [Header("Other Component Variable")]
-    
+
     protected IReceiveInputFromPlayer _getCanInputPlayer;
     private bool isToldHold;
     [SerializeField]private Transform _friendsDefaultDirection;
@@ -67,6 +67,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     protected override void Start()
     {
         base.Start();
+        
         
         _enemyAIManager.OnEnemyisEngaging += OnEnemyStartedEngaging;
         _enemyAIManager.OnEnemyStopEngaging += OnEnemyStopEngaging;

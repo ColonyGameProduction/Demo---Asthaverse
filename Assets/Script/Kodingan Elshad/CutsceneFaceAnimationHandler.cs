@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Video;
+using Unity.PlasticSCM.Editor.WebApi;
 
 public class CutsceneFaceAnimationHandler : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
     private Sprite curSprite;
     public CutsceneMouthSO cutsceneMouth;
     public DialogCutsceneSceneSOList dialogCutsceneSceneSOList;
-    private DialogCutsceneSO curCutsceneDialog;
+    [ReadOnly(false), SerializeField]private DialogCutsceneSO curCutsceneDialog;
     public TextMeshProUGUI leftName;
     public TextMeshProUGUI rightName;
     public TextMeshProUGUI text;
@@ -32,9 +33,9 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
     [Header("Move scene")]
     public SceneManagementManager _sceneManagementManager;
     public bool alreadyGoToNextScene;
-    public bool GoToSceneA;
     public string scene1;
     public string scene2;
+    public const string PLAYERPREFS_CURRIDX_DIALOGSCENECUTSCENE = "currIdxDialogSceneCutScene";
 
     private void Start()
     {
@@ -51,7 +52,10 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
 
         first = true;
 
-        curCutsceneDialog = dialogCutsceneSceneSOList.GetLatestDialogScene();
+        int currIdx = PlayerPrefs.GetInt("PLAYERPREFS_CURRIDX_DIALOGSCENECUTSCENE", 0);
+        curCutsceneDialog = dialogCutsceneSceneSOList.GetLatestDialogScene(currIdx);
+        currIdx += 1;
+        PlayerPrefs.SetInt("PLAYERPREFS_CURRIDX_DIALOGSCENECUTSCENE", currIdx);
 
         AssigningTheFace();
         AddingTheWord();
@@ -227,9 +231,10 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
     {
         if(alreadyGoToNextScene) return;
         alreadyGoToNextScene = true;
-        if(GoToSceneA)
+        if(curCutsceneDialog.title == DialogCutsceneTitle.Cutscene1)
         {
             _sceneManagementManager.SaveLoadSceneName(scene1);
+            
         }
         else _sceneManagementManager.SaveLoadSceneName(scene2);
         _sceneManagementManager.GoToOtherScene();
