@@ -197,6 +197,12 @@ public class PlayableInteraction : MonoBehaviour
                 // Debug.Log(interactable.InteractableTransform.name + " out");
                 if(!interactable.CanInteract)_interactablesList.Remove(interactable);
             }
+            else if(interactable != null && !_interactablesList.Contains(interactable) && interactable.CanInteract)
+            {
+                if(interactable == _thisObjInteractable) return;
+                // Debug.Log(interactable.InteractableTransform.name + " in");
+                _interactablesList.Add(interactable);
+            }
 
             
         }
@@ -207,6 +213,20 @@ public class PlayableInteraction : MonoBehaviour
             if(silentKillAble != null && _silentKillAbleList.Contains(silentKillAble))
             {
                 if(!silentKillAble.CanBeKill)_silentKillAbleList.Remove(silentKillAble);
+            }
+            else
+            {
+                EnemyIdentity enemyIdentity = other.gameObject.GetComponent<EnemyIdentity>();
+                enemyIdentity = enemyIdentity != null ? enemyIdentity : other.gameObject.GetComponentInParent<EnemyIdentity>();
+
+                if(enemyIdentity != null && enemyIdentity.IsDead) return;
+
+                // if(silentKillAble != null)Debug.Log(silentKillAble.SilentKillAbleTransform.name + " in1");
+                if(silentKillAble != null && !_silentKillAbleList.Contains(silentKillAble) && silentKillAble.CanBeKill)
+                {
+                    _silentKillAbleList.Add(silentKillAble);
+                    // Debug.Log(silentKillAble.SilentKillAbleTransform.name + " in2");
+                }
             }
         }
     }

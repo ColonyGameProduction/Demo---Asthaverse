@@ -412,7 +412,18 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
         // IsCrouching = false; //biar kalo lg crouch di tmpt ga tb tb berdiri
     }
-    public void SetCharaGameObjRotationToNormal() => _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+    public void SetCharaGameObjRotationToNormal()
+    {
+        if(_getPlayableCharacterIdentity.IsSilentKilling)
+        {
+            transform.rotation = _charaGameObject.rotation;
+            _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+        }
+        else
+        {
+            _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+        }
+    }
     #endregion
 
     #region Movement Speed
