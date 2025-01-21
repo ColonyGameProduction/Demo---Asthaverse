@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 public class TutorialPositionTrigger : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> tutorialCanvases;
-    [SerializeField] private int canvasIndex;
+    [SerializeField] private List<GameObject> tutorialImages;
+    [SerializeField] private int tutorialIndex;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            tutorialCanvases[canvasIndex].SetActive(true);
+            tutorialImages[tutorialIndex].SetActive(true);
         }
     }
 }
