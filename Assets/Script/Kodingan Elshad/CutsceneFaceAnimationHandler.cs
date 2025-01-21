@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Video;
+using Unity.PlasticSCM.Editor.WebApi;
 
 public class CutsceneFaceAnimationHandler : MonoBehaviour
 {
@@ -227,9 +228,10 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
     {
         if(alreadyGoToNextScene) return;
         alreadyGoToNextScene = true;
-        if(GoToSceneA)
+        if(curCutsceneDialog.title == DialogCutsceneTitle.Cutscene1)
         {
             _sceneManagementManager.SaveLoadSceneName(scene1);
+            
         }
         else _sceneManagementManager.SaveLoadSceneName(scene2);
         _sceneManagementManager.GoToOtherScene();
