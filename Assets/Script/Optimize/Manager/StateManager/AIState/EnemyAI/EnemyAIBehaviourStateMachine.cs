@@ -28,6 +28,9 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
     
     [Header("Patrol Path")]
     [SerializeField] private Transform[] _patrolPath;
+    private bool _isTimerPatrolChangeOn;
+    [SerializeField] private float _timerPatrolMax;
+    private float _timerPatrol;
     private bool _switchingPath;
     private int _currPath;
 
@@ -195,24 +198,38 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
         if(IsAIIdle && GetFOVState.CurrState == FOVDistState.none && _patrolPath.Length > 0 && agentPos == _patrolPath[_currPath].position)
         {
             // _isIdlePatroling = false;
-
-            if (!_switchingPath)
+            if(!_isTimerPatrolChangeOn)
             {
-                _currPath++;
+                _isTimerPatrolChangeOn = true;
+                _timerPatrol = _timerPatrolMax;
             }
             else
             {
-                _currPath--;
+                if(_timerPatrol >= 0) _timerPatrol -= Time.deltaTime;
+                else
+                {
+                    if (!_switchingPath)
+                    {
+                        _currPath++;
+                    }
+                    else
+                    {
+                        _currPath--;
+                    }
+
+                    if (_currPath == _patrolPath.Length - 1)
+                    {
+                        _switchingPath = true;
+                    }
+                    else if (_currPath == 0)
+                    {
+                        _switchingPath = false;
+                    }
+                    _isTimerPatrolChangeOn = false;
+                }
             }
 
-            if (_currPath == _patrolPath.Length - 1)
-            {
-                _switchingPath = true;
-            }
-            else if (_currPath == 0)
-            {
-                _switchingPath = false;
-            }
+            
             
         }
         if(!IsAIIdle)
