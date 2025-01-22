@@ -100,12 +100,12 @@ public class PlayableCameraSniperEvent : PlayableCamera
         // {
         //     angles.y = _maxRightCameraRotateY;
         // }
-        Debug.Log("Sniper camera angle before" + angles);
+        // Debug.Log("Sniper camera angle before" + angles);
         if(_maxLeftCameraRotateY > _startCameraRotateY && _startCameraRotateY > _maxRightCameraRotateY)
         {
             if(angleY > _maxRightCameraRotateY && angleY < _maxLeftCameraRotateY)
             {
-                Debug.Log("Masuk atas Sniper camera");
+                // Debug.Log("Masuk atas Sniper camera");
                 if(angleY <= _startCameraRotateY) angles.y = _maxRightCameraRotateY;
                 else angles.y = _maxLeftCameraRotateY;
             }
@@ -114,7 +114,7 @@ public class PlayableCameraSniperEvent : PlayableCamera
         {
             if((angleY > _maxLeftCameraRotateY && angleY > _maxRightCameraRotateY) || (angleY < _maxLeftCameraRotateY && angleY < _maxRightCameraRotateY)) 
             {
-                Debug.Log("Masuk bwh Sniper camera");
+                // Debug.Log("Masuk bwh Sniper camera");
                 if(_maxLeftCameraRotateY > _startCameraRotateY)
                 {
                     if(angleY > _maxRightCameraRotateY || (angleY < _maxLeftCameraRotateY && angleY < _startCameraRotateY)) angles.y = _maxRightCameraRotateY;
@@ -129,7 +129,7 @@ public class PlayableCameraSniperEvent : PlayableCamera
         }
         
         
-        Debug.Log("Sniper camera angle now" + angles);
+        // Debug.Log("Sniper camera angle now" + angles);
         _followTarget.localEulerAngles = angles;
         
 
@@ -140,7 +140,7 @@ public class PlayableCameraSniperEvent : PlayableCamera
         // isChangingPlaceToFace = true;
         Quaternion lookRot = Quaternion.LookRotation(newPos.position - _followTarget.position, Vector3.up);
         _followTarget.rotation = lookRot;
-        Debug.Log("Start Sniper camera angle now" + lookRot);
+        // Debug.Log("Start Sniper camera angle now" + lookRot);
         _startCameraRotateY = _followTarget.eulerAngles.y;
         _maxRightCameraRotateY = _startCameraRotateY + _cameraRotateYClamp;
         if(_maxRightCameraRotateY > 360)

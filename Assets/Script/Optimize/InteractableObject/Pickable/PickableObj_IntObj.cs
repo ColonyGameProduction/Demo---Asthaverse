@@ -32,10 +32,10 @@ public class PickableObj_IntObj : InteractableObject
     {
         if(!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Weapon"))
         {
-            Debug.Log("I make sound using" + other.gameObject);
+            // Debug.Log("I make sound using" + other.gameObject);
             if(IsBeingThrown)
             {
-                Debug.Log("I make sound");
+                // Debug.Log("I make sound");
                 _canInteract = false;
                 IsBeingThrown = false;
                 WorldSoundManager.Instance.MakeSound(WorldSoundName.Whistle, _playerWhoHeldItem.transform.position, _playerWhoHeldItem.GetFOVMachine.CharaEnemyMask);

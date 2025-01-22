@@ -274,7 +274,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
 
             SetConstraintData();
         }
-        Debug.Log("Halo ini OnisPlayerInput ga kepanggil???" + transform.name + " " + obj);
+        // Debug.Log("Halo ini OnisPlayerInput ga kepanggil???" + transform.name + " " + obj);
     }
     private void SetConstraintData()
     {
@@ -301,7 +301,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     }
     private void SetRigHandFollow()
     {
-        Debug.Log(transform.name + "Masuk sini " + _getPlayableCharacterIdentity.CurrWeaponIdx);
+        // Debug.Log(transform.name + "Masuk sini " + _getPlayableCharacterIdentity.CurrWeaponIdx);
         if(_getPlayableCharacterIdentity.CurrWeaponIdx == 0)
         {
             if(_rigHandFollowRifle) _rigHandFollowRifle.weight = 1;

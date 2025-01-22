@@ -42,7 +42,7 @@ public class SplitTeammatesEvent : MonoBehaviour, IUnsubscribeEvent
 
         if(pos == _newPlaceToGo.position && Vector3.Distance(_chosenSplitTeammates.transform.position, _newPlaceToGo.position) < 0.5f)
         {
-            Debug.Log(pos + " emang ini sama ??? " + _newPlaceToGo.position);
+            // Debug.Log(pos + " emang ini sama ??? " + _newPlaceToGo.position);
             _chosenSplitTeammates.gameObject.SetActive(false);
             UnsubscribeEvent();
         }

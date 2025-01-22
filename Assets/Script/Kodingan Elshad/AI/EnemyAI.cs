@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.EventSystems.EventTrigger;
 
 
 public class EnemyAI : ExecuteLogic
@@ -254,7 +252,7 @@ public class EnemyAI : ExecuteLogic
                     thisQuest.questActivate = false;
                 }
 
-                Debug.Log("Dead");
+                // Debug.Log("Dead");
                 isDead = true;
             }
         }

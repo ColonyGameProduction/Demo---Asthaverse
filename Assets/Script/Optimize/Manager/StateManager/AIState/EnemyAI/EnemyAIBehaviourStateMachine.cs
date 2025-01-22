@@ -568,13 +568,13 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
                     {
                         if(NewPosForwardDistance >= 0)
                         {
-                            Debug.Log("Depan, kanan" + transform.name);
+                            // Debug.Log("Depan, kanan" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
                             _dirToLookAtWhenChecking = -wallForward;
                         }
                         else
                         {
-                            Debug.Log("Bawah, kiri" + transform.name);
+                            // Debug.Log("Bawah, kiri" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
                             _dirToLookAtWhenChecking = wallForward;
                         }
@@ -585,14 +585,14 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
                     {
                         if(NewPosForwardDistance > 0)
                         {
-                            Debug.Log("Depan, kiri" + transform.name);
+                            // Debug.Log("Depan, kiri" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
                             _dirToLookAtWhenChecking = -wallForward;
                             
                         }
                         else
                         {
-                            Debug.Log("Bawah, kanan" + transform.name);
+                            // Debug.Log("Bawah, kanan" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
                             _dirToLookAtWhenChecking = wallForward;
                         }
@@ -608,13 +608,13 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
                     {
                         if(NewPosRightDistance > 0)
                         {
-                            Debug.Log("kiri, atas" + transform.name);
+                            // Debug.Log("kiri, atas" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
                             _dirToLookAtWhenChecking = -wallRight;
                         }
                         else
                         {
-                            Debug.Log("kanan, atas" + transform.name);
+                            // Debug.Log("kanan, atas" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
                             _dirToLookAtWhenChecking = wallRight;
                         }
@@ -624,13 +624,13 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
                     {
                         if(NewPosRightDistance >= 0) 
                         {
-                            Debug.Log("kanan, bawah" + transform.name);
+                            // Debug.Log("kanan, bawah" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
                             _dirToLookAtWhenChecking = -wallRight;
                         }
                         else 
                         {
-                            Debug.Log("kiri, bawah" + transform.name);
+                            // Debug.Log("kiri, bawah" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
                             _dirToLookAtWhenChecking = wallRight;
                         }
@@ -653,7 +653,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
 
     public void RespondToSound(Vector3 soundOriginPos)
     {
-        Debug.Log(transform.name + "heard sound from " + soundOriginPos);
+        // Debug.Log(transform.name + "heard sound from " + soundOriginPos);
         if(_fovMachine.VisibleTargets.Count > 0 || _getFOVAdvancedData.OtherVisibleTargets.Count > 0)return;
         if(!IsAIEngage)
         {

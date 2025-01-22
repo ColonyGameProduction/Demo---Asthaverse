@@ -64,8 +64,8 @@ namespace DialogueSystem
             if(dialogSeq != null)StartCoroutine(dialogSeq);
             else
             {
-                Debug.Log("WHY IT'S NULL");
-                Debug.Log(SceneDialogue);
+                // Debug.Log("WHY IT'S NULL");
+                // Debug.Log(SceneDialogue);
             }
             
         }

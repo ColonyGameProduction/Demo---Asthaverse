@@ -94,7 +94,7 @@ public class CharacterProfileUIHandler : MonoBehaviour
     }
     public void RemoveCharaProfileUI(int idx)
     {
-        Debug.Log("Emang indxnya apa" + idx);
+        // Debug.Log("Emang indxnya apa" + idx);
         if(_charaProfileUIList[idx] == null) return;
 
         CharacterProfileUI deleteProfile = _charaProfileUIList[idx];

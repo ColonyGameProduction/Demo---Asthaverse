@@ -12,7 +12,7 @@ public class SilentKill : MonoBehaviour
     {        
         if(canKill)
         {
-            Debug.Log("Killed");
+            // Debug.Log("Killed");
             Destroy(gameObject);
             canKill = false;
         }        

@@ -85,7 +85,7 @@ public class WeaponLogicManager : MonoBehaviour
                         else
                         {
                             isHitBody = false;
-                            Debug.Log("I hit Obstacle");
+                            // Debug.Log("I hit Obstacle");
                         }
                     }
                     else
@@ -115,7 +115,7 @@ public class WeaponLogicManager : MonoBehaviour
                         else
                         {
                             isHitBody = false;
-                            Debug.Log("I hit Obstacle");
+                            // Debug.Log("I hit Obstacle");
                         }
                     }
                 }
@@ -137,7 +137,7 @@ public class WeaponLogicManager : MonoBehaviour
                 else
                 {
                     isHitBody = false;
-                    Debug.Log("I hit Obstacle");
+                    // Debug.Log("I hit Obstacle");
                 }
             }
 
@@ -175,17 +175,17 @@ public class WeaponLogicManager : MonoBehaviour
             if(hitBodyPart == bodyParts.head)
             {
                 totalDamage = (weapon.baseDamage * weapon.headDamageMultiplier) - ((weapon.baseDamage * weapon.headDamageMultiplier) * ((int)_getHealthFunction.GetCharaArmourType/100));
-                Debug.Log("I hit Head");
+                // Debug.Log("I hit Head");
             }
             else if(hitBodyPart == bodyParts.body)
             {
                 totalDamage = (weapon.baseDamage) - ((weapon.baseDamage) * ((int)_getHealthFunction.GetCharaArmourType/100));
-                Debug.Log("I hit Body");
+                // Debug.Log("I hit Body");
             }
             else if(hitBodyPart == bodyParts.leg)
             {
                 totalDamage = (weapon.baseDamage * weapon.legDamageMultiplier) - ((weapon.baseDamage * weapon.legDamageMultiplier) * ((int)_getHealthFunction.GetCharaArmourType/100));
-                Debug.Log("I hit Leg");
+                // Debug.Log("I hit Leg");
             }
             if(!Debugs)_getHealthFunction.Hurt(totalDamage);
             // Debug.Log(entityGameObject.name + " Hit!" + " HP:" + _getHealthFunction.CurrHealth);

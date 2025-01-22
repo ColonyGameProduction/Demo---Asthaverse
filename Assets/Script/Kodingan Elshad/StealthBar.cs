@@ -120,7 +120,7 @@ public class StealthBar : MonoBehaviour
         Vector3 direction = (fillBarLocation - player.position).normalized;
 
         float angle = (Vector3.SignedAngle(direction, flatForward, Vector3.up));
-        Debug.Log(angle);
+        // Debug.Log(angle);
         fillBar.transform.localEulerAngles = new Vector3(0, 0, angle);
     
     }

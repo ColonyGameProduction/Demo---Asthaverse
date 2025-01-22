@@ -58,7 +58,7 @@ public class AudioManager : AudioHandler
     #region BGM Method Helper
     private void SetBGM(AudioBGMName name)
     {
-        Debug.Log("SetBGM" + name);
+        // Debug.Log("SetBGM" + name);
         AudioSource audioSource = GetAudioSource(AudioType.BGM);
 
         if(audioSource.isPlaying && name != AudioBGMName.None && name != _currBGMName)
@@ -80,7 +80,7 @@ public class AudioManager : AudioHandler
 
         AudioSource audioSource = GetAudioSource(AudioType.BGM);
         float finalVolume = audioSource.volume;
-        Debug.Log("PlayBGM" + audioSource.clip + " " + finalVolume);
+        // Debug.Log("PlayBGM" + audioSource.clip + " " + finalVolume);
 
         audioSource.volume = 0;
         audioSource.Play();
@@ -92,7 +92,7 @@ public class AudioManager : AudioHandler
     }
     private void StopBGM(AudioBGMName startAnotherBGM)
     {
-        Debug.Log("StopBGM" + startAnotherBGM);
+        // Debug.Log("StopBGM" + startAnotherBGM);
         AudioSource audioSource = GetAudioSource(AudioType.BGM);
         float startVolume = audioSource.volume;
         

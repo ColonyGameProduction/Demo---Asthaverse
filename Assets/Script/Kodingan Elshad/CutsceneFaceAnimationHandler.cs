@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Video;
-using Unity.PlasticSCM.Editor.WebApi;
 
 public class CutsceneFaceAnimationHandler : MonoBehaviour
 {
@@ -144,7 +142,7 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
                 });
 
                 float decreaseValue = rightName.color.a;
-                Debug.Log(decreaseValue);
+                // Debug.Log(decreaseValue);
 
                 LeanTween.value(decreaseValue, .1f, 0.5f).setOnUpdate((float value) => {
                     if(decreaseValue > .1f)
@@ -165,12 +163,12 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
                 });
                 
                 float decreaseValue = leftName.color.a;
-                Debug.Log(decreaseValue);
+                // Debug.Log(decreaseValue);
 
                 LeanTween.value(decreaseValue, .1f, 0.5f).setOnUpdate((float value) => {
                     if (decreaseValue > .1f)
                     {
-                        Debug.Log("Masuk");
+                        // Debug.Log("Masuk");
                         Color color = leftName.color;
                         color.a = value;
                         leftName.color = color;
@@ -224,7 +222,7 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
         }
         else if(index ==  curCutsceneDialog.dialogSentence.Count - 1)
         {
-            Debug.Log("Cutscene Clear");
+            // Debug.Log("Cutscene Clear");
             GoToMainScene();
         }
     }
