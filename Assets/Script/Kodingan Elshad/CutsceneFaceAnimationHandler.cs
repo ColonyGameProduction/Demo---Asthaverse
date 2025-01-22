@@ -55,6 +55,7 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
         int currIdx = PlayerPrefs.GetInt("PLAYERPREFS_CURRIDX_DIALOGSCENECUTSCENE", 0);
         curCutsceneDialog = dialogCutsceneSceneSOList.GetLatestDialogScene(currIdx);
         currIdx += 1;
+        if(currIdx >= dialogCutsceneSceneSOList.dialogCutsceneSOList.Count) currIdx = 0;
         PlayerPrefs.SetInt("PLAYERPREFS_CURRIDX_DIALOGSCENECUTSCENE", currIdx);
 
         AssigningTheFace();

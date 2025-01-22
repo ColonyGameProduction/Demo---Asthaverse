@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
 {
+    public static SniperShootingEvent Instance {get; private set;}
     // [Header("Test")]
     public bool StartEvent, StopEvent;
     [Space(1)]
@@ -30,6 +31,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     [SerializeField] private LayerMask _charaEnemyMask;
     private float _charaAimAccuracy;
     private Transform _cameraTransform;
+    public Action OnWeaponBulletChange;
 
     #region Recoil
     [Header("Recoil Data")]
@@ -48,6 +50,8 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     [ReadOnly(true)] private int _currPlaceToLookIdx = 0;
 
     #region Getter Setter
+    public EntityStatSO CharaStat {get {return _specialCharaStatSO;}}
+    public WeaponData GetWeaponDataSpecial {get {return _currWeaponData;}}
     public float FinalCountRecoil
     {
         get
@@ -88,6 +92,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
 
     private void Awake() 
     {
+        Instance = this;
         _playableCamera = GetComponent<PlayableCameraSniperEvent>();
         _weaponShootVFX = GetComponent<WeaponShootVFX>();
         _cameraTransform = Camera.main.transform;
@@ -239,7 +244,10 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
             RecoilHandler();
             _playableCamera.GiveRecoilToCamera();
             _weaponLogicManager.ShootingPerformed(this.transform, _cameraTransform.position, _cameraTransform.forward.normalized, _charaAimAccuracy, _currWeaponData.weaponStatSO, _charaEnemyMask, 0, _cameraTransform.position, false, false, _weaponShootVFX);
+
             _currWeaponData.currBullet -= 1;
+            OnWeaponBulletChange?.Invoke();
+
             if(!_currWeaponData.weaponStatSO.allowHoldDownButton) _isShooting = false;
             StartCoroutine(FireRate(_currWeaponData.weaponStatSO.fireRate));
 
@@ -299,6 +307,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
             _currWeaponData.totalBullet = 0;
         } 
 
+        OnWeaponBulletChange?.Invoke();
 
         _canReload = false;
         _isDoingReloading = false;
