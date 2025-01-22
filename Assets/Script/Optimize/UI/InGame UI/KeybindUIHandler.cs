@@ -18,48 +18,68 @@ public class KeybindUIHandler : MonoBehaviour, IUnsubscribeEvent
     public static Action<KeybindUIType> OnChangeKeybind;
 
     [Header("Keybind Floating")]
+
+    [Header("Silent Take Down Keybind")]
     [SerializeField] private GameObject _silentTakeDownContainer;
     public static Action<bool> OnShowSilentTakeDownKeybind;
-    [SerializeField] private GameObject _interactContainer;
-    public static Action<bool> OnShowInteractKeybind;
-    [SerializeField] private GameObject _pickUpContainer;
-    public static Action<bool> OnShowPickUpKeybind;
-    [SerializeField] private GameObject _reviveContainer;
-    public static Action<bool> OnShowReviveKeybind;
+
+    [Header("Interact Keybind")]
+    [SerializeField] private Image _interactContainer;
+    public static Action<InteractObjType> OnShowInteractKeybind;
+    public static Action OnHideInteractKeybind;
+    [SerializeField] private Sprite _generalInteractSprite, _pickUpInteractSprite, _reviveInteractSprite;
+
+    [Header("Interact Keybind")]
+    [SerializeField] private GameObject _takeCoverContainer;
+    public static Action<bool> OnShowTakeCoverKeybind;
 
     private void Awake() 
     {
         ToggleSilentTakeDownKeybindContainer(false);
         ToggleInteractKeybindContainer(false);
-        TogglePickUpKeybindContainer(false);
-        ToggleReviveKeybindContainer(false);
 
         OnChangeKeybind += ChangeKeybindUI;
         ChangeKeybindUI(KeybindUIType.General);
 
         OnShowSilentTakeDownKeybind += ToggleSilentTakeDownKeybindContainer;
-        OnShowInteractKeybind += ToggleInteractKeybindContainer;
-        OnShowPickUpKeybind += TogglePickUpKeybindContainer;
-        OnShowReviveKeybind += ToggleReviveKeybindContainer;
+
+        OnShowInteractKeybind += ShowInteractKeybind;
+        OnHideInteractKeybind += HideInteractKeybind;
+
+        OnShowTakeCoverKeybind += ToggleTakeCoverKeybindContainer;
     }
 
+    #region Silent Take Down Keybind
     private void ToggleSilentTakeDownKeybindContainer(bool show)
     {
         _silentTakeDownContainer.SetActive(show);
     }
+    #endregion
+
+    #region TakeCover Keybind
+    private void ToggleTakeCoverKeybindContainer(bool show)
+    {
+        _takeCoverContainer.SetActive(show);
+    }
+    #endregion
+
+    #region  Interact Keybind
+    private void ShowInteractKeybind(InteractObjType interactObjType)
+    {
+        _interactContainer.sprite = interactObjType == InteractObjType.None || interactObjType == InteractObjType.Interact ? _generalInteractSprite : interactObjType == InteractObjType.Pick_up ? _pickUpInteractSprite : _reviveInteractSprite;
+        ToggleInteractKeybindContainer(true);
+    }
+    private void HideInteractKeybind()
+    {
+        ToggleInteractKeybindContainer(false);
+    }
     private void ToggleInteractKeybindContainer(bool show)
     {
-        _interactContainer.SetActive(show);
+        _interactContainer.gameObject.SetActive(show);
     }
-    private void TogglePickUpKeybindContainer(bool show)
-    {
-        _pickUpContainer.SetActive(show);
-    }
-    private void ToggleReviveKeybindContainer(bool show)
-    {
-        _reviveContainer.SetActive(show);
-    }
-    
+    #endregion
+
+    #region General Keybind
     private void ChangeKeybindUI(KeybindUIType newType)
     {
         if(newType == _currType) return;
@@ -78,13 +98,13 @@ public class KeybindUIHandler : MonoBehaviour, IUnsubscribeEvent
             _keybindImage.sprite = _commandSprite;
         }
     }
-
+    #endregion
     public void UnsubscribeEvent()
     {
         OnChangeKeybind -= ChangeKeybindUI;
         OnShowSilentTakeDownKeybind -= ToggleSilentTakeDownKeybindContainer;
-        OnShowInteractKeybind -= ToggleInteractKeybindContainer;
-        OnShowPickUpKeybind -= TogglePickUpKeybindContainer;
-        OnShowReviveKeybind -= ToggleReviveKeybindContainer;
+        OnShowInteractKeybind -= ShowInteractKeybind;
+        OnHideInteractKeybind -= HideInteractKeybind;
+        OnShowTakeCoverKeybind -= ToggleTakeCoverKeybindContainer;
     }
 }

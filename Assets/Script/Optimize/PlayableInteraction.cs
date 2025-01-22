@@ -54,33 +54,25 @@ public class PlayableInteraction : MonoBehaviour
         SearchRaycastInteractable();
         if(_playableCharacterIdentity.IsHoldingInteraction)
         {
-            KeybindUIHandler.OnShowInteractKeybind(false);
-            KeybindUIHandler.OnShowPickUpKeybind(false);
-            KeybindUIHandler.OnShowReviveKeybind(false);
+            KeybindUIHandler.OnHideInteractKeybind();
         }
         else
         {
             if(_currInteractable != null)
             {
-                KeybindUIHandler.OnShowReviveKeybind(true);
-                KeybindUIHandler.OnShowInteractKeybind(false);
-                KeybindUIHandler.OnShowPickUpKeybind(false);
+                KeybindUIHandler.OnShowInteractKeybind(InteractObjType.Revive);
             }
             else
             {
                 if(_currInteractableRaycast != null)
-                {
-                    KeybindUIHandler.OnShowReviveKeybind(_currInteractableRaycast.InteractObjType == InteractObjType.Revive ? true : false);   
-                    KeybindUIHandler.OnShowPickUpKeybind(_currInteractableRaycast.InteractObjType == InteractObjType.Pick_up ? true : false);   
-                    KeybindUIHandler.OnShowInteractKeybind(_currInteractableRaycast.InteractObjType == InteractObjType.Interact ? true : false);   
+                {  
+                    KeybindUIHandler.OnShowInteractKeybind(_currInteractableRaycast.InteractObjType);   
                     
                     
                 }
                 else
                 {
-                    KeybindUIHandler.OnShowInteractKeybind(false);
-                    KeybindUIHandler.OnShowPickUpKeybind(false);
-                    KeybindUIHandler.OnShowReviveKeybind(false);
+                    KeybindUIHandler.OnHideInteractKeybind();
                 }
             }
         }
