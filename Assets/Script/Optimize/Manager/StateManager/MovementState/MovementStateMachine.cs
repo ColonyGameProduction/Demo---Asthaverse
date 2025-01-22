@@ -145,7 +145,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
         _currState?.UpdateState();
     }
-    private void FixedUpdate() 
+    protected virtual void FixedUpdate() 
     {
         if(!_gm.IsGamePlaying()) return;
 

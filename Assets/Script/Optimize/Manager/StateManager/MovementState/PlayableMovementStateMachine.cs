@@ -59,6 +59,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected PlayableMakeSFX _getPlayableMakeSFX;
     protected FOVMachine _fovMachine;
     #endregion
+    private RaycastHit _wallTakeCoverHit;
     public const string ANIMATION_MOVE_PARAMETER_TAKECOVERPOS = "TakeCoverPos";
     public const string ANIMATION_MOVE_PARAMETER_TAKECOVER = "TakeCover";
     
@@ -192,6 +193,14 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
         base.Update();
         GoingToTakeCover();
+    }
+
+    protected override void FixedUpdate() 
+    {
+        base.FixedUpdate();
+
+        if(!_gm.IsGamePlaying()) return;
+        NearWallTakeCoverHandler();
     }
 
     #region Move
@@ -455,18 +464,22 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     }
 
     #region TakeCoverAtWall
-    public bool IsNearWall()
+    public void NearWallTakeCoverHandler()
     {
-        RaycastHit hit;
-        // Debug.DrawRay(transform.position, _charaGameObject.forward.normalized * 100f, Color.red, 2f, false);
-        if(Physics.Raycast(transform.position, _charaGameObject.forward.normalized, out hit, _playerToWallMinDistance, _wallLayerMask))
+        if(Physics.Raycast(transform.position, _charaGameObject.forward.normalized, out _wallTakeCoverHit, _playerToWallMinDistance, _wallLayerMask))
         {
-
-            SetTakeCoverWallData(hit);
+            
+        }
+        KeybindUIHandler.OnShowTakeCoverKeybind(_wallTakeCoverHit.collider ? IsTakingCoverAtWall ? false : true : false);
+    }
+    public bool CanTakeCover()
+    {
+        if(_wallTakeCoverHit.collider != null)
+        {
+            SetTakeCoverWallData(_wallTakeCoverHit);
             
             return true;
         }
-
         return false;
     }
     public void TakeCoverAtWall()
