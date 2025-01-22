@@ -8,6 +8,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [Header("Input Control Now")]
     [ReadOnly(false), SerializeField] protected bool _isPlayerInput;
     public event Action<bool> OnIsPlayerInputChange;
+    private bool _isStillPlayable;
 
     [Header("Friend Data Helper")]
     protected int _friendID;
@@ -77,8 +78,10 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public Action OnPlayableDeath;
     public Action OnIsCrawlingChange;
     public Action<float, float> OnPlayableHealthChange;
+    public Action OnPlayableBulletChange;
     public Action OnSwitchWeapon;
     public Action OnCancelInteractionButton;
+    
 
     #region GETTERSETTER Variable
 
@@ -154,7 +157,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     public bool IsSilentKilling {get {return _playableUseWeaponStateMachine.IsSilentKill;} set { _playableUseWeaponStateMachine.IsSilentKill = value;}}
 
     public Transform GetFriendBeingRevivedPos {get {return _characterIdentityWhoBeingRevived.transform;}}
-    
+    public bool IsStillPlayable {get {return _isStillPlayable;} set{_isStillPlayable = value;}}
 
     public bool IsHoldingInteraction 
     {
@@ -267,6 +270,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             CurrWeapon.currBullet += CurrWeapon.totalBullet;
             CurrWeapon.totalBullet = 0;
         } 
+        OnPlayableBulletChange?.Invoke();
     }
     public void SwitchWeapon()
     {
@@ -304,7 +308,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     }
     protected void RegenerationTimer()
     {
-        if(CurrHealth <= TotalHealth && !IsDead)
+        if(CurrHealth <= TotalHealth && !IsDead && !IsSilentKilling)
         {
             if(_friendAIStateMachine.EnemyWhoSawAIList.Count > 0)
             {
@@ -339,13 +343,13 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             if(!immortalized) Death();
         }
     }
-    public override void Heal(float Healing)
+    protected override void HandleHeal(float Healing)
     {
-        base.Heal(Healing);
+        base.HandleHeal(Healing);
 
         OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
     }
-    public override void Death()
+    protected override void HandleDeath()
     {
         if(IsReviving)
         {
@@ -353,7 +357,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
             StopRevivingFriend();
         }
         _isHoldSwitchState = false;
-        base.Death();
+        base.HandleDeath();
 
         if(IsHoldingInteraction) IsHoldingInteraction = false;
         if(_playableInteraction.IsHeldingObject) _playableInteraction.RemoveHeldObject();
@@ -411,6 +415,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _isAnimatingOtherAnimation = false;
         _animator.SetBool(ANIMATION_BEING_REVIVED_PARAMETER, false);
         _animator.SetBool(ANIMATION_DEATH_PARAMETER, false);
+        PlayableCharacterManager.OnFinishReviveAnimation?.Invoke();
     }
     public void CutOutFromBeingRevived()
     {

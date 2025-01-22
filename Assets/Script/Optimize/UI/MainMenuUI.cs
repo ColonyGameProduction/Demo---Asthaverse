@@ -20,7 +20,7 @@ public class MainMenuUI : MonoBehaviour, IUnsubscribeEvent
     
     private Button[] _buttons;
 
-    [SerializeField] private DialogCutsceneSceneSOList _resetSO;
+    public const string PLAYERPREFS_CURRIDX_DIALOGSCENECUTSCENE = "currIdxDialogSceneCutScene";
     
 
     private void Awake() 
@@ -60,7 +60,7 @@ public class MainMenuUI : MonoBehaviour, IUnsubscribeEvent
         if(!CanClickButton()) return;
 
         _isClickingStartExitButton = true;
-        _resetSO.currIdx = 0;
+        PlayerPrefs.SetInt("PLAYERPREFS_CURRIDX_DIALOGSCENECUTSCENE", 0);
         _sceneManagementManager.SaveLoadSceneName(levelToLoad);
         StartCoroutine(DelayButtonAnimation(StartGame));
     }

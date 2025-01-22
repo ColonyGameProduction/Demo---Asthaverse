@@ -5,15 +5,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DialogCutsceneSceneSOList", menuName = "ScriptableObject/DialogCutsceneSceneSOList")]
 public class DialogCutsceneSceneSOList : ScriptableObject
 {
-    public int currIdx;
     public List<DialogCutsceneSO> dialogCutsceneSOList;
-    public DialogCutsceneSO GetLatestDialogScene()
+    public DialogCutsceneSO GetLatestDialogScene(int currIdx)
     {
         if(currIdx < dialogCutsceneSOList.Count)
         {
-            int oldIdx = currIdx;
-            currIdx++;
-            return dialogCutsceneSOList[oldIdx];
+            return dialogCutsceneSOList[currIdx];
         }
         return null;
     }   

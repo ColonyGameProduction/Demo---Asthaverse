@@ -9,7 +9,6 @@ public class EnemyKillQuestHandler : SoloQuestHandler
     [SerializeField]protected List<Transform> _enemyTargetList;
     protected int _totalTarget, _totalTargetDied;
     private string _questDescRaw;
-    [SerializeField] private GameObject _checkerInMap;
 
     #region GETTER SETTER
     public int TotalTarget {get {return _totalTarget;}}
@@ -33,6 +32,9 @@ public class EnemyKillQuestHandler : SoloQuestHandler
     {
         if(_enemyTargetList.Contains(transform))
         {
+            EnemySnipingEventUIHandler snipingUI = transform.GetComponentInChildren<EnemySnipingEventUIHandler>();
+            if(snipingUI != null) snipingUI.HideUI();
+
             _enemyTargetList.Remove(transform);
             _totalTargetDied++;
         }
@@ -42,23 +44,21 @@ public class EnemyKillQuestHandler : SoloQuestHandler
 
     public override void ActivateQuest()
     {
-        _isActivated = true;
-        if(_checkerInMap)_checkerInMap.SetActive(true);
+        base.ActivateQuest();
         QuestComplete();
     }
 
     public override void DeactivateQuest()
     {
-        if(_checkerInMap)_checkerInMap.SetActive(false);
         base.DeactivateQuest();
     }
     
-    protected override void QuestComplete()
+    protected override void HandleQuestComplete()
     {
         
         if(_totalTargetDied < _totalTarget) return;
 
-        base.QuestComplete();
+        base.HandleQuestComplete();
     }
 
     private void ChangeDesc()
@@ -67,4 +67,13 @@ public class EnemyKillQuestHandler : SoloQuestHandler
         _questDesc = questDescFinal;
         OnChangeDescBeforeComplete?.Invoke();
     }
+    public void ShowSnipingUITarget()
+    {
+        foreach(Transform target in _enemyTargetList)
+        {
+            EnemySnipingEventUIHandler snipingUI = target.GetComponentInChildren<EnemySnipingEventUIHandler>();
+            if(snipingUI != null) snipingUI.ShowUI();
+        }
+    }
+
 }

@@ -66,6 +66,7 @@ public class PauseUIHandler : MonoBehaviour, IUnsubscribeEvent
         _sceneManagementManager.SaveLoadSceneName("Main Menu");
         _sceneManagementManager.GoToOtherScene();
     }
+    
 
     public void UnsubscribeEvent()
     {

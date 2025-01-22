@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent, IConnectToQuest
 {
@@ -11,7 +12,7 @@ public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent, IConnectToQ
     private bool _isTestAfterDialogDone, _canTriggerOnce;
     [SerializeField] private bool _canOnlyBeActivateOnce;
     public Action<DialogCutsceneTitle> OnPlayerTriggerOnce;
-
+    public UnityEvent OnTriggerEventEventFromOutside;
     public event Action OnTriggerQuestComplete;
 
     private void Start() 
@@ -29,7 +30,7 @@ public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent, IConnectToQ
             {
                 if (!_isActivate)
                 {
-                    _dialogInGameManager.PlayDialogCutscene(_chosenTitleToPlay);
+                    _dialogInGameManager.PlayDialogCutsceneTitle(_chosenTitleToPlay);
                     _isActivate = true;
 
                     if(!_canTriggerOnce)
@@ -51,6 +52,7 @@ public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent, IConnectToQ
         {
             _isTestAfterDialogDone = true;
             OnTriggerQuestComplete?.Invoke();
+            OnTriggerEventEventFromOutside?.Invoke();
         }
     }
 
