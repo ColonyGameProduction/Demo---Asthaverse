@@ -129,9 +129,14 @@ public class PlayableInteraction : MonoBehaviour
         float closestDistance = Mathf.Infinity;
         // float smallestDotProduct = -1;
         IInteractable chosenInteractable = null;
+        IInteractable removeInteractable = null;
         foreach(IInteractable interactable in _interactablesList)
         {
-            if(interactable == null)continue;
+            if(interactable == null || !interactable.CanInteract)
+            {
+                if(!interactable.CanInteract) removeInteractable = interactable;
+                continue;
+            }
             float InteractableToPlayerDistance = Vector3.Distance(interactable.GetInteractableTransform.position, _thisObjInteractable.GetInteractableTransform.position);
             
 
@@ -142,6 +147,13 @@ public class PlayableInteraction : MonoBehaviour
                 chosenInteractable = interactable;
             }
         }
+
+        if(removeInteractable != null)
+        {
+            _interactablesList.Remove(removeInteractable);
+            removeInteractable = null;
+        }
+        
         return chosenInteractable;
     }
     private ISilentKillAble GetClosestSilentkillable()
