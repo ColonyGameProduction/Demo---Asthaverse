@@ -295,17 +295,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
         if(!_isReloading) return;
 
         
-        float bulletNeed = _currWeaponData.weaponStatSO.magSize - _currWeaponData.currBullet;
-        if (_currWeaponData.totalBullet >= bulletNeed)
-        {
-            _currWeaponData.currBullet = _currWeaponData.weaponStatSO.magSize;
-            _currWeaponData.totalBullet -= bulletNeed;
-        }
-        else if (_currWeaponData.totalBullet > 0)
-        {
-            _currWeaponData.currBullet += _currWeaponData.totalBullet;
-            _currWeaponData.totalBullet = 0;
-        } 
+        _currWeaponData.currBullet = _currWeaponData.weaponStatSO.magSize;
 
         OnWeaponBulletChange?.Invoke();
 

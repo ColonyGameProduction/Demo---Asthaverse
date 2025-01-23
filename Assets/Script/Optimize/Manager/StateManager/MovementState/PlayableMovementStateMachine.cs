@@ -24,6 +24,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     [SerializeField] protected float _takeCoverWallCheckerAngleBuffer = 45;
     [SerializeField] protected float _takeCoverWallCheckerMultiplierBuffer = 0.1f;
     [SerializeField] protected float _takeCoverAnimateCharaPosMultiplierBuffer = 0.5f;
+    [SerializeField] protected float _takeCoverNavMeshAgentRadius = 0.1f;
 
     protected Transform _animateCharaTransform;
     protected Transform _originToLookAtWall;
@@ -139,7 +140,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     {
         get 
         {
-            return IsTakingCoverAtWall ?  0.1f :  _agentNavMesh.radius;
+            return IsTakingCoverAtWall ?  0.01f :  _agentNavMesh.radius;
             
         }
     }
@@ -348,7 +349,9 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             Vector3 wallOtherSideDir = Vector3.zero;
             if(!isGoingToLeft)wallOtherSideDir = Quaternion.Euler (0, -_takeCoverWallCheckerAngleBuffer,0) * -_takeCoverDirection;
             else wallOtherSideDir = Quaternion.Euler (0, _takeCoverWallCheckerAngleBuffer,0) * -_takeCoverDirection;
-            // Debug.DrawRay(transform.position + wallMovementDir * 1.1f, wallOtherSideDir * _playerToWallMinDistance, Color.black, 1f, false);
+
+            Debug.DrawRay(transform.position + wallMovementDir * 1.1f, wallOtherSideDir * _playerToWallMinDistance, Color.black, 1f, false);
+
             RaycastHit otherSideWall;
             if(Physics.Raycast(transform.position + wallMovementDir * (1+_takeCoverWallCheckerMultiplierBuffer), wallOtherSideDir, out otherSideWall, _playerToWallMinDistance, _wallLayerMask))
             {

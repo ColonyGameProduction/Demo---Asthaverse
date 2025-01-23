@@ -41,11 +41,12 @@ public class SnipingUIHandler : MonoBehaviour, IUnsubscribeEvent
         _charaNameContainer.text = _event.CharaStat.entityName.ToUpper();
         
         UpdateBulletWeaponData();
+        _maxBulletContainer.text = "XXX";
     }
     private void UpdateBulletWeaponData()
     {
         _currBulletContainer.text = ((int)_event.GetWeaponDataSpecial.currBullet).ToString("D3");
-        _maxBulletContainer.text = ((int)_event.GetWeaponDataSpecial.totalBullet).ToString("D3");
+        
     }
 
     public void ShowSnipingUI()
