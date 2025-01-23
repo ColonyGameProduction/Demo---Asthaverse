@@ -178,7 +178,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     #region AI ONLY
     protected void MoveAI(Vector3 direction)
     {
-        if(AgentNavMesh.speed != _currSpeed)AgentNavMesh.speed = _currSpeed;
+        if(AgentNavMesh.speed != _currSpeed) AgentNavMesh.speed = _currSpeed;
 
         bool isFacingTheDirection = true;
         float checkFaceDir = 0;
