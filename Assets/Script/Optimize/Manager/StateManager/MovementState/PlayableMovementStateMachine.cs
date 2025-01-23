@@ -470,7 +470,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         {
             
         }
-        KeybindUIHandler.OnShowTakeCoverKeybind(_wallTakeCoverHit.collider ? IsTakingCoverAtWall ? false : true : false);
+        if(!_isAIInput) KeybindUIHandler.OnShowTakeCoverKeybind(_wallTakeCoverHit.collider ? IsTakingCoverAtWall ? false : true : false);
     }
     public bool CanTakeCover()
     {
