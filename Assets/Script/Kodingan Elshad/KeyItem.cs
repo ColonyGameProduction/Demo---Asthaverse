@@ -25,7 +25,7 @@ public class KeyItem : MonoBehaviour
     {
         if (thisQuest != null && thisQuest.questComplete != true)
         {
-            Debug.Log("Quest Complete");
+            // Debug.Log("Quest Complete");
             thisQuest.questComplete = true;
             thisQuest.ActivatingTheNextQuest(thisQuest);
         }

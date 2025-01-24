@@ -21,7 +21,7 @@ public class GameTimer : MonoBehaviour
             {
                 timeRemaining = 0;
                 timerIsRunning = false;
-                Debug.Log("Game Over!!!");
+                // Debug.Log("Game Over!!!");
             }
         }
     }

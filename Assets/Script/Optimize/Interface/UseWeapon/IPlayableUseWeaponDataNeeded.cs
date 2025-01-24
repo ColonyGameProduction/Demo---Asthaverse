@@ -9,4 +9,5 @@ public interface IPlayableUseWeaponDataNeeded
     void TellToTurnOffScope();
     public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get ;}
     public void SilentKilledEnemyAnimation();
+    public PlayableMakeSFX GetPlayableMakeSFX {get ;}
 }

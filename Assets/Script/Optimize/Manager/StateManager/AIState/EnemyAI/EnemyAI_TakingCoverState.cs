@@ -53,7 +53,7 @@ public class EnemyAI_TakingCoverState : EnemyAIState
                 }
                 if(_sm.IsAtTakingCoverHidingPlace && _sm.HidingCheckDelayTimer <= 0 && ((!_sm.isWallTallerThanChara && _sm.IsCrouchingBehindWall()) || _sm.isWallTallerThanChara) && _sm.EnemyWhoSawAIList.Count > 0 && _sm.IsThePersonImLookingAlsoSeeMe(_sm.GetFOVMachine.ClosestEnemy))
                 {
-                    Debug.Log("HALOOO ?? HARUSNYA GA ADA?"+ _sm.transform.name + _sm.EnemyWhoSawAIList.Count);
+                    // Debug.Log("HALOOO ?? HARUSNYA GA ADA?"+ _sm.transform.name + _sm.EnemyWhoSawAIList.Count);
                     if(_sm.GetFOVState.CurrState == FOVDistState.far || _sm.GetFOVState.CurrState == FOVDistState.close)
                     {
                         if(_sm.GetFOVState.CurrState == FOVDistState.far)_sm.StopShooting();
@@ -106,7 +106,7 @@ public class EnemyAI_TakingCoverState : EnemyAIState
                     {
                         if(changeTimer <= 0)
                         {
-                            Debug.Log("change timerrrr" + changeTimer + " " + _sm.transform.name);
+                            // Debug.Log("change timerrrr" + changeTimer + " " + _sm.transform.name);
                             ForceChangeHide();
                         }
                     }

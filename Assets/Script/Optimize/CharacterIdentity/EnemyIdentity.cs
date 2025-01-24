@@ -8,7 +8,12 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
 
     private bool _canBeKill = true;
     private bool _isSilentKilled;
-    [SerializeField] private Transform _enemyGameObject;
+    private Transform _enemyGameObject;
+
+    [Header("Dead Variable")]
+    [SerializeField] private float _enemyDeathFadeDuration = 2f;
+    private Body _enemyBody;
+    [SerializeField] private GameObject[] _hideUIArrayWhenDead;
 
     private const string ANIMATION_PARAMETER_SILENTKILLED = "SilentKilled";
 
@@ -20,6 +25,7 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     {
         base.Awake();
         _enemyAIStateMachine = _aiStateMachine as EnemyAIBehaviourStateMachine;
+        _enemyBody = GetComponent<Body>();
         _enemyGameObject = _animator.gameObject.transform;
     }
     public override void ReloadWeapon()
@@ -33,6 +39,11 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
         EnemyAIManager.Instance.EditEnemyHearAnnouncementList(_enemyAIStateMachine, false);
         EnemyAIManager.Instance.OnEnemyDead?.Invoke(this.transform);
         _enemyAIStateMachine.enabled = false;
+
+        foreach(GameObject ui in _hideUIArrayWhenDead)
+        {
+            ui.SetActive(false);
+        }
     }
     public override void AfterFinishDeathAnimation()
     {
@@ -47,11 +58,16 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
             _enemyAIStateMachine.enabled = false;
         }
         _enemyAIStateMachine.UnsubscribeEvent();
-        Destroy(this.gameObject, 0.5f);
+        _enemyBody.ToggleBodyPartsCollider(false);
+        _charaMakeSFX.UnsubscribeEvent();
+        // _enemyBody.MakeItTransparent(_enemyDeathFadeDuration);
+        Destroy(this.gameObject, _enemyDeathFadeDuration + 0.1f);
     }
 
     public void GotSilentKill(PlayableCharacterIdentity characterIdentityWhoKilling)
     {
+        if(_isSilentKilled) return;
+        
         _silentKillAnimationIdx = characterIdentityWhoKilling.SilentKillIdx;        
         _animator.SetFloat(ANIMATION_PARAMETER_SILENTKILLCOUNTER, _silentKillAnimationIdx);
 
@@ -59,6 +75,7 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
         characterIdentityWhoKilling.GetPlayableUseWeaponStateMachine.SetSilentKilledEnemy(this);
         characterIdentityWhoKilling.IsSilentKilling = true;
         _isSilentKilled = true;
+        _canBeKill = false;
         _isDead = true;
         _moveStateMachine.ForceStopMoving();
         _useWeaponStateMachine.ForceStopUseWeapon();

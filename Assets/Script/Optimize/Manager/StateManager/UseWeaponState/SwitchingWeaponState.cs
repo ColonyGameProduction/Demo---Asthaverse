@@ -31,6 +31,8 @@ public class SwitchingWeaponState : UseWeaponState
             isDoSwitch = true;
             _sm.IsResetAnimTime = true;
             _sm.CharaIdentity.OnToggleLeftHandRig?.Invoke(false, false);
+
+            _playableData.GetPlayableMakeSFX.PlaySwitchWeaponSFX();
             base.EnterState();
         }
         else if(isDoSwitch && !_advancedUse.IsSwitchingWeapon)

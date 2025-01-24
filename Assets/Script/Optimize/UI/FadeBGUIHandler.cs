@@ -63,7 +63,7 @@ public class FadeBGUIHandler : MonoBehaviour
             LeanTween.alphaCanvas(_fadeBG, to, duration).setOnComplete(
                 ()=>
                 {
-                    Debug.Log("Donee");
+                    // Debug.Log("Donee");
                     if(action != null) action();
                 }
             );

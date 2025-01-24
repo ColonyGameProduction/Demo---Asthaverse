@@ -15,14 +15,14 @@ public class EnemySoundDetection : MonoBehaviour
         {
             if (distance <= _hearingRange * volume * _whistleHearingMultiplier)
             {
-                Debug.Log("Enemy hears the whistle");
+                // Debug.Log("Enemy hears the whistle");
             }
         }
         else
         {
             if (distance <= _hearingRange * volume)
             {
-                Debug.Log("Enemy hears footsteps");
+                // Debug.Log("Enemy hears footsteps");
             }
         }
     }

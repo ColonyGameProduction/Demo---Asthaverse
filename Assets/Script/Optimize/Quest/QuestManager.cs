@@ -42,12 +42,12 @@ public class QuestManager : MonoBehaviour, IUnsubscribeEvent
 
     private void NextQuest()
     {
-        Debug.Log("NEXT QUEST");
+        // Debug.Log("NEXT QUEST");
         CurrQuest.EndedCallQuestContainerUI();
         
         if(_currQuestIdx == _questList.Count - 1)
         {
-            Debug.Log("Level Completed");
+            // Debug.Log("Level Completed");
             _questGameUIHandler.HideQuestContainerUI();
             OnLevelCompleted?.Invoke();
             return;

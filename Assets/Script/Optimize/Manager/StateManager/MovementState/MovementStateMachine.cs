@@ -15,6 +15,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     #region Normal Variable
 
     protected GameManager _gm;
+    
     [Space(1)]
     [Header("Move States - Stand")]
     [ReadOnly(true), SerializeField]protected bool _isIdle = true;
@@ -76,6 +77,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public Action<Vector3> OnIsTheSamePosition;
     #endregion
     #endregion
+    
 
     #region CONST Variable
 
@@ -117,6 +119,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         }
     }
     
+    
     #endregion
 
     protected override void Awake() 
@@ -145,7 +148,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
         _currState?.UpdateState();
     }
-    private void FixedUpdate() 
+    protected virtual void FixedUpdate() 
     {
         if(!_gm.IsGamePlaying()) return;
 
@@ -167,18 +170,35 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public virtual void Move()
     {
         MoveAI(CurrAIDirPos);
+        MovementAudioHandler();
     }
 
     public virtual void ForceStopMoving()
     {
         ForceAIStopMoving();
     }
+    protected virtual void MovementAudioHandler()
+    {
+        if(IsRunning)
+        {
+            // Debug.Log(transform.position + " produce walk sound");
+            _charaMakeSFX.PlayRunSFX();
+        }
+        else if(IsWalking)
+        {
+            _charaMakeSFX.PlayWalkSFX();
+        }
+        else if(IsCrouching)
+        {
+            _charaMakeSFX.PlayCrouchSFX();
+        }
+    }
     #endregion
 
     #region AI ONLY
     protected void MoveAI(Vector3 direction)
     {
-        if(AgentNavMesh.speed != _currSpeed)AgentNavMesh.speed = _currSpeed;
+        if(AgentNavMesh.speed != _currSpeed) AgentNavMesh.speed = _currSpeed;
 
         bool isFacingTheDirection = true;
         float checkFaceDir = 0;

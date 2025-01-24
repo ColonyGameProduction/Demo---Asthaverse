@@ -8,7 +8,7 @@ public class CompleteQuestHandler : TriggerQuestHandler
     [SerializeField] private PauseUIHandler _pauseUIHandler;
     public override void EndedCallQuestContainerUI()
     {
-        Debug.Log("Load the Cutscene");
+        // Debug.Log("Load the Cutscene");
 
         GameManager.instance.GameCompleted();
         _pauseUIHandler.GoBackToMainMenu();

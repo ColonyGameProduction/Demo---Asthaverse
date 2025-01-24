@@ -2,12 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine.UI;
-using System;
 using UnityEngine.Rendering;
-using static UnityEngine.Rendering.DebugUI;
 
 //kelas untuk player action seperti attacking, scope, dan Silent kill
 
@@ -234,12 +230,12 @@ public class PlayerAction : ExecuteLogic
     {
         if (Physics.Raycast(highCoverDetection.position, highCoverDetection.forward, 2f, LayerMask.GetMask("WallTakeCover")))
         {
-            Debug.Log("High Cover!");
+            // Debug.Log("High Cover!");
             isHighCover = true;
         }
         else
         {
-            Debug.Log("Low Cover!");
+            // Debug.Log("Low Cover!");
             isHighCover = false;
         }
     }
@@ -585,7 +581,7 @@ public class PlayerAction : ExecuteLogic
 
 
         // Input yang ini itu sementara aja
-        Debug.DrawRay(transform.position, playerGameObject.forward.normalized * 2f, Color.red);
+        // Debug.DrawRay(transform.position, playerGameObject.forward.normalized * 2f, Color.red);
 
         if (isCover && autoMoverActive)
         {
@@ -639,7 +635,7 @@ public class PlayerAction : ExecuteLogic
             Vector3 rayOrigin = Camera.main.transform.position;
             Vector3 rayDirection = Camera.main.transform.forward.normalized;
 
-            Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.red, 2f);
+            // Debug.DrawRay(rayOrigin, rayDirection * 100f, Color.red, 2f);
 
             if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 100f, LayerMask.GetMask("Ground")))
             {
@@ -647,7 +643,7 @@ public class PlayerAction : ExecuteLogic
             }
             else if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hithit, 100f, LayerMask.GetMask("WallTakeCover")))
             {
-                Debug.Log(hithit.point);
+                // Debug.Log(hithit.point);
                 Vector3 movePos = hithit.point;
                 Vector3 movePosWithoutY = new Vector3();
 
