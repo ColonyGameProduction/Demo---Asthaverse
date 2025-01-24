@@ -194,7 +194,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _playableCamera = GetComponent<PlayableCamera>();
         _playableInteraction = GetComponentInChildren<PlayableInteraction>();
         _playableSkill = GetComponent<PlayableSkill>();
-        _playableMakeSFX = GetComponentInChildren<PlayableMakeSFX>();
+        _playableMakeSFX = _charaMakeSFX as PlayableMakeSFX;
         _playableMinimapSymbolHandler = GetComponentInChildren<PlayableMinimapSymbolHandler>();
         InitializeFriend();
 
@@ -337,6 +337,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         _regenCDTimer = _regenTimerMax;
         CurrHealth -= Damage;
         
+        _charaMakeSFX.PlayPainGruntSFX();
         OnPlayableHealthChange?.Invoke(CurrHealth, TotalHealth);
 
         if(CurrHealth <= 0)

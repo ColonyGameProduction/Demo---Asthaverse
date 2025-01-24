@@ -9,8 +9,11 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     private bool _canBeKill = true;
     private bool _isSilentKilled;
     private Transform _enemyGameObject;
+
+    [Header("Dead Variable")]
     [SerializeField] private float _enemyDeathFadeDuration = 2f;
     private Body _enemyBody;
+    [SerializeField] private GameObject[] _hideUIArrayWhenDead;
 
     private const string ANIMATION_PARAMETER_SILENTKILLED = "SilentKilled";
 
@@ -36,6 +39,11 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
         EnemyAIManager.Instance.EditEnemyHearAnnouncementList(_enemyAIStateMachine, false);
         EnemyAIManager.Instance.OnEnemyDead?.Invoke(this.transform);
         _enemyAIStateMachine.enabled = false;
+
+        foreach(GameObject ui in _hideUIArrayWhenDead)
+        {
+            ui.SetActive(false);
+        }
     }
     public override void AfterFinishDeathAnimation()
     {
@@ -51,6 +59,7 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
         }
         _enemyAIStateMachine.UnsubscribeEvent();
         _enemyBody.ToggleBodyPartsCollider(false);
+        _charaMakeSFX.UnsubscribeEvent();
         // _enemyBody.MakeItTransparent(_enemyDeathFadeDuration);
         Destroy(this.gameObject, _enemyDeathFadeDuration + 0.1f);
     }

@@ -37,6 +37,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     protected IReceiveInputFromPlayer _getCanInputPlayer;
     protected ICanSwitchWeapon _getCanSwitchWeapon;
     protected Camera _mainCamera;
+    protected PlayableMakeSFX _getPlayableMakeSFX;
 
     [Space(1)]
     [Header("More Weapon Logic Data")]
@@ -94,11 +95,14 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     public PlayerGunCollide GetPlayerGunCollider {get {return _getPlayerGunCollide;} set { _getPlayerGunCollide = value;}} 
 
     public Transform EnemySilentKillTransformPos {get {return _enemySilentKillTransformPos;}}
+    public PlayableMakeSFX GetPlayableMakeSFX {get {return _getPlayableMakeSFX;}}
     #endregion
     public event Action OnTurningOffScope;// ini dipanggil kalo misal lg input player dan reload - yg subs adalah playablecharamanager
     protected override void Awake()
     {
         base.Awake();
+        _getPlayableMakeSFX = _charaMakeSFX as PlayableMakeSFX;
+
         _mainCamera = Camera.main;
         CharaIdentity_OnIsPlayerInputChange(!IsAIInput);
         _getCanSwitchWeapon = GetComponent<ICanSwitchWeapon>();
@@ -136,7 +140,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     }
     public void SilentKill()
     {
-        StartCoroutine(SilentKillActive(_silentKillDuration));
+        // StartCoroutine(SilentKillActive(_silentKillDuration));
     }
     protected IEnumerator SilentKillActive(float reloadTime)
     {
@@ -349,6 +353,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     }
     public void SilentKilledEnemyAnimation()
     {
+        
         _silentKilledEnemy.StartSilentKilled(_enemySilentKillTransformPos);
     }
     #region Recoil

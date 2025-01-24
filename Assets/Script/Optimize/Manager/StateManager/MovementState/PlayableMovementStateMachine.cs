@@ -149,13 +149,15 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected override void Awake()
     {
         base.Awake();
+        _getPlayableMakeSFX = _charaMakeSFX as PlayableMakeSFX;
+
         _animateCharaTransform = _animator.transform;
         _fovMachine = GetComponent<FOVMachine>();
         _originToLookAtWall = _fovMachine.GetFOVPoint;
-        _getPlayableMakeSFX = GetComponentInChildren<PlayableMakeSFX>();
 
         _canReceivePlayerInput = GetComponent<IReceiveInputFromPlayer>();
         _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
+        
         
 
         _isAIInput = !_canReceivePlayerInput.IsPlayerInput;
@@ -173,6 +175,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     {
         GameObject go = new GameObject("tempCharaTransform");
         
+        
+
         _tempAnimateCharaTransform = go.transform;
         _tempAnimateCharaTransform.parent = _charaGameObject;
         _tempAnimateCharaTransform.localPosition = _animateCharaTransform.transform.localPosition;
@@ -190,8 +194,6 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     protected override void Update()
     {
-        if(!_gm.IsGamePlaying()) _getPlayableMakeSFX.StopMovementTypeSFX();
-
         base.Update();
         GoingToTakeCover();
     }
@@ -212,23 +214,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             Vector3 movement = new Vector3(InputMovement.x, 0, InputMovement.y).normalized;
             if(!IsTakingCoverAtWall)MovePlayableChara(movement);
             else MovePlayableOnWall(movement);
+            MovementAudioHandler();
         }
         else base.Move();
 
-        if(IsRunning)
-        {
-            // Debug.Log(transform.position + " produce walk sound");
-            _worldSoundManager.MakeSound(WorldSoundName.Walk, transform.position, _fovMachine.CharaEnemyMask);
-            _getPlayableMakeSFX.PlayRunSFX();
-        }
-        else if(IsWalking)
-        {
-            _getPlayableMakeSFX.PlayWalkSFX();
-        }
-        else if(IsCrouching)
-        {
-            _getPlayableMakeSFX.PlayCrouchSFX();
-        }
+        
     }
     /// <summary>
     /// Move yang digunakan untuk kontrol dgn input dari player
@@ -245,6 +235,22 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             IsAskedToRunByPlayable = false;
         }
         if(IsMustLookForward)IsMustLookForward = false;
+    }
+    protected override void MovementAudioHandler()
+    {
+        if(IsRunning)
+        {
+            _worldSoundManager.MakeSound(WorldSoundName.Walk, transform.position, _fovMachine.CharaEnemyMask);
+            _charaMakeSFX.PlayRunSFX();
+        }
+        else if(IsWalking)
+        {
+            _charaMakeSFX.PlayWalkSFX();
+        }
+        else if(IsCrouching)
+        {
+            _charaMakeSFX.PlayCrouchSFX();
+        }
     }
     #endregion
     #region PlayableChara Only

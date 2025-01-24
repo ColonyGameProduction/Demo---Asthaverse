@@ -22,6 +22,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     private FadeBGUIHandler _fadeUIHandler;
     private PlayableCharacterManager _playableCharacterManager;
     private PlayableSkill _playableSkill;
+    [SerializeField]private SpecialSnipingMakeSFX _specialMakeSFX;
     #endregion
     [Header("Shooting Variable")]
     [ReadOnly(false), SerializeField] private WeaponData _currWeaponData;
@@ -93,6 +94,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     private void Awake() 
     {
         Instance = this;
+        // _specialMakeSFX = GetComponentInChildren<SpecialSnipingMakeSFX>();
         _playableCamera = GetComponent<PlayableCameraSniperEvent>();
         _weaponShootVFX = GetComponent<WeaponShootVFX>();
         _cameraTransform = Camera.main.transform;
@@ -244,6 +246,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
             RecoilHandler();
             _playableCamera.GiveRecoilToCamera();
             _weaponLogicManager.ShootingPerformed(this.transform, _cameraTransform.position, _cameraTransform.forward.normalized, _charaAimAccuracy, _currWeaponData.weaponStatSO, _charaEnemyMask, 0, _cameraTransform.position, false, false, _weaponShootVFX);
+            _specialMakeSFX.PlayShootSFX();
 
             _currWeaponData.currBullet -= 1;
             OnWeaponBulletChange?.Invoke();
@@ -279,6 +282,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
 
     public void ReloadWeapon()
     {
+        _specialMakeSFX.PlayReloadSFX();
         StartCoroutine(ReloadWeaponActive(_currWeaponData.weaponStatSO.reloadTime));
     }
     protected IEnumerator ReloadWeaponActive(float reloadTime)

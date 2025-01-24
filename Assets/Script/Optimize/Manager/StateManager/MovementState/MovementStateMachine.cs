@@ -15,6 +15,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     #region Normal Variable
 
     protected GameManager _gm;
+    
     [Space(1)]
     [Header("Move States - Stand")]
     [ReadOnly(true), SerializeField]protected bool _isIdle = true;
@@ -76,6 +77,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public Action<Vector3> OnIsTheSamePosition;
     #endregion
     #endregion
+    
 
     #region CONST Variable
 
@@ -116,6 +118,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
             return _agentNavMesh.radius;
         }
     }
+    
     
     #endregion
 
@@ -167,11 +170,28 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     public virtual void Move()
     {
         MoveAI(CurrAIDirPos);
+        MovementAudioHandler();
     }
 
     public virtual void ForceStopMoving()
     {
         ForceAIStopMoving();
+    }
+    protected virtual void MovementAudioHandler()
+    {
+        if(IsRunning)
+        {
+            // Debug.Log(transform.position + " produce walk sound");
+            _charaMakeSFX.PlayRunSFX();
+        }
+        else if(IsWalking)
+        {
+            _charaMakeSFX.PlayWalkSFX();
+        }
+        else if(IsCrouching)
+        {
+            _charaMakeSFX.PlayCrouchSFX();
+        }
     }
     #endregion
 

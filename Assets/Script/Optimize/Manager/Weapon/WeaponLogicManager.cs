@@ -80,11 +80,13 @@ public class WeaponLogicManager : MonoBehaviour
 
                             GameObject entityGameObject = hit.collider.gameObject;
                             // Debug.Log(entityGameObject.name + " di sini " + body);
+                            HitAudioHandlerBody(body.bodyType, hit.point);
                             CalculateDamage(shooter, weaponStat, entityGameObject, body.bodyType);
                         }
                         else
                         {
                             isHitBody = false;
+                            HitAudioHandlerNonBody(hit.transform.tag, hit.point);
                             // Debug.Log("I hit Obstacle");
                         }
                     }
@@ -110,11 +112,13 @@ public class WeaponLogicManager : MonoBehaviour
 
                             GameObject entityGameObject = hit.collider.gameObject;
                             // Debug.Log(entityGameObject.name + " di sini " + body);
+                            HitAudioHandlerBody(body.bodyType, hit.point);
                             CalculateDamage(shooter, weaponStat, entityGameObject, body.bodyType);
                         }
                         else
                         {
                             isHitBody = false;
+                            HitAudioHandlerNonBody(hit.transform.tag, hit.point);
                             // Debug.Log("I hit Obstacle");
                         }
                     }
@@ -132,11 +136,13 @@ public class WeaponLogicManager : MonoBehaviour
 
                     GameObject entityGameObject = hit.collider.gameObject;
                     // Debug.Log(entityGameObject.name + " di sini " + body);
+                    HitAudioHandlerBody(body.bodyType, hit.point);
                     CalculateDamage(shooter, weaponStat, entityGameObject, body.bodyType);
                 }
                 else
                 {
                     isHitBody = false;
+                    HitAudioHandlerNonBody(hit.transform.tag, hit.point);
                     // Debug.Log("I hit Obstacle");
                 }
             }
@@ -171,6 +177,7 @@ public class WeaponLogicManager : MonoBehaviour
         // Debug.Log("Halooo????");
         if(_getHealthFunction != null)
         {
+            
             float totalDamage = 0;
             if(hitBodyPart == bodyParts.head)
             {
@@ -187,6 +194,7 @@ public class WeaponLogicManager : MonoBehaviour
                 totalDamage = (weapon.baseDamage * weapon.legDamageMultiplier) - ((weapon.baseDamage * weapon.legDamageMultiplier) * ((int)_getHealthFunction.GetCharaArmourType/100));
                 // Debug.Log("I hit Leg");
             }
+            
             if(!Debugs)_getHealthFunction.Hurt(totalDamage);
             // Debug.Log(entityGameObject.name + " Hit!" + " HP:" + _getHealthFunction.CurrHealth);
         }
@@ -241,5 +249,34 @@ public class WeaponLogicManager : MonoBehaviour
         yield return new WaitUntil(() => impactParticle.isStopped);
         impactParticle.Stop();
         weaponShootVFX.SetVFXBackToNormal(impactParticle.transform);
+    }
+    private void HitAudioHandlerNonBody(String tagName, Vector3 audioPos)
+    {
+        if(tagName == "Glass")
+        {
+            int choice = UnityEngine.Random.Range(1,4);
+            AudioSFXName audioSFXName = AudioSFXName.None;
+            if(choice == 1) audioSFXName = AudioSFXName.BulletHits_Window_1;
+            else if(choice == 2) audioSFXName = AudioSFXName.BulletHits_Window_2;
+            else if(choice == 3) audioSFXName = AudioSFXName.BulletHits_Window_3;
+            AudioManager.Instance.PlayAudioClip(audioSFXName, audioPos);
+        }
+        else if(tagName == "Wood")
+        {
+            AudioManager.Instance.PlayAudioClip(AudioSFXName.BulletHits_Wood, audioPos);
+        }
+        else
+        {
+            AudioManager.Instance.PlayAudioClip(AudioSFXName.BulletHits_Ground, audioPos);
+        }
+        
+    }
+    private void HitAudioHandlerBody(bodyParts part, Vector3 audioPos)
+    {
+        AudioSFXName audioSFXName = AudioSFXName.None;
+        if(part == bodyParts.head) audioSFXName = AudioSFXName.BulletHits_Head;
+        else if(part == bodyParts.body || part == bodyParts.leg) audioSFXName = AudioSFXName.BulletHits_Body;
+
+        AudioManager.Instance.PlayAudioClip(audioSFXName, audioPos);
     }
 }

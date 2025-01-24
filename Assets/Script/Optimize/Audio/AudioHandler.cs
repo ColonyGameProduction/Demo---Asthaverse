@@ -1,12 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class AudioHandler : MonoBehaviour
 {
     [SerializeField] protected SOAudioSFXList _audioSFXList;
-    protected Audio[] _audioArray;
-    protected virtual int TotalAudioArray {get {return _audioSFXList.audioSFX.Count;}}
+    protected List<Audio> _audioList = new List<Audio>();
+    // protected virtual int TotalAudioList {get {return _audioSFXList.audioSFX.Count;}}
 
     protected virtual void Awake()
     {
@@ -14,13 +13,13 @@ public abstract class AudioHandler : MonoBehaviour
     }
     protected virtual void InitializeAudioSource()
     {
-        _audioArray = new Audio[TotalAudioArray];
         for(int i = 0; i < _audioSFXList.audioSFX.Count ; i++)
         {
-            _audioArray[i].audioType = _audioSFXList.audioSFX[i].audioType;
-
-            _audioArray[i].audioSource = gameObject.AddComponent<AudioSource>();
-            AudioSource source = _audioArray[i].audioSource;
+            Audio newAudio = new Audio();
+            newAudio.audioType = _audioSFXList.audioSFX[i].audioType;
+            newAudio.audioSource = gameObject.AddComponent<AudioSource>();
+            
+            _audioList.Add(newAudio);
         }
     }
 
@@ -67,7 +66,7 @@ public abstract class AudioHandler : MonoBehaviour
     }
     protected virtual AudioSource GetAudioSource(AudioType audioType)
     {
-        Audio audio = System.Array.Find(_audioArray, audio => audio.audioType == audioType);
+        Audio audio = _audioList.Find(audio => audio.audioType == audioType);
 
         return audio.audioSource;
     }
@@ -85,5 +84,13 @@ public abstract class AudioHandler : MonoBehaviour
         source.loop = audioData.loop;
         source.volume = audioData.volume;
         source.pitch = audioData.pitch;
+    }
+
+    protected virtual void StopLoopAudioSourceWhenPause()
+    {
+        foreach(Audio audio in _audioList)
+        {
+            if(audio.audioSource.loop) audio.audioSource.Stop();
+        }
     }
 }

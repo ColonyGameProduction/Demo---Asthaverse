@@ -27,6 +27,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     protected FOVMachine _fovMachine;
     protected GameManager _gm;
     protected Animator _animator;
+    protected CharacterMakeSFX _charaMakeSFX;
 
     #region CHARACTER STATS
     [Space(1)]
@@ -99,6 +100,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
 
     public float SilentKillIdx {get {return _silentKillAnimationIdx;} set {_silentKillAnimationIdx = value;}}
 
+    public CharacterMakeSFX CharaMakeSFX {get{return _charaMakeSFX;}}
 
     #endregion
     protected virtual void Awake()
@@ -113,6 +115,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
         _aiStateMachine = GetComponent<AIBehaviourStateMachine>();
         _weaponShootVFX = GetComponent<WeaponShootVFX>();
         _fovMachine = GetComponent<FOVMachine>();
+        _charaMakeSFX = GetComponentInChildren<CharacterMakeSFX>();
         _weaponGameObjectDataContainer = GetComponentInChildren<WeaponGameObjectDataContainer>();
 
         InitializeCharacter();
@@ -135,6 +138,9 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
         
         _regenCDTimer = _regenTimerMax;
         CurrHealth -= Damage;
+
+        _charaMakeSFX.PlayPainGruntSFX();
+        
         if(CurrHealth <= 0)
         {
             CurrHealth = 0;

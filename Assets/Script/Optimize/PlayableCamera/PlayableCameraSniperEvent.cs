@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayableCameraSniperEvent : PlayableCamera
 {
-    [SerializeField] private Camera _mainUICam;
     private SniperShootingEvent _sniperShootingEvent;
     private float recoilX, recoilY;
     private bool _goback;
@@ -161,11 +160,11 @@ public class PlayableCameraSniperEvent : PlayableCamera
     {
         // Debug.Log("FOV now" + Camera.main.fieldOfView);
         _oldFOV = Camera.main.fieldOfView;
-        _mainUICam.fieldOfView = 6.5f;
+        MainUICamHandler.OnMainCamChangeFOV(6.5f);
         
     }
     public void SetUICameraNormalFOV()
     {
-        _mainUICam.fieldOfView = _oldFOV;
+        MainUICamHandler.OnMainCamChangeFOV(_oldFOV);
     }
 }

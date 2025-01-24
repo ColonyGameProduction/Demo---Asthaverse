@@ -33,7 +33,8 @@ public class SilentKillState : UseWeaponState
         {
             isDoSilentKill = true;
             _sm.CharaIdentity.OnToggleFollowHandRig?.Invoke(false, false);
-            // _advancedUse.SilentKill();
+            
+            _playableData.GetPlayableMakeSFX.PlaySilentKillSFX(_sm.CharaIdentity.SilentKillIdx);
             base.EnterState();
             _playableData.SilentKilledEnemyAnimation();
         }

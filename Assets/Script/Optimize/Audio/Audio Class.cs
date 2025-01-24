@@ -13,21 +13,29 @@ public struct Audio
 
 public enum AudioType
 {
-    None, BGM, Movement, Whistle, SwitchWeapon, Reload, NightVision, UI, Pain, PickupAmmo, BulletHits
+    None = 0, BGM = 1, Movement = 2, Whistle = 3, SwitchWeapon = 4, Reload = 5, Shoot = 11, NightVision = 6, SilentKill = 12, UI = 7, Pain = 8, PickupAmmo = 9, BulletHits = 10, BrokeThrowItem = 11,
 }
 public enum AudioSFXName
 {
-    None, NormalWalk, Whistle, FireGun,
-    Walk_Dirt, Run_Dirt, Crouch_Dirt,
+    None = 0,  
+    Walk_Dirt = 1, Run_Dirt = 2, Crouch_Dirt = 3,
+    S_Whistle_1 = 4, S_Whistle_2 = 5, S_Whistle_3 = 6, S_Whistle_4 = 7,
+    Pain_Grunts_1 = 8, Pain_Grunts_2 = 9, Pain_Grunts_3 = 10, Pain_Grunts_4 = 11, Pain_Grunts_5 = 12, Pain_Grunts_6 = 13, Pain_Grunts_7 = 14, Pain_Grunts_8 = 15,
+    SwitchWeap_RP = 16, SwitchWeap_PR = 17,
+    Reload_R_Stand = 18, Reload_R_Crouch = 24, Reload_P = 19,
+    SilentKill_1 = 20, SilentKill_2 = 21,
+    Shoot_R = 22, Shoot_P = 23,
+    BrokeThrowItem_GlassBottle = 30,
     SwitchWeapon_Start, SwitchWeapon_End,
     Reload_Rifle, Reload_Pistol,
-    NightVision_On, NightVision_Off,
-    BrokenItem, Alarm, 
+    NightVision_On = 40, NightVision_Off = 41, Alarm = 39, 
     DoorRotate, DoorSlide,
-    UI_Click, Pain, PickupAmmo,
-    BulletHits_Head, BulletHits_Body,
-    BulletHits_Window, BulletHits_Ground,
-    BulletHits_Wood,
+    UI_Click = 45, Pain, PickupAmmo,
+    BulletHits_Head = 50, BulletHits_Body = 51,
+    BulletHits_Window_1 = 52, BulletHits_Window_2 = 53, BulletHits_Window_3 = 54,
+    BulletHits_Ground = 55,
+    BulletHits_Wood = 56,
+    Shoot_R_EnemyOnly = 24,
 
 }
 public enum AudioBGMName
