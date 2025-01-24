@@ -134,13 +134,14 @@ GameObject:
   - component: {fileID: 2227553}
   - component: {fileID: 2227552}
   - component: {fileID: 2227551}
+  - component: {fileID: 2227554}
   m_Layer: 0
   m_Name: Enemy (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!195 &2227551
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -202,7 +203,7 @@ MonoBehaviour:
   enemyHP: 0
   isItEnemy:
     serializedVersion: 2
-    m_Bits: 4288
+    m_Bits: 0
   enemyState: 0
   alertValue: 0
   maxAlertValue: 0
@@ -226,6 +227,31 @@ Transform:
   - {fileID: 345610458}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!205 &2227554
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2227550}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.6
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 0}
+  - screenRelativeHeight: 0.3
+    fadeTransitionWidth: 0
+    renderers: []
+  - screenRelativeHeight: 0.12068739
+    fadeTransitionWidth: 0
+    renderers: []
+  m_Enabled: 1
 --- !u!1 &27399682
 GameObject:
   m_ObjectHideFlags: 0
@@ -3985,7 +4011,7 @@ MonoBehaviour:
   enemyHP: 0
   isItEnemy:
     serializedVersion: 2
-    m_Bits: 4288
+    m_Bits: 0
   enemyState: 0
   alertValue: 0
   maxAlertValue: 0
@@ -4193,7 +4219,7 @@ MonoBehaviour:
   enemyHP: 0
   isItEnemy:
     serializedVersion: 2
-    m_Bits: 4288
+    m_Bits: 0
   enemyState: 0
   alertValue: 0
   maxAlertValue: 0
@@ -10939,12 +10965,20 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1a5a0a53e005dcf47996549a946c019e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1a5a0a53e005dcf47996549a946c019e, type: 3}
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 944927156297921104, guid: 1a5a0a53e005dcf47996549a946c019e, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 944927156297921104, guid: 1a5a0a53e005dcf47996549a946c019e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1434763339977632021, guid: 1a5a0a53e005dcf47996549a946c019e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -19674,7 +19708,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!195 &1525295030
 NavMeshAgent:
   m_ObjectHideFlags: 0
