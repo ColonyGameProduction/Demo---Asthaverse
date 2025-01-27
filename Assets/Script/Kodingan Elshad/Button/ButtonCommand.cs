@@ -8,6 +8,6 @@ public class ButtonCommand : ButtonParent
     {
         base.ButtonPressed();
 
-        Debug.Log("Button is Pressed");
+        // Debug.Log("Button is Pressed");
     }
 }

@@ -17,12 +17,14 @@ public class WeaponVFX
 [Serializable]
 public class WeaponsVFX
 {
-    public WeaponsVFX(List<WeaponVFX> newWeaponVFXPool)
+    public WeaponsVFX(List<WeaponVFX> newWeaponVFXPool, ParticleSystem newGunFlash)
     {
         weaponVFXPool = newWeaponVFXPool;
+        gunFlash = newGunFlash;
         poolIdx = 0;
     }
     public int poolIdx;
+    public ParticleSystem gunFlash;
     public List<WeaponVFX> weaponVFXPool;
 }
 
@@ -33,17 +35,16 @@ public class WeaponShootVFX : MonoBehaviour
 
     [Header("Prefab")]
     [SerializeField]private ParticleSystem _impactParticlePrefab;
-    private ParticleSystem _gunFlash;
+    // private ParticleSystem _gunFlash;
     [SerializeField]private int _totalBuffer = 10;
     public int CurrWeaponIdx{get; set;}
 
     public void SpawnTrail(int total, Vector3 originShootPoint, TrailRenderer _bulletTrailPrefab, ParticleSystem _gunFlashPrefab)
     {
-        if(_gunFlash == null)
-        {
-            _gunFlash = Instantiate(_gunFlashPrefab, originShootPoint, Quaternion.identity, trailParent); 
-            _gunFlash.Stop();
-        }
+
+        ParticleSystem gunFlash = Instantiate(_gunFlashPrefab, originShootPoint, Quaternion.identity, trailParent); 
+        gunFlash.Stop();
+
         List<WeaponVFX> weaponVFXList = new List<WeaponVFX>();
 
         for(int i=0; i < total + _totalBuffer; i++)
@@ -60,7 +61,7 @@ public class WeaponShootVFX : MonoBehaviour
             WeaponVFX weaponVFX = new WeaponVFX(trail, particle);
             weaponVFXList.Add(weaponVFX);
         }
-        WeaponsVFX newWeaponTrailList = new WeaponsVFX(weaponVFXList);
+        WeaponsVFX newWeaponTrailList = new WeaponsVFX(weaponVFXList, gunFlash);
         _weaponsVFXPool.Add(newWeaponTrailList);
     }
     public WeaponVFX GetWeaponVFX()
@@ -82,8 +83,9 @@ public class WeaponShootVFX : MonoBehaviour
     }
     public void CallGunFlash(Vector3 position)
     {
-        _gunFlash.transform.position = position;
-        _gunFlash.Play();
+        WeaponsVFX weaponsVFX = _weaponsVFXPool[CurrWeaponIdx];
+        weaponsVFX.gunFlash.transform.position = position;
+        weaponsVFX.gunFlash.Play();
     }
 
 }

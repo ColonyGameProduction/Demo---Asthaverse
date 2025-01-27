@@ -130,11 +130,11 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
         if(_currGameState != GameState.Play && _currGameState != GameState.Pause) return;
         _isPause = !_isPause;
         OnPlayerPause?.Invoke(_isPause);
-        // AudioManager.Instance.ChangeBGMVolumeWhenPause(_isPause);
+        AudioManager.Instance.ChangeBGMVolumeWhenPause(_isPause);
         
         if(_isPause)
         {
-            Debug.Log("Game is Paused");
+            // Debug.Log("Game is Paused");
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
@@ -143,7 +143,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
         }
         else
         {
-            Debug.Log("Game is Play");
+            // Debug.Log("Game is Play");
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 

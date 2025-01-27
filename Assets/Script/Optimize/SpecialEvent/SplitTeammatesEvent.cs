@@ -26,7 +26,7 @@ public class SplitTeammatesEvent : MonoBehaviour, IUnsubscribeEvent
     }
     public void SplitEvent()
     {
-        _chosenSplitTeammates.GetMovementStateMachine.OnIsTheSamePosition += Gone;
+        if(_chosenSplitTeammates.GetMovementStateMachine != null) _chosenSplitTeammates.GetMovementStateMachine.OnIsTheSamePosition += Gone;
         if(_playableCharacterManager.CurrPlayableChara == _chosenSplitTeammates)
         {
             _playableCharacterManager.ChangePlayer();
@@ -42,7 +42,7 @@ public class SplitTeammatesEvent : MonoBehaviour, IUnsubscribeEvent
 
         if(pos == _newPlaceToGo.position && Vector3.Distance(_chosenSplitTeammates.transform.position, _newPlaceToGo.position) < 0.5f)
         {
-            Debug.Log(pos + " emang ini sama ??? " + _newPlaceToGo.position);
+            // Debug.Log(pos + " emang ini sama ??? " + _newPlaceToGo.position);
             _chosenSplitTeammates.gameObject.SetActive(false);
             UnsubscribeEvent();
         }
@@ -50,6 +50,6 @@ public class SplitTeammatesEvent : MonoBehaviour, IUnsubscribeEvent
 
     public void UnsubscribeEvent()
     {
-        _chosenSplitTeammates.GetMovementStateMachine.OnIsTheSamePosition -= Gone;
+        if(_chosenSplitTeammates.GetMovementStateMachine != null) _chosenSplitTeammates.GetMovementStateMachine.OnIsTheSamePosition -= Gone;
     }
 }

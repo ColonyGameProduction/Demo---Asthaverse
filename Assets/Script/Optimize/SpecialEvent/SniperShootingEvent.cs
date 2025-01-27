@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
 {
+    public static SniperShootingEvent Instance {get; private set;}
     // [Header("Test")]
     public bool StartEvent, StopEvent;
     [Space(1)]
@@ -21,6 +22,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     private FadeBGUIHandler _fadeUIHandler;
     private PlayableCharacterManager _playableCharacterManager;
     private PlayableSkill _playableSkill;
+    [SerializeField]private SpecialSnipingMakeSFX _specialMakeSFX;
     #endregion
     [Header("Shooting Variable")]
     [ReadOnly(false), SerializeField] private WeaponData _currWeaponData;
@@ -30,6 +32,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     [SerializeField] private LayerMask _charaEnemyMask;
     private float _charaAimAccuracy;
     private Transform _cameraTransform;
+    public Action OnWeaponBulletChange;
 
     #region Recoil
     [Header("Recoil Data")]
@@ -48,6 +51,8 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     [ReadOnly(true)] private int _currPlaceToLookIdx = 0;
 
     #region Getter Setter
+    public EntityStatSO CharaStat {get {return _specialCharaStatSO;}}
+    public WeaponData GetWeaponDataSpecial {get {return _currWeaponData;}}
     public float FinalCountRecoil
     {
         get
@@ -88,6 +93,8 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
 
     private void Awake() 
     {
+        Instance = this;
+        // _specialMakeSFX = GetComponentInChildren<SpecialSnipingMakeSFX>();
         _playableCamera = GetComponent<PlayableCameraSniperEvent>();
         _weaponShootVFX = GetComponent<WeaponShootVFX>();
         _cameraTransform = Camera.main.transform;
@@ -239,7 +246,11 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
             RecoilHandler();
             _playableCamera.GiveRecoilToCamera();
             _weaponLogicManager.ShootingPerformed(this.transform, _cameraTransform.position, _cameraTransform.forward.normalized, _charaAimAccuracy, _currWeaponData.weaponStatSO, _charaEnemyMask, 0, _cameraTransform.position, false, false, _weaponShootVFX);
+            _specialMakeSFX.PlayShootSFX();
+
             _currWeaponData.currBullet -= 1;
+            OnWeaponBulletChange?.Invoke();
+
             if(!_currWeaponData.weaponStatSO.allowHoldDownButton) _isShooting = false;
             StartCoroutine(FireRate(_currWeaponData.weaponStatSO.fireRate));
 
@@ -271,6 +282,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
 
     public void ReloadWeapon()
     {
+        _specialMakeSFX.PlayReloadSFX();
         StartCoroutine(ReloadWeaponActive(_currWeaponData.weaponStatSO.reloadTime));
     }
     protected IEnumerator ReloadWeaponActive(float reloadTime)
@@ -287,18 +299,9 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
         if(!_isReloading) return;
 
         
-        float bulletNeed = _currWeaponData.weaponStatSO.magSize - _currWeaponData.currBullet;
-        if (_currWeaponData.totalBullet >= bulletNeed)
-        {
-            _currWeaponData.currBullet = _currWeaponData.weaponStatSO.magSize;
-            _currWeaponData.totalBullet -= bulletNeed;
-        }
-        else if (_currWeaponData.totalBullet > 0)
-        {
-            _currWeaponData.currBullet += _currWeaponData.totalBullet;
-            _currWeaponData.totalBullet = 0;
-        } 
+        _currWeaponData.currBullet = _currWeaponData.weaponStatSO.magSize;
 
+        OnWeaponBulletChange?.Invoke();
 
         _canReload = false;
         _isDoingReloading = false;

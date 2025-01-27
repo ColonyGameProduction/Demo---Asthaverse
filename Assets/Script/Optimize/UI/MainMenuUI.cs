@@ -92,7 +92,7 @@ public class MainMenuUI : MonoBehaviour, IUnsubscribeEvent
     {
         _fadeUIHandler.ChangeBGColor(_startGameBGColor);
         _sceneManagementManager.GoToOtherScene();
-        Debug.Log("I start the game - go to loading screen");
+        // Debug.Log("I start the game - go to loading screen");
     }
     private void OpenSettings()
     {

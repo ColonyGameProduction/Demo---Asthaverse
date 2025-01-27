@@ -32,14 +32,16 @@ public class PickableObj_IntObj : InteractableObject
     {
         if(!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Weapon"))
         {
-            Debug.Log("I make sound using" + other.gameObject);
+            // Debug.Log("I make sound using" + other.gameObject);
             if(IsBeingThrown)
             {
-                Debug.Log("I make sound");
+                // Debug.Log("I make sound");
                 _canInteract = false;
                 IsBeingThrown = false;
-                WorldSoundManager.Instance.MakeSound(WorldSoundName.Whistle, _playerWhoHeldItem.transform.position, _playerWhoHeldItem.GetFOVMachine.CharaEnemyMask);
-                AudioManager.Instance.PlayAudioClip(AudioSFXName.Whistle, transform.position);
+                WorldSoundManager.Instance.MakeSound(WorldSoundName.Bottle, transform.position, _playerWhoHeldItem.GetFOVMachine.CharaEnemyMask);
+
+                AudioManager.Instance.PlayAudioClip(AudioSFXName.BrokeThrowItem_GlassBottle, transform.position);
+
                 _playerWhoHeldItem = null;
                 Destroy(this.gameObject);
                 // Debug.Log(gameObject + "Object destroy");

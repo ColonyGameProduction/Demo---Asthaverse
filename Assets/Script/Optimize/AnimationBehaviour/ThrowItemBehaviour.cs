@@ -23,7 +23,7 @@ public class ThrowItemBehaviour : StateMachineBehaviour
        if(_animatorHelper == null) _animatorHelper = animator.GetComponent<AnimatorCharacterHelp>();
        _animatorHelper.ExitThrowAnim();
        
-       Debug.Log("Apa ga lwt sini? behaviour throw");
+    //    Debug.Log("Apa ga lwt sini? behaviour throw");
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

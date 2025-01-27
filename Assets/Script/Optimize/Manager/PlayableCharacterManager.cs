@@ -545,7 +545,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
     {
         if(!_gm.IsGamePlaying() || !_gm.IsNormalGamePlayMode()) return;
 
-        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && _currPlayableMoveStateMachine.IsNearWall() && !CurrPlayableChara.IsHoldingInteraction)
+        if(CanDoThisFunction() && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsReloading && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && _currPlayableMoveStateMachine.CanTakeCover() && !CurrPlayableChara.IsHoldingInteraction)
         {
             if(_currPlayableInteraction.IsHeldingObject) _currPlayableInteraction.RemoveHeldObject();
             if(_playableCharacterCameraManager.IsScope) _playableCharacterCameraManager.ResetScope();
@@ -834,7 +834,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         if(IsCommandingFriend)OnCommandingBoolChange?.Invoke(true, friendID);
 
-        if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead || CurrPlayableChara.IsReviving || _currPlayableUseWeaponStateMachine.IsSilentKill || _currPlayableUseWeaponStateMachine.IsReloading || _currPlayableUseWeaponStateMachine.IsSwitchingWeapon || _currPlayableMoveStateMachine.IsTakingCoverAtWall || CurrPlayableChara.IsHoldingInteraction)return;
+        if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead || CurrPlayableChara.IsReviving || _currPlayableUseWeaponStateMachine.IsSilentKill || _currPlayableUseWeaponStateMachine.IsReloading || _currPlayableUseWeaponStateMachine.IsSwitchingWeapon || CurrPlayableChara.IsHoldingInteraction)return;
 
         
         _currPlayableMoveStateMachine.ForceStopMoving();

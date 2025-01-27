@@ -288,13 +288,13 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                     {
                         if(NewPosForwardDistance >= 0)
                         {
-                            Debug.Log("Depan, kanan" + transform.name);
+                            // Debug.Log("Depan, kanan" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
                             _dirToLookAtWhenChecking = -wallForward;
                         }
                         else
                         {
-                            Debug.Log("Bawah, kiri" + transform.name);
+                            // Debug.Log("Bawah, kiri" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
                             _dirToLookAtWhenChecking = wallForward;
                         }
@@ -305,14 +305,14 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                     {
                         if(NewPosForwardDistance > 0)
                         {
-                            Debug.Log("Depan, kiri" + transform.name);
+                            // Debug.Log("Depan, kiri" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
                             _dirToLookAtWhenChecking = -wallForward;
                             
                         }
                         else
                         {
-                            Debug.Log("Bawah, kanan" + transform.name);
+                            // Debug.Log("Bawah, kanan" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
                             _dirToLookAtWhenChecking = wallForward;
                         }
@@ -325,13 +325,13 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                     {
                         if(NewPosRightDistance > 0)
                         {
-                            Debug.Log("kiri, atas" + transform.name);
+                            // Debug.Log("kiri, atas" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
                             _dirToLookAtWhenChecking = -wallRight;
                         }
                         else
                         {
-                            Debug.Log("kanan, atas" + transform.name);
+                            // Debug.Log("kanan, atas" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
                             _dirToLookAtWhenChecking = wallRight;
                         }
@@ -341,13 +341,13 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
                     {
                         if(NewPosRightDistance >= 0) 
                         {
-                            Debug.Log("kanan, bawah" + transform.name);
+                            // Debug.Log("kanan, bawah" + transform.name);
                             _isAtTheLeftSideOfTheWall = false;
                             _dirToLookAtWhenChecking = -wallRight;
                         }
                         else 
                         {
-                            Debug.Log("kiri, bawah" + transform.name);
+                            // Debug.Log("kiri, bawah" + transform.name);
                             _isAtTheLeftSideOfTheWall = true;
                             _dirToLookAtWhenChecking = wallRight;
                         }
@@ -767,7 +767,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
         path = new NavMeshPath();
         if(NavMesh.CalculatePath(origin, target, _agent.areaMask, path))
         {
-            Debug.Log(path.status + " PATH STATUS NOW" + target);
+            // Debug.Log(path.status + " PATH STATUS NOW" + target);
             _tempFirstPathPos = path.corners[0];
             float distance = Vector3.Distance(origin, path.corners[0]);
             for(int j = 1; j < path.corners.Length; j++)
@@ -777,7 +777,7 @@ public abstract class AIBehaviourStateMachine : BaseStateMachine, IUnsubscribeEv
             }
             return distance;
         }
-        Debug.Log("no path");
+        // Debug.Log("no path");
         return Mathf.Infinity;
     }
 

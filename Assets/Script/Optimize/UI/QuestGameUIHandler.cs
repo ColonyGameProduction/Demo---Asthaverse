@@ -202,7 +202,7 @@ public class QuestGameUIHandler : MonoBehaviour
 
     public void ResetCurrActivatedChildIdx()
     {
-        Debug.Log("Hayooo");
+        // Debug.Log("Hayooo");
         _currActivatedChildIdx = 0;
     }
 }

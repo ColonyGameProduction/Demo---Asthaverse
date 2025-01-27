@@ -60,6 +60,7 @@ GameObject:
   - component: {fileID: 5053533584995375850}
   - component: {fileID: 4612384578178662893}
   - component: {fileID: 6137730885844334973}
+  - component: {fileID: 8143870778091409893}
   m_Layer: 0
   m_Name: Follow Camera
   m_TagString: Untagged
@@ -152,6 +153,19 @@ MonoBehaviour:
   m_Damping: 0
   m_DampingWhenOccluded: 0
   m_OptimalTargetDistance: 0
+--- !u!114 &8143870778091409893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391679238578878866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 961dbc1d206d4b64394c7998f89cb7ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioSFXList: {fileID: 11400000, guid: 9ff6aa5be9731cf4abdffa09b7cd4581, type: 2}
 --- !u!1 &3396149867613517999
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,6 +218,7 @@ MonoBehaviour:
   StopEvent: 0
   _shootingGameObjectContainer: {fileID: 6723929332947886438}
   _specialCharaStatSO: {fileID: 11400000, guid: 19497c1fe5e01cb4fb4a8ba27d653f4d, type: 2}
+  _specialMakeSFX: {fileID: 8143870778091409893}
   _currWeaponData:
     weaponStatSO: {fileID: 0}
     totalBullet: 0
@@ -218,8 +233,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 79168
   _recoilCoolDownBuffer: 0.1
-  _questToStartEvent: {fileID: 0}
-  _questToStopEvent: {fileID: 0}
+  _questToStartEvent:
+  - {fileID: 0}
+  _questToStopEvent:
+  - {fileID: 0}
   _placeToLookList: []
 --- !u!114 &3755499065177399780
 MonoBehaviour:
@@ -254,7 +271,10 @@ MonoBehaviour:
   _changeCameraHeightSpeed: 2
   _recoilDelayMax: 0.2
   _gobackDelayMax: 0.25
-  isChangingPlaceToFace: 0
+  _cameraRotateYClamp: 45
+  _startCameraRotateY: 0
+  _maxLeftCameraRotateY: 0
+  _maxRightCameraRotateY: 0
 --- !u!114 &7048015461342798756
 MonoBehaviour:
   m_ObjectHideFlags: 0
