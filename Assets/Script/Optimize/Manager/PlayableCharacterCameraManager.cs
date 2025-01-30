@@ -71,12 +71,14 @@ public class PlayableCharacterCameraManager : MonoBehaviour, IPlayableCameraEffe
     {
         _isScope = true;
         _currPlayableCamera?.ChangeCameraFOV(_normalFOV);
+        MainUICamHandler.OnMainCamChangeFOV(_normalFOV);
     }
 
     public void ResetScope()
     {
         _isScope = false;
         _currPlayableCamera?.ChangeCameraFOV(_scopeFOV);
+        MainUICamHandler.OnMainCamChangeFOV(_scopeFOV);
     }
 
     public void NightVision()

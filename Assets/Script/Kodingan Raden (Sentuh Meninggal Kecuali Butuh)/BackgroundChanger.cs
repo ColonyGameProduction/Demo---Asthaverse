@@ -21,7 +21,7 @@ public class BackgroundChanger : MonoBehaviour
         }
         else
         {
-            Debug.LogError("No images assigned to the BackgroundChanger script!");
+            // Debug.LogError("No images assigned to the BackgroundChanger script!");
         }
     }
 

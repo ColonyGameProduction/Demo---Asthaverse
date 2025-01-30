@@ -60,7 +60,7 @@ public class Quest : QuestParent
             canProceedToNextQuest = true;
         }
 
-        Debug.Log(canProceedToNextQuest);
+        // Debug.Log(canProceedToNextQuest);
 
         if (canProceedToNextQuest)
         {

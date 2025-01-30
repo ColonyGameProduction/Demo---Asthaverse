@@ -1,10 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class QuestUIHandler : MonoBehaviour
 {
@@ -37,14 +33,14 @@ public class QuestUIHandler : MonoBehaviour
 
         if (!currQuest.isOptional)
         {
-            Debug.Log(questText.text);
+            // Debug.Log(questText.text);
             mainQuest.Add(questText);
             if (questText.text == mainQuestTempWords)
             {
                 mainQuestCounter++;
                 mainQuest.Remove(questText);
                 Destroy(questText.transform.parent.gameObject);
-                Debug.Log(mainQuestCounter.ToString());
+                // Debug.Log(mainQuestCounter.ToString());
             }
             else
             {
@@ -69,7 +65,7 @@ public class QuestUIHandler : MonoBehaviour
                 sideQuestCounter++;
                 sideQuestName.Remove(questText);
                 Destroy(questText.transform.parent.gameObject);
-                Debug.Log(sideQuestCounter.ToString());
+                // Debug.Log(sideQuestCounter.ToString());
             }
             else
             {
@@ -113,13 +109,13 @@ public class QuestUIHandler : MonoBehaviour
         {
             foreach (var item in sideQuestName)
             {
-                Debug.Log(item.text + " masuk " + checker);
+                // Debug.Log(item.text + " masuk " + checker);
                 if (item.text.Contains("(optional)"))
                 {
-                    Debug.Log("tai");
+                    // Debug.Log("tai");
                     if (item.text.Contains(checker))
                     {
-                        Debug.Log("tai2");
+                        // Debug.Log("tai2");
                         LeanTween.value(1, 0, 1f).setOnUpdate((float value) =>
                         {
                             Color color = item.color;

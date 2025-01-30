@@ -1,16 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using Cinemachine;
 using UnityEngine.AI;
 using System;
-using System.Security.Cryptography;
-using System.Linq;
-using UnityEngine.Rendering;
-using UnityEngine.InputSystem.Android;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 
 /* PERHATIAN!!!
  * Kalo mau akses logic di skrip ini

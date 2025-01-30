@@ -33,6 +33,7 @@ public class ReloadWeaponState : UseWeaponState
         {
             isDoReloading = true;
             _sm.CharaIdentity.OnToggleLeftHandRig?.Invoke(false, false);
+            _sm.GetCharaMakeSFX.PlayReloadSFX();
             base.EnterState();
         }
         else if(isDoReloading && !_normalUse.IsReloading)

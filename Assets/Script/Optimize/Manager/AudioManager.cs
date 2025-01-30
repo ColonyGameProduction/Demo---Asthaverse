@@ -8,9 +8,6 @@ using UnityEngine;
 public class AudioManager : AudioHandler
 {
     public static AudioManager Instance {get; private set;}
-    [Header("TEST")]
-    public bool isTest;
-    public Vector3 pos;
 
     [Space(1)]
     [SerializeField] private SOAudioBGMList _audioBGMList;
@@ -25,7 +22,7 @@ public class AudioManager : AudioHandler
     public static Action<AudioBGMName> OnChangeBGM;
 
     #region Getter Setter Variable
-    protected override int TotalAudioArray {get {return _audioSFXList.audioSFX.Count + 1;}}
+    // protected override int TotalAudioList {get {return _audioSFXList.audioSFX.Count + 1;}}
     #endregion
 
     protected override void Awake()
@@ -45,20 +42,12 @@ public class AudioManager : AudioHandler
         OnChangeBGM += SetBGM;
     }
 
-    private void Update() 
-    {
-        if(isTest)
-        {
-            isTest = false;
-            PlayAudioClip(AudioSFXName.Whistle, pos);
-        }
-    }
 
 
     #region BGM Method Helper
     private void SetBGM(AudioBGMName name)
     {
-        Debug.Log("SetBGM" + name);
+        // Debug.Log("SetBGM" + name);
         AudioSource audioSource = GetAudioSource(AudioType.BGM);
 
         if(audioSource.isPlaying && name != AudioBGMName.None && name != _currBGMName)
@@ -80,7 +69,7 @@ public class AudioManager : AudioHandler
 
         AudioSource audioSource = GetAudioSource(AudioType.BGM);
         float finalVolume = audioSource.volume;
-        Debug.Log("PlayBGM" + audioSource.clip + " " + finalVolume);
+        // Debug.Log("PlayBGM" + audioSource.clip + " " + finalVolume);
 
         audioSource.volume = 0;
         audioSource.Play();
@@ -92,7 +81,7 @@ public class AudioManager : AudioHandler
     }
     private void StopBGM(AudioBGMName startAnotherBGM)
     {
-        Debug.Log("StopBGM" + startAnotherBGM);
+        // Debug.Log("StopBGM" + startAnotherBGM);
         AudioSource audioSource = GetAudioSource(AudioType.BGM);
         float startVolume = audioSource.volume;
         
@@ -116,6 +105,8 @@ public class AudioManager : AudioHandler
         else vol = _currMaxVol;
 
         audioSource.volume = vol;
+
+        if(isPause) StopLoopAudioSourceWhenPause();
     }
 
     #endregion
@@ -155,24 +146,31 @@ public class AudioManager : AudioHandler
     #region override
     protected override void InitializeAudioSource()
     {
-        _audioArray = new Audio[TotalAudioArray];
         for(int i = 0; i < _audioSFXList.audioSFX.Count ; i++)
         {
             if(_audioSFXList.audioSFX[i].useSpatialBlend)continue;
 
-            _audioArray[i].audioType = _audioSFXList.audioSFX[i].audioType;
+            Audio newAudio = new Audio();
+            newAudio.audioType = _audioSFXList.audioSFX[i].audioType;
+            newAudio.audioSource = gameObject.AddComponent<AudioSource>();
 
-            _audioArray[i].audioSource = gameObject.AddComponent<AudioSource>();
-            AudioSource source = _audioArray[i].audioSource;
-
+            _audioList.Add(newAudio);
         }
 
-        int idx = _audioSFXList.audioSFX.Count;
-        _audioArray[idx].audioType = AudioType.BGM;
+        Audio newAudioBGM = new Audio();
+        newAudioBGM.audioType = AudioType.BGM;
+        newAudioBGM.audioSource = gameObject.AddComponent<AudioSource>();
 
-        _audioArray[idx].audioSource = gameObject.AddComponent<AudioSource>();
-        AudioSource source2 = _audioArray[idx].audioSource;
+        _audioList.Add(newAudioBGM);
         SetBGM(_startudioBGMName);
+    }
+    protected override void StopLoopAudioSourceWhenPause()
+    {
+        foreach(Audio audio in _audioList)
+        {
+            if(audio.audioType == AudioType.BGM) return;
+            if(audio.audioSource.loop) audio.audioSource.Stop();
+        }
     }
     #endregion
 

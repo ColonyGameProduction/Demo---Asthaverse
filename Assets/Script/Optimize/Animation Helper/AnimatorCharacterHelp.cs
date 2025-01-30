@@ -73,7 +73,7 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
         if(_playableCharaIdentity) _playableInteraction = _playableCharaIdentity.GetPlayableInteraction;
     }
     private void Update() {
-        Debug.Log(_characterIdentity.transform.name + "IK RIGHT HAND POS Di Update" + _animator.GetIKPosition(AvatarIKGoal.RightHand));
+        // Debug.Log(_characterIdentity.transform.name + "IK RIGHT HAND POS Di Update" + _animator.GetIKPosition(AvatarIKGoal.RightHand));
         // if(target && canDoIt)
         // {
         //     _rig.weight = 0;
@@ -112,7 +112,7 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     }
     public void AfterFinishReviveAnim()
     {
-        Debug.Log("Halooo ??? revive???");
+        // Debug.Log("Halooo ??? revive???");
         _playableCharaIdentity.AfterFinishReviveAnimation();
     }
     public void StartKnockOutAnim()
@@ -128,7 +128,7 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
 
     public void OnAnimatorIK(int layerIndex) 
     {
-        Debug.Log(_characterIdentity.transform.name + "IK RIGHT HAND POS Di ON ANIMATOR IK" + _animator.GetIKPosition(AvatarIKGoal.RightHand));
+        // Debug.Log(_characterIdentity.transform.name + "IK RIGHT HAND POS Di ON ANIMATOR IK" + _animator.GetIKPosition(AvatarIKGoal.RightHand));
 
         if(target && canDoIt)
         {
@@ -184,7 +184,7 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
         Ray rayLeftFoot = new Ray(_animator.GetIKPosition(AvatarIKGoal.LeftFoot) + Vector3.up, Vector3.down);
         if(Physics.Raycast(rayLeftFoot, out RaycastHit hitLeft, _distanceToGround + _raycastDownDistance, _placeToWalkLayer))
         {
-            Debug.Log("KAKI KIRIIIII");
+            // Debug.Log("KAKI KIRIIIII");
             Vector3 newFootPos = hitLeft.point;
             newFootPos.y += _distanceToGround;
             _animator.SetIKPosition(AvatarIKGoal.LeftFoot, newFootPos);
@@ -201,7 +201,7 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
         Ray rayRightFoot = new Ray(_animator.GetIKPosition(AvatarIKGoal.RightFoot) + Vector3.up, Vector3.down);
         if(Physics.Raycast(rayRightFoot, out RaycastHit hitRight, _distanceToGround + _raycastDownDistance, _placeToWalkLayer))
         {
-            Debug.Log("KAKI KANNAAAN");
+            // Debug.Log("KAKI KANNAAAN");
             Vector3 newFootPos = hitRight.point;
             newFootPos.y += _distanceToGround;
             _animator.SetIKPosition(AvatarIKGoal.RightFoot, newFootPos);
@@ -229,7 +229,7 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
             {
                 if(hitLeftH.transform.CompareTag("Ground"))
                 {
-                    Debug.Log("KAKI KIRIIIII");
+                    // Debug.Log("KAKI KIRIIIII");
                     Vector3 newHandPos = hitLeftH.point;
                     newHandPos.y += _distanceToGround;
                     _animator.SetIKPosition(AvatarIKGoal.LeftHand, newHandPos);
@@ -246,7 +246,7 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
             {
                 if(hitRightH.transform.CompareTag("Ground"))
                 {
-                    Debug.Log("KAKI KANNAAAN");
+                    // Debug.Log("KAKI KANNAAAN");
                     Vector3 newHandPos = hitRightH.point;
                     newHandPos.y += _distanceToGround;
                     _animator.SetIKPosition(AvatarIKGoal.RightHand, newHandPos);

@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyAI_EngageState : EnemyAIState
@@ -34,7 +31,7 @@ public class EnemyAI_EngageState : EnemyAIState
         _sm.GetFOVState.FOVStateHandler();
         if(_sm.IsTakingCover && _sm.IsAtTakingCoverHidingPlace)
         {
-            Debug.Log("Taking cover now" + _sm.transform.name);
+            // Debug.Log("Taking cover now" + _sm.transform.name);
             // _sm.IsTakingCover = false;
             _sm.EnemyAIManager.EditEnemyCaptainList(_sm, false);
             _sm.SwitchState(_factory.AI_TakingCoverState());

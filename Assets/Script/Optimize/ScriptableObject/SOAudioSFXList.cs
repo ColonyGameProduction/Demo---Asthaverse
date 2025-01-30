@@ -37,4 +37,15 @@ public class SOAudioSFXList : ScriptableObject
 
         return (AudioType.None, null);
     }
+    public int GetAudioSFXListCountPerType(AudioType audioType)
+    {
+        foreach(AudioSFXTypeGroup audioSFXGroup in audioSFX)
+        {
+            if(audioSFXGroup.audioType == audioType)
+            {
+                return audioSFXGroup.audioSFX.Count;
+            }
+        }
+        return 0;
+    }
 }

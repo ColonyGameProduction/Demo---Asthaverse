@@ -24,6 +24,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     [SerializeField] protected float _takeCoverWallCheckerAngleBuffer = 45;
     [SerializeField] protected float _takeCoverWallCheckerMultiplierBuffer = 0.1f;
     [SerializeField] protected float _takeCoverAnimateCharaPosMultiplierBuffer = 0.5f;
+    [SerializeField] protected float _takeCoverNavMeshAgentRadius = 0.1f;
 
     protected Transform _animateCharaTransform;
     protected Transform _originToLookAtWall;
@@ -59,6 +60,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected PlayableMakeSFX _getPlayableMakeSFX;
     protected FOVMachine _fovMachine;
     #endregion
+    private RaycastHit _wallTakeCoverHit;
     public const string ANIMATION_MOVE_PARAMETER_TAKECOVERPOS = "TakeCoverPos";
     public const string ANIMATION_MOVE_PARAMETER_TAKECOVER = "TakeCover";
     
@@ -138,7 +140,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     {
         get 
         {
-            return IsTakingCoverAtWall ?  0.1f :  _agentNavMesh.radius;
+            return IsTakingCoverAtWall ?  0.01f :  _agentNavMesh.radius;
             
         }
     }
@@ -147,13 +149,15 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected override void Awake()
     {
         base.Awake();
+        _getPlayableMakeSFX = _charaMakeSFX as PlayableMakeSFX;
+
         _animateCharaTransform = _animator.transform;
         _fovMachine = GetComponent<FOVMachine>();
         _originToLookAtWall = _fovMachine.GetFOVPoint;
-        _getPlayableMakeSFX = GetComponentInChildren<PlayableMakeSFX>();
 
         _canReceivePlayerInput = GetComponent<IReceiveInputFromPlayer>();
         _getPlayableCharacterIdentity = _charaIdentity as PlayableCharacterIdentity;
+        
         
 
         _isAIInput = !_canReceivePlayerInput.IsPlayerInput;
@@ -171,6 +175,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     {
         GameObject go = new GameObject("tempCharaTransform");
         
+        
+
         _tempAnimateCharaTransform = go.transform;
         _tempAnimateCharaTransform.parent = _charaGameObject;
         _tempAnimateCharaTransform.localPosition = _animateCharaTransform.transform.localPosition;
@@ -188,10 +194,16 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     protected override void Update()
     {
-        if(!_gm.IsGamePlaying()) _getPlayableMakeSFX.StopMovementTypeSFX();
-
         base.Update();
         GoingToTakeCover();
+    }
+
+    protected override void FixedUpdate() 
+    {
+        base.FixedUpdate();
+
+        if(!_gm.IsGamePlaying()) return;
+        NearWallTakeCoverHandler();
     }
 
     #region Move
@@ -202,23 +214,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             Vector3 movement = new Vector3(InputMovement.x, 0, InputMovement.y).normalized;
             if(!IsTakingCoverAtWall)MovePlayableChara(movement);
             else MovePlayableOnWall(movement);
+            MovementAudioHandler();
         }
         else base.Move();
 
-        if(IsRunning)
-        {
-            // Debug.Log(transform.position + " produce walk sound");
-            _worldSoundManager.MakeSound(WorldSoundName.Walk, transform.position, _fovMachine.CharaEnemyMask);
-            _getPlayableMakeSFX.PlayRunSFX();
-        }
-        else if(IsWalking)
-        {
-            _getPlayableMakeSFX.PlayWalkSFX();
-        }
-        else if(IsCrouching)
-        {
-            _getPlayableMakeSFX.PlayCrouchSFX();
-        }
+        
     }
     /// <summary>
     /// Move yang digunakan untuk kontrol dgn input dari player
@@ -235,6 +235,22 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             IsAskedToRunByPlayable = false;
         }
         if(IsMustLookForward)IsMustLookForward = false;
+    }
+    protected override void MovementAudioHandler()
+    {
+        if(IsRunning)
+        {
+            _worldSoundManager.MakeSound(WorldSoundName.Walk, transform.position, _fovMachine.CharaEnemyMask);
+            _charaMakeSFX.PlayRunSFX();
+        }
+        else if(IsWalking)
+        {
+            _charaMakeSFX.PlayWalkSFX();
+        }
+        else if(IsCrouching)
+        {
+            _charaMakeSFX.PlayCrouchSFX();
+        }
     }
     #endregion
     #region PlayableChara Only
@@ -339,7 +355,9 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             Vector3 wallOtherSideDir = Vector3.zero;
             if(!isGoingToLeft)wallOtherSideDir = Quaternion.Euler (0, -_takeCoverWallCheckerAngleBuffer,0) * -_takeCoverDirection;
             else wallOtherSideDir = Quaternion.Euler (0, _takeCoverWallCheckerAngleBuffer,0) * -_takeCoverDirection;
-            // Debug.DrawRay(transform.position + wallMovementDir * 1.1f, wallOtherSideDir * _playerToWallMinDistance, Color.black, 1f, false);
+
+            Debug.DrawRay(transform.position + wallMovementDir * 1.1f, wallOtherSideDir * _playerToWallMinDistance, Color.black, 1f, false);
+
             RaycastHit otherSideWall;
             if(Physics.Raycast(transform.position + wallMovementDir * (1+_takeCoverWallCheckerMultiplierBuffer), wallOtherSideDir, out otherSideWall, _playerToWallMinDistance, _wallLayerMask))
             {
@@ -412,7 +430,18 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
         // IsCrouching = false; //biar kalo lg crouch di tmpt ga tb tb berdiri
     }
-    public void SetCharaGameObjRotationToNormal() => _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+    public void SetCharaGameObjRotationToNormal()
+    {
+        if(_getPlayableCharacterIdentity.IsSilentKilling)
+        {
+            transform.rotation = _charaGameObject.rotation;
+            _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+        }
+        else
+        {
+            _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
+        }
+    }
     #endregion
 
     #region Movement Speed
@@ -444,18 +473,22 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     }
 
     #region TakeCoverAtWall
-    public bool IsNearWall()
+    public void NearWallTakeCoverHandler()
     {
-        RaycastHit hit;
-        // Debug.DrawRay(transform.position, _charaGameObject.forward.normalized * 100f, Color.red, 2f, false);
-        if(Physics.Raycast(transform.position, _charaGameObject.forward.normalized, out hit, _playerToWallMinDistance, _wallLayerMask))
+        if(Physics.Raycast(transform.position, _charaGameObject.forward.normalized, out _wallTakeCoverHit, _playerToWallMinDistance, _wallLayerMask))
         {
-
-            SetTakeCoverWallData(hit);
+            
+        }
+        if(!_isAIInput) KeybindUIHandler.OnShowTakeCoverKeybind(_wallTakeCoverHit.collider ? IsTakingCoverAtWall ? false : true : false);
+    }
+    public bool CanTakeCover()
+    {
+        if(_wallTakeCoverHit.collider != null)
+        {
+            SetTakeCoverWallData(_wallTakeCoverHit);
             
             return true;
         }
-
         return false;
     }
     public void TakeCoverAtWall()

@@ -93,9 +93,9 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         _fovMachine.FOVJob();
         CheckPastVisibleTargets();
         DetectEnemy();
+        HandleGotDetected();
         if(IsAIInput)
         {
-            HandleGotDetected();
             _currState?.UpdateState();
         }
     }
