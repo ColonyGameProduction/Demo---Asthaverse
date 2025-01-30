@@ -9,7 +9,7 @@ public interface IPlayableMovementDataNeeded
     bool IsTakingCoverAtWall{get; set;}
     void RotateToAim_Idle();
     public PlayableCharacterIdentity GetPlayableCharacterIdentity{ get ;}
-    public PlayableMakeSFX GetPlayableMakeSFX {get ;}
+    public PlayableMakeSFX GetPlayableMakeSFX { get; }
     public void CharaConDataToCrawl();
     public void RotateWhileReviving();
     
