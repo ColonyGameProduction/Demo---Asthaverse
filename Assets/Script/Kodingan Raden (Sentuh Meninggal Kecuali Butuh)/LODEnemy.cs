@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class LODController : MonoBehaviour
+public class LODEnemy : MonoBehaviour
 {
     public float lod0Distance = 5f; // Jarak dalam meter untuk LOD 0
     public float lod1Distance = 10f; // Jarak dalam meter untuk LOD 1
@@ -32,12 +32,10 @@ public class LODController : MonoBehaviour
 
         LOD[] lods = lodGroup.GetLODs();
 
-        // Konversi dari meter ke screen size
         float lod0ScreenSize = ConvertMetersToScreenSize(lod0Distance, objectSize);
         float lod1ScreenSize = ConvertMetersToScreenSize(lod1Distance, objectSize);
         float lod2ScreenSize = ConvertMetersToScreenSize(lod2Distance, objectSize);
 
-        // Pastikan urutan tetap benar
         if (lod0ScreenSize <= lod1ScreenSize) lod0ScreenSize = lod1ScreenSize + 0.05f;
         if (lod1ScreenSize <= lod2ScreenSize) lod1ScreenSize = lod2ScreenSize + 0.05f;
 
