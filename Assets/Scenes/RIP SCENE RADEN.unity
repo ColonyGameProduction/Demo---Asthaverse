@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.11762781, g: 0.15173459, b: 0.21071848, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 2227552}
   - component: {fileID: 2227551}
   - component: {fileID: 2227554}
+  - component: {fileID: 2227555}
   m_Layer: 0
   m_Name: Enemy (1)
   m_TagString: Untagged
@@ -241,17 +242,34 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.6
+  - screenRelativeHeight: 0.07442185
     fadeTransitionWidth: 0
     renderers:
-    - renderer: {fileID: 0}
-  - screenRelativeHeight: 0.3
+    - renderer: {fileID: 345610461}
+  - screenRelativeHeight: 0.062407285
     fadeTransitionWidth: 0
-    renderers: []
-  - screenRelativeHeight: 0.12068739
+    renderers:
+    - renderer: {fileID: 345610461}
+  - screenRelativeHeight: 0.062407285
     fadeTransitionWidth: 0
-    renderers: []
+    renderers:
+    - renderer: {fileID: 345610461}
   m_Enabled: 1
+--- !u!114 &2227555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2227550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 620c8e43311fe324d9e23651e33c0ecd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lod0ScreenSize: 0.3
+  lod1ScreenSize: 0.2
+  lod2ScreenSize: 0.1
 --- !u!1 &27399682
 GameObject:
   m_ObjectHideFlags: 0
