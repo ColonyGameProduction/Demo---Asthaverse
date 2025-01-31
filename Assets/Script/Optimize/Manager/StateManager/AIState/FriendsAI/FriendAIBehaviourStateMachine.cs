@@ -143,7 +143,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     {
         if(IsAIIdle && GotDetectedbyEnemy && LeaveDirection != Vector3.zero && agentPos == _runAwayPos && IsAIInput)
         {
-            _moveStateMachine.IsRunning = false;
+            _charaIdentity.Run(false);
         }
 
         if(IsTakingCover && !IsAIIdle && IsAIInput)
