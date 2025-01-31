@@ -8,6 +8,7 @@ public class ChangeSceneAfterCutscene : MonoBehaviour
     public SceneManagementManager SMM;
     public string SceneName;
     public VideoPlayer video;
+    public bool _hasFinish = false;
 
     private void Start()
     {
@@ -17,8 +18,8 @@ public class ChangeSceneAfterCutscene : MonoBehaviour
 
     private void Video_loopPointReached(VideoPlayer source)
     {
-        SMM.SaveLoadSceneName(SceneName);
-        SMM.GoToOtherScene();   
+        SMM.GoToScene(SceneName);   
+        _hasFinish = true;
     }
 }
  

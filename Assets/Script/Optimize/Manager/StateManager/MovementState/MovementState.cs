@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 
 /// <summary>
 /// Movement state -> semua state pergerakan: Idle, Walk, Run, Crouch

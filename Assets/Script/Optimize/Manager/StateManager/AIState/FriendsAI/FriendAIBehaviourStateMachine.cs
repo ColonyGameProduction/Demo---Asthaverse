@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
+
 using UnityEngine;
 
 public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBehaviourStateData
@@ -143,7 +140,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     {
         if(IsAIIdle && GotDetectedbyEnemy && LeaveDirection != Vector3.zero && agentPos == _runAwayPos && IsAIInput)
         {
-            _moveStateMachine.IsRunning = false;
+            _charaIdentity.Run(false);
         }
 
         if(IsTakingCover && !IsAIIdle && IsAIInput)
