@@ -1019,6 +1019,9 @@ namespace Unity.VisualScripting.Generated.Aot
 	// PositionTriggerObj.op_Implicit
 	// PositionTriggerObj.op_Equality
 	// PositionTriggerObj.op_Inequality
+	// LayerMaskChanger.op_Implicit
+	// LayerMaskChanger.op_Equality
+	// LayerMaskChanger.op_Inequality
 	// AudioManager.op_Implicit
 	// AudioManager.op_Equality
 	// AudioManager.op_Inequality
@@ -1760,11 +1763,6 @@ namespace Unity.VisualScripting.Generated.Aot
 	// Cinemachine.PostFX.CinemachineVolumeSettings.op_Inequality
 	// --------------- Plugin Stubs
 	// --------------- Asset Stubs
-	// --------------- Scene Stubs
-	// --------------- Scene Stubs
-	// --------------- Scene Stubs
-	// --------------- Scene Stubs
-	// --------------- Scene Stubs
 	// --------------- Scene Stubs
 	// --------------- Scene Stubs
 	// --------------- Scene Stubs
@@ -13498,6 +13496,41 @@ namespace Unity.VisualScripting.Generated.Aot
 		// PositionTriggerObj.op_Inequality
 		[global::UnityEngine.Scripting.PreserveAttribute()]
 		public static void PositionTriggerObj_op_Inequality()
+		{
+			global::UnityEngine.Object arg0 = default(global::UnityEngine.Object);
+			global::UnityEngine.Object arg1 = default(global::UnityEngine.Object);
+			bool @operator = (arg0 != arg1);
+			global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool> optimized = new global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool>(default(global::System.Reflection.MethodInfo));
+			optimized.Invoke(null, arg0, arg1);
+			optimized.Invoke(default(object[]));
+		}
+		
+		// LayerMaskChanger.op_Implicit
+		[global::UnityEngine.Scripting.PreserveAttribute()]
+		public static void LayerMaskChanger_op_Implicit()
+		{
+			global::UnityEngine.Object arg0 = default(global::UnityEngine.Object);
+			bool conversion = ((bool)(arg0));
+			global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, bool> optimized = new global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, bool>(default(global::System.Reflection.MethodInfo));
+			optimized.Invoke(null, arg0);
+			optimized.Invoke(default(object[]));
+		}
+		
+		// LayerMaskChanger.op_Equality
+		[global::UnityEngine.Scripting.PreserveAttribute()]
+		public static void LayerMaskChanger_op_Equality()
+		{
+			global::UnityEngine.Object arg0 = default(global::UnityEngine.Object);
+			global::UnityEngine.Object arg1 = default(global::UnityEngine.Object);
+			bool @operator = (arg0 == arg1);
+			global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool> optimized = new global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool>(default(global::System.Reflection.MethodInfo));
+			optimized.Invoke(null, arg0, arg1);
+			optimized.Invoke(default(object[]));
+		}
+		
+		// LayerMaskChanger.op_Inequality
+		[global::UnityEngine.Scripting.PreserveAttribute()]
+		public static void LayerMaskChanger_op_Inequality()
 		{
 			global::UnityEngine.Object arg0 = default(global::UnityEngine.Object);
 			global::UnityEngine.Object arg1 = default(global::UnityEngine.Object);

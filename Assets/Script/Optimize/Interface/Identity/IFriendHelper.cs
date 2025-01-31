@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 
 //Data for helping friendAI
 public interface IPlayableFriendDataHelper

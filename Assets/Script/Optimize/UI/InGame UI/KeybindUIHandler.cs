@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem.iOS;
-using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class KeybindUIHandler : MonoBehaviour, IUnsubscribeEvent
