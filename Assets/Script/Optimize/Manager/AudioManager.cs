@@ -101,7 +101,11 @@ public class AudioManager : AudioHandler
         AudioSource audioSource = GetAudioSource(AudioType.BGM);
 
         float vol = 0;
-        if(isPause) vol = audioSource.volume * 0.5f;
+        if(isPause)
+        {
+            _currMaxVol = audioSource.volume;
+            vol = _currMaxVol * 0.5f;
+        }
         else vol = _currMaxVol;
 
         audioSource.volume = vol;
@@ -168,7 +172,12 @@ public class AudioManager : AudioHandler
     {
         foreach(Audio audio in _audioList)
         {
-            if(audio.audioType == AudioType.BGM) continue;
+            if(audio.audioType == AudioType.BGM)
+            {
+                Debug.Log("AAAA");
+                continue;
+            }
+            Debug.Log("AAAA hrsnya ga masuk");
             if(audio.audioSource.loop) audio.audioSource.Stop();
         }
     }

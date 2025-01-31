@@ -160,11 +160,11 @@ public class PlayableCameraSniperEvent : PlayableCamera
     {
         // Debug.Log("FOV now" + Camera.main.fieldOfView);
         _oldFOV = Camera.main.fieldOfView;
-        MainUICamHandler.OnMainCamChangeFOV(6.5f);
+        if(MainUICamHandler.OnMainCamChangeFOV != null) MainUICamHandler.OnMainCamChangeFOV(6.5f);
         
     }
     public void SetUICameraNormalFOV()
     {
-        MainUICamHandler.OnMainCamChangeFOV(_oldFOV);
+        if(MainUICamHandler.OnMainCamChangeFOV != null) MainUICamHandler.OnMainCamChangeFOV(_oldFOV);
     }
 }
