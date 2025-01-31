@@ -168,7 +168,7 @@ public class AudioManager : AudioHandler
     {
         foreach(Audio audio in _audioList)
         {
-            if(audio.audioType == AudioType.BGM) return;
+            if(audio.audioType == AudioType.BGM) continue;
             if(audio.audioSource.loop) audio.audioSource.Stop();
         }
     }
