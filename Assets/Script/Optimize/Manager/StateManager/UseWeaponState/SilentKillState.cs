@@ -34,6 +34,7 @@ public class SilentKillState : UseWeaponState
             
             _playableData.GetPlayableMakeSFX.PlaySilentKillSFX(_sm.CharaIdentity.SilentKillIdx);
             base.EnterState();
+
             _playableData.SilentKilledEnemyAnimation();
         }
         else if(isDoSilentKill && !_advancedUse.IsSilentKill)
@@ -70,7 +71,7 @@ public class SilentKillState : UseWeaponState
     }
     public override void ExitState()
     {
-        _sm.CharaAnimator.SetBool("SilentKill", false);
+        // base.ExitState();
         _sm.CharaIdentity.SilentKillIdx = _sm.CharaIdentity.SilentKillIdx == 1 ? 0 : 1;
         
         _sm.CharaIdentity.OnToggleFollowHandRig?.Invoke(true, false);

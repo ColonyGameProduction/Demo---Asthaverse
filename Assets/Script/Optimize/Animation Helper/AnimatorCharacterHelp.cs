@@ -393,6 +393,7 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     #region Silent Kill Methods
     public void SilentKillFinished()
     {
+        // Debug.Log("ga masuk sini ?? SK");
         _playableUseWeaponStateMachine.SilentKillAnimationFinished();
         ShowCurrWeapon();
     }
@@ -403,6 +404,10 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     public void SilentKilledFinished()
     {
         _characterIdentity.AfterFinishDeathAnimation();
+    }
+    public void TurnOffSilentKillParameter()
+    {
+        _animator.SetBool("SilentKill", false);
     }
     #endregion
 

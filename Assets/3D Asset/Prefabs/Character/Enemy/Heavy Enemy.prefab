@@ -251,13 +251,44 @@ MonoBehaviour:
     m_Root: {fileID: 2956997540100455283}
     m_Mid: {fileID: 616755506035142763}
     m_Tip: {fileID: 1201332214260252410}
-    m_Target: {fileID: 0}
-    m_Hint: {fileID: 0}
+    m_Target: {fileID: 374155058326367471}
+    m_Hint: {fileID: 2055975065014456071}
     m_TargetPositionWeight: 1
     m_TargetRotationWeight: 1
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 0
     m_MaintainTargetRotationOffset: 0
+--- !u!1 &1545707274294940952
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2055975065014456071}
+  m_Layer: 7
+  m_Name: SecondAimRig_hint_IndexFinger_Rifle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2055975065014456071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545707274294940952}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5577463, y: -0.5925471, z: -0.46951324, w: 0.3425847}
+  m_LocalPosition: {x: 0.030313551, y: -0.05062892, z: -0.052859973}
+  m_LocalScale: {x: 1, y: 0.9999999, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8439237056117755685}
+  m_LocalEulerAnglesHint: {x: -10.036, y: -109.234, z: -93.671}
 --- !u!1 &1681301054778517667
 GameObject:
   m_ObjectHideFlags: 0
@@ -1481,6 +1512,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3615833182539725012}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7702604039347119136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8439237056117755685}
+  m_Layer: 7
+  m_Name: Rig
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8439237056117755685
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7702604039347119136}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 374155058326367471}
+  - {fileID: 2055975065014456071}
+  m_Father: {fileID: 1553112457234027645}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8001996409588192232
 GameObject:
   m_ObjectHideFlags: 0
@@ -1986,6 +2050,37 @@ CapsuleCollider:
   m_Height: 0.005000001
   m_Direction: 1
   m_Center: {x: -0.00010000001, y: 0.0018999956, z: -0.00020071164}
+--- !u!1 &8807972377790052469
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 374155058326367471}
+  m_Layer: 7
+  m_Name: SecondAimRig_target_IndexFinger_Rifle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &374155058326367471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8807972377790052469}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5962747, y: -0.72461826, z: -0.30949947, w: 0.15360679}
+  m_LocalPosition: {x: 0.030616952, y: -0.044994902, z: -0.017309306}
+  m_LocalScale: {x: 1, y: 0.9999999, z: 0.99999994}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8439237056117755685}
+  m_LocalEulerAnglesHint: {x: -15.388, y: -142.142, z: -84.206}
 --- !u!1 &8966231587711469532
 GameObject:
   m_ObjectHideFlags: 0
@@ -2064,6 +2159,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3615833182539725012}
     m_Modifications:
+    - target: {fileID: 3788793834178078774, guid: a42006722860ac34592d09e046437b5a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4437993473730641870, guid: a42006722860ac34592d09e046437b5a, type: 3}
       propertyPath: m_Name
       value: weapon_bone.001-allweapon-enemy
@@ -2177,12 +2276,20 @@ PrefabInstance:
     - {fileID: 5202877937438851322, guid: a42006722860ac34592d09e046437b5a, type: 3}
     - {fileID: 7050583680607747806, guid: a42006722860ac34592d09e046437b5a, type: 3}
     - {fileID: 9160971004470446452, guid: a42006722860ac34592d09e046437b5a, type: 3}
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4602590066088325772, guid: a42006722860ac34592d09e046437b5a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8439237056117755685}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a42006722860ac34592d09e046437b5a, type: 3}
 --- !u!4 &569062316112292848 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3294343423882661121, guid: a42006722860ac34592d09e046437b5a, type: 3}
+  m_PrefabInstance: {fileID: 3049619515110631153}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1553112457234027645 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4602590066088325772, guid: a42006722860ac34592d09e046437b5a, type: 3}
   m_PrefabInstance: {fileID: 3049619515110631153}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2217480901382328007 stripped

@@ -400,8 +400,8 @@ MonoBehaviour:
     m_Root: {fileID: 7126088482628133220}
     m_Mid: {fileID: 4855595071670905468}
     m_Tip: {fileID: 6577036012472394989}
-    m_Target: {fileID: 0}
-    m_Hint: {fileID: 0}
+    m_Target: {fileID: 8801178538650169811}
+    m_Hint: {fileID: 7622618152380663889}
     m_TargetPositionWeight: 1
     m_TargetRotationWeight: 1
     m_HintWeight: 1
@@ -2261,6 +2261,10 @@ PrefabInstance:
       propertyPath: _weaponGameObjectDataList.Array.data[0].weaponMagTransform
       value: 
       objectReference: {fileID: 3813925198272062174}
+    - target: {fileID: 9160971004470446452, guid: a42006722860ac34592d09e046437b5a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 3699351292999437827, guid: a42006722860ac34592d09e046437b5a, type: 3}
@@ -2467,7 +2471,13 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 291a9bc172b8eb248b52882158a5ba69, type: 2}
     - target: {fileID: 5866666021909216657, guid: e85c379d1746e544fb460f08a1fb93d4, type: 3}
       propertyPath: m_WarningMessage
-      value: 
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
+        'soldier:RightHandIndex2'\n\tTransform 'soldier:RightHandIndex1'\n\tTransform
+        'soldier:Spine'\n\tTransform 'soldier:RightForeArm'\n\tTransform 'soldier:RightHand'\n\tTransform
+        'soldier:RightHandIndex3'\n\tTransform 'soldier:Hips'\n\tTransform 'soldier:LeftArm'\n\tand
+        more ..."
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: e85c379d1746e544fb460f08a1fb93d4, type: 3}
       propertyPath: m_ApplyRootMotion

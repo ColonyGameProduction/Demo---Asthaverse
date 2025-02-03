@@ -119,8 +119,8 @@ MonoBehaviour:
     m_Root: {fileID: 1641322879122400560}
     m_Mid: {fileID: 3981564922283060776}
     m_Tip: {fileID: 3415283941439758521}
-    m_Target: {fileID: 0}
-    m_Hint: {fileID: 0}
+    m_Target: {fileID: 5997774084209727052}
+    m_Hint: {fileID: 2411620156168750430}
     m_TargetPositionWeight: 1
     m_TargetRotationWeight: 1
     m_HintWeight: 1
@@ -256,6 +256,7 @@ MonoBehaviour:
   _takeCoverWallCheckerAngleBuffer: 45
   _takeCoverWallCheckerMultiplierBuffer: 0.1
   _takeCoverAnimateCharaPosMultiplierBuffer: 0.5
+  _takeCoverNavMeshAgentRadius: 0.1
   _crawlHeightCharaCon:
     center: {x: 0, y: 0.375, z: 0}
     radius: 0.4
@@ -963,7 +964,7 @@ Transform:
   m_Children:
   - {fileID: 2411620156168750430}
   - {fileID: 5997774084209727052}
-  m_Father: {fileID: 6303986594614226879}
+  m_Father: {fileID: 5840391580659725526}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2710919290074069518
 GameObject:
@@ -4068,6 +4069,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: 291a9bc172b8eb248b52882158a5ba69, type: 2}
     - target: {fileID: 5866666021909216657, guid: 53a46595b85635c40987e628d38b0d2e, type: 3}
+      propertyPath: m_WarningMessage
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
+        'soldier:LeftArm'\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
+        'soldier:LeftArm'\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
+        'soldier:LeftArm'"
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 53a46595b85635c40987e628d38b0d2e, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
@@ -5031,6 +5041,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 999938694401123991}
     m_Modifications:
+    - target: {fileID: 566351608523801534, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 785519967252611693, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.000080576254
@@ -5172,12 +5186,12 @@ PrefabInstance:
     - {fileID: 2474006508078182788, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
     - {fileID: 7737433875298423074, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 785519967252611693, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6352593638049011140}
     - targetCorrespondingSourceObject: {fileID: 7487779997098061229, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5296544384236971532}
+    - targetCorrespondingSourceObject: {fileID: 907410887901976836, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6352593638049011140}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
 --- !u!4 &2890040818630246386 stripped
@@ -5209,6 +5223,11 @@ Transform:
 --- !u!4 &4785941776325095360 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2301881364553695762, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
+  m_PrefabInstance: {fileID: 6744976448729099730}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5840391580659725526 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 907410887901976836, guid: 121c211ebe2ea1a46abd2927cc5bd65f, type: 3}
   m_PrefabInstance: {fileID: 6744976448729099730}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &6303986594614226879 stripped
