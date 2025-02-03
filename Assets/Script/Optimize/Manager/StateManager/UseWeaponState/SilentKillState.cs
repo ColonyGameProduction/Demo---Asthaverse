@@ -70,6 +70,7 @@ public class SilentKillState : UseWeaponState
     }
     public override void ExitState()
     {
+        _sm.CharaAnimator.SetBool("SilentKill", false);
         _sm.CharaIdentity.SilentKillIdx = _sm.CharaIdentity.SilentKillIdx == 1 ? 0 : 1;
         
         _sm.CharaIdentity.OnToggleFollowHandRig?.Invoke(true, false);
