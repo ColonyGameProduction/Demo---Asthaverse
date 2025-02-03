@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1030984219}
   - component: {fileID: 1030984220}
   - component: {fileID: 1030984221}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: SM_Grid12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,6 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030984218}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -34,7 +35,6 @@ Transform:
   - {fileID: 1030984227}
   - {fileID: 1030984231}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!205 &1030984220
 LODGroup:
@@ -72,9 +72,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030984218}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 5.298018, y: 0.315586, z: 0.178799}
   m_Center: {x: -2.649008, y: 0.000001, z: -0.025768}
 --- !u!1 &1030984222
@@ -88,7 +96,7 @@ GameObject:
   - component: {fileID: 1030984223}
   - component: {fileID: 1030984224}
   - component: {fileID: 1030984225}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: SM_Grid12_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,13 +110,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030984222}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1030984219}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1030984224
 MeshRenderer:
@@ -171,7 +179,7 @@ GameObject:
   - component: {fileID: 1030984227}
   - component: {fileID: 1030984228}
   - component: {fileID: 1030984229}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: SM_Grid12_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,13 +193,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030984226}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1030984219}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1030984228
 MeshRenderer:
@@ -254,7 +262,7 @@ GameObject:
   - component: {fileID: 1030984231}
   - component: {fileID: 1030984232}
   - component: {fileID: 1030984233}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: SM_Grid12_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -268,13 +276,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030984230}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1030984219}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1030984232
 MeshRenderer:
