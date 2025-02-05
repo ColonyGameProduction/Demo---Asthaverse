@@ -39,7 +39,7 @@ public class GraphicsManager : MonoBehaviour
     private readonly string[] _qualityLevels = { "Low", "Medium", "High", "Ultra" };
 
     // VSync
-    [ReadOnly(false), SerializeField] private bool _isVSyncOn = true;
+    [ReadOnly(false), SerializeField] private bool _isVSyncOn = false;
 
     // Max Framerate
     private int[] _framerateOptions = { 30, 60, 120, 144, 165, 240, -1 };

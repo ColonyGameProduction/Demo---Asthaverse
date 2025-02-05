@@ -255,7 +255,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
             return true;
         }
-        
+        // Debug.Log(transform.name + " pos saat ini " + transform.position + "destinasi" + AgentNavMesh.destination + "I go here even if no takecover");
         return false;
     }
 

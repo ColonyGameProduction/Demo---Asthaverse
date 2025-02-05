@@ -123,6 +123,75 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &48719450
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2321047122282925768, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321047122282925768, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321047122282925768, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321047122282925768, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321047122282925768, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321047122282925768, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321047122282925768, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321047122282925768, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321047122282925768, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2321047122282925768, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044205664458445738, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: _startudioBGMName
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044205664458445738, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: _startAudioBGMName
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4044205664458445738, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: _isRestartIfAlreadyPlayed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5247767739786439477, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c50e2b074aae1f245afc7f9d5358bd54, type: 3}
 --- !u!1 &658897043
 GameObject:
   m_ObjectHideFlags: 0
@@ -887,7 +956,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1603031016}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 63210f2a9bd83824dbd3e182dd2b2377, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: ae2ac0d62f6cb32459648dbb6c1f49d1, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -909,7 +978,7 @@ VideoPlayer:
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 1
   m_Looping: 0
   m_WaitForFirstFrame: 1
@@ -1020,3 +1089,4 @@ SceneRoots:
   - {fileID: 658897046}
   - {fileID: 1985693050}
   - {fileID: 1215849554}
+  - {fileID: 48719450}

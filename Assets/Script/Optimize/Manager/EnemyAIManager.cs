@@ -8,6 +8,7 @@ public class EnemyAIManager : MonoBehaviour, IUnsubscribeEvent
     #region Normal Variable
     public static EnemyAIManager Instance { get; private set;}
     private GameManager _gm;
+    private AudioManager _am;
     [Header("List")]
     [SerializeField] private List<Transform> _POIPosList;
     [SerializeField] private List<Transform> _POIPosNearLastSeenPosList;
@@ -31,6 +32,8 @@ public class EnemyAIManager : MonoBehaviour, IUnsubscribeEvent
     [SerializeField] protected float _isEngageTimerMax = 0.3f;
     private bool hasToShoutStopEngage;
     private bool _isEnemyEngaging;
+
+    [SerializeField] private AudioBGMName _bgmNameWhenEnemyEngaging, _bgmNameWhenEnemyStopEngaging;
     #endregion
     
     #region GETTER SETTER VARIABLE
@@ -50,6 +53,7 @@ public class EnemyAIManager : MonoBehaviour, IUnsubscribeEvent
     private void Start()
     {
         _gm = GameManager.instance;
+        _am = AudioManager.Instance;
         
         OnFoundLastCharaSeenPos += FindAllPOINearLastSeenPos;
         OnEnemyisEngaging += EnemyisEngaging;
@@ -166,6 +170,8 @@ public class EnemyAIManager : MonoBehaviour, IUnsubscribeEvent
         _isEngageTimer = _isEngageTimerMax;
         _isEnemyEngaging = true;
         if(!hasToShoutStopEngage)hasToShoutStopEngage = true;
+
+        _am.ChangeBGMMidGame(_bgmNameWhenEnemyEngaging);
     }
     public void EngageTimerCounter()
     {
@@ -179,6 +185,7 @@ public class EnemyAIManager : MonoBehaviour, IUnsubscribeEvent
             {
                 _isEngageTimer = 0f;
                 OnEnemyStopEngaging?.Invoke();
+                _am.ChangeBGMMidGame(_bgmNameWhenEnemyStopEngaging);
                 _isEnemyEngaging = false;
                 hasToShoutStopEngage = false;
             }

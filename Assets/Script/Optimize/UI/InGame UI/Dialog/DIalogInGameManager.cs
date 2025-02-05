@@ -84,7 +84,7 @@ public class DIalogInGameManager : MonoBehaviour
         });
 
         _currDialog = NextDialog(_nextDialogDelay);
-        StartCoroutine(_currDialog);
+        if(_chosenDialog != null)StartCoroutine(_currDialog);
 
     }
     public IEnumerator NextDialog(float delay)

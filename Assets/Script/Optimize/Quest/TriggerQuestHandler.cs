@@ -15,6 +15,7 @@ public class TriggerQuestHandler : SoloQuestHandler, IUnsubscribeEvent
     {
         base.ActivateQuest();
         ToggleCollider(true);
+        _triggerObject.WhenQuestActivated();
         
     }
     public override void DeactivateQuest()

@@ -27,6 +27,8 @@ public class IdleState : MovementState
         _playableData?.RotateWhileReviving();
         if(_playableData != null && (PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || _playableData.GetPlayableCharacterIdentity.IsReviving || _playableData.GetPlayableCharacterIdentity.IsSilentKilling))return;
 
+        // Debug.Log(_sm.transform.name + " hallooooo????");
+        // if(_sm.IsAIInput)Debug.Log(_sm.transform.name + "Why is take cover still on" + "I go here even if no takecover");
         if((!_sm.IsAIInput && _playableData.InputMovement != Vector3.zero) || (_sm.IsAIInput && !_sm.IsAIAtDirPos()))
         {
             if(_groundData != null && _groundData.IsCrawling)_sm.SwitchState(_factory.CrawlState());

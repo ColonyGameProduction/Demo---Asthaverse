@@ -38,6 +38,9 @@ public class SnipingUIHandler : MonoBehaviour, IUnsubscribeEvent
 
         _charaFaceImageContainer.sprite = _event.CharaStat.cropImage;
         _charaNameContainer.text = _event.CharaStat.entityName.ToUpper();
+
+        _weaponImageContainer.sprite = _event.GetWeaponDataSpecial.weaponStatSO.gunShilouete;
+        _weaponNameContainer.text = _event.GetWeaponDataSpecial.weaponStatSO.weaponName;
         
         UpdateBulletWeaponData();
         _maxBulletContainer.text = "XXX";

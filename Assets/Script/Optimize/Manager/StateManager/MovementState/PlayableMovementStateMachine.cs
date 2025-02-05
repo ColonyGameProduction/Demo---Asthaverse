@@ -216,7 +216,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             else MovePlayableOnWall(movement);
             MovementAudioHandler();
         }
-        else base.Move();
+        else
+        {
+            Debug.Log("I go here even if no takecover");
+            base.Move();
+        }
 
         
     }
@@ -512,7 +516,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     public void ExitTakeCover()
     {
         AgentNavMesh.ResetPath();
-        _isAIInput = false;
+        if(_getPlayableCharacterIdentity.IsPlayerInput) _isAIInput = false;
         IsTakingCoverAtWall = false;
         CharaAnimator?.SetBool(ANIMATION_MOVE_PARAMETER_TAKECOVER, false);
         _isAtTakingCoverPos = false;

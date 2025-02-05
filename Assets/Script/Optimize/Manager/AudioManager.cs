@@ -10,7 +10,8 @@ public class AudioManager : AudioHandler
     [SerializeField] private SOAudioBGMList _audioBGMList;
 
     [Header("Start BGM of This Scene")]
-    [SerializeField] private AudioBGMName _startudioBGMName;
+    [SerializeField] private bool _isRestartIfAlreadyPlayed;
+    [SerializeField] private AudioBGMName _startAudioBGMName;
     private AudioBGMName _currBGMName;
     [SerializeField] private float _startBGMDuration = 1f, _stopBGMDuration = 0.5f;
     private float _currMaxVol = 0;
@@ -20,13 +21,18 @@ public class AudioManager : AudioHandler
 
     #region Getter Setter Variable
     // protected override int TotalAudioList {get {return _audioSFXList.audioSFX.Count + 1;}}
+    public AudioBGMName CurrBGMName {get {return _currBGMName;}}
     #endregion
 
     protected override void Awake()
     {
         if(Instance != null)
         {
-            OnChangeBGM?.Invoke(_startudioBGMName);
+            if(Instance.CurrBGMName != _startAudioBGMName || (Instance.CurrBGMName == _startAudioBGMName && _isRestartIfAlreadyPlayed))
+            {
+                OnChangeBGM?.Invoke(_startAudioBGMName);
+            }
+            
             Destroy(gameObject);
             return;
         }
@@ -47,7 +53,7 @@ public class AudioManager : AudioHandler
         // Debug.Log("SetBGM" + name);
         AudioSource audioSource = GetAudioSource(AudioType.BGM);
 
-        if(audioSource.isPlaying && name != AudioBGMName.None && name != _currBGMName)
+        if(audioSource.isPlaying)
         {
             StopBGM(name);
             return;
@@ -92,6 +98,15 @@ public class AudioManager : AudioHandler
                 if(startAnotherBGM != AudioBGMName.None) SetBGM(startAnotherBGM);
             }
         ).id;
+    }
+    public void ChangeBGMMidGame(AudioBGMName audioBGMName)
+    {
+        if(audioBGMName == _currBGMName) return;
+
+        AudioSource audioSource = GetAudioSource(AudioType.BGM);
+        audioSource.Stop();
+        
+        SetBGM(audioBGMName);
     }
     public void ChangeBGMVolumeWhenPause(bool isPause)
     {
@@ -163,7 +178,7 @@ public class AudioManager : AudioHandler
         newAudioBGM.audioSource = gameObject.AddComponent<AudioSource>();
 
         _audioList.Add(newAudioBGM);
-        SetBGM(_startudioBGMName);
+        SetBGM(_startAudioBGMName);
     }
     protected override void StopLoopAudioSourceWhenPause()
     {

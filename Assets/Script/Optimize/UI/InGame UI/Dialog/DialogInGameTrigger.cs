@@ -54,6 +54,10 @@ public class DialogInGameTrigger : MonoBehaviour, IUnsubscribeEvent, IConnectToQ
             OnTriggerEventEventFromOutside?.Invoke();
         }
     }
+    public virtual void WhenQuestActivated()
+    {
+        
+    }
 
     public void UnsubscribeEvent()
     {

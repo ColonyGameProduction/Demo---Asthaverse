@@ -16,4 +16,8 @@ public class PositionTriggerObj : MonoBehaviour, IConnectToQuest
             }
         }
     }
+    public virtual void WhenQuestActivated()
+    {
+        
+    }
 }

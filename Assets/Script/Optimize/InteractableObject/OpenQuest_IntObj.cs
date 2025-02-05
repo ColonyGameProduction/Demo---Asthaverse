@@ -19,4 +19,8 @@ public class OpenQuest_IntObj : InteractableObject, IConnectToQuest
         OnTriggerQuestComplete?.Invoke();
     }
 
+    public virtual void WhenQuestActivated()
+    {
+        
+    }
 }

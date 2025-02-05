@@ -8,7 +8,8 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
     
     [Header("State Machine")]
     private EnemyIdentity _enemyIdentity;
-    
+    [Header("Shout Bool")]
+    [SerializeField] private bool _cannotHearShout;
 
     [Header("Enemy Alert Value")]
     [ReadOnly(false), SerializeField] private float _alertValue;
@@ -287,7 +288,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
 
     private void EnemyAIManager_OnCaptainsStartHunting(EnemyAIBehaviourStateMachine enemy)
     {
-        if(_charaIdentity.IsDead)return;
+        if(_charaIdentity.IsDead || _cannotHearShout)return;
         if(enemy == this)
         {
             EnemyAIManager.EditEnemyCaptainList(this, true);
@@ -321,7 +322,7 @@ public class EnemyAIBehaviourStateMachine : AIBehaviourStateMachine, IHearSound
     {
         EnemyAIManager.ResetPOIPosNearLastSeenPos();
         
-        if(_charaIdentity.IsDead)return;
+        if(_charaIdentity.IsDead || _cannotHearShout)return;
         if(enemy == this)
         {
             EnemyAIManager.EditEnemyCaptainList(this, true);

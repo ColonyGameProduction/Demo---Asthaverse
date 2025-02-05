@@ -10,10 +10,19 @@ public class ChangeSceneAfterCutscene : MonoBehaviour
     public VideoPlayer video;
     public bool _hasFinish = false;
 
+    private void Awake() 
+    {
+        video.Prepare();
+    }
     private void Start()
     {
         SMM = SceneManagementManager.Instance;
         video.loopPointReached += Video_loopPointReached;
+        
+    }
+    private void Update() 
+    {
+        if(video.isPrepared) video.Play();
     }
 
     private void Video_loopPointReached(VideoPlayer source)

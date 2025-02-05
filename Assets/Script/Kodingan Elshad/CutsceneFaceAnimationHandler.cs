@@ -33,6 +33,7 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
     public bool alreadyGoToNextScene;
     public string scene1;
     public string scene2;
+    public AudioBGMName _bgmCutscene1, _bgmCutcene2;
     public const string PLAYERPREFS_CURRIDX_DIALOGSCENECUTSCENE = "currIdxDialogSceneCutScene";
 
     private void Start()
@@ -52,9 +53,18 @@ public class CutsceneFaceAnimationHandler : MonoBehaviour
 
         int currIdx = PlayerPrefs.GetInt("PLAYERPREFS_CURRIDX_DIALOGSCENECUTSCENE", 0);
         curCutsceneDialog = dialogCutsceneSceneSOList.GetLatestDialogScene(currIdx);
+        
         currIdx += 1;
         if(currIdx >= dialogCutsceneSceneSOList.dialogCutsceneSOList.Count) currIdx = 0;
+
         PlayerPrefs.SetInt("PLAYERPREFS_CURRIDX_DIALOGSCENECUTSCENE", currIdx);
+
+        if(curCutsceneDialog.title == DialogCutsceneTitle.Cutscene1)
+        {
+            AudioManager.Instance.ChangeBGMMidGame(_bgmCutscene1);
+            
+        }
+        else AudioManager.Instance.ChangeBGMMidGame(_bgmCutcene2);
 
         AssigningTheFace();
         AddingTheWord();
