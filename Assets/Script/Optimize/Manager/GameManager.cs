@@ -75,12 +75,6 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
         _gameInput = GameInputManager.Instance;
         SubscribeToGameInputManager();
 
-        playableCharacterNum = 0;
-        FollowCamerasRefrence();
-        CreatingBreadcrumbs();
-        canSwitch = true;
-        scope = false;
-
         if(startAtCheckPoint) LoadCheckPoint();
         
         _fadeUIHandler = FadeBGUIHandler.Instance;

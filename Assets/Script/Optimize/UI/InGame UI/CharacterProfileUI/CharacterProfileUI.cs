@@ -122,6 +122,12 @@ public class CharacterProfileUI : MonoBehaviour, IUnsubscribeEvent
     }
     public void UpdateHealthDataVisual()
     {
+        if(_playableIdentity.IsDead)
+        {
+            _charaHurtContainer.alpha = 1;
+            return;
+        }
+
         float alphaPoint = Mathf.Clamp01(((_playableIdentity.TotalHealth * 3/4) - _playableIdentity.CurrHealth) / (_playableIdentity.TotalHealth * 3/4));
         _charaHurtContainer.alpha = alphaPoint;
     }
