@@ -18,6 +18,7 @@ public abstract class AudioHandler : MonoBehaviour
             Audio newAudio = new Audio();
             newAudio.audioType = _audioSFXList.audioSFX[i].audioType;
             newAudio.audioSource = gameObject.AddComponent<AudioSource>();
+            newAudio.isPause = false;
             
             _audioList.Add(newAudio);
         }

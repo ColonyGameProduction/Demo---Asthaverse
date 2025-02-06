@@ -169,6 +169,7 @@ public class AudioManager : AudioHandler
             Audio newAudio = new Audio();
             newAudio.audioType = _audioSFXList.audioSFX[i].audioType;
             newAudio.audioSource = gameObject.AddComponent<AudioSource>();
+            newAudio.isPause = false;
 
             _audioList.Add(newAudio);
         }
@@ -176,6 +177,7 @@ public class AudioManager : AudioHandler
         Audio newAudioBGM = new Audio();
         newAudioBGM.audioType = AudioType.BGM;
         newAudioBGM.audioSource = gameObject.AddComponent<AudioSource>();
+        newAudioBGM.isPause = false;
 
         _audioList.Add(newAudioBGM);
         SetBGM(_startAudioBGMName);

@@ -97,6 +97,29 @@ public class CharacterMakeSFX : AudioHandler, IUnsubscribeEvent
     {
         //mungkin perlu dipertimbangkan kalo isplaying aja kali penandanya
         if(isPause) StopLoopAudioSourceWhenPause();
+        TogglePauseAllAudioSource(isPause);
+    }
+    protected void TogglePauseAllAudioSource(bool isPause)
+    {
+        foreach(Audio audio in _audioList)
+        {
+            if(isPause)
+            {
+                if(audio.audioSource.isPlaying)
+                {
+                    audio.audioSource.Pause();
+                    audio.isPause = true;
+                }
+            }
+            else
+            {
+                if(audio.isPause)
+                {
+                    audio.audioSource.UnPause();
+                    audio.isPause = false;
+                }
+            }
+        }
     }
 
     public void UnsubscribeEvent()

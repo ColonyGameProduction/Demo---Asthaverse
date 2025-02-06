@@ -15,7 +15,7 @@ public class OpenQuest_IntObj : InteractableObject, IConnectToQuest
         _canInteract = false;
         // Debug.Log("Open Next Quest");
         characterIdentity.StopNormalInteractionAnimation();
-        
+        base.Interact(characterIdentity);
         OnTriggerQuestComplete?.Invoke();
     }
 

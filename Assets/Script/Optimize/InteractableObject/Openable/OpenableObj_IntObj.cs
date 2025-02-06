@@ -19,11 +19,14 @@ public abstract class OpenableObj_IntObj : InteractableObject
         characterIdentity.DoNormalInteractionAnimation();
         ToggleOpenClose(characterIdentity.transform);
         characterIdentity.StopNormalInteractionAnimation();
+
+
         // StartCoroutine(OpenObj());
     }
     protected virtual void ToggleOpenClose(Transform chara)
     {
         _isOpen = !_isOpen;
+        ToggleInteractableObjAudio(_interactSFXAudioSource, true);
     }
 
 }

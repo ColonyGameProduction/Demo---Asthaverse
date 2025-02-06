@@ -11,15 +11,10 @@ public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent, IConnec
     [ReadOnly(false), SerializeField] protected bool _isComplete;
 
     protected PlayableCharacterIdentity _currCharaInteracting;
-    protected AudioSource _audioSource;
+    [SerializeField] protected AudioSource _completedAudioSource;
     public override bool CanInteract {get{ return !_isComplete;}}
     public Action<float> OnValueChange;
     public event Action OnTriggerQuestComplete;
-
-    protected virtual void Awake()
-    {
-        _audioSource = GetComponent<AudioSource>();
-    }
     protected virtual void Update() 
     {
         if(_isComplete) return;
@@ -48,6 +43,7 @@ public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent, IConnec
         characterIdentity.DoNormalInteractionAnimation();
         HoldInteractUI.OnStartHoldInteracting?.Invoke(this);
 
+        base.Interact(characterIdentity);
         _isBeingInteracted = true;
     }
     public virtual void WhenQuestActivated()
@@ -61,6 +57,9 @@ public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent, IConnec
     
     protected virtual void ResetInteraction()
     {
+        ToggleInteractableObjAudio(_interactSFXAudioSource, false);
+        ToggleInteractableObjAudio(_completedAudioSource, true);
+
         _currCharaInteracting.OnCancelInteractionButton -= ResetInteraction;
         _currCharaInteracting.IsHoldingInteraction = false;
         _currCharaInteracting.StopNormalInteractionAnimation();

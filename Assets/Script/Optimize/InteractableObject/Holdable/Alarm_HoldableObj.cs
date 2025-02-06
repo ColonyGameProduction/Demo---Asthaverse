@@ -1,15 +1,17 @@
 
 
+using UnityEngine;
+
 public class Alarm_HoldableObj : HoldableObj_IntObj
 {
+    [SerializeField] protected AudioSource _startQuestAudioSource;
     public override void WhenQuestActivated()
     {
-        if(_audioSource != null) _audioSource.Play();
+        ToggleInteractableObjAudio(_startQuestAudioSource, true);
     }
     protected override void WhenComplete()
     {
         base.WhenComplete();
-        if(_audioSource != null) _audioSource.Stop();
-        // Debug.Log("RINNGGGGGGGGGGGGGGGGGGGGG!!!!!");
+        ToggleInteractableObjAudio(_startQuestAudioSource, false);
     }
 }

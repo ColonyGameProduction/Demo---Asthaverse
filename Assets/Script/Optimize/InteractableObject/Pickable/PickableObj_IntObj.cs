@@ -1,4 +1,5 @@
 
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PickableObj_IntObj : InteractableObject
@@ -13,7 +14,7 @@ public class PickableObj_IntObj : InteractableObject
     public bool IsThrowAble {get{return _isThrowAble;}}
     public bool IsBeingThrown {get{return _isBeingThrown;} set{_isBeingThrown = value;}}
     public override bool CanInteract {get{ return _canInteract;}}
-    private void Awake()  
+    protected virtual void Awake()  
     {
         _rb = GetComponent<Rigidbody>();
         _sparkleParticle = GetComponentInChildren<ParticleSystem>();
@@ -25,6 +26,7 @@ public class PickableObj_IntObj : InteractableObject
         IsBeingThrown = false;
         characterIdentity.GetPlayableInteraction.PickUpObject(this);
 
+        base.Interact(characterIdentity);
         KeybindUIHandler.OnChangeKeybind?.Invoke(KeybindUIType.PickUp);
     }
     private void OnCollisionEnter(Collision other) 
