@@ -33,6 +33,7 @@ public class DIalogInGameManager : MonoBehaviour
     [ReadOnly(false), SerializeField] private bool _canNextDialog;
     [Header("Event from inspector")]
     [SerializeField] private EventAfterDialogFinishFromInspector[] _eventAfterDialogFinishFromInspectors;
+    private int _leanTweenDialogTextID;
 
     #region event
     public Action<DialogCutsceneTitle> OnDialogFinish;
@@ -64,6 +65,7 @@ public class DIalogInGameManager : MonoBehaviour
         if(_currDialog != null)
         {
             StopCoroutine(_currDialog);
+            // LeanTween.cancel(_faceImageRectTransform);
             _currDialog = null;
         }
         if(_chosenDialog != null) OnDialogFinish?.Invoke(_chosenDialog.title);
@@ -78,7 +80,7 @@ public class DIalogInGameManager : MonoBehaviour
         _dialogText.text = _chosenDialog.dialogSentence[_currDialogIdx];
         _video.Play();
 
-        LeanTween.alpha(_faceImage.gameObject.GetComponent<RectTransform>(), 1, .1f);
+        LeanTween.alpha(_faceImageRectTransform, 1, .1f);
         LeanTween.value(0, 1, 0.5f).setOnUpdate((float value) => {
             ChangeTextAlphaValue(_dialogText, value);
         });
@@ -111,18 +113,22 @@ public class DIalogInGameManager : MonoBehaviour
             ChangeTextAlphaValue(_dialogText, value);
         }).setOnComplete(() =>
         {
-            _currDialog = null;
-            if (_currDialogIdx != _chosenDialog.dialogSentence.Count - 1)
+            if(_chosenDialog != null)
             {
-                _currDialogIdx++;
-                PlayDialog();
+                _currDialog = null;
+                if (_currDialogIdx != _chosenDialog.dialogSentence.Count - 1)
+                {
+                    _currDialogIdx++;
+                    PlayDialog();
+                }
+                else
+                {
+                    OnDialogFinish?.Invoke(_chosenDialog.title);
+                    CheckEventFromInspectorAfterDialogFinish(_chosenDialog.title);
+                    StopCurrDialog();
+                }
             }
-            else
-            {
-                OnDialogFinish?.Invoke(_chosenDialog.title);
-                CheckEventFromInspectorAfterDialogFinish(_chosenDialog.title);
-                StopCurrDialog();
-            }
+            
         });
     }
     private void ChangeTextAlphaValue(TextMeshProUGUI chosen, float to)

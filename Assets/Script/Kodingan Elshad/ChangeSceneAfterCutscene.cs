@@ -9,6 +9,7 @@ public class ChangeSceneAfterCutscene : MonoBehaviour
     public string SceneName;
     public VideoPlayer video;
     public bool _hasFinish = false;
+    bool _isFirsTime = true;
 
     private void Awake() 
     {
@@ -22,7 +23,11 @@ public class ChangeSceneAfterCutscene : MonoBehaviour
     }
     private void Update() 
     {
-        if(video.isPrepared) video.Play();
+        if(video.isPrepared && _isFirsTime)
+        {
+            _isFirsTime = false;
+            video.Play();
+        }
     }
 
     private void Video_loopPointReached(VideoPlayer source)

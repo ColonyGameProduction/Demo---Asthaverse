@@ -404,7 +404,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _chosenChara.TurnOnOffFriendAI(false);
         if(_chosenChara.GetFriendAIStateMachine.IsToldHold) _chosenChara.GetFriendAIStateMachine.IsToldHold = false;
 
-
+        if(_chosenChara.IsDead) _chosenChara.Revive(_chosenChara);
         _playableCharacterUIManager.GetCharacterProfileUIHandler.RemoveCharaProfileUI(_charaIdentities.IndexOf(_chosenChara));
         _charaIdentities.Remove(_chosenChara);
 

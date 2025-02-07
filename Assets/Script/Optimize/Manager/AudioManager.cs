@@ -22,13 +22,19 @@ public class AudioManager : AudioHandler
     #region Getter Setter Variable
     // protected override int TotalAudioList {get {return _audioSFXList.audioSFX.Count + 1;}}
     public AudioBGMName CurrBGMName {get {return _currBGMName;}}
+    public bool IsBGMPlaying {
+        get{
+            AudioSource audioSource = GetAudioSource(AudioType.BGM);
+            return audioSource.isPlaying;
+        }
+    }
     #endregion
 
     protected override void Awake()
     {
         if(Instance != null)
         {
-            if(Instance.CurrBGMName != _startAudioBGMName || (Instance.CurrBGMName == _startAudioBGMName && _isRestartIfAlreadyPlayed))
+            if(!Instance.IsBGMPlaying || ((Instance.CurrBGMName != _startAudioBGMName || (Instance.CurrBGMName == _startAudioBGMName && _isRestartIfAlreadyPlayed)) && Instance.IsBGMPlaying))
             {
                 OnChangeBGM?.Invoke(_startAudioBGMName);
             }

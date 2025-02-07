@@ -99,6 +99,7 @@ public class CharacterProfileUIHandler : MonoBehaviour
 
         CharacterProfileUI deleteProfile = _charaProfileUIList[idx];
         _charaProfileUIList.Remove(deleteProfile);
+        deleteProfile.UnsubscribeEvent();
         Destroy(deleteProfile.gameObject);
     }
 }

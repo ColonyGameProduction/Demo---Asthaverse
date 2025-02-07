@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SettingUIHandler : MonoBehaviour
 {
+    private AudioManager _am;
     [Header("Sesuai urutan di UI")]
     [SerializeField] private GameObject _settingsUIContainer;
     [SerializeField] private GameObject[] _tabs;
@@ -17,6 +18,10 @@ public class SettingUIHandler : MonoBehaviour
         HideSettingsUI();   
         SwitchTab(0);
     }
+    private void Start() 
+    {
+        _am = AudioManager.Instance;
+    }
 
     public void SwitchTab(int pageNo)
     {
@@ -27,6 +32,7 @@ public class SettingUIHandler : MonoBehaviour
             _tabs[i].SetActive(i==pageNo);
             SetTextAlpha(_buttonTexts[i], i==pageNo ? activeAlphaText : inActiveAlphaText);
         }
+        if(_am != null)_am.PlayUIClick();
     }
     private void SetTextAlpha(TextMeshProUGUI buttonText, float alphaValueText)
     {

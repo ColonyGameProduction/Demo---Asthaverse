@@ -66,8 +66,8 @@ public class AudioSettingsManager : MonoBehaviour
     private void Start()
     {
         LoadPref();
-
         _am = AudioManager.Instance;
+
         // Add listeners to buttons
         _masterLeftButton.onClick.AddListener(() => ChangeMasterVolumeButton(-_stepSize)); // Decrease volume
         _masterRightButton.onClick.AddListener(() => ChangeMasterVolumeButton(_stepSize)); // Increase volume
@@ -99,6 +99,11 @@ public class AudioSettingsManager : MonoBehaviour
         UpdateMusicVolume(_musicCurrentVolume);
         UpdateSoundEffectVolume(_soundEffectCurrentVolume);
         UpdateDialogueVolume(_dialogueCurrentVolume);
+
+        _isMasterVolChangeFromSlider = true;
+        _isMusicVolChangeFromSlider = true;
+        _isSFXVolChangeFromSlider = true;
+        _isDialogueVolChangeFromSlider = true;
     }
 
     public void ChangeOutput(int change)
@@ -141,6 +146,7 @@ public class AudioSettingsManager : MonoBehaviour
         else _masterSlider.value = value;
 
         // Update volume and UI text
+        if(_am != null) _am.PlayUIClick();
         _masterVolumeText.text = Mathf.RoundToInt(value * 100) + "%";
         SetAudioMixerFloat(MIXER_MASTER, _masterCurrentVolume);
     }
@@ -171,6 +177,7 @@ public class AudioSettingsManager : MonoBehaviour
         else _musicSlider.value = value;
 
         // Update volume and UI text
+        if(_am != null) _am.PlayUIClick();
         _musicVolumeText.text = Mathf.RoundToInt(value * 100) + "%";
         SetAudioMixerFloat(MIXER_MUSIC, _musicCurrentVolume);
     }
@@ -201,6 +208,7 @@ public class AudioSettingsManager : MonoBehaviour
         else _soundEffectSlider.value = value;
 
         // Update volume and UI text
+        if(_am != null) _am.PlayUIClick();
         _soundEffectVolumeText.text = Mathf.RoundToInt(value * 100) + "%";
         SetAudioMixerFloat(MIXER_SFX, _soundEffectCurrentVolume);
     }
@@ -231,6 +239,7 @@ public class AudioSettingsManager : MonoBehaviour
         else _dialogueSlider.value = value;
 
         // Update volume and UI text
+        if(_am != null) _am.PlayUIClick();
         _dialogueVolumeText.text = Mathf.RoundToInt(value * 100) + "%";
         SetAudioMixerFloat(MIXER_DIALOGUE, _dialogueCurrentVolume);
     }

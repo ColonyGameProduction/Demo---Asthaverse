@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class ControlsManager : MonoBehaviour
 {
+    private AudioManager _am;
     [Header("Sensitivity")]
     [SerializeField] private TextMeshProUGUI _sensPresentageText;
     [SerializeField] private Slider _sensSlider;
@@ -53,6 +54,7 @@ public class ControlsManager : MonoBehaviour
     private void Start()
     {
         LoadPref();
+        _am = AudioManager.Instance;
         
 
         _sensLeftButton.onClick.AddListener(() => ChangeSensPresentageButton(-_stepSize));
@@ -68,6 +70,8 @@ public class ControlsManager : MonoBehaviour
         _currentCrouchIndex = PlayerPrefs.GetInt(CROUCH_MODE_PREF, _currentCrouchIndex);
 
         UpdateSensPresentage(_sensCurrentPresentage);
+        _isSensChangeFromSlider = true;
+
         UpdateAimText();
         UpdateSprintText();
         UpdateCrouchText();
@@ -96,7 +100,7 @@ public class ControlsManager : MonoBehaviour
         else _sensSlider.value = value;
         
         _sensPresentageText.text = Mathf.RoundToInt(value * 100) + "%";
-        
+        if(_am != null) _am.PlayUIClick();
         // value change
         // ------------
         
@@ -117,7 +121,7 @@ public class ControlsManager : MonoBehaviour
     private void UpdateAimText()
     {
         _aimOption.text = _aimOptions[_currentAimIndex];
-
+        if(_am != null) _am.PlayUIClick();
         OnAimModeChange?.Invoke(_currentAimIndex == 0 ? true : false);
     }
 
@@ -134,7 +138,7 @@ public class ControlsManager : MonoBehaviour
     private void UpdateSprintText()
     {
         _sprintOption.text = _sprintOptions[_currentSprintIndex];
-
+        if(_am != null) _am.PlayUIClick();
         OnSprintModeChange?.Invoke(_currentSprintIndex == 0 ? true : false);
     }
 
@@ -144,14 +148,14 @@ public class ControlsManager : MonoBehaviour
 
         // value change
         PlayerPrefs.SetInt(CROUCH_MODE_PREF, _currentCrouchIndex);
-
+        
         UpdateCrouchText();
     }
 
     private void UpdateCrouchText()
     {
         _crouchOption.text = _crouchOptions[_currentCrouchIndex];
-
+        if(_am != null) _am.PlayUIClick();
         OnCrouchModeChange?.Invoke(_currentCrouchIndex == 0 ? true : false);
     }
 }

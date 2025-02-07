@@ -217,6 +217,7 @@ public class CharacterProfileUI : MonoBehaviour, IUnsubscribeEvent
 
     public void UnsubscribeEvent()
     {
+        if(_playableIdentity != null)_playableIdentity.OnPlayableHealthChange -= UpdateHealthData;
         if(_playableIdentity != null)_playableIdentity.OnSwitchWeapon -= SwitchWeaponUI;
         if(_playableIdentity != null)_playableIdentity.OnPlayableBulletChange -= UpdateBulletWeaponData;
     }

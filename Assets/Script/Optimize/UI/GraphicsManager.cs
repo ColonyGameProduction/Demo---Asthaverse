@@ -3,6 +3,7 @@ using TMPro;
 
 public class GraphicsManager : MonoBehaviour
 {
+    private AudioManager _am;
     [Header("Resolution")]
     [SerializeField] private TextMeshProUGUI _resolutionOption;
 
@@ -57,6 +58,7 @@ public class GraphicsManager : MonoBehaviour
         _resolutions = System.Array.FindAll(_commonResolutions, r => r.width <= Screen.currentResolution.width && r.height <= Screen.currentResolution.height);
 
         LoadPref();
+        _am = AudioManager.Instance;
     }
 
     private void LoadPref()
@@ -125,26 +127,31 @@ public class GraphicsManager : MonoBehaviour
     {
         Resolution res = _resolutions[_currentResolutionIndex];
         _resolutionOption.text = $"{res.width} x {res.height}";
+        if(_am != null) _am.PlayUIClick();
     }
 
     private void UpdateDisplayModeText()
     {
         _displayModeOption.text = _displayModes[_currentDisplayModeIndex];
+        if(_am != null) _am.PlayUIClick();
     }
 
     private void UpdateQualityText()
     {
         _qualityOption.text = _qualityLevels[_currentQualityIndex];
+        if(_am != null) _am.PlayUIClick();
     }
 
     private void UpdateVSyncText()
     {
         _VSyncOption.text = _isVSyncOn ? "On" : "Off";
+        if(_am != null) _am.PlayUIClick();
     }
 
     private void UpdateMaxFramerateText()
     {
         int framerate = _framerateOptions[_currentFramerateIndex];
         _maxFrameOption.text = framerate == -1 ? "Unlimited" : framerate.ToString();
+        if(_am != null) _am.PlayUIClick();
     }
 }
