@@ -929,7 +929,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
             }
         }
 
-        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction)
+        if(CanDoThisFunction() && !_currPlayableMoveStateMachine.IsRunning && !_currPlayableUseWeaponStateMachine.IsSilentKill && !_currPlayableUseWeaponStateMachine.IsSwitchingWeapon && !_currPlayableUseWeaponStateMachine.IsReloading && !CurrPlayableChara.IsDead && !CurrPlayableChara.IsReviving && !_currPlayableInteraction.IsHeldingObject && !_currPlayableMoveStateMachine.IsTakingCoverAtWall && !CurrPlayableChara.IsHoldingInteraction && !_gm.IsEventGamePlayMode())
         {
             //KALO LAGI mo ngescope, tp blm aim, lsg aim nya nyalain jg
 

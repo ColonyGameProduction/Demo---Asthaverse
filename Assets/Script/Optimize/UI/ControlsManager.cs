@@ -36,7 +36,7 @@ public class ControlsManager : MonoBehaviour
     [ReadOnly(false), SerializeField] private readonly string[] _sprintOptions = { "Hold", "Toggle" };
 
     //Crouch
-    [ReadOnly(false), SerializeField] private int _currentCrouchIndex = 0;
+    [ReadOnly(false), SerializeField] private int _currentCrouchIndex = 1;
     [ReadOnly(false), SerializeField] private readonly string[] _crouchOptions = { "Hold", "Toggle" };
 
     #region event

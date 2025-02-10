@@ -248,6 +248,11 @@ MonoBehaviour:
   _crouchHeadHitAngleBuffer: 15
   _isCrawl: 0
   _crawlSpeedMultiplier: 0.2
+  _playableLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _playerPushMinDistance: 0.7
+  _friendPushSpeed: 0.5
   _isTakeCoverAtWall: 0
   _wallLayerMask:
     serializedVersion: 2
@@ -4070,12 +4075,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 291a9bc172b8eb248b52882158a5ba69, type: 2}
     - target: {fileID: 5866666021909216657, guid: 53a46595b85635c40987e628d38b0d2e, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
-        'soldier:LeftArm'\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
-        'soldier:LeftArm'\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
-        'soldier:LeftArm'"
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 53a46595b85635c40987e628d38b0d2e, type: 3}
       propertyPath: m_ApplyRootMotion

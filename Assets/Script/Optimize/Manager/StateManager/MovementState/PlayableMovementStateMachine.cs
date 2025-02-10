@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovementData, IPlayableMovementDataNeeded, IUnsubscribeEvent
 {
+    Vector3 startPosGiz, endPosGiz, boxSize;
     #region Normal Variable
     [Header ("Playable Character Variable")]
     protected bool _isAskedToCrouchByPlayable, _isAskedToRunByPlayable;
@@ -15,6 +16,12 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     [ReadOnly(true), SerializeField] protected bool _isCrawl;
     [SerializeField] protected float _crawlSpeedMultiplier;
     private float _crawlSpeed;
+
+    [Space(2)]
+    [Header("Push Friend")]
+    [SerializeField] protected LayerMask _playableLayerMask;
+    [SerializeField][Range(0,3f)] protected float _playerPushMinDistance = 0.01f;
+    [SerializeField] protected float _friendPushSpeed = 0.5f;
 
     [Space(1)]
     [Header("Taking Cover At Wall Data")]
@@ -169,6 +176,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         _normalHeightCharaCon.height = _cc.height;
 
 
+
         if(_playableLookTarget == null) _playableLookTarget = GetComponent<PlayableCamera>().GetFollowTarget;
     }
     protected override void Start()
@@ -270,6 +278,8 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
         if(!IsMustLookForward)RotatePlayableChara(Facedir);
         else RotatePlayableChara(flatForward);
+
+        PushAICharacter(Facedir);
     }
     private void MovePlayableOnWall(Vector3 direction)
     {
@@ -380,6 +390,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
 
         CC.SimpleMove(wallMovementDir * _currSpeed);
+        PushAICharacter(wallMovementDir);
 
         // CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, direction.x);
         // CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, direction.z);
@@ -445,6 +456,52 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         {
             _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
         }
+    }
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(startPosGiz, boxSize);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(endPosGiz, boxSize);
+    }
+
+    private void PushAICharacter(Vector3 moveDir)
+    {
+        Debug.Log("Push" + transform.name + " " + moveDir + "I'm Pushing");
+        // Debug.DrawRay(_charaGameObject.transform.position + moveDir * _cc.radius, moveDir * _playerPushMinDistance, Color.blue, 2);
+        // if(Physics.Raycast(_charaGameObject.transform.position + moveDir * _cc.radius, moveDir, out RaycastHit _friendHit, _playerPushMinDistance, _playableLayerMask))
+        // {
+        //     Debug.Log("Push We hit right?" + _friendHit.transform.name);
+        //     PlayableMovementStateMachine move = _friendHit.transform.GetComponentInParent<PlayableMovementStateMachine>();
+        //     if(move != null)
+        //     {
+        //         Debug.Log("Push" + transform.name + " I'm Pushinbg");
+        //         move.GotPush_AICharacter(moveDir);
+        //     }
+        // }
+        boxSize = new Vector3(_cc.radius, _cc.height, _cc.radius);
+        startPosGiz = _charaGameObject.transform.position + moveDir * _cc.radius;
+        endPosGiz = startPosGiz + moveDir * _playerPushMinDistance;
+
+        
+
+        if(Physics.BoxCast(_charaGameObject.transform.position + moveDir * _cc.radius, boxSize/2, moveDir, out RaycastHit hitFriend, Quaternion.identity, _playerPushMinDistance, _playableLayerMask))
+        {
+            Debug.Log("Push We hit right?" + hitFriend.transform.name);
+            PlayableMovementStateMachine move = hitFriend.transform.GetComponentInParent<PlayableMovementStateMachine>();
+            if(move != null && move != this)
+            {
+                Debug.Log("Push" + transform.name + " I'm Pushinbg");
+                move.GotPush_AICharacter(moveDir);
+            }
+        }
+    }
+    private void GotPush_AICharacter(Vector3 dir)
+    {
+        if(!IsIdle) return;
+        Debug.Log("Push" + transform.name + " I got Pushed");
+        _currAIDirPos += dir + _currAIDirPos;
+        CC.SimpleMove(dir * _friendPushSpeed);
     }
     #endregion
 

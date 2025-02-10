@@ -436,6 +436,11 @@ MonoBehaviour:
   _crouchHeadHitAngleBuffer: 15
   _isCrawl: 0
   _crawlSpeedMultiplier: 0.2
+  _playableLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _playerPushMinDistance: 0.7
+  _friendPushSpeed: 0.5
   _isTakeCoverAtWall: 0
   _wallLayerMask:
     serializedVersion: 2
@@ -444,6 +449,7 @@ MonoBehaviour:
   _takeCoverWallCheckerAngleBuffer: 45
   _takeCoverWallCheckerMultiplierBuffer: 0.1
   _takeCoverAnimateCharaPosMultiplierBuffer: 0.5
+  _takeCoverNavMeshAgentRadius: 0.1
   _crawlHeightCharaCon:
     center: {x: 0, y: 0.375, z: 0}
     radius: 0.4
