@@ -457,13 +457,13 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
             _charaGameObject.localRotation = Quaternion.Euler(0, 0, 0);
         }
     }
-    private void OnDrawGizmos() {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(startPosGiz, boxSize);
+    // private void OnDrawGizmos() {
+    //     Gizmos.color = Color.blue;
+    //     Gizmos.DrawWireCube(startPosGiz, boxSize);
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(endPosGiz, boxSize);
-    }
+    //     Gizmos.color = Color.green;
+    //     Gizmos.DrawWireCube(endPosGiz, boxSize);
+    // }
 
     private void PushAICharacter(Vector3 moveDir)
     {
@@ -487,11 +487,11 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
         if(Physics.BoxCast(_charaGameObject.transform.position + moveDir * _cc.radius, boxSize/2, moveDir, out RaycastHit hitFriend, Quaternion.identity, _playerPushMinDistance, _playableLayerMask))
         {
-            Debug.Log("Push We hit right?" + hitFriend.transform.name);
+            // Debug.Log("Push We hit right?" + hitFriend.transform.name);
             PlayableMovementStateMachine move = hitFriend.transform.GetComponentInParent<PlayableMovementStateMachine>();
             if(move != null && move != this)
             {
-                Debug.Log("Push" + transform.name + " I'm Pushinbg");
+                // Debug.Log("Push" + transform.name + " I'm Pushinbg");
                 move.GotPush_AICharacter(moveDir);
             }
         }
@@ -499,7 +499,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     private void GotPush_AICharacter(Vector3 dir)
     {
         if(!IsIdle) return;
-        Debug.Log("Push" + transform.name + " I got Pushed");
+        // Debug.Log("Push" + transform.name + " I got Pushed");
         _currAIDirPos += dir + _currAIDirPos;
         CC.SimpleMove(dir * _friendPushSpeed);
     }

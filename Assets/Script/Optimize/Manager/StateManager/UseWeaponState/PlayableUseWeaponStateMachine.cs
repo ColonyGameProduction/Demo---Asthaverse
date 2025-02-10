@@ -30,6 +30,7 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     [SerializeField] private MultiAimConstraint _aimRigConstraintDataRifle;
     [SerializeField] private MultiAimConstraint _bodyRigConstraintDataPistol;
     [SerializeField] private MultiAimConstraint _aimRigConstraintDataPistol;
+    [SerializeField] private TwoBoneIKConstraint _leftArmPistol;
     private bool _isChangeInUpdate, _isChangeInUpdateMultiAimConstraint;
 
     [Space(1)]
@@ -334,7 +335,11 @@ public class PlayableUseWeaponStateMachine : UseWeaponStateMachine, IAdvancedUse
     public override void DeactivateRigAim()
     {
         base.DeactivateRigAim();
-        if(_rigControllerPistol)_rigControllerPistol.weight = 0;
+        if(_leftArmPistol)_rigControllerPistol.weight = 0;
+    }
+    public void ToggleLeftArmPistolRig(bool isActivate)
+    {
+        _leftArmPistol.weight = isActivate ? 1 : 0;
     }
 
     public void TellToTurnOffScope()

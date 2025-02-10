@@ -251,6 +251,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeCameraPlace"",
+                    ""type"": ""Button"",
+                    ""id"": ""51e9138b-e174-4510-b83c-9a22eaeb70af"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -572,6 +581,17 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""Command Friend"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f18b553d-00ee-4119-9905-2aebcf317c40"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeCameraPlace"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -695,6 +715,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_TakeCover = m_InputPlayerAction.FindAction("TakeCover", throwIfNotFound: true);
         m_InputPlayerAction_ExitTakeCover = m_InputPlayerAction.FindAction("ExitTakeCover", throwIfNotFound: true);
         m_InputPlayerAction_CommandFriend = m_InputPlayerAction.FindAction("Command Friend", throwIfNotFound: true);
+        m_InputPlayerAction_ChangeCameraPlace = m_InputPlayerAction.FindAction("ChangeCameraPlace", throwIfNotFound: true);
         // InputMenuAction
         m_InputMenuAction = asset.FindActionMap("InputMenuAction", throwIfNotFound: true);
         m_InputMenuAction_PauseGame = m_InputMenuAction.FindAction("Pause Game", throwIfNotFound: true);
@@ -786,6 +807,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_TakeCover;
     private readonly InputAction m_InputPlayerAction_ExitTakeCover;
     private readonly InputAction m_InputPlayerAction_CommandFriend;
+    private readonly InputAction m_InputPlayerAction_ChangeCameraPlace;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -815,6 +837,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @TakeCover => m_Wrapper.m_InputPlayerAction_TakeCover;
         public InputAction @ExitTakeCover => m_Wrapper.m_InputPlayerAction_ExitTakeCover;
         public InputAction @CommandFriend => m_Wrapper.m_InputPlayerAction_CommandFriend;
+        public InputAction @ChangeCameraPlace => m_Wrapper.m_InputPlayerAction_ChangeCameraPlace;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -899,6 +922,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @CommandFriend.started += instance.OnCommandFriend;
             @CommandFriend.performed += instance.OnCommandFriend;
             @CommandFriend.canceled += instance.OnCommandFriend;
+            @ChangeCameraPlace.started += instance.OnChangeCameraPlace;
+            @ChangeCameraPlace.performed += instance.OnChangeCameraPlace;
+            @ChangeCameraPlace.canceled += instance.OnChangeCameraPlace;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -978,6 +1004,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @CommandFriend.started -= instance.OnCommandFriend;
             @CommandFriend.performed -= instance.OnCommandFriend;
             @CommandFriend.canceled -= instance.OnCommandFriend;
+            @ChangeCameraPlace.started -= instance.OnChangeCameraPlace;
+            @ChangeCameraPlace.performed -= instance.OnChangeCameraPlace;
+            @ChangeCameraPlace.canceled -= instance.OnChangeCameraPlace;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -1084,6 +1113,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnTakeCover(InputAction.CallbackContext context);
         void OnExitTakeCover(InputAction.CallbackContext context);
         void OnCommandFriend(InputAction.CallbackContext context);
+        void OnChangeCameraPlace(InputAction.CallbackContext context);
     }
     public interface IInputMenuActionActions
     {

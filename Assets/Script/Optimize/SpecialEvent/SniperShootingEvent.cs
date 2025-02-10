@@ -212,6 +212,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     {
         SetCameraPosToLook();
         _gm.OnChangeGamePlayModeToEvent?.Invoke();
+        KeybindUIHandler.OnChangeKeybind(KeybindUIType.Sniper);
 
         EnemyKillQuestHandler killQuest = _questToStopEvent[_currQuestIdx] as EnemyKillQuestHandler;
         if(killQuest != null) killQuest.ShowSnipingUITarget();
@@ -225,6 +226,8 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
     public void StopSniperShootingEvent()
     {
         _gm.OnChangeGamePlayModeToNormal?.Invoke();
+        KeybindUIHandler.OnChangeKeybind(KeybindUIType.General);
+
         _playableCharacterManager.SetCurrPlayableSkill(null);
         _shootingGameObjectContainer.SetActive(false);
         _playableCamera.SetUICameraNormalFOV();

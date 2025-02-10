@@ -15,7 +15,8 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
                   OnCommandPerformed, OnExitCommandPerformed, OnRegroupFriendPerformed,
                   OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnScopeCanceled, OnReloadPerformed,
                   OnInteractPerformed, OnInteractCanceled, OnNightVisionPerformed, OnSkillPerformed, OnWhistlePerformed, OnThrowPerformed,
-                  OnTakeCoverPerformed, OnExitTakeCoverPerformed;
+                  OnTakeCoverPerformed, OnExitTakeCoverPerformed,
+                  OnChangeCameraPlace;
     public Action<int> OnCommandFriendPerformed;
     #endregion
 
@@ -70,6 +71,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
 
         _inputActions.InputPlayerAction.TakeCover.performed += TakeCover_performed;
         _inputActions.InputPlayerAction.ExitTakeCover.performed += ExitTakeCover_performed;
+        _inputActions.InputPlayerAction.ChangeCameraPlace.performed += ChangeCameraPlace_performed;
     }
 
     
@@ -127,7 +129,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
     private void Throw_performed(InputAction.CallbackContext context) => OnThrowPerformed?.Invoke();
     private void TakeCover_performed(InputAction.CallbackContext context) => OnTakeCoverPerformed?.Invoke();
     private void ExitTakeCover_performed(InputAction.CallbackContext context) => OnExitTakeCoverPerformed?.Invoke();
-
+    private void ChangeCameraPlace_performed(InputAction.CallbackContext context) => OnChangeCameraPlace?.Invoke();
     public Vector2 Movement()
     {
         Vector2 direction = Vector2.zero;
@@ -168,6 +170,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
 
         _inputActions.InputPlayerAction.TakeCover.performed -= TakeCover_performed;
         _inputActions.InputPlayerAction.ExitTakeCover.performed -= ExitTakeCover_performed;
+        _inputActions.InputPlayerAction.ChangeCameraPlace.performed -= ChangeCameraPlace_performed;
 
         _inputActions.InputMenuAction.PauseGame.performed -= PauseGame_performed;
     }

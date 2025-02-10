@@ -21,6 +21,14 @@ public class PlayableCamera : MonoBehaviour
     protected bool _isChangingCameraHeight;
     protected float _currTargetHeight;
     const float EPSILON = 0.0001f;
+
+    [Header("Camera View Pos")]
+    [ReadOnly(false), SerializeField] private bool _isLeft;
+    [SerializeField] private float _moveCameraViewSpeed = 0.2f;
+    private int _leanTweenChangeViewID;
+    // private float _newView;
+    private Cinemachine3rdPersonFollow _cinemachine3rdPersonFollow;
+    private float _startPos;
     #region GETTER SETTER VARIABLE
 
     public CinemachineVirtualCamera GetFollowCamera {get { return _followCamera;}}
@@ -31,6 +39,8 @@ public class PlayableCamera : MonoBehaviour
     protected virtual void Start() 
     {
         _gm = GameManager.instance;
+        _cinemachine3rdPersonFollow = _followCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
+        _startPos = _cinemachine3rdPersonFollow.ShoulderOffset.x;
     }
     protected virtual void Update()
     {
@@ -99,6 +109,19 @@ public class PlayableCamera : MonoBehaviour
                 _followTarget.localPosition = new Vector3(_followTarget.localPosition.x, newHeight, _followTarget.localPosition.z);
             }
         }
+    }
+    public void ChangeCameraView()
+    {
+        _isLeft = !_isLeft;
+        float oldView = _cinemachine3rdPersonFollow.ShoulderOffset.x;
+        float _newView = _isLeft ? -_startPos : _startPos;
+
+        LeanTween.cancel(_leanTweenChangeViewID);
+        _leanTweenChangeViewID = LeanTween.value(oldView, _newView, _moveCameraViewSpeed).setOnUpdate((float value)=>
+            {
+                _cinemachine3rdPersonFollow.ShoulderOffset.x = value;
+            }
+        ).id;
     }
 
 }

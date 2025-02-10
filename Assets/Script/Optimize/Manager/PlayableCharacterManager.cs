@@ -539,6 +539,14 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _gameInputManager.OnThrowPerformed += GameInput_OnThrowPerformed;
         _gameInputManager.OnTakeCoverPerformed += GameInput_OnTakeCoverPerformed;
         _gameInputManager.OnExitTakeCoverPerformed += GameInput_OnExitTakeCoverPerformed;
+
+        _gameInputManager.OnChangeCameraPlace += GameInput_OnChangeCameraPlace;
+    }
+
+    private void GameInput_OnChangeCameraPlace()
+    {
+        if(!_gm.IsGamePlaying() || !_gm.IsNormalGamePlayMode()) return;
+        _currPlayableCamera.ChangeCameraView();
     }
 
     private void GameInput_OnTakeCoverPerformed()
@@ -1011,6 +1019,8 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _gameInputManager.OnThrowPerformed -= GameInput_OnThrowPerformed;
         _gameInputManager.OnTakeCoverPerformed -= GameInput_OnTakeCoverPerformed;
         _gameInputManager.OnExitTakeCoverPerformed -= GameInput_OnExitTakeCoverPerformed;
+
+        _gameInputManager.OnChangeCameraPlace -= GameInput_OnChangeCameraPlace;
     }
     public bool IsEveryoneAlive()
     {

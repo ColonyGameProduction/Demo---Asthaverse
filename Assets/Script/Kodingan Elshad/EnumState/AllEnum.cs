@@ -88,7 +88,7 @@ public enum DialogCutsceneTitle
 
 public enum KeybindUIType
 {
-    General, PickUp, Command 
+    General, PickUp, Command, Sniper
 }
 
 [Serializable]

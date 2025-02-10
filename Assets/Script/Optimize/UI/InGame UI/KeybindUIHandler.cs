@@ -11,6 +11,8 @@ public class KeybindUIHandler : MonoBehaviour, IUnsubscribeEvent
     [SerializeField] private Sprite _generalSprite;
     [SerializeField] private Sprite _pickUpSprite;
     [SerializeField] private Sprite _commandSprite;
+    [SerializeField] private Sprite _sniperSprite;
+    private KeybindUIType _oldKeybind;
     public static Action<KeybindUIType> OnChangeKeybind;
 
     [Header("Keybind Floating")]
@@ -79,7 +81,13 @@ public class KeybindUIHandler : MonoBehaviour, IUnsubscribeEvent
     private void ChangeKeybindUI(KeybindUIType newType)
     {
         if(newType == _currType) return;
+        if(_currType == KeybindUIType.Sniper && newType != KeybindUIType.Command)
+        {
+            newType = _oldKeybind;
+        }
 
+
+        _oldKeybind = _currType;
         _currType = newType;
         if(_currType == KeybindUIType.General)
         {
@@ -92,6 +100,10 @@ public class KeybindUIHandler : MonoBehaviour, IUnsubscribeEvent
         else if(_currType == KeybindUIType.Command)
         {
             _keybindImage.sprite = _commandSprite;
+        }
+        else if(_currType == KeybindUIType.Sniper)
+        {
+            _keybindImage.sprite = _sniperSprite;
         }
     }
     #endregion

@@ -194,10 +194,10 @@ public class AudioManager : AudioHandler
         {
             if(audio.audioType == AudioType.BGM)
             {
-                Debug.Log("AAAA");
+                // Debug.Log("AAAA");
                 continue;
             }
-            Debug.Log("AAAA hrsnya ga masuk");
+            // Debug.Log("AAAA hrsnya ga masuk");
             if(audio.audioSource.loop) audio.audioSource.Stop();
         }
     }
