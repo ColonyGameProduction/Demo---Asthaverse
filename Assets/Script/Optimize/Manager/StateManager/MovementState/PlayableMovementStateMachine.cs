@@ -58,6 +58,24 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     [ReadOnly(true),SerializeField] protected bool _isMustLookForward;
 
     [Space(1)]
+    [SerializeField] private float _walkAnimSpeedMultiplier = 1.75f;
+    [SerializeField] private float _sprintAnimSpeedMultiplier = 1.25f;
+    [SerializeField] private float _crouchAnimSpeedMultiplier = 1;
+    [SerializeField] private float _aimStandAnimSpeedMultiplier = 1.25f;
+    [SerializeField] private float _aimCrouchAnimSpeedMultiplier = 1;
+    [SerializeField] private float _TCWalkStandAnimSpeedMultiplier = 1.25f;
+    [SerializeField] private float _TCWalkCrouchAnimSpeedMultiplier = 1.25f;
+
+    public const string ANIMATION_MOVE_PARAMETER_WALKMULTIPLIER = "WalkSpeedMultiplier";
+    public const string ANIMATION_MOVE_PARAMETER_SPRINTMULTIPLIER = "SprintSpeedMultiplier";
+    public const string ANIMATION_MOVE_PARAMETER_CROUCHMULTIPLIER = "CrouchSpeedMultiplier";
+    public const string ANIMATION_MOVE_PARAMETER_AIMSTANDMULTIPLIER = "AimStandSpeedMultiplier";
+    public const string ANIMATION_MOVE_PARAMETER_AIMCROUCHMULTIPLIER = "AimCrouchSpeedMultiplier";
+    public const string ANIMATION_MOVE_PARAMETER_TAKECOVER_WALKSTANDMULTIPLIER = "TCWalkStandSpeedMultiplier";
+    public const string ANIMATION_MOVE_PARAMETER_TAKECOVER_WALKCROUCHMULTIPLIER = "TCWalkCrouchSpeedMultiplier";
+
+
+    [Space(1)]
     [Header("Saving other component data")]
     private CharacterController _cc;
     protected IReceiveInputFromPlayer _canReceivePlayerInput;
@@ -156,6 +174,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     protected override void Awake()
     {
         base.Awake();
+        SetMoveAnimationSpeed();
         _getPlayableMakeSFX = _charaMakeSFX as PlayableMakeSFX;
 
         _animateCharaTransform = _animator.transform;
@@ -204,6 +223,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     {
         base.Update();
         GoingToTakeCover();
+        // SetMoveAnimationSpeed();
     }
 
     protected override void FixedUpdate() 
@@ -696,5 +716,19 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
     {
         _canReceivePlayerInput.OnIsPlayerInputChange -= CharaIdentity_OnIsPlayerInputChange;
         OnIsTheSamePosition -= OnIsTheSamePositionTakeCover;
+    }
+
+    private void SetMoveAnimationSpeed()
+    {
+        _animator.SetFloat(ANIMATION_MOVE_PARAMETER_WALKMULTIPLIER, _walkAnimSpeedMultiplier);
+        _animator.SetFloat(ANIMATION_MOVE_PARAMETER_SPRINTMULTIPLIER, _sprintAnimSpeedMultiplier);
+        _animator.SetFloat(ANIMATION_MOVE_PARAMETER_CROUCHMULTIPLIER, _crouchAnimSpeedMultiplier);
+        _animator.SetFloat(ANIMATION_MOVE_PARAMETER_AIMSTANDMULTIPLIER, _aimStandAnimSpeedMultiplier);
+        _animator.SetFloat(ANIMATION_MOVE_PARAMETER_AIMCROUCHMULTIPLIER, _aimCrouchAnimSpeedMultiplier);
+
+        _animator.SetFloat(ANIMATION_MOVE_PARAMETER_TAKECOVER_WALKSTANDMULTIPLIER, _TCWalkStandAnimSpeedMultiplier);
+
+        _animator.SetFloat(ANIMATION_MOVE_PARAMETER_TAKECOVER_WALKCROUCHMULTIPLIER, _TCWalkCrouchAnimSpeedMultiplier);
+
     }
 }

@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1030975981}
-  - component: {fileID: 1100565537922811285}
-  m_Layer: 0
+  - component: {fileID: 3571705274832399558}
+  m_Layer: 16
   m_Name: SM_Well_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,8 +33,8 @@ Transform:
   - {fileID: 1030975984}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1100565537922811285
-BoxCollider:
+--- !u!136 &3571705274832399558
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -51,9 +51,11 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.269329, y: 1.0420848, z: 2.2960877}
-  m_Center: {x: 0.0334301, y: 0.46414244, z: 0.016645849}
+  serializedVersion: 2
+  m_Radius: 1.1729591
+  m_Height: 2.4321635
+  m_Direction: 1
+  m_Center: {x: 0.024981737, y: 0.034170747, z: 0.027051449}
 --- !u!1 &1030975983
 GameObject:
   m_ObjectHideFlags: 0
@@ -65,7 +67,7 @@ GameObject:
   - component: {fileID: 1030975984}
   - component: {fileID: 1030975985}
   - component: {fileID: 1030975986}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: SM_Well_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
