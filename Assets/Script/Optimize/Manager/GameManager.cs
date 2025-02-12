@@ -153,6 +153,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
     }
     public void GameOver()
     {
+        if(IsGameOver()) return;
         SetGameState(GameState.GameOver);
         // Time.timeScale = 0f;
         OnGameOver?.Invoke();
