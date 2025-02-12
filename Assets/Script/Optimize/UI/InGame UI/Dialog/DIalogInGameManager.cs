@@ -65,7 +65,9 @@ public class DIalogInGameManager : MonoBehaviour
         if(_currDialog != null)
         {
             StopCoroutine(_currDialog);
-            // LeanTween.cancel(_faceImageRectTransform);
+            
+            LeanTween.cancel(_leanTweenDialogTextID);
+            ChangeTextAlphaValue(_dialogText, 0);
             _currDialog = null;
         }
         if(_chosenDialog != null) OnDialogFinish?.Invoke(_chosenDialog.title);
@@ -108,7 +110,7 @@ public class DIalogInGameManager : MonoBehaviour
             }
         }
 
-        LeanTween.value(1, 0, 0.1f).setOnUpdate((float value) =>
+        _leanTweenDialogTextID = LeanTween.value(1, 0, 0.1f).setOnUpdate((float value) =>
         {
             ChangeTextAlphaValue(_dialogText, value);
         }).setOnComplete(() =>
@@ -129,7 +131,7 @@ public class DIalogInGameManager : MonoBehaviour
                 }
             }
             
-        });
+        }).id;
     }
     private void ChangeTextAlphaValue(TextMeshProUGUI chosen, float to)
     {
