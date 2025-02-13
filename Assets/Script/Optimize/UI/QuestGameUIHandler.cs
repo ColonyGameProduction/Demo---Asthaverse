@@ -115,7 +115,7 @@ public class QuestGameUIHandler : MonoBehaviour
         {
             SoloQuestHandler soloQuest = quest as SoloQuestHandler;
             soloQuest.OnChangeDescBeforeComplete += questContainerUI.ChangeText;
-
+            ChangeImageAlphaValue(questContainerUI.containerBG, 1);
         }
         else
         {
