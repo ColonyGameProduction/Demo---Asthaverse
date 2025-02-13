@@ -12,6 +12,7 @@ public class QuestContainerUI
     public QuestContainerUI(GameObject parent, Image bg, Image strip, TextMeshProUGUI textUI, string questOptionalSentences)
     {
         containerParent = parent;
+        parentHLayoutGroup = containerParent.GetComponent<HorizontalLayoutGroup>();
         containerBG = bg;
         stripPointContainer = strip.gameObject;
 
@@ -20,6 +21,7 @@ public class QuestContainerUI
 
     }
     public GameObject containerParent;
+    public HorizontalLayoutGroup parentHLayoutGroup;
     public TextMeshProUGUI text;
     public Image containerBG;
     public GameObject stripPointContainer;
@@ -55,6 +57,7 @@ public class QuestGameUIHandler : MonoBehaviour
     [SerializeField] private float _soloQuestFontSize, _multipleQuestFontSize;
     [SerializeField] private float _changeTextAlphaDuration = 0.5f;
     [TextArea(2,3)][SerializeField] private string _questOptionalText;
+    [SerializeField] private int _rightPaddingParent = 30;
 
     [Header("Container BG")]
     [SerializeField] private Color _startBGColor;
@@ -106,6 +109,7 @@ public class QuestGameUIHandler : MonoBehaviour
         questContainerUI.isOptional = isOptional;
         questContainerUI.text.font = isMultipleQuest ? _multipleQuestFont : _soloQuestFont;
         questContainerUI.text.fontSize = isMultipleQuest ? _multipleQuestFontSize : _soloQuestFontSize;
+        questContainerUI.parentHLayoutGroup.padding.right = isMultipleQuest ? _rightPaddingParent : 0;
 
         if(!isMultipleQuest)
         {

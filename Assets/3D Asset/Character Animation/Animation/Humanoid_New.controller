@@ -748,6 +748,21 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!206 &-8096965704402791766
+BlendTree:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BlendTree
+  m_Childs: []
+  m_BlendParameter: AltIdleIdx
+  m_BlendParameterY: Blend
+  m_MinThreshold: 0
+  m_MaxThreshold: 1
+  m_UseAutomaticThresholds: 1
+  m_NormalizedBlendValues: 0
+  m_BlendType: 0
 --- !u!1102 &-8090273509481190431
 AnimatorState:
   serializedVersion: 6
@@ -1148,7 +1163,7 @@ BlendTree:
   m_Name: Pistol Blend
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -5034110392340220100, guid: 1b9237e2de794374186da61cf68d23c6, type: 3}
+    m_Motion: {fileID: 4769667691956516698, guid: 1b9237e2de794374186da61cf68d23c6, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -1614,6 +1629,53 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!206 &-6827450349370547570
+BlendTree:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Rifle_Stand_Idle_Relax_Alt2
+  m_Childs:
+  - serializedVersion: 2
+    m_Motion: {fileID: -4592663396556178518, guid: b07552408b3b0904988bca3ced8a732b, type: 3}
+    m_Threshold: 0
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1.5
+    m_CycleOffset: 0
+    m_DirectBlendParameter: IdleCounter
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 8982824954204012216, guid: b07552408b3b0904988bca3ced8a732b, type: 3}
+    m_Threshold: 1
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: IdleCounter
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 4884164652473148232, guid: b07552408b3b0904988bca3ced8a732b, type: 3}
+    m_Threshold: 2
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1.5
+    m_CycleOffset: 0
+    m_DirectBlendParameter: IdleCounter
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 9210537014622397681}
+    m_Threshold: 3
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: IdleCounter
+    m_Mirror: 0
+  m_BlendParameter: AltIdleIdx
+  m_BlendParameterY: Blend
+  m_MinThreshold: 0
+  m_MaxThreshold: 3
+  m_UseAutomaticThresholds: 0
+  m_NormalizedBlendValues: 0
+  m_BlendType: 0
 --- !u!1101 &-6804772480964886832
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -3260,7 +3322,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Walk Blend Tree
-  m_Speed: 1
+  m_Speed: 2
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -1051236307026792852}
@@ -5789,6 +5851,12 @@ AnimatorController:
   - m_Name: TCWalkCrouchSpeedMultiplier
     m_Type: 1
     m_DefaultFloat: 1
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: AltIdleIdx
+    m_Type: 1
+    m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
@@ -9614,7 +9682,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 5592850663135291406, guid: ab3192f9f32986d4298ab0ed783ea48b, type: 3}
+    m_Motion: {fileID: -9157791962708427819, guid: 0f32c09e7dea4f04fbdf1245a6e19425, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -9625,7 +9693,7 @@ BlendTree:
     m_Motion: {fileID: -6033178501517116734, guid: 924180254d8dcfb4eb408d408467442c, type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 0.4
     m_CycleOffset: 0
     m_DirectBlendParameter: IdleCounter
     m_Mirror: 0
@@ -11574,7 +11642,7 @@ BlendTree:
     m_DirectBlendParameter: Horizontal
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 9210537014622397681}
+    m_Motion: {fileID: -6827450349370547570}
     m_Threshold: 3
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1

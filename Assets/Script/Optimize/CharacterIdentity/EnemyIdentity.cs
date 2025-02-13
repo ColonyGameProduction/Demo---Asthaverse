@@ -7,6 +7,7 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     private bool _canBeKill = true;
     private bool _isSilentKilled;
     private Transform _enemyGameObject;
+    [SerializeField] private float _altIdleAnimationIdx;
 
     [Header("Dead Variable")]
     [SerializeField] private float _enemyDeathFadeDuration = 2f;
@@ -14,6 +15,7 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     [SerializeField] private GameObject[] _hideUIArrayWhenDead;
 
     private const string ANIMATION_PARAMETER_SILENTKILLED = "SilentKilled";
+    private const string ANIMATION_PARAMETER_ALTIDLEIDX = "AltIdleIdx";
 
     public Transform GetSilentKillAbleTransform {get{return transform;}}
     public bool CanBeKill {get{return _canBeKill;}}
@@ -22,6 +24,8 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
     protected override void Awake() 
     {
         base.Awake();
+        _animator.SetFloat(ANIMATION_PARAMETER_ALTIDLEIDX, _altIdleAnimationIdx);
+
         _enemyAIStateMachine = _aiStateMachine as EnemyAIBehaviourStateMachine;
         _enemyBody = GetComponent<Body>();
         _enemyGameObject = _animator.gameObject.transform;

@@ -487,7 +487,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     private void PushAICharacter(Vector3 moveDir)
     {
-        Debug.Log("Push" + transform.name + " " + moveDir + "I'm Pushing");
+        // Debug.Log("Push" + transform.name + " " + moveDir + "I'm Pushing");
         // Debug.DrawRay(_charaGameObject.transform.position + moveDir * _cc.radius, moveDir * _playerPushMinDistance, Color.blue, 2);
         // if(Physics.Raycast(_charaGameObject.transform.position + moveDir * _cc.radius, moveDir, out RaycastHit _friendHit, _playerPushMinDistance, _playableLayerMask))
         // {

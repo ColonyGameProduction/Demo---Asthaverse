@@ -842,11 +842,11 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
 
         if(IsCommandingFriend)OnCommandingBoolChange?.Invoke(true, friendID);
 
-        if(!CanDoThisFunction() || _playableCharacterCameraManager.IsScope || CurrPlayableChara.IsDead || CurrPlayableChara.IsReviving || _currPlayableUseWeaponStateMachine.IsSilentKill || _currPlayableUseWeaponStateMachine.IsReloading || _currPlayableUseWeaponStateMachine.IsSwitchingWeapon || CurrPlayableChara.IsHoldingInteraction)return;
+        if(!CanDoThisFunction() || _currPlayableUseWeaponStateMachine.IsUsingWeapon || CurrPlayableChara.IsDead || CurrPlayableChara.IsReviving || _currPlayableUseWeaponStateMachine.IsSilentKill || _currPlayableUseWeaponStateMachine.IsReloading || _currPlayableUseWeaponStateMachine.IsSwitchingWeapon || CurrPlayableChara.IsHoldingInteraction)return;
 
         
         _currPlayableMoveStateMachine.ForceStopMoving();
-        _currPlayableUseWeaponStateMachine.ForceStopUseWeapon();
+        // _currPlayableUseWeaponStateMachine.ForceStopUseWeapon(); //yg penting pas nembak ga sambil ini
         Time.timeScale = 0.2f;
 
         if(chosenFriend.GetFriendAIStateMachine.IsToldHold)

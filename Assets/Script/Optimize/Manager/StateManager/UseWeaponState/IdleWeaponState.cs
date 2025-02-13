@@ -14,7 +14,7 @@ public class IdleWeaponState : UseWeaponState
             // Debug.Log("what");
             _sm.OnWasUsingGun?.Invoke();
         }
-        _playableData?.ToggleLeftArmPistolRig(false);
+        // _playableData?.ToggleLeftArmPistolRig(false);
         _sm.IsIdle = true;
     }
     public override void UpdateState()
@@ -50,7 +50,7 @@ public class IdleWeaponState : UseWeaponState
     }
     public override void ExitState()
     {
-        _playableData?.ToggleLeftArmPistolRig(true);
+        // _playableData?.ToggleLeftArmPistolRig(true);
         _sm.IsIdle = false;
     }
 }
