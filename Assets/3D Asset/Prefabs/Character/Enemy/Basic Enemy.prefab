@@ -1327,7 +1327,8 @@ MonoBehaviour:
   _regenTimerMax: 0.5
   _regenCDTimer: 0
   ANIMATION_PARAMETER_SILENTKILLCOUNTER: SilentKillCounter
-  _enemyDeathFadeDuration: 2
+  _altIdleAnimationIdx: 0
+  _enemyDeathFadeDuration: 10
   _hideUIArrayWhenDead:
   - {fileID: 3728512558436456851}
   - {fileID: 3304507627808746611}
@@ -1445,6 +1446,7 @@ MonoBehaviour:
   _focusedBodyPartsToShoot: 1
   _isCheckingLastPosTimer: 0
   _isCheckingLastPosTimerMax: 1
+  _cannotHearShout: 0
   _alertValue: 0
   _maxAlertValue: 0
   _alertValueCountMultiplier: 10
@@ -2471,13 +2473,7 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 291a9bc172b8eb248b52882158a5ba69, type: 2}
     - target: {fileID: 5866666021909216657, guid: e85c379d1746e544fb460f08a1fb93d4, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'soldier:LeftForeArm'\n\tTransform 'soldier:LeftHand'\n\tTransform
-        'soldier:RightHandIndex2'\n\tTransform 'soldier:RightHandIndex1'\n\tTransform
-        'soldier:Spine'\n\tTransform 'soldier:RightForeArm'\n\tTransform 'soldier:RightHand'\n\tTransform
-        'soldier:RightHandIndex3'\n\tTransform 'soldier:Hips'\n\tTransform 'soldier:LeftArm'\n\tand
-        more ..."
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: e85c379d1746e544fb460f08a1fb93d4, type: 3}
       propertyPath: m_ApplyRootMotion

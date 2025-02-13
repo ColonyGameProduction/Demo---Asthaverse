@@ -8,7 +8,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     [Header("Input Control Now")]
     [ReadOnly(false), SerializeField] protected bool _isPlayerInput;
     public event Action<bool> OnIsPlayerInputChange;
-    private bool _isStillPlayable;
+    private bool _isStillPlayable = true;
     [SerializeField] private InteractObjType _intObjType;
     
 

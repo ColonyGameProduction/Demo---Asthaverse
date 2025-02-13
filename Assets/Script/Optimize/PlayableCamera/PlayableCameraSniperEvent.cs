@@ -7,8 +7,9 @@ public class PlayableCameraSniperEvent : PlayableCamera
     private float recoilX, recoilY;
     private bool _goback;
     [SerializeField] private float _recoilDelayMax = 0.2f, _gobackDelayMax = 0.25f;
-    [SerializeField] private float _cameraRotateYClamp = 45f;
-    [ReadOnly(false), SerializeField]private float _startCameraRotateY, _maxLeftCameraRotateY, _maxRightCameraRotateY;
+    [SerializeField] private float _cameraRotateYClamp = 45f, _cameraRotateXClamp;
+    [ReadOnly(true), SerializeField] private float _startCameraRotateX, _maxUpCameraRotateX = 340, _maxDownCameraRotateX = 40;
+    [ReadOnly(false), SerializeField] private float _startCameraRotateY, _maxLeftCameraRotateY, _maxRightCameraRotateY;
     private float _recoilDelay, _gobackDelay;
     private float _oldFOV;
     
@@ -73,21 +74,39 @@ public class PlayableCameraSniperEvent : PlayableCamera
         _followTarget.rotation *= Quaternion.AngleAxis(-mouseY, Vector3.right);
         
         
-
         // prevent camera moving out of bounds
         Vector3 angles = _followTarget.localEulerAngles;
         angles.z = 0f;
 
         float angleX = _followTarget.localEulerAngles.x;
         float angleY = _followTarget.localEulerAngles.y;
+        Debug.Log("Sniper camera angle before" + angles); 
 
-        if (angleX > 180 && angleX < 340)
+        if(_maxUpCameraRotateX > _startCameraRotateX && _startCameraRotateX > _maxDownCameraRotateX)
         {
-            angles.x = 340;
+            if(angleX > _maxDownCameraRotateX && angleX < _maxUpCameraRotateX)
+            {
+                Debug.Log("Masuk atas Sniper camera X");
+                if(angleX <= _startCameraRotateX) angles.x = _maxDownCameraRotateX;
+                else angles.x = _maxUpCameraRotateX;
+            }
         }
-        else if (angleX < 180 && angleX > 40)
+        else
         {
-            angles.x = 40;
+            if((angleX > _maxUpCameraRotateX && angleX > _maxDownCameraRotateX) || (angleX < _maxUpCameraRotateX && angleX < _maxDownCameraRotateX)) 
+            {
+                Debug.Log("Masuk bwh Sniper camera X");
+                if(_maxUpCameraRotateX > _startCameraRotateX)
+                {
+                    if(angleX > _maxDownCameraRotateX || (angleX < _maxUpCameraRotateX && angleX < _startCameraRotateX)) angles.x = _maxDownCameraRotateX;
+                    else if(angleX < _maxUpCameraRotateX && angleX >= _startCameraRotateX) angles.x = _maxUpCameraRotateX;
+                }
+                else
+                {
+                    if(angleX > _maxDownCameraRotateX && angleX < _startCameraRotateX) angles.x = _maxDownCameraRotateX;
+                    else angles.x = _maxUpCameraRotateX;
+                }
+            }
         }
 
         // if(angleY > _startCameraRotateY && angleY < _maxLeftCameraRotateY)
@@ -98,12 +117,12 @@ public class PlayableCameraSniperEvent : PlayableCamera
         // {
         //     angles.y = _maxRightCameraRotateY;
         // }
-        // Debug.Log("Sniper camera angle before" + angles);
+        
         if(_maxLeftCameraRotateY > _startCameraRotateY && _startCameraRotateY > _maxRightCameraRotateY)
         {
             if(angleY > _maxRightCameraRotateY && angleY < _maxLeftCameraRotateY)
             {
-                // Debug.Log("Masuk atas Sniper camera");
+                Debug.Log("Masuk atas Sniper camera Y");
                 if(angleY <= _startCameraRotateY) angles.y = _maxRightCameraRotateY;
                 else angles.y = _maxLeftCameraRotateY;
             }
@@ -112,7 +131,7 @@ public class PlayableCameraSniperEvent : PlayableCamera
         {
             if((angleY > _maxLeftCameraRotateY && angleY > _maxRightCameraRotateY) || (angleY < _maxLeftCameraRotateY && angleY < _maxRightCameraRotateY)) 
             {
-                // Debug.Log("Masuk bwh Sniper camera");
+                Debug.Log("Masuk bwh Sniper camera Y");
                 if(_maxLeftCameraRotateY > _startCameraRotateY)
                 {
                     if(angleY > _maxRightCameraRotateY || (angleY < _maxLeftCameraRotateY && angleY < _startCameraRotateY)) angles.y = _maxRightCameraRotateY;
@@ -127,7 +146,7 @@ public class PlayableCameraSniperEvent : PlayableCamera
         }
         
         
-        // Debug.Log("Sniper camera angle now" + angles);
+        Debug.Log("Sniper camera angle now" + angles);
         _followTarget.localEulerAngles = angles;
         
 
@@ -153,13 +172,28 @@ public class PlayableCameraSniperEvent : PlayableCamera
         }
 
         _startCameraRotateY = Mathf.Abs(180 - _startCameraRotateY);
+
+        _startCameraRotateX = _followTarget.eulerAngles.x;
+        _maxUpCameraRotateX = _startCameraRotateX - _cameraRotateXClamp;
+        if(_maxUpCameraRotateX < 0)
+        {
+            _maxUpCameraRotateX = 360 + _maxUpCameraRotateX;
+        }
+
+        _maxDownCameraRotateX = _startCameraRotateX + _cameraRotateXClamp;
+        if(_maxDownCameraRotateX > 360)
+        {
+            _maxDownCameraRotateX = _maxDownCameraRotateX - 360;
+        }
+
+        _startCameraRotateX = Mathf.Abs(180 - _startCameraRotateX);
         
     }
     public void SetUICameraSnipingFOV()
     {
         // Debug.Log("FOV now" + Camera.main.fieldOfView);
         _oldFOV = Camera.main.fieldOfView;
-        if(MainUICamHandler.OnMainCamChangeFOV != null) MainUICamHandler.OnMainCamChangeFOV(1.5f);
+        if(MainUICamHandler.OnMainCamChangeFOV != null) MainUICamHandler.OnMainCamChangeFOV(_followCamera.m_Lens.FieldOfView);
         
     }
     public void SetUICameraNormalFOV()

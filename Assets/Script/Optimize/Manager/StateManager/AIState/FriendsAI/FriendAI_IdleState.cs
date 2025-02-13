@@ -36,17 +36,30 @@ public class FriendAI_IdleState : FriendAIState
         }
         if(_sm.CharaIdentity.IgnoreThisCharacter)
         {
+            Debug.Log("kalo ignore diem di sinikan " + _sm.transform.name);
             if(_sm.GetPlayableCharaIdentity.IsStillPlayable)
             {
                 if(_sm.IsToldHold)
                 {
                     _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
                 }
-                else if(!_sm.IsFriendAlreadyAtDefaultDistance()) _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position);
                 else
                 {
-                    _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
+                    if(_sm.GetMoveStateMachine.IsIdle && !_sm.IsFriendTooFarFromPlayerWhenIdle()) _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
+                    else
+                    {
+                        if(!_sm.IsFriendAlreadyAtDefaultDistance())
+                        {
+                            _sm.GetMoveStateMachine.SetAIDirection(_sm.FriendsDefaultDirection.position + _sm.CurrPlayableIdentity.GetPlayableMovementStateMachine.GetCharaGameObjectFaceDir() * 1.5f);
+                        }
+                        else
+                        {
+                            _sm.GetMoveStateMachine.SetAIDirection(_sm.transform.position);
+                        }
+
+                    }
                 }
+                
             }
             else
             {
@@ -55,6 +68,7 @@ public class FriendAI_IdleState : FriendAIState
             
             return;
         }
+        Debug.Log("ga ke sinikan " + _sm.transform.name);
         
         if(_sm.GotDetectedbyEnemy && _sm.LeaveDirection != Vector3.zero && !_sm.IsCharacterDead)
         {

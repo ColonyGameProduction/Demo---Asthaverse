@@ -2248,6 +2248,13 @@ MonoBehaviour:
   _charaGameObject: {fileID: 3875112289283872767}
   _rotateSpeed: 10
   _isMustLookForward: 0
+  _walkAnimSpeedMultiplier: 1.75
+  _sprintAnimSpeedMultiplier: 1.25
+  _crouchAnimSpeedMultiplier: 1
+  _aimStandAnimSpeedMultiplier: 1.25
+  _aimCrouchAnimSpeedMultiplier: 1
+  _TCWalkStandAnimSpeedMultiplier: 1.25
+  _TCWalkCrouchAnimSpeedMultiplier: 1.25
 --- !u!114 &5641427699908407941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4201,6 +4208,30 @@ PrefabInstance:
     - target: {fileID: -2125136573992735570, guid: 22bc53da80cf81a48a00a84977dacece, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -2061618120173902867, guid: 22bc53da80cf81a48a00a84977dacece, type: 3}
+      propertyPath: m_AABB.m_Center.x
+      value: 0.000013174489
+      objectReference: {fileID: 0}
+    - target: {fileID: -2061618120173902867, guid: 22bc53da80cf81a48a00a84977dacece, type: 3}
+      propertyPath: m_AABB.m_Center.y
+      value: -0.0069888122
+      objectReference: {fileID: 0}
+    - target: {fileID: -2061618120173902867, guid: 22bc53da80cf81a48a00a84977dacece, type: 3}
+      propertyPath: m_AABB.m_Center.z
+      value: -0.0000020458829
+      objectReference: {fileID: 0}
+    - target: {fileID: -2061618120173902867, guid: 22bc53da80cf81a48a00a84977dacece, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.0023542838
+      objectReference: {fileID: 0}
+    - target: {fileID: -2061618120173902867, guid: 22bc53da80cf81a48a00a84977dacece, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 0.004
+      objectReference: {fileID: 0}
+    - target: {fileID: -2061618120173902867, guid: 22bc53da80cf81a48a00a84977dacece, type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: 0.0019961065
       objectReference: {fileID: 0}
     - target: {fileID: -2061618120173902867, guid: 22bc53da80cf81a48a00a84977dacece, type: 3}
       propertyPath: m_Bones.Array.data[101]
