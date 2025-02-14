@@ -80,13 +80,13 @@ public class PlayableCameraSniperEvent : PlayableCamera
 
         float angleX = _followTarget.localEulerAngles.x;
         float angleY = _followTarget.localEulerAngles.y;
-        Debug.Log("Sniper camera angle before" + angles); 
+        // Debug.Log("Sniper camera angle before" + angles); 
 
         if(_maxUpCameraRotateX > _startCameraRotateX && _startCameraRotateX > _maxDownCameraRotateX)
         {
             if(angleX > _maxDownCameraRotateX && angleX < _maxUpCameraRotateX)
             {
-                Debug.Log("Masuk atas Sniper camera X");
+                // Debug.Log("Masuk atas Sniper camera X");
                 if(angleX <= _startCameraRotateX) angles.x = _maxDownCameraRotateX;
                 else angles.x = _maxUpCameraRotateX;
             }
@@ -95,7 +95,7 @@ public class PlayableCameraSniperEvent : PlayableCamera
         {
             if((angleX > _maxUpCameraRotateX && angleX > _maxDownCameraRotateX) || (angleX < _maxUpCameraRotateX && angleX < _maxDownCameraRotateX)) 
             {
-                Debug.Log("Masuk bwh Sniper camera X");
+                // Debug.Log("Masuk bwh Sniper camera X");
                 if(_maxUpCameraRotateX > _startCameraRotateX)
                 {
                     if(angleX > _maxDownCameraRotateX || (angleX < _maxUpCameraRotateX && angleX < _startCameraRotateX)) angles.x = _maxDownCameraRotateX;
@@ -122,7 +122,7 @@ public class PlayableCameraSniperEvent : PlayableCamera
         {
             if(angleY > _maxRightCameraRotateY && angleY < _maxLeftCameraRotateY)
             {
-                Debug.Log("Masuk atas Sniper camera Y");
+                // Debug.Log("Masuk atas Sniper camera Y");
                 if(angleY <= _startCameraRotateY) angles.y = _maxRightCameraRotateY;
                 else angles.y = _maxLeftCameraRotateY;
             }
@@ -131,7 +131,7 @@ public class PlayableCameraSniperEvent : PlayableCamera
         {
             if((angleY > _maxLeftCameraRotateY && angleY > _maxRightCameraRotateY) || (angleY < _maxLeftCameraRotateY && angleY < _maxRightCameraRotateY)) 
             {
-                Debug.Log("Masuk bwh Sniper camera Y");
+                // Debug.Log("Masuk bwh Sniper camera Y");
                 if(_maxLeftCameraRotateY > _startCameraRotateY)
                 {
                     if(angleY > _maxRightCameraRotateY || (angleY < _maxLeftCameraRotateY && angleY < _startCameraRotateY)) angles.y = _maxRightCameraRotateY;
@@ -146,7 +146,7 @@ public class PlayableCameraSniperEvent : PlayableCamera
         }
         
         
-        Debug.Log("Sniper camera angle now" + angles);
+        // Debug.Log("Sniper camera angle now" + angles);
         _followTarget.localEulerAngles = angles;
         
 

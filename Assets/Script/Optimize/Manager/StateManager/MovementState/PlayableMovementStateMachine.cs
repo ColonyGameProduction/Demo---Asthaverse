@@ -246,7 +246,7 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         }
         else
         {
-            Debug.Log("I go here even if no takecover");
+            // Debug.Log("I go here even if no takecover");
             base.Move();
         }
 

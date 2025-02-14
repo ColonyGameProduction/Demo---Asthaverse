@@ -59,7 +59,7 @@ public class CharacterMakeSFX : AudioHandler, IUnsubscribeEvent
         int chosenCount = 0;
         if(maxWhistleSFXCount > 0) chosenCount = UnityEngine.Random.Range(1, maxWhistleSFXCount + 1);
 
-        Debug.Log("Chosen whistle" + chosenCount);
+        // Debug.Log("Chosen whistle" + chosenCount);
         if(Enum.TryParse(AUDIOSFXNAME_FRONT_PAINGRUNTTYPE + chosenCount.ToString(), out AudioSFXName result))
         {
             PlaySFXOnce(result);

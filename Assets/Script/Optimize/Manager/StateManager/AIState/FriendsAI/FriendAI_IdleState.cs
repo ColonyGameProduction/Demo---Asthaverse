@@ -36,7 +36,7 @@ public class FriendAI_IdleState : FriendAIState
         }
         if(_sm.CharaIdentity.IgnoreThisCharacter)
         {
-            Debug.Log("kalo ignore diem di sinikan " + _sm.transform.name);
+            // Debug.Log("kalo ignore diem di sinikan " + _sm.transform.name);
             if(_sm.GetPlayableCharaIdentity.IsStillPlayable)
             {
                 if(_sm.IsToldHold)
@@ -68,7 +68,7 @@ public class FriendAI_IdleState : FriendAIState
             
             return;
         }
-        Debug.Log("ga ke sinikan " + _sm.transform.name);
+        // Debug.Log("ga ke sinikan " + _sm.transform.name);
         
         if(_sm.GotDetectedbyEnemy && _sm.LeaveDirection != Vector3.zero && !_sm.IsCharacterDead)
         {

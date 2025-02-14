@@ -137,7 +137,7 @@ public class SniperShootingEvent : MonoBehaviour, IUnsubscribeEvent
         if(StartEvent)
         {
             StartEvent = false;
-            SetCameraPosToLook();
+            TriggerStartEvent();
         }
 
     }
