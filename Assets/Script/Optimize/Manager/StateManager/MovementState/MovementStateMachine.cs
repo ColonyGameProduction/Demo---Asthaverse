@@ -224,9 +224,8 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
             isFacingTheDirection = checkFaceDir > _lookTargetDotMin;
         }
         
-
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, isFacingTheDirection? animatedFaceDir.x : 0.1f* animatedFaceDir.x, 0.5f, Time.deltaTime);
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, isFacingTheDirection? animatedFaceDir.z : 0.1f * animatedFaceDir.z, 0.5f, Time.deltaTime);
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, isFacingTheDirection? animatedFaceDir.x : 0.3f* animatedFaceDir.x, 0.5f, Time.deltaTime);
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, isFacingTheDirection? animatedFaceDir.z : 0.3f * animatedFaceDir.z, 0.5f, Time.deltaTime);
 
     }
     public bool IsAIAtDirPos()

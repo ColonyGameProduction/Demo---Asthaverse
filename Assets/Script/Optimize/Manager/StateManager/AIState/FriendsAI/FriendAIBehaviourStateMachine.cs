@@ -19,7 +19,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     [SerializeField] private float _mainPlayableMaxDistance = 3.5f;
     [SerializeField] private float _friendsDefaultMaxDistanceFromPlayer = 2.5f;
-    [SerializeField] private float _friendDefaultMaxDistanceFromPlayerWhenEngaged = 15f;
+    [SerializeField] private float _friendDefaultMaxDistanceFromPlayerWhenEngages = 15f;
 
     [Header("Friend AI States")]
     [SerializeField] protected bool _isAIIdle;
@@ -137,7 +137,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
     }
     public bool IsFriendAlreadyAtDefaultDistanceWhenEngaged()
     {
-        if(Vector3.Distance(transform.position, _currPlayable.position) <= _friendDefaultMaxDistanceFromPlayerWhenEngaged) return true;
+        if(Vector3.Distance(transform.position, _currPlayable.position) <= _friendDefaultMaxDistanceFromPlayerWhenEngages) return true;
         return false;
     }
     #endregion
