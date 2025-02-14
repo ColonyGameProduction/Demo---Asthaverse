@@ -19,6 +19,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
 
     [SerializeField] private float _mainPlayableMaxDistance = 3.5f;
     [SerializeField] private float _friendsDefaultMaxDistanceFromPlayer = 2.5f;
+    [SerializeField] private float _friendDefaultMaxDistanceFromPlayerWhenEngaged = 15f;
 
     [Header("Friend AI States")]
     [SerializeField] protected bool _isAIIdle;
@@ -134,6 +135,11 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         if(Vector3.Distance(transform.position, _currPlayable.position) <= _friendsDefaultMaxDistanceFromPlayer) return true;
         return false;
     }
+    public bool IsFriendAlreadyAtDefaultDistanceWhenEngaged()
+    {
+        if(Vector3.Distance(transform.position, _currPlayable.position) <= _friendDefaultMaxDistanceFromPlayerWhenEngaged) return true;
+        return false;
+    }
     #endregion
 
     protected override void MoveStateMachine_OnIsTheSamePosition(Vector3 agentPos)
@@ -141,6 +147,7 @@ public class FriendAIBehaviourStateMachine : AIBehaviourStateMachine, IFriendBeh
         if(IsAIIdle && GotDetectedbyEnemy && LeaveDirection != Vector3.zero && agentPos == _runAwayPos && IsAIInput)
         {
             _charaIdentity.Run(false);
+            // _leaveDirection = Vector3.zero;
         }
 
         if(IsTakingCover && !IsAIIdle && IsAIInput)

@@ -58,7 +58,6 @@ public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent, IConnec
     protected virtual void ResetInteraction()
     {
         ToggleInteractableObjAudio(_interactSFXAudioSource, false);
-        ToggleInteractableObjAudio(_completedAudioSource, true);
 
         _currCharaInteracting.OnCancelInteractionButton -= ResetInteraction;
         _currCharaInteracting.IsHoldingInteraction = false;
@@ -66,7 +65,11 @@ public class HoldableObj_IntObj : InteractableObject, IUnsubscribeEvent, IConnec
         HoldInteractUI.OnStopHoldInteracting?.Invoke(this);
         _currCharaInteracting = null;
 
-        if(_isComplete) return;
+        if(_isComplete)
+        {
+            ToggleInteractableObjAudio(_completedAudioSource, true);
+            return;
+        }
         _isBeingInteracted = false;
 
         
