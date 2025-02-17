@@ -641,6 +641,11 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     }
     #endregion
 
+    public virtual void SetIdleFinalAnimationIdx(float idx)
+    {
+        _altIdleAnimationIdx = idx;
+        SetIdleFinalAnimationAnimatorIdx();
+    }
     public override void UnsubscribeEvent()
     {
         base.UnsubscribeEvent();

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
@@ -156,8 +157,9 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
             PlayableCharacterIdentity charaIdentity = player.GetComponent<PlayableCharacterIdentity>();
             _charaIdentities.Add(charaIdentity);
             _playableCharacterUIManager.GetCharacterProfileUIHandler.AssignCharaProfileUI(charaIdentity);
+            
         }
-
+        RandomAnimationIdleFinalIdx();
         //jd kalo misal ada save save bs lwt sini
         _currCharaidx = 0;
         SetAllCurr();
@@ -166,6 +168,20 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _gameInputManager = GameInputManager.Instance;
         SubscribeToGameInputManager();
 
+    }
+    private void RandomAnimationIdleFinalIdx()
+    {
+        float random = UnityEngine.Random.Range(0, 4);
+        if(random == 3) random = 4;
+
+        foreach(PlayableCharacterIdentity chara in _charaIdentities)
+        {
+            chara.SetIdleFinalAnimationIdx(random);
+
+            random++;
+            if(random > 4) random = 0;
+            if(random == 3) random = 4;
+        }
     }
 
     private void GameManager_OnChangeGamePlayModeToNormal()
@@ -967,7 +983,8 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         }
 
         CurrPlayableChara.Aiming(false);
-        _playableCharacterCameraManager.ResetScope();
+        
+        if(_gm.IsNormalGamePlayMode()) _playableCharacterCameraManager.ResetScope();
     }
     private void GameInput_OnReloadPerformed()
     {

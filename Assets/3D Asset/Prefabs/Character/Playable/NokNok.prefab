@@ -215,6 +215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   immortalized: 0
   _characterStatSO: {fileID: 11400000, guid: 44e0f714ed1482045a23bbb9cae42a89, type: 2}
+  _altIdleAnimationIdx: 0
   _charaName: 
   _totalHealth: 100
   _currHealth: 0
@@ -266,7 +267,6 @@ MonoBehaviour:
   _idleAnimCycleTimeTarget:
   - 2
   - 6
-  - 10
   _idleAnimCycleSpeed: 2
   _lookTargetDotMin: 0.9
   _crouchHeightCharaCon:
@@ -434,6 +434,7 @@ MonoBehaviour:
   _playableUseWeaponStateMachine: {fileID: 0}
   _mainPlayableMaxDistance: 3.5
   _friendsDefaultMaxDistanceFromPlayer: 2.5
+  _friendDefaultMaxDistanceFromPlayerWhenEngages: 15
   _isAIIdle: 1
   _isAIEngage: 0
   _isEngageTimer: 0
@@ -1300,7 +1301,7 @@ MonoBehaviour:
   _interactableLayerMask:
     serializedVersion: 2
     m_Bits: 1024
-  _interactDistances: 7.5
+  _interactDistances: 3
   _pickableObjPoint: {fileID: 5378941265763607128}
   _throwForceMultiplier: 20
 --- !u!54 &4587147607533735347

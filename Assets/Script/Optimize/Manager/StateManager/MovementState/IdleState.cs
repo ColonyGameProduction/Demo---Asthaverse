@@ -7,11 +7,14 @@ public class IdleState : MovementState
 {
     float _timeCounter, _currTargetTime, _nextIdleAnimIdxTarget;
     bool _isIdleAnimChanging;
+    private float _standIdleRifleAnimCycleTotal = 3;
     const float EPSILON = 0.0001f;
     const string ANIMATION_MOVE_PARAMETER_CROUCH = "Crouch";
-    const float STAND_IDLE_ANIM_CYCLE_TOTAL = 3;
 
-    public IdleState(MovementStateMachine currStateMachine, MovementStateFactory factory) : base(currStateMachine, factory){}
+    public IdleState(MovementStateMachine currStateMachine, MovementStateFactory factory) : base(currStateMachine, factory)
+    {
+        _standIdleRifleAnimCycleTotal = _sm.IdleAnimCycleTimeTarget.Length;
+    }
     
     public override void EnterState()
     {   
@@ -144,10 +147,10 @@ public class IdleState : MovementState
             {
                 if(_sm.IdleAnimCycleIdx == 0 || !_standData.IsCrouching)
                 {
-                    if(_sm.IdleAnimCycleIdx < STAND_IDLE_ANIM_CYCLE_TOTAL)
+                    if(_sm.IdleAnimCycleIdx < _standIdleRifleAnimCycleTotal)
                     {
                         float nextIdleAnimIdx = _sm.IdleAnimCycleIdx + 1;
-                        if(nextIdleAnimIdx < STAND_IDLE_ANIM_CYCLE_TOTAL)_currTargetTime = _sm.IdleAnimCycleTimeTarget[(int)nextIdleAnimIdx];
+                        if(nextIdleAnimIdx < _standIdleRifleAnimCycleTotal) _currTargetTime = _sm.IdleAnimCycleTimeTarget[(int)nextIdleAnimIdx];
                         _nextIdleAnimIdxTarget = nextIdleAnimIdx;
                         _isIdleAnimChanging = true;
                         // _stateMachine.ChangeIdleCounter(x);

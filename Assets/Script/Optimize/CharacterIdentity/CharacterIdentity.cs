@@ -15,6 +15,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     [Header("CHARACTER SCRIPTABLE OBJECT STAT")]
     [SerializeField] protected EntityStatSO _characterStatSO;
     private bool _ignoreThisCharacter;
+    [SerializeField] protected float _altIdleAnimationIdx;
 
     [Header("Manager/Machine")]
     //Untuk ambil bool
@@ -73,6 +74,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     public const string ANIMATION_DEATH_TRIGGER_PARAMETER = "DeathTrigger";
     public const string ANIMATION_IsBoyChara_PARAMETER = "IsBoyChara";
     public string ANIMATION_PARAMETER_SILENTKILLCOUNTER = "SilentKillCounter";
+    public const string ANIMATION_PARAMETER_ALTIDLEIDX = "AltIdleIdx";
     #endregion
 
     #region GETTERSETTER Variable
@@ -313,6 +315,11 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     }
     #endregion
 
+    protected virtual void SetIdleFinalAnimationAnimatorIdx()
+    {
+        _animator.SetFloat(ANIMATION_PARAMETER_ALTIDLEIDX, _altIdleAnimationIdx);
+    }
+    
     public virtual void UnsubscribeEvent()
     {
         _useWeaponStateMachine.OnWasUsingGun -= UseWeapon_OnWasUsingGun;

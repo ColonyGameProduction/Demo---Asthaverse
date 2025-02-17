@@ -5791,13 +5791,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 677508835}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a41fc92ed03e3774e9f14f1c0e7f6af5, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f51fed9be0526e42895f086f3d04be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 1533244281}
-  buttonText: {fileID: 677508838}
-  highlightedAlpha: 1
-  normalAlpha: 0.1
+  _highlightContainer: {fileID: 1533244281}
+  _buttonText: {fileID: 677508838}
+  _highlightedAlpha: 1
+  _normalAlpha: 0.1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -16239,7 +16239,7 @@ GameObject:
   - component: {fileID: 1651341073}
   - component: {fileID: 1651341076}
   - component: {fileID: 1651341072}
-  - component: {fileID: 1651341075}
+  - component: {fileID: 1651341077}
   m_Layer: 5
   m_Name: Exit Button
   m_TagString: Untagged
@@ -16433,22 +16433,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1651341070}
   m_CullTransparentMesh: 1
---- !u!114 &1651341075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1651341070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a41fc92ed03e3774e9f14f1c0e7f6af5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlight: {fileID: 817695798}
-  buttonText: {fileID: 1651341073}
-  highlightedAlpha: 1
-  normalAlpha: 0.1
 --- !u!114 &1651341076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16465,6 +16449,22 @@ MonoBehaviour:
   buttonText: {fileID: 1651341073}
   highlightedAlpha: 1
   normalAlpha: 0.1
+--- !u!114 &1651341077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651341070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f51fed9be0526e42895f086f3d04be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _highlightContainer: {fileID: 817695798}
+  _buttonText: {fileID: 1651341073}
+  _highlightedAlpha: 1
+  _normalAlpha: 0.1
 --- !u!1 &1858015066
 GameObject:
   m_ObjectHideFlags: 0
@@ -16566,6 +16566,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.ParticleSystem, UnityEngine
         m_MethodName: Play
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1858015071}
+        m_TargetAssemblyTypeName: ButtonTextUIInteraction, Assembly-CSharp
+        m_MethodName: ToggleHighlight
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -16680,13 +16692,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1858015066}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a41fc92ed03e3774e9f14f1c0e7f6af5, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f51fed9be0526e42895f086f3d04be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 902283541}
-  buttonText: {fileID: 1858015069}
-  highlightedAlpha: 1
-  normalAlpha: 0.1
+  _highlightContainer: {fileID: 902283541}
+  _buttonText: {fileID: 1858015069}
+  _highlightedAlpha: 1
+  _normalAlpha: 0.1
 --- !u!1 &1908523369
 GameObject:
   m_ObjectHideFlags: 0

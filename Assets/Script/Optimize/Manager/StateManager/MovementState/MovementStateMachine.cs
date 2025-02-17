@@ -223,9 +223,21 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
             checkFaceDir = Vector3.Dot(facedir, transform.forward);
             isFacingTheDirection = checkFaceDir > _lookTargetDotMin;
         }
-        
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, isFacingTheDirection? animatedFaceDir.x : 0.3f* animatedFaceDir.x, 0.5f, Time.deltaTime);
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, isFacingTheDirection? animatedFaceDir.z : 0.3f * animatedFaceDir.z, 0.5f, Time.deltaTime);
+        Debug.Log(transform.name + "hasil animated facedir before" + animatedFaceDir);
+        if(Mathf.Abs(animatedFaceDir.x) > 0.1f && Mathf.Abs(animatedFaceDir.x) < 0.5f)
+        {
+            if(animatedFaceDir.x > 0.1f) animatedFaceDir.x += 0.5f;
+            else if(animatedFaceDir.x < -0.1f) animatedFaceDir.x += -0.5f;
+        }
+        if(Mathf.Abs(animatedFaceDir.y) > 0.1f && Mathf.Abs(animatedFaceDir.z) < 0.5f)
+        {
+            if(animatedFaceDir.z > 0.1f) animatedFaceDir.z += 0.5f;
+            else if(animatedFaceDir.z < -0.1f) animatedFaceDir.z += -0.5f;
+        }
+        Debug.Log(transform.name + "hasil animated facedir after" + animatedFaceDir);
+
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, isFacingTheDirection? animatedFaceDir.x : 0.9f* animatedFaceDir.x, 0.5f, Time.deltaTime);
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, isFacingTheDirection? animatedFaceDir.z : 0.9f * animatedFaceDir.z, 0.5f, Time.deltaTime);
 
     }
     public bool IsAIAtDirPos()

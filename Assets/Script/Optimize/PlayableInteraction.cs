@@ -188,6 +188,7 @@ public class PlayableInteraction : MonoBehaviour
             {
                 // if(interactable == _thisObjInteractable) return;
                 // interactable.Interact(_playableCharacterIdentity);
+
                 _currInteractableRaycast = interactable;
             }
         }
