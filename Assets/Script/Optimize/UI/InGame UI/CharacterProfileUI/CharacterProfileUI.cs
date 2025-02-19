@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using TMPro;
 
 using UnityEngine;
-using UnityEngine.Serialization;
+
 using UnityEngine.UI;
 
 public class CharacterProfileUI : MonoBehaviour, IUnsubscribeEvent
@@ -212,7 +211,7 @@ public class CharacterProfileUI : MonoBehaviour, IUnsubscribeEvent
 
     public void UnsubscribeEvent()
     {
-        _playableIdentity.OnSwitchWeapon -= SwitchWeaponUI;
-        _playableIdentity.OnPlayableBulletChange -= UpdateBulletWeaponData;
+        if(_playableIdentity != null)_playableIdentity.OnSwitchWeapon -= SwitchWeaponUI;
+        if(_playableIdentity != null)_playableIdentity.OnPlayableBulletChange -= UpdateBulletWeaponData;
     }
 }

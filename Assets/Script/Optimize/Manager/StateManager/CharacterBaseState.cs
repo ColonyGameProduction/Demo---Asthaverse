@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 
 /// <summary>
 /// Base State that connect with animation in it's doing; 

@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
-using UnityEngine.AI;
+
 
 public class FriendAI_IdleState : FriendAIState
 {
@@ -64,6 +63,10 @@ public class FriendAI_IdleState : FriendAIState
             
             _sm.FriendsCommandDirection.position = _sm.FriendsDefaultDirection.position;
             return;
+        }
+        if(!_sm.GotDetectedbyEnemy)
+        {
+            if(_sm.GetMoveStateMachine.IsRunning) _sm.CharaIdentity.Run(false);
         }
         if(!PlayableCharacterManager.IsCommandingFriend)
         {

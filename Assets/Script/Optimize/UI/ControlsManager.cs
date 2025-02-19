@@ -1,7 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem.Controls;
+
 using UnityEngine.UI;
 
 public class ControlsManager : MonoBehaviour
