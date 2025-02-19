@@ -68,9 +68,15 @@ public class DIalogInGameManager : MonoBehaviour
             
             LeanTween.cancel(_leanTweenDialogTextID);
             ChangeTextAlphaValue(_dialogText, 0);
+            
             _currDialog = null;
         }
-        if(_chosenDialog != null) OnDialogFinish?.Invoke(_chosenDialog.title);
+        if(_chosenDialog != null)
+        {
+            OnDialogFinish?.Invoke(_chosenDialog.title);
+            CheckEventFromInspectorAfterDialogFinish(_chosenDialog.title);
+        }
+        
         _chosenDialog = null;
     }
     private void PlayDialog()

@@ -10,6 +10,8 @@ public class ChangeSceneAfterCutscene : MonoBehaviour
     public VideoPlayer video;
     public bool _hasFinish = false;
     bool _isFirsTime = true;
+    public bool _isEndingSceneFirst = false;
+    [SerializeField] private ThankFinishUI _thankFinishUI;
 
     private void Awake() 
     {
@@ -18,6 +20,7 @@ public class ChangeSceneAfterCutscene : MonoBehaviour
     private void Start()
     {
         SMM = SceneManagementManager.Instance;
+
         video.loopPointReached += Video_loopPointReached;
         
     }
@@ -32,8 +35,16 @@ public class ChangeSceneAfterCutscene : MonoBehaviour
 
     private void Video_loopPointReached(VideoPlayer source)
     {
-        SMM.GoToScene(SceneName);   
+        if(_isEndingSceneFirst)
+        {
+            _thankFinishUI.ShowThanks(()=>SMM.GoToScene(SceneName));
+        }
+        else
+        {
+            SMM.GoToScene(SceneName);   
+        }
         _hasFinish = true;
+        
     }
 }
  

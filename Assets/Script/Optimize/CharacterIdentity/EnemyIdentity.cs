@@ -58,6 +58,11 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
             EnemyAIManager.Instance.EditEnemyHearAnnouncementList(_enemyAIStateMachine, false);
             EnemyAIManager.Instance.OnEnemyDead?.Invoke(this.transform);
             _enemyAIStateMachine.enabled = false;
+
+            foreach(GameObject ui in _hideUIArrayWhenDead)
+            {
+                ui.SetActive(false);
+            }
         }
         _enemyAIStateMachine.UnsubscribeEvent();
         _enemyBody.ToggleBodyPartsCollider(false);
