@@ -6,6 +6,7 @@ using UnityEngine;
 public class ThankFinishUI : MonoBehaviour
 {
     private SceneManagementManager SMM;
+    private AudioManager _am;
     [SerializeField] private GameObject _textContainer;
     private CanvasGroup _canvasGroup;
     [SerializeField] private float _fadeInDuration = 0.5f;
@@ -19,9 +20,11 @@ public class ThankFinishUI : MonoBehaviour
     private void Start()
     {
         SMM = SceneManagementManager.Instance;
+        _am = AudioManager.Instance;
     }
     public void ShowThanks(Action action)
     {
+        _am.ChangeBGMMidGame(AudioBGMName.MainMenu);
         LeanTween.value(0, 1, _fadeWaitTimer).setOnComplete(
             ()=>
             {

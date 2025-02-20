@@ -66,6 +66,7 @@ public class EnemyIdentity : CharacterIdentity, ISilentKillAble
         }
         _enemyAIStateMachine.UnsubscribeEvent();
         _enemyBody.ToggleBodyPartsCollider(false);
+        _enemyAIStateMachine.Agent.enabled = false;
         _charaMakeSFX.UnsubscribeEvent();
         // _enemyBody.MakeItTransparent(_enemyDeathFadeDuration);
         Destroy(this.gameObject, _enemyDeathFadeDuration + 0.1f);

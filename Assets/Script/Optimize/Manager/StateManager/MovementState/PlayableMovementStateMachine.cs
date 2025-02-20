@@ -221,16 +221,18 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
 
     protected override void Update()
     {
-        base.Update();
+        if(!_gm.IsGamePlaying() || !this.gameObject.activeSelf) return;
+
+        _currState?.UpdateState();
         GoingToTakeCover();
         // SetMoveAnimationSpeed();
     }
 
     protected override void FixedUpdate() 
     {
-        base.FixedUpdate();
-
         if(!_gm.IsGamePlaying()) return;
+        _currState?.PhysicsLogicUpdateState();
+
         NearWallTakeCoverHandler();
     }
 

@@ -144,13 +144,13 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
 
     protected virtual void Update() 
     {
-        if(!_gm.IsGamePlaying() || !this.gameObject.activeSelf) return;
+        if(!_gm.IsGamePlaying() || !this.gameObject.activeSelf || _charaIdentity.IsDead) return;
 
         _currState?.UpdateState();
     }
     protected virtual void FixedUpdate() 
     {
-        if(!_gm.IsGamePlaying()) return;
+        if(!_gm.IsGamePlaying() || _charaIdentity.IsDead) return;
 
         _currState?.PhysicsLogicUpdateState();
     }

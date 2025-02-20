@@ -19,6 +19,8 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     // public bool _enableIKFeature = true, _enableIKProFeature = true, _showDebug = true;
     [SerializeField][Range(0, 2f)] private float _distanceToGround = 1.14f;
     [SerializeField][Range(0, 2f)] private float _raycastDownDistance = 1.5f;
+    [SerializeField][Range(0, 1f)] private float _leftWeight = 1;
+    [SerializeField][Range(0, 1f)] private float _rightWeight = 1;
     [SerializeField][Range(0, 1f)] private float _leftRotationWeight = 1;
     [SerializeField][Range(0, 1f)] private float _rightRotationWeight = 1;
     [SerializeField] private LayerMask _placeToWalkLayer;
@@ -27,8 +29,10 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     // [SerializeField][Range(0, 1f)] private float _pelvisUpDownSpeed = 0.28f;
     // [SerializeField][Range(0, 1f)] private float _feetToLKPosSpeed = 0.5f;
 
-    private const string LEFTFOOTANIM_VARIABLENAME = "LeftIKRotation";
-    private const string RIGHTTFOOTANIM_VARIABLENAME = "RightIKRotation";
+    private const string LEFTFOOTROTANIM_VARIABLENAME = "LeftIKRotation";
+    private const string RIGHTTFOOTROTANIM_VARIABLENAME = "RightIKRotation";
+    private const string LEFTFOOTWEIGHTANIM_VARIABLENAME = "LeftIKWeight";
+    private const string RIGHTTFOOTWEIGHTANIM_VARIABLENAME = "RightIKWeight";
     // private Vector3 _rightFootPos, _leftFootPos, _leftFootIKPos, _rightFootIKPos;
     // private Quaternion _leftFootIKRotation, _rightFootIKRotation;
     // private float _lastPelvisPositionY, _lastRightFootPosY, _lastLeftFootPosY;
@@ -42,13 +46,29 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     private Vector3 _magOriginalLocalPos, _magOriginalLocalEulerAngles;
     [SerializeField] private Vector3 _magHandLocalPos, _magHandLocalEulerAngles;
     #endregion
-    public GameObject target;
-    public GameObject target2, hand;
-    public bool canDoIt;
-    public GameObject _chara;
-    public Vector3 addedForGun;
-    public Rig _rig;
+    public bool StopIK;
+    [SerializeField] private bool _useAnimatorIK = true;
     
+    public float LeftWeight {
+        get{
+            return _useAnimatorIK ? _animator.GetFloat(LEFTFOOTWEIGHTANIM_VARIABLENAME) : _leftWeight;
+        }
+    }
+    public float RightWeight {
+        get{
+            return _useAnimatorIK ? _animator.GetFloat(RIGHTTFOOTWEIGHTANIM_VARIABLENAME) : _rightWeight;
+        }
+    }
+    public float LeftRWeight {
+        get{
+            return _useAnimatorIK ? _animator.GetFloat(LEFTFOOTROTANIM_VARIABLENAME) : _leftRotationWeight;
+        }
+    }
+    public float RightRWeight {
+        get{
+            return _useAnimatorIK ? _animator.GetFloat(RIGHTTFOOTROTANIM_VARIABLENAME) : _rightRotationWeight;
+        }
+    }
     private void Awake() 
     {
         _animator = GetComponent<Animator>();
@@ -73,29 +93,7 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
         if(_playableCharaIdentity) _playableInteraction = _playableCharaIdentity.GetPlayableInteraction;
     }
     private void Update() {
-        // Debug.Log(_characterIdentity.transform.name + "IK RIGHT HAND POS Di Update" + _animator.GetIKPosition(AvatarIKGoal.RightHand));
-        // if(target && canDoIt)
-        // {
-        //     _rig.weight = 0;
-        //     Transform forearm = _animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
-        //     Debug.Log(forearm.position + " INI TOLONG BGT YA");
-        //     target2.transform.position = forearm.transform.position;
-        //     // target2.transform.rotation = hand.transform.rotation;
-
-
-        //     Vector3 dir = _chara.transform.forward;
-        //     dir.y = 0;
-        //     // Vector3 pos = _animator.GetIKPosition(AvatarIKGoal.RightHand);
-        //     Vector3 pos = _animator.GetBoneTransform(HumanBodyBones.RightHand).position;
-            
-        //     target.transform.position = pos + addedForGun;
-
-        //     Debug.Log(forearm.transform.position + "FOREARM SEBELUM");
-
-        //     _rig.weight = 1;
-        //     Debug.Log(forearm.transform.position + "FOREARM SESUDAH");
-        //     // canDoIt = false;
-        // }
+        
     }
 
     public void ChangeIsCrawling(bool value) => _isCrawl = value;
@@ -128,34 +126,19 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
 
     public void OnAnimatorIK(int layerIndex) 
     {
-        // Debug.Log(_characterIdentity.transform.name + "IK RIGHT HAND POS Di ON ANIMATOR IK" + _animator.GetIKPosition(AvatarIKGoal.RightHand));
-
-        if(target && canDoIt)
+        if((_characterIdentity.IsDead && _playableCharaIdentity == null) || StopIK)
         {
-            // _rig.weight = 0;
-            // Transform forearm = _animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
-            // Debug.Log(forearm.position + " INI TOLONG BGT YA");
-            // target2.transform.position = forearm.transform.position;
-            // target2.transform.rotation = hand.transform.rotation;
+            _animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 0);
+            _animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 0);
+            _animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 0);
+            _animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, 0);
 
-
-            Vector3 dir = _chara.transform.forward;
-            dir.y = 0;
-            Vector3 pos = _animator.GetIKPosition(AvatarIKGoal.RightHand);
-            // Vector3 pos = _animator.GetBoneTransform(HumanBodyBones.RightHand).position;
-            
-            target.transform.position = pos + addedForGun;
-
-            // Debug.Log(forearm.transform.position + "FOREARM SEBELUM");
-
-            // _rig.weight = 1;
-            // Debug.Log(forearm.transform.position + "FOREARM SESUDAH");
-            // canDoIt = false;
+            _animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0);
+            _animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 0);
+            _animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0);
+            _animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0);
+            return;
         }
-
-
-
-
         FeetHandGroundControl();
 
 
@@ -163,13 +146,13 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
     
     public void FeetHandGroundControl()
     {
-        _animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 1f);
-        _animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, 1f);
+        _animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, LeftWeight);
+        _animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, RightWeight);
 
         if(!_isCrawl)
         {
-            _animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, _leftRotationWeight);
-            _animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, _rightRotationWeight);
+            _animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, LeftRWeight);
+            _animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, RightRWeight);
             
             // _animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, _animator.GetFloat(LEFTFOOTANIM_VARIABLENAME));
             // _animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, _animator.GetFloat(RIGHTTFOOTANIM_VARIABLENAME));
@@ -216,11 +199,10 @@ public class AnimatorCharacterHelp : MonoBehaviour, IUnsubscribeEvent
 
         if(_isCrawl)
         {
-            _animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1);
-            _animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
-
-            _animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, _leftRotationWeight);
-            _animator.SetIKRotationWeight(AvatarIKGoal.RightHand, _rightRotationWeight);
+            _animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, LeftWeight);
+            _animator.SetIKPositionWeight(AvatarIKGoal.RightHand, RightWeight);
+            _animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, LeftRWeight);
+            _animator.SetIKRotationWeight(AvatarIKGoal.RightHand, RightRWeight);
             // _animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, _animator.GetFloat(LEFTFOOTANIM_VARIABLENAME));
             // _animator.SetIKRotationWeight(AvatarIKGoal.RightHand, _animator.GetFloat(RIGHTTFOOTANIM_VARIABLENAME));
 

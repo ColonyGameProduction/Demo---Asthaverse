@@ -7,6 +7,7 @@ public class IdleState : MovementState
 {
     float _timeCounter, _currTargetTime, _nextIdleAnimIdxTarget;
     bool _isIdleAnimChanging;
+    bool _isGoingBackToIdleRelax1 = false;
     private float _standIdleRifleAnimCycleTotal = 3;
     const float EPSILON = 0.0001f;
     const string ANIMATION_MOVE_PARAMETER_CROUCH = "Crouch";
@@ -140,11 +141,18 @@ public class IdleState : MovementState
     private void IdleAnimCycleTimerUpdate()
     {
         // Debug.Log("Time COUNTERR" + _timeCounter);
-        if(_timeCounter < _currTargetTime)_timeCounter += Time.deltaTime;
-        else if(_timeCounter >= _currTargetTime)
+        if((_timeCounter < _currTargetTime && !_isGoingBackToIdleRelax1) || (_timeCounter > _currTargetTime && _isGoingBackToIdleRelax1))
+        {
+            if(!_isGoingBackToIdleRelax1) _timeCounter += Time.deltaTime;
+            else _timeCounter -= Time.deltaTime;
+
+            Debug.Log(_sm.transform.name + " _time" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1);
+        }
+        else if((_timeCounter >= _currTargetTime && !_isGoingBackToIdleRelax1) || (_timeCounter <= _currTargetTime && _isGoingBackToIdleRelax1))
         {
             if(_sm.IdleAnimCycleIdx >= 0)
             {
+
                 if(_sm.IdleAnimCycleIdx == 0 || !_standData.IsCrouching)
                 {
                     if(_sm.IdleAnimCycleIdx < _standIdleRifleAnimCycleTotal)
@@ -154,6 +162,27 @@ public class IdleState : MovementState
                         _nextIdleAnimIdxTarget = nextIdleAnimIdx;
                         _isIdleAnimChanging = true;
                         // _stateMachine.ChangeIdleCounter(x);
+                        Debug.Log(_sm.transform.name + " _time" + " masuk atas" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1 + " " + _sm.IdleAnimCycleIdx + " " + _nextIdleAnimIdxTarget + " " + _standIdleRifleAnimCycleTotal);
+                    }
+                    else if(_sm.IdleAnimCycleIdx == _standIdleRifleAnimCycleTotal)
+                    {
+                        
+                        if(!_isGoingBackToIdleRelax1)
+                        {
+                            _isGoingBackToIdleRelax1 = true;
+                            float nextIdleAnimIdx = _sm.IdleAnimCycleIdx - 1;
+                            _currTargetTime = _sm.IdleAnimCycleTimeTarget[(int)nextIdleAnimIdx-1];
+                            _nextIdleAnimIdxTarget = nextIdleAnimIdx;
+                            Debug.Log(_sm.transform.name + " _time" + " masuk sini dulu" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1 + " " + _sm.IdleAnimCycleIdx + " " + _nextIdleAnimIdxTarget + " " + _standIdleRifleAnimCycleTotal);
+                        }
+                        else
+                        {
+                            Debug.Log(_sm.transform.name + " _time" + " masuk bawah" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1 + " " + _sm.IdleAnimCycleIdx + " " + _nextIdleAnimIdxTarget + " " + _standIdleRifleAnimCycleTotal);
+                            _isGoingBackToIdleRelax1 = false;
+                            
+                            _currTargetTime = _sm.IdleAnimCycleTimeTarget[(int)_standIdleRifleAnimCycleTotal - 1];
+                            _isIdleAnimChanging = true;
+                        }
                     }
                 }
             }
@@ -164,11 +193,16 @@ public class IdleState : MovementState
     private void ChangingIdleAnimation()
     {   
         float tempCounter = Mathf.Lerp(_sm.IdleAnimCycleIdx, _nextIdleAnimIdxTarget, Time.deltaTime * _sm.IdleAnimCycleSpeed);
-        if(_nextIdleAnimIdxTarget - tempCounter < EPSILON)tempCounter = _nextIdleAnimIdxTarget;
+        if(Mathf.Abs(_nextIdleAnimIdxTarget - tempCounter) < EPSILON)
+        {
+            tempCounter = _nextIdleAnimIdxTarget;
+            tempCounter = Mathf.Floor(tempCounter);
+        }
         _sm.SetIdleAnimCycleIdx(tempCounter);
         if(_sm.IdleAnimCycleIdx == _nextIdleAnimIdxTarget)
         {
             _isIdleAnimChanging = false;
+
             _sm.SetIdleAnimCycleIdx(_nextIdleAnimIdxTarget);
         }
     }
@@ -176,7 +210,7 @@ public class IdleState : MovementState
     private void ResetIdleAnimCycle()
     {
         _isIdleAnimChanging = false;
-
+        _isGoingBackToIdleRelax1 = false;
         if(_sm.WasCharacterAiming)
         {
             _sm.WasCharacterAiming = false;
