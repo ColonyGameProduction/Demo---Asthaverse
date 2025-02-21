@@ -15,6 +15,11 @@ public class PlayableCamera : MonoBehaviour
     [SerializeField] protected float _cameraRotationSpeed = 200f;
     protected float _cameraRotationMultiplier = 1f;
     
+    [Header("Camera Height Variable")]
+    protected float _currCamFOV;
+    protected float _currTargetCamFOV;
+    [SerializeField] private float _changeCameraFOVSpeed = 0.2f;
+    private int _leanTweenChangeFOVID;
 
     [Header("Camera Height Variable")]
     [SerializeField] protected float _changeCameraHeightSpeed = 2f;
@@ -29,6 +34,12 @@ public class PlayableCamera : MonoBehaviour
     // private float _newView;
     private Cinemachine3rdPersonFollow _cinemachine3rdPersonFollow;
     private float _startPos;
+
+    [Header("Camera Clamp X Variable")]
+    [SerializeField] protected float _cameraRotateXClamp = 40;
+    [ReadOnly(true), SerializeField] protected float _startCameraRotateX = 0f;
+    [ReadOnly(true), SerializeField] protected float _maxUpCameraRotateX = 340, _maxDownCameraRotateX = 40;
+
     #region GETTER SETTER VARIABLE
 
     public CinemachineVirtualCamera GetFollowCamera {get { return _followCamera;}}
@@ -38,6 +49,8 @@ public class PlayableCamera : MonoBehaviour
 
     protected virtual void Start() 
     {
+        _currCamFOV = _followCamera.m_Lens.FieldOfView;
+        SetCameraToLookAtX();
         _gm = GameManager.instance;
         _cinemachine3rdPersonFollow = _followCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
         _startPos = _cinemachine3rdPersonFollow.ShoulderOffset.x;
@@ -66,15 +79,33 @@ public class PlayableCamera : MonoBehaviour
         Vector3 angles = _followTarget.localEulerAngles;
         angles.z = 0f;
 
-        float angle = _followTarget.localEulerAngles.x;
+        float angleX = _followTarget.localEulerAngles.x;
 
-        if (angle > 180 && angle < 340)
+        if(_maxUpCameraRotateX > _startCameraRotateX && _startCameraRotateX > _maxDownCameraRotateX)
         {
-            angles.x = 340;
+            if(angleX > _maxDownCameraRotateX && angleX < _maxUpCameraRotateX)
+            {
+                // Debug.Log("Masuk atas Sniper camera X");
+                if(angleX <= _startCameraRotateX) angles.x = _maxDownCameraRotateX;
+                else angles.x = _maxUpCameraRotateX;
+            }
         }
-        else if (angle < 180 && angle > 40)
+        else
         {
-            angles.x = 40;
+            if((angleX > _maxUpCameraRotateX && angleX > _maxDownCameraRotateX) || (angleX < _maxUpCameraRotateX && angleX < _maxDownCameraRotateX)) 
+            {
+                // Debug.Log("Masuk bwh Sniper camera X");
+                if(_maxUpCameraRotateX > _startCameraRotateX)
+                {
+                    if(angleX > _maxDownCameraRotateX || (angleX < _maxUpCameraRotateX && angleX < _startCameraRotateX)) angles.x = _maxDownCameraRotateX;
+                    else if(angleX < _maxUpCameraRotateX && angleX >= _startCameraRotateX) angles.x = _maxUpCameraRotateX;
+                }
+                else
+                {
+                    if(angleX > _maxDownCameraRotateX && angleX < _startCameraRotateX) angles.x = _maxDownCameraRotateX;
+                    else angles.x = _maxUpCameraRotateX;
+                }
+            }
         }
 
         _followTarget.localEulerAngles = angles;
@@ -84,7 +115,15 @@ public class PlayableCamera : MonoBehaviour
 
     public void ChangeCameraFOV(float newFOV)
     {
-        _followCamera.m_Lens.FieldOfView = newFOV;
+        float startFOV = _followCamera.m_Lens.FieldOfView;
+        _currTargetCamFOV = newFOV;
+
+        LeanTween.cancel(_leanTweenChangeFOVID);
+        _leanTweenChangeFOVID = LeanTween.value(startFOV, _currTargetCamFOV, _moveCameraViewSpeed).setOnUpdate((float value)=>
+            {
+                _followCamera.m_Lens.FieldOfView = value;
+            }
+        ).setOnComplete(()=> {_currCamFOV = _currTargetCamFOV;}).id;
     }
     public void SetCameraHeight(float chosenHeight)
     {
@@ -122,6 +161,22 @@ public class PlayableCamera : MonoBehaviour
                 _cinemachine3rdPersonFollow.ShoulderOffset.x = value;
             }
         ).id;
+    }
+    private void SetCameraToLookAtX()
+    {
+        _maxUpCameraRotateX = _startCameraRotateX - _cameraRotateXClamp;
+        if(_maxUpCameraRotateX < 0)
+        {
+            _maxUpCameraRotateX = 360 + _maxUpCameraRotateX;
+        }
+
+        _maxDownCameraRotateX = _startCameraRotateX + _cameraRotateXClamp;
+        if(_maxDownCameraRotateX > 360)
+        {
+            _maxDownCameraRotateX = _maxDownCameraRotateX - 360;
+        }
+
+        _startCameraRotateX = Mathf.Abs(180 - _startCameraRotateX);
     }
 
 }

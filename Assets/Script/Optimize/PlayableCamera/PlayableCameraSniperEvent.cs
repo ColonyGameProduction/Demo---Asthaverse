@@ -6,9 +6,12 @@ public class PlayableCameraSniperEvent : PlayableCamera
     private SniperShootingEvent _sniperShootingEvent;
     private float recoilX, recoilY;
     private bool _goback;
-    [SerializeField] private float _recoilDelayMax = 0.2f, _gobackDelayMax = 0.25f;
-    [SerializeField] private float _cameraRotateYClamp = 45f, _cameraRotateXClamp;
-    [ReadOnly(true), SerializeField] private float _startCameraRotateX, _maxUpCameraRotateX = 340, _maxDownCameraRotateX = 40;
+    [Header("Recoil Sniper Variable")]
+    [SerializeField] private float _recoilDelayMax = 0.2f;
+    [SerializeField] private float _gobackDelayMax = 0.25f;
+
+    [Header("Camera Clamp Y Variable")]
+    [SerializeField] private float _cameraRotateYClamp = 45f;
     [ReadOnly(false), SerializeField] private float _startCameraRotateY, _maxLeftCameraRotateY, _maxRightCameraRotateY;
     private float _recoilDelay, _gobackDelay;
     private float _oldFOV;
@@ -193,11 +196,11 @@ public class PlayableCameraSniperEvent : PlayableCamera
     {
         // Debug.Log("FOV now" + Camera.main.fieldOfView);
         _oldFOV = Camera.main.fieldOfView;
-        if(MainUICamHandler.OnMainCamChangeFOV != null) MainUICamHandler.OnMainCamChangeFOV(_followCamera.m_Lens.FieldOfView);
+        // if(MainUICamHandler.OnMainCamChangeFOV != null) MainUICamHandler.OnMainCamChangeFOV(_followCamera.m_Lens.FieldOfView);
         
     }
     public void SetUICameraNormalFOV()
     {
-        if(MainUICamHandler.OnMainCamChangeFOV != null) MainUICamHandler.OnMainCamChangeFOV(_oldFOV);
+        // if(MainUICamHandler.OnMainCamChangeFOV != null) MainUICamHandler.OnMainCamChangeFOV(_oldFOV);
     }
 }
