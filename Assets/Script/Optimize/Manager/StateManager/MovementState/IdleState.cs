@@ -157,8 +157,10 @@ public class IdleState : MovementState
                 {
                     if(_sm.IdleAnimCycleIdx < _standIdleRifleAnimCycleTotal)
                     {
+                        
                         float nextIdleAnimIdx = _sm.IdleAnimCycleIdx + 1;
                         if(nextIdleAnimIdx < _standIdleRifleAnimCycleTotal) _currTargetTime = _sm.IdleAnimCycleTimeTarget[(int)nextIdleAnimIdx];
+                        if(nextIdleAnimIdx == _standIdleRifleAnimCycleTotal && _playableData != null) _playableData.GetPlayableCharacterIdentity.RandomAnimationIdleFinalIdx();
                         _nextIdleAnimIdxTarget = nextIdleAnimIdx;
                         _isIdleAnimChanging = true;
                         // _stateMachine.ChangeIdleCounter(x);

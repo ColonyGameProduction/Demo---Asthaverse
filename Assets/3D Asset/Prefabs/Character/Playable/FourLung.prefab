@@ -1324,6 +1324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49c689a50c7996a458ae6ea313eebcf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _iswantDebugAnimator: 0
   _isIdle: 1
   _isWalking: 0
   _isRun: 0
@@ -1346,6 +1347,7 @@ MonoBehaviour:
     m_Bits: 131072
   _crouchRayBuffer: 1.1
   _crouchHeadHitAngleBuffer: 15
+  _animTransitionSmoothSpeed: 3.5
   _isCrawl: 0
   _crawlSpeedMultiplier: 0.2
   _playableLayerMask:
@@ -1438,9 +1440,14 @@ MonoBehaviour:
   _followCamera: {fileID: 3852001047181008165}
   _followTarget: {fileID: 5945616959973882629}
   _cameraRotationSpeed: 200
+  _changeCameraFOVSpeed: 0.2
   _changeCameraHeightSpeed: 2
   _isLeft: 0
   _moveCameraViewSpeed: 0.2
+  _cameraRotateXClamp: 50
+  _startCameraRotateX: 0
+  _maxUpCameraRotateX: 340
+  _maxDownCameraRotateX: 40
 --- !u!114 &5044008858533674564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1733,11 +1740,11 @@ MonoBehaviour:
   m_TransparentLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_MinimumDistanceFromTarget: 0.1
+  m_MinimumDistanceFromTarget: 0.2
   m_AvoidObstacles: 1
   m_DistanceLimit: 0
   m_MinimumOcclusionTime: 0
-  m_CameraRadius: 0.1
+  m_CameraRadius: 0.5
   m_Strategy: 0
   m_MaximumEffort: 4
   m_SmoothingTime: 0

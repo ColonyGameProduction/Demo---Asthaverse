@@ -275,7 +275,7 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         }
 
         
-        Debug.Log(transform.name + " target" + targetHorizontal + " " + targetVertical + "_curranim" + _animHorizontal + " " + _animVertical); 
+        // Debug.Log(transform.name + " target" + targetHorizontal + " " + targetVertical + "_curranim" + _animHorizontal + " " + _animVertical); 
         CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, _animHorizontal);
         CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, _animVertical);
     }

@@ -181,6 +181,7 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     protected override void Awake()
     {
         base.Awake();
+        
         SwitchAnimatorGunCounterToCurr();
         
         if(_deadColl.activeSelf)_deadColl.gameObject.SetActive(false);
@@ -641,10 +642,16 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
     }
     #endregion
 
-    public virtual void SetIdleFinalAnimationIdx(float idx)
+    private void SetIdleFinalAnimationIdx(float idx)
     {
         _altIdleAnimationIdx = idx;
         SetIdleFinalAnimationAnimatorIdx();
+    }
+    public void RandomAnimationIdleFinalIdx()
+    {
+        float random = UnityEngine.Random.Range(0, 4);
+        if(random == 3) random = 4;
+        SetIdleFinalAnimationIdx(random);
     }
     public override void UnsubscribeEvent()
     {
