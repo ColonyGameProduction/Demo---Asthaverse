@@ -12,6 +12,7 @@ public struct CharaControllerData
 }
 public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMovementData
 {
+    public bool _iswantDebugAnimator;
     #region Normal Variable
 
     protected GameManager _gm;
@@ -73,6 +74,10 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
     [SerializeField] protected float _crouchHeadHitAngleBuffer = 15;
     private bool _isAtCrouchPlatform;
     
+    [Header("Animator variable")]
+    [SerializeField] protected float _animTransitionSmoothSpeed = 3.5f;
+    protected float _animHorizontal = 0;
+    protected float _animVertical = 0;
     #region Event
     public Action<Vector3> OnIsTheSamePosition;
     #endregion
@@ -236,9 +241,43 @@ public class MovementStateMachine : CharacterStateMachine, IMovement, IStandMove
         }
         Debug.Log(transform.name + "hasil animated facedir after" + animatedFaceDir);
 
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, isFacingTheDirection? animatedFaceDir.x : 0.9f* animatedFaceDir.x, 0.5f, Time.deltaTime);
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, isFacingTheDirection? animatedFaceDir.z : 0.9f * animatedFaceDir.z, 0.5f, Time.deltaTime);
+        AnimateMovement(isFacingTheDirection? animatedFaceDir : 0.9f* animatedFaceDir);
+        // CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, isFacingTheDirection? animatedFaceDir.x : 0.9f* animatedFaceDir.x, 0.5f, Time.deltaTime);
+        // CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, isFacingTheDirection? animatedFaceDir.z : 0.9f * animatedFaceDir.z, 0.5f, Time.deltaTime);
 
+    }
+
+    public virtual void AnimateMovement(Vector3 input)
+    {
+        if(_iswantDebugAnimator) return;
+        float targetHorizontal = input.x;
+        float targetVertical = input.z;
+
+        if(Mathf.Abs(_animHorizontal - targetHorizontal) < 0.1f) _animHorizontal = targetHorizontal;
+        if(Mathf.Abs(_animVertical - targetVertical) < 0.1f) _animVertical = targetVertical;
+
+        if(_animHorizontal < targetHorizontal)
+        {
+            _animHorizontal += _animTransitionSmoothSpeed * Time.deltaTime;
+        }
+        else if (_animHorizontal > targetHorizontal)
+        {
+            _animHorizontal -= _animTransitionSmoothSpeed * Time.deltaTime;
+        }
+
+        if(_animVertical < targetVertical)
+        {
+            _animVertical += _animTransitionSmoothSpeed * Time.deltaTime;
+        }
+        else if (_animVertical > targetVertical)
+        {
+            _animVertical -= _animTransitionSmoothSpeed * Time.deltaTime;
+        }
+
+        
+        Debug.Log(transform.name + " target" + targetHorizontal + " " + targetVertical + "_curranim" + _animHorizontal + " " + _animVertical); 
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, _animHorizontal);
+        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, _animVertical);
     }
     public bool IsAIAtDirPos()
     {

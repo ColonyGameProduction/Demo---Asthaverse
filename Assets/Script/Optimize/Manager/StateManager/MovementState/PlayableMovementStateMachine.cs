@@ -295,8 +295,9 @@ public class PlayableMovementStateMachine : MovementStateMachine, IGroundMovemen
         
         CC.SimpleMove(Facedir * _currSpeed);
 
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, direction.x);
-        CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, direction.z);
+        AnimateMovement(direction);
+        // CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_HORIZONTAL, direction.x);
+        // CharaAnimator?.SetFloat(ANIMATION_MOVE_PARAMETER_VERTICAL, direction.z);
 
         if(!IsMustLookForward)RotatePlayableChara(Facedir);
         else RotatePlayableChara(flatForward);

@@ -434,6 +434,7 @@ MonoBehaviour:
     m_Bits: 131072
   _crouchRayBuffer: 1.1
   _crouchHeadHitAngleBuffer: 15
+  _animTransitionSpeed: 3.5
   _isCrawl: 0
   _crawlSpeedMultiplier: 0.2
   _playableLayerMask:
@@ -526,9 +527,14 @@ MonoBehaviour:
   _followCamera: {fileID: 3918376348911298722}
   _followTarget: {fileID: 8849633188511668127}
   _cameraRotationSpeed: 200
+  _changeCameraFOVSpeed: 0.2
   _changeCameraHeightSpeed: 2
   _isLeft: 0
   _moveCameraViewSpeed: 0.2
+  _cameraRotateXClamp: 40
+  _startCameraRotateX: 0
+  _maxUpCameraRotateX: 340
+  _maxDownCameraRotateX: 40
 --- !u!114 &8916737995085213083
 MonoBehaviour:
   m_ObjectHideFlags: 0

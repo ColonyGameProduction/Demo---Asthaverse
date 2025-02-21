@@ -29,6 +29,7 @@ public class IdleState : MovementState
     public override void UpdateState()
     {
         _playableData?.RotateWhileReviving();
+        _sm.AnimateMovement(Vector3.zero);
         if(_playableData != null && (PlayableCharacterManager.IsSwitchingCharacter || PlayableCharacterManager.IsAddingRemovingCharacter || _playableData.GetPlayableCharacterIdentity.IsReviving || _playableData.GetPlayableCharacterIdentity.IsSilentKilling))return;
 
         // Debug.Log(_sm.transform.name + " hallooooo????");
@@ -111,8 +112,7 @@ public class IdleState : MovementState
     }
     private void StopMovementAnimation()
     {
-        _sm.CharaAnimator?.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_HORIZONTAL, 0);
-        _sm.CharaAnimator?.SetFloat(MovementStateMachine.ANIMATION_MOVE_PARAMETER_VERTICAL, 0);
+        
         SetAnimParamInactive(ANIMATION_MOVE_PARAMETER_ISMOVING);
     }
 
