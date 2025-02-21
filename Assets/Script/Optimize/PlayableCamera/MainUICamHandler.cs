@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class MainUICamHandler : MonoBehaviour, IUnsubscribeEvent
 {
-    public static Action<float> OnMainCamChangeFOV;
+    // public static Action<float> OnMainCamChangeFOV;
     private Camera _uiCam;
+    [SerializeField] private Camera _mainCam;
 
 
     private void Awake() 
     {
+        // _mainCam = GetComponentInParent<Camera>();
         _uiCam = GetComponent<Camera>();
-        OnMainCamChangeFOV += ChangeUICamFOV;
+        // OnMainCamChangeFOV += ChangeUICamFOV;
+    }
+    private void Update()
+    {
+        ChangeUICamFOV(_mainCam.fieldOfView);
     }
 
     private void ChangeUICamFOV(float fov)
@@ -20,6 +26,6 @@ public class MainUICamHandler : MonoBehaviour, IUnsubscribeEvent
     }
     public void UnsubscribeEvent()
     {
-        OnMainCamChangeFOV -= ChangeUICamFOV;
+        // OnMainCamChangeFOV -= ChangeUICamFOV;
     }
 }
