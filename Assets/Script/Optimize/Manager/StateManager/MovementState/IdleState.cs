@@ -146,7 +146,7 @@ public class IdleState : MovementState
             if(!_isGoingBackToIdleRelax1) _timeCounter += Time.deltaTime;
             else _timeCounter -= Time.deltaTime;
 
-            Debug.Log(_sm.transform.name + " _time" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1);
+            // Debug.Log(_sm.transform.name + " _time" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1);
         }
         else if((_timeCounter >= _currTargetTime && !_isGoingBackToIdleRelax1) || (_timeCounter <= _currTargetTime && _isGoingBackToIdleRelax1))
         {
@@ -162,7 +162,7 @@ public class IdleState : MovementState
                         _nextIdleAnimIdxTarget = nextIdleAnimIdx;
                         _isIdleAnimChanging = true;
                         // _stateMachine.ChangeIdleCounter(x);
-                        Debug.Log(_sm.transform.name + " _time" + " masuk atas" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1 + " " + _sm.IdleAnimCycleIdx + " " + _nextIdleAnimIdxTarget + " " + _standIdleRifleAnimCycleTotal);
+                        // Debug.Log(_sm.transform.name + " _time" + " masuk atas" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1 + " " + _sm.IdleAnimCycleIdx + " " + _nextIdleAnimIdxTarget + " " + _standIdleRifleAnimCycleTotal);
                     }
                     else if(_sm.IdleAnimCycleIdx == _standIdleRifleAnimCycleTotal)
                     {
@@ -173,11 +173,11 @@ public class IdleState : MovementState
                             float nextIdleAnimIdx = _sm.IdleAnimCycleIdx - 1;
                             _currTargetTime = _sm.IdleAnimCycleTimeTarget[(int)nextIdleAnimIdx-1];
                             _nextIdleAnimIdxTarget = nextIdleAnimIdx;
-                            Debug.Log(_sm.transform.name + " _time" + " masuk sini dulu" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1 + " " + _sm.IdleAnimCycleIdx + " " + _nextIdleAnimIdxTarget + " " + _standIdleRifleAnimCycleTotal);
+                            // Debug.Log(_sm.transform.name + " _time" + " masuk sini dulu" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1 + " " + _sm.IdleAnimCycleIdx + " " + _nextIdleAnimIdxTarget + " " + _standIdleRifleAnimCycleTotal);
                         }
                         else
                         {
-                            Debug.Log(_sm.transform.name + " _time" + " masuk bawah" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1 + " " + _sm.IdleAnimCycleIdx + " " + _nextIdleAnimIdxTarget + " " + _standIdleRifleAnimCycleTotal);
+                            // Debug.Log(_sm.transform.name + " _time" + " masuk bawah" + _timeCounter + " target" + _currTargetTime + " " + _isGoingBackToIdleRelax1 + " " + _sm.IdleAnimCycleIdx + " " + _nextIdleAnimIdxTarget + " " + _standIdleRifleAnimCycleTotal);
                             _isGoingBackToIdleRelax1 = false;
                             
                             _currTargetTime = _sm.IdleAnimCycleTimeTarget[(int)_standIdleRifleAnimCycleTotal - 1];
