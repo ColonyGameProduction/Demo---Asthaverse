@@ -234,6 +234,7 @@ public class GameManager : MonoBehaviour, IUnsubscribeEvent
         _currCheckPointIdx = idx;
         PlayerPrefs.SetInt(CHECK_POINT_PREF, idx);
     }
+    
     #endregion
 
 }

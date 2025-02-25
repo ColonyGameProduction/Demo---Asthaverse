@@ -543,6 +543,14 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _gameInputManager.OnExitTakeCoverPerformed += GameInput_OnExitTakeCoverPerformed;
 
         _gameInputManager.OnChangeCameraPlace += GameInput_OnChangeCameraPlace;
+        _gameInputManager.OnImmortalized += GameInput_OnImmortalized;
+    }
+
+    private void GameInput_OnImmortalized()
+    {
+        if(!_gm.IsGamePlaying()) return;
+        // Debug.Log("Immortallized!!");
+        ImmortallizedCharacter();
     }
 
     private void GameInput_OnChangeCameraPlace()
@@ -1024,6 +1032,7 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
         _gameInputManager.OnExitTakeCoverPerformed -= GameInput_OnExitTakeCoverPerformed;
 
         _gameInputManager.OnChangeCameraPlace -= GameInput_OnChangeCameraPlace;
+        _gameInputManager.OnImmortalized -= GameInput_OnImmortalized;
     }
     public bool IsEveryoneAlive()
     {
@@ -1032,5 +1041,12 @@ public class PlayableCharacterManager : MonoBehaviour, IUnsubscribeEvent
             if(chara.IsDead) return false;
         }
         return true;
+    }
+    public void ImmortallizedCharacter()
+    {
+        foreach(PlayableCharacterIdentity chara in _charaIdentities)
+        {
+            chara.Immortalized = !chara.Immortalized;
+        }
     }
 }

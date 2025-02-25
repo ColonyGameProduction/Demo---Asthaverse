@@ -345,7 +345,8 @@ public class PlayableCharacterIdentity : CharacterIdentity, IPlayableFriendDataH
         {
             CurrHealth = 0;
             
-            if(!immortalized) Death();
+            if(!_immortalized) Death();
+            else CurrHealth = 1;
         }
     }
     protected override void HandleHeal(float Healing)

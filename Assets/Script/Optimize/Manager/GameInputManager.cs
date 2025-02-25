@@ -16,7 +16,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
                   OnSilentKillPerformed, OnShootingPerformed, OnShootingCanceled, OnScopePerformed, OnScopeCanceled, OnReloadPerformed,
                   OnInteractPerformed, OnInteractCanceled, OnNightVisionPerformed, OnSkillPerformed, OnWhistlePerformed, OnThrowPerformed,
                   OnTakeCoverPerformed, OnExitTakeCoverPerformed,
-                  OnChangeCameraPlace;
+                  OnChangeCameraPlace, OnImmortalized;
     public Action<int> OnCommandFriendPerformed;
     #endregion
 
@@ -72,9 +72,9 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
         _inputActions.InputPlayerAction.TakeCover.performed += TakeCover_performed;
         _inputActions.InputPlayerAction.ExitTakeCover.performed += ExitTakeCover_performed;
         _inputActions.InputPlayerAction.ChangeCameraPlace.performed += ChangeCameraPlace_performed;
+        _inputActions.InputPlayerAction.Immortalized.performed += Immortalized_performed;
     }
 
-    
 
     public void SubscribeToInputMenuAction()
     {
@@ -130,6 +130,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
     private void TakeCover_performed(InputAction.CallbackContext context) => OnTakeCoverPerformed?.Invoke();
     private void ExitTakeCover_performed(InputAction.CallbackContext context) => OnExitTakeCoverPerformed?.Invoke();
     private void ChangeCameraPlace_performed(InputAction.CallbackContext context) => OnChangeCameraPlace?.Invoke();
+    private void Immortalized_performed(InputAction.CallbackContext context) => OnImmortalized?.Invoke();
     public Vector2 Movement()
     {
         Vector2 direction = Vector2.zero;
@@ -171,6 +172,7 @@ public class GameInputManager : MonoBehaviour, IUnsubscribeEvent
         _inputActions.InputPlayerAction.TakeCover.performed -= TakeCover_performed;
         _inputActions.InputPlayerAction.ExitTakeCover.performed -= ExitTakeCover_performed;
         _inputActions.InputPlayerAction.ChangeCameraPlace.performed -= ChangeCameraPlace_performed;
+        _inputActions.InputPlayerAction.Immortalized.performed -= Immortalized_performed;
 
         _inputActions.InputMenuAction.PauseGame.performed -= PauseGame_performed;
     }

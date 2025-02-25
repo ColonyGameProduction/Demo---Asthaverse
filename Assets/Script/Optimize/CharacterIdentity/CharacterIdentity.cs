@@ -9,7 +9,7 @@ using UnityEngine;
 public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, IUnsubscribeEvent
 {
     [Header("test")]
-    public bool immortalized;
+    [SerializeField] protected bool _immortalized;
 
     #region Normal Variable
     [Header("CHARACTER SCRIPTABLE OBJECT STAT")]
@@ -102,6 +102,7 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
     public float SilentKillIdx {get {return _silentKillAnimationIdx;} set {_silentKillAnimationIdx = value;}}
 
     public CharacterMakeSFX CharaMakeSFX {get{return _charaMakeSFX;}}
+    public bool Immortalized {get {return _immortalized;} set {_immortalized = value;}}
 
     #endregion
     protected virtual void Awake()
@@ -145,7 +146,8 @@ public abstract class CharacterIdentity : MonoBehaviour, IHealth, IHaveWeapon, I
         if(CurrHealth <= 0)
         {
             CurrHealth = 0;
-            if(!immortalized) Death();
+            if(!_immortalized) Death();
+            else CurrHealth = 1;
         }
     }
     public void Heal(float Healing)

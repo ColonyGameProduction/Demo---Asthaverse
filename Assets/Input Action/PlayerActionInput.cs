@@ -260,6 +260,15 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Immortalized"",
+                    ""type"": ""Button"",
+                    ""id"": ""a95e2315-efc8-41bd-9e6d-b9971e8e1845"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -592,6 +601,50 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
                     ""action"": ""ChangeCameraPlace"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""85fa07cb-ce92-46ba-9230-f1c85183fc88"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Immortalized"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""639ce7dc-8997-454f-8322-9f70de201ed7"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Immortalized"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""c538cd58-2aaa-488a-94d4-8d4bcee28de2"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Immortalized"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""784524ed-cfda-4231-bdbf-461fbfb7d8d8"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Immortalized"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -716,6 +769,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         m_InputPlayerAction_ExitTakeCover = m_InputPlayerAction.FindAction("ExitTakeCover", throwIfNotFound: true);
         m_InputPlayerAction_CommandFriend = m_InputPlayerAction.FindAction("Command Friend", throwIfNotFound: true);
         m_InputPlayerAction_ChangeCameraPlace = m_InputPlayerAction.FindAction("ChangeCameraPlace", throwIfNotFound: true);
+        m_InputPlayerAction_Immortalized = m_InputPlayerAction.FindAction("Immortalized", throwIfNotFound: true);
         // InputMenuAction
         m_InputMenuAction = asset.FindActionMap("InputMenuAction", throwIfNotFound: true);
         m_InputMenuAction_PauseGame = m_InputMenuAction.FindAction("Pause Game", throwIfNotFound: true);
@@ -808,6 +862,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputPlayerAction_ExitTakeCover;
     private readonly InputAction m_InputPlayerAction_CommandFriend;
     private readonly InputAction m_InputPlayerAction_ChangeCameraPlace;
+    private readonly InputAction m_InputPlayerAction_Immortalized;
     public struct InputPlayerActionActions
     {
         private @PlayerActionInput m_Wrapper;
@@ -838,6 +893,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         public InputAction @ExitTakeCover => m_Wrapper.m_InputPlayerAction_ExitTakeCover;
         public InputAction @CommandFriend => m_Wrapper.m_InputPlayerAction_CommandFriend;
         public InputAction @ChangeCameraPlace => m_Wrapper.m_InputPlayerAction_ChangeCameraPlace;
+        public InputAction @Immortalized => m_Wrapper.m_InputPlayerAction_Immortalized;
         public InputActionMap Get() { return m_Wrapper.m_InputPlayerAction; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -925,6 +981,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @ChangeCameraPlace.started += instance.OnChangeCameraPlace;
             @ChangeCameraPlace.performed += instance.OnChangeCameraPlace;
             @ChangeCameraPlace.canceled += instance.OnChangeCameraPlace;
+            @Immortalized.started += instance.OnImmortalized;
+            @Immortalized.performed += instance.OnImmortalized;
+            @Immortalized.canceled += instance.OnImmortalized;
         }
 
         private void UnregisterCallbacks(IInputPlayerActionActions instance)
@@ -1007,6 +1066,9 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
             @ChangeCameraPlace.started -= instance.OnChangeCameraPlace;
             @ChangeCameraPlace.performed -= instance.OnChangeCameraPlace;
             @ChangeCameraPlace.canceled -= instance.OnChangeCameraPlace;
+            @Immortalized.started -= instance.OnImmortalized;
+            @Immortalized.performed -= instance.OnImmortalized;
+            @Immortalized.canceled -= instance.OnImmortalized;
         }
 
         public void RemoveCallbacks(IInputPlayerActionActions instance)
@@ -1114,6 +1176,7 @@ public partial class @PlayerActionInput: IInputActionCollection2, IDisposable
         void OnExitTakeCover(InputAction.CallbackContext context);
         void OnCommandFriend(InputAction.CallbackContext context);
         void OnChangeCameraPlace(InputAction.CallbackContext context);
+        void OnImmortalized(InputAction.CallbackContext context);
     }
     public interface IInputMenuActionActions
     {
